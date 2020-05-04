@@ -1,4 +1,6 @@
+import 'package:groupshare/core/excpetions/exceptions.dart';
 import 'package:groupshare/data/auth.pb.dart';
+import 'package:groupshare/data/error.pb.dart';
 import 'package:groupshare/data/login.pb.dart';
 import 'package:groupshare/data/token.pb.dart';
 import 'package:http/http.dart';
@@ -14,7 +16,24 @@ class Api {
       '$_domain/$T',
       body: payload.writeToBuffer(),
     );
-    return fromBuffer<U>(response.bodyBytes);
+    final resp = fromBuffer<U>(response.bodyBytes);
+    final errorField = resp.getTagNumber("err");
+    if (errorField == null) {
+      return resp;
+    }
+    final errorValue = resp.getFieldOrNull(errorField);
+    if (errorValue == null) {
+      return resp;
+    }
+    final error = errorValue as Error;
+    switch (error.type) {
+      case Error_Types.AUTH_ERROR:
+        throw AuthException(error.message);
+      case Error_Types.AUTH_EXPIRED:
+        throw AuthException(error.message, true);
+      default:
+        throw UserException(error.message);
+    }
   }
 
   T fromBuffer<T>(List<int> b) {

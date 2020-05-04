@@ -9,6 +9,8 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'error.pb.dart' as $0;
+
 class TokenRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('TokenRequest', createEmptyInstance: create)
     ..aOS(1, 'device')
@@ -73,7 +75,7 @@ class TokenRequest extends $pb.GeneratedMessage {
 class TokenResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('TokenResponse', createEmptyInstance: create)
     ..aOB(1, 'ok')
-    ..aOM<TokenError>(2, 'err', subBuilder: TokenError.create)
+    ..aOM<$0.Error>(2, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
   ;
 
@@ -102,55 +104,14 @@ class TokenResponse extends $pb.GeneratedMessage {
   void clearOk() => clearField(1);
 
   @$pb.TagNumber(2)
-  TokenError get err => $_getN(1);
+  $0.Error get err => $_getN(1);
   @$pb.TagNumber(2)
-  set err(TokenError v) { setField(2, v); }
+  set err($0.Error v) { setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasErr() => $_has(1);
   @$pb.TagNumber(2)
   void clearErr() => clearField(2);
   @$pb.TagNumber(2)
-  TokenError ensureErr() => $_ensure(1);
-}
-
-class TokenError extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('TokenError', createEmptyInstance: create)
-    ..aOB(1, 'error')
-    ..aOS(2, 'message')
-    ..hasRequiredFields = false
-  ;
-
-  TokenError._() : super();
-  factory TokenError() => create();
-  factory TokenError.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory TokenError.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  TokenError clone() => TokenError()..mergeFromMessage(this);
-  TokenError copyWith(void Function(TokenError) updates) => super.copyWith((message) => updates(message as TokenError));
-  $pb.BuilderInfo get info_ => _i;
-  @$core.pragma('dart2js:noInline')
-  static TokenError create() => TokenError._();
-  TokenError createEmptyInstance() => create();
-  static $pb.PbList<TokenError> createRepeated() => $pb.PbList<TokenError>();
-  @$core.pragma('dart2js:noInline')
-  static TokenError getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<TokenError>(create);
-  static TokenError _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.bool get error => $_getBF(0);
-  @$pb.TagNumber(1)
-  set error($core.bool v) { $_setBool(0, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasError() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearError() => clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get message => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set message($core.String v) { $_setString(1, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasMessage() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearMessage() => clearField(2);
+  $0.Error ensureErr() => $_ensure(1);
 }
 

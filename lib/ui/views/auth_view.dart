@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:groupshare/core/excpetions/exceptions.dart';
 import 'package:groupshare/core/viewmodels/auth_model.dart';
 import 'package:groupshare/locator.dart';
 import 'package:groupshare/ui/views/base_view.dart';
@@ -59,9 +60,13 @@ class _AuthFormState extends State<AuthForm> {
                 await model.getAuth(_code);
                 Navigator.pushNamedAndRemoveUntil(
                     context, '/share/list', (_) => false);
+              } on UserException catch (ex) {
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text(ex.message),
+                ));
               } catch (ex) {
                 Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text(ex.toString()),
+                  content: Text("Error"),
                 ));
               }
             }),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:groupshare/core/excpetions/exceptions.dart';
 import 'package:groupshare/core/viewmodels/login_model.dart';
 import 'package:groupshare/locator.dart';
 import 'package:groupshare/ui/views/base_view.dart';
@@ -63,9 +64,13 @@ class _LoginFormState extends State<LoginForm> {
                   '/auth',
                   (_) => false,
                 );
+              } on UserException catch (ex) {
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text(ex.message),
+                ));
               } catch (ex) {
                 Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text(ex.toString()),
+                  content: Text("Error"),
                 ));
               }
             }),

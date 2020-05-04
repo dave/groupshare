@@ -9,9 +9,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'auth.pbenum.dart';
-
-export 'auth.pbenum.dart';
+import 'error.pb.dart' as $0;
 
 class AuthRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('AuthRequest', createEmptyInstance: create)
@@ -77,7 +75,7 @@ class AuthRequest extends $pb.GeneratedMessage {
 class AuthResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('AuthResponse', createEmptyInstance: create)
     ..aOS(1, 'token')
-    ..aOM<AuthError>(2, 'err', subBuilder: AuthError.create)
+    ..aOM<$0.Error>(2, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
   ;
 
@@ -106,65 +104,14 @@ class AuthResponse extends $pb.GeneratedMessage {
   void clearToken() => clearField(1);
 
   @$pb.TagNumber(2)
-  AuthError get err => $_getN(1);
+  $0.Error get err => $_getN(1);
   @$pb.TagNumber(2)
-  set err(AuthError v) { setField(2, v); }
+  set err($0.Error v) { setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasErr() => $_has(1);
   @$pb.TagNumber(2)
   void clearErr() => clearField(2);
   @$pb.TagNumber(2)
-  AuthError ensureErr() => $_ensure(1);
-}
-
-class AuthError extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('AuthError', createEmptyInstance: create)
-    ..aOB(1, 'error')
-    ..e<AuthError_Types>(2, 'type', $pb.PbFieldType.OE, defaultOrMaker: AuthError_Types.ERROR, valueOf: AuthError_Types.valueOf, enumValues: AuthError_Types.values)
-    ..aOS(3, 'message')
-    ..hasRequiredFields = false
-  ;
-
-  AuthError._() : super();
-  factory AuthError() => create();
-  factory AuthError.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory AuthError.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  AuthError clone() => AuthError()..mergeFromMessage(this);
-  AuthError copyWith(void Function(AuthError) updates) => super.copyWith((message) => updates(message as AuthError));
-  $pb.BuilderInfo get info_ => _i;
-  @$core.pragma('dart2js:noInline')
-  static AuthError create() => AuthError._();
-  AuthError createEmptyInstance() => create();
-  static $pb.PbList<AuthError> createRepeated() => $pb.PbList<AuthError>();
-  @$core.pragma('dart2js:noInline')
-  static AuthError getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AuthError>(create);
-  static AuthError _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.bool get error => $_getBF(0);
-  @$pb.TagNumber(1)
-  set error($core.bool v) { $_setBool(0, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasError() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearError() => clearField(1);
-
-  @$pb.TagNumber(2)
-  AuthError_Types get type => $_getN(1);
-  @$pb.TagNumber(2)
-  set type(AuthError_Types v) { setField(2, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasType() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearType() => clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get message => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set message($core.String v) { $_setString(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasMessage() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearMessage() => clearField(3);
+  $0.Error ensureErr() => $_ensure(1);
 }
 

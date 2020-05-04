@@ -19,10 +19,6 @@ class AuthModel extends BaseModel {
       ..code = code;
 
     final resp = await api.send<AuthRequest, AuthResponse>(req);
-    if (resp.err.error) {
-      throw Exception(resp.err.message);
-    }
-
     await prefs.setToken(resp.token);
   }
 }

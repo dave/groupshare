@@ -17,10 +17,6 @@ class LoginModel extends BaseModel {
       ..email = email;
 
     final resp = await api.send<LoginRequest, LoginResponse>(req);
-    if (resp.err.error) {
-      throw Exception(resp.err.message);
-    }
-
     await prefs.setEmail(email);
     await prefs.setTime(resp.time);
     await prefs.removeToken();

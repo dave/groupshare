@@ -19,15 +19,7 @@ const TokenResponse$json = const {
   '1': 'TokenResponse',
   '2': const [
     const {'1': 'ok', '3': 1, '4': 1, '5': 8, '10': 'ok'},
-    const {'1': 'err', '3': 2, '4': 1, '5': 11, '6': '.TokenError', '10': 'err'},
-  ],
-};
-
-const TokenError$json = const {
-  '1': 'TokenError',
-  '2': const [
-    const {'1': 'error', '3': 1, '4': 1, '5': 8, '10': 'error'},
-    const {'1': 'message', '3': 2, '4': 1, '5': 9, '10': 'message'},
+    const {'1': 'err', '3': 2, '4': 1, '5': 11, '6': '.Error', '10': 'err'},
   ],
 };
 

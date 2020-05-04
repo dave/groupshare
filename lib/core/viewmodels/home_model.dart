@@ -1,3 +1,4 @@
+import 'package:groupshare/core/excpetions/exceptions.dart';
 import 'package:groupshare/core/services/api.dart';
 import 'package:groupshare/core/services/device.dart';
 import 'package:groupshare/core/services/prefs.dart';
@@ -28,9 +29,13 @@ class HomeModel extends BaseModel {
       ..time = prefs.time
       ..token = prefs.token;
 
-    final resp = await api.send<TokenRequest, TokenResponse>(req);
-    if (resp.err.error) {
+    try {
+      await api.send<TokenRequest, TokenResponse>(req);
+    } on AuthException catch (ex) {
+      // only clear the auth data if we get an auth error
       await prefs.clear();
+      return Status.Error;
+    } catch (ex) {
       return Status.Error;
     }
     return Status.Done;
