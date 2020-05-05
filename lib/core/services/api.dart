@@ -1,5 +1,5 @@
 import 'package:groupshare/core/excpetions/exceptions.dart';
-import 'package:groupshare/data/error.pb.dart';
+import 'package:groupshare/pb/error.pb.dart';
 import 'package:http/http.dart';
 import 'package:protobuf/protobuf.dart';
 
@@ -14,6 +14,7 @@ class Api {
       '$_domain/$T',
       body: payload.writeToBuffer(),
     );
+    // TODO: Need "(reply as GeneratedMessage)" for IntelliJ code completion. Remove?
     (reply as GeneratedMessage).mergeFromBuffer(request.bodyBytes);
 
     final errorField = reply.getTagNumber("err");

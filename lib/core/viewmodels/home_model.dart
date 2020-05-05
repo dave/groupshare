@@ -3,8 +3,8 @@ import 'package:groupshare/core/services/api.dart';
 import 'package:groupshare/core/services/device.dart';
 import 'package:groupshare/core/services/prefs.dart';
 import 'package:groupshare/core/viewmodels/base_model.dart';
-import 'package:groupshare/data/token.pb.dart';
 import 'package:groupshare/locator.dart';
+import 'package:groupshare/pb/auth/token.pb.dart';
 
 enum Status { Empty, Auth, Done, Error }
 
@@ -31,7 +31,7 @@ class HomeModel extends BaseModel {
 
     try {
       await api.send<TokenRequest, TokenResponse>(req, TokenResponse());
-    } on AuthException catch (ex) {
+    } on AuthException {
       // only clear the auth data if we get an auth error
       await prefs.clear();
       return Status.Error;

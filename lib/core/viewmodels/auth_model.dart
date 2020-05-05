@@ -1,8 +1,8 @@
 import 'package:groupshare/core/services/api.dart';
 import 'package:groupshare/core/services/device.dart';
 import 'package:groupshare/core/services/prefs.dart';
-import 'package:groupshare/data/auth.pb.dart';
 import 'package:groupshare/locator.dart';
+import 'package:groupshare/pb/auth/auth.pb.dart';
 
 import 'base_model.dart';
 
