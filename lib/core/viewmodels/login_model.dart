@@ -16,7 +16,8 @@ class LoginModel extends BaseModel {
       ..device = device.id
       ..email = email;
 
-    final resp = await api.send<LoginRequest, LoginResponse>(req);
+    final resp =
+        await api.send<LoginRequest, LoginResponse>(req, LoginResponse());
     await prefs.setEmail(email);
     await prefs.setTime(resp.time);
     await prefs.removeToken();

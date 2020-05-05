@@ -30,7 +30,7 @@ class HomeModel extends BaseModel {
       ..token = prefs.token;
 
     try {
-      await api.send<TokenRequest, TokenResponse>(req);
+      await api.send<TokenRequest, TokenResponse>(req, TokenResponse());
     } on AuthException catch (ex) {
       // only clear the auth data if we get an auth error
       await prefs.clear();
