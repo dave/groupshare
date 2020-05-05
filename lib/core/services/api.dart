@@ -14,6 +14,9 @@ class Api {
       '$_domain/$T',
       body: payload.writeToBuffer(),
     );
+    if (request.statusCode != 200) {
+      throw UserException("Error ${request.statusCode}");
+    }
     // TODO: Need "(reply as GeneratedMessage)" for IntelliJ code completion. Remove?
     (reply as GeneratedMessage).mergeFromBuffer(request.bodyBytes);
 
@@ -27,9 +30,9 @@ class Api {
     }
     final error = errorValue as Error;
     switch (error.type) {
-      case Error_Types.AUTH_ERROR:
+      case Error_Type.AUTH_ERROR:
         throw AuthException(error.message);
-      case Error_Types.AUTH_EXPIRED:
+      case Error_Type.AUTH_EXPIRED:
         throw AuthException(error.message, true);
       default:
         throw UserException(error.message);

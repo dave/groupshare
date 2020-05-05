@@ -11,8 +11,8 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../error.pb.dart' as $0;
 
-class TokenRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('TokenRequest', createEmptyInstance: create)
+class Token_Request extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Token.Request', createEmptyInstance: create)
     ..aOS(1, 'device')
     ..aOS(2, 'email')
     ..aOS(3, 'time')
@@ -20,20 +20,20 @@ class TokenRequest extends $pb.GeneratedMessage {
     ..hasRequiredFields = false
   ;
 
-  TokenRequest._() : super();
-  factory TokenRequest() => create();
-  factory TokenRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory TokenRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  TokenRequest clone() => TokenRequest()..mergeFromMessage(this);
-  TokenRequest copyWith(void Function(TokenRequest) updates) => super.copyWith((message) => updates(message as TokenRequest));
+  Token_Request._() : super();
+  factory Token_Request() => create();
+  factory Token_Request.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Token_Request.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  Token_Request clone() => Token_Request()..mergeFromMessage(this);
+  Token_Request copyWith(void Function(Token_Request) updates) => super.copyWith((message) => updates(message as Token_Request));
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static TokenRequest create() => TokenRequest._();
-  TokenRequest createEmptyInstance() => create();
-  static $pb.PbList<TokenRequest> createRepeated() => $pb.PbList<TokenRequest>();
+  static Token_Request create() => Token_Request._();
+  Token_Request createEmptyInstance() => create();
+  static $pb.PbList<Token_Request> createRepeated() => $pb.PbList<Token_Request>();
   @$core.pragma('dart2js:noInline')
-  static TokenRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<TokenRequest>(create);
-  static TokenRequest _defaultInstance;
+  static Token_Request getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Token_Request>(create);
+  static Token_Request _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get device => $_getSZ(0);
@@ -72,27 +72,27 @@ class TokenRequest extends $pb.GeneratedMessage {
   void clearToken() => clearField(4);
 }
 
-class TokenResponse extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('TokenResponse', createEmptyInstance: create)
+class Token_Response extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Token.Response', createEmptyInstance: create)
     ..aOB(1, 'ok')
     ..aOM<$0.Error>(2, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
   ;
 
-  TokenResponse._() : super();
-  factory TokenResponse() => create();
-  factory TokenResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory TokenResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  TokenResponse clone() => TokenResponse()..mergeFromMessage(this);
-  TokenResponse copyWith(void Function(TokenResponse) updates) => super.copyWith((message) => updates(message as TokenResponse));
+  Token_Response._() : super();
+  factory Token_Response() => create();
+  factory Token_Response.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Token_Response.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  Token_Response clone() => Token_Response()..mergeFromMessage(this);
+  Token_Response copyWith(void Function(Token_Response) updates) => super.copyWith((message) => updates(message as Token_Response));
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static TokenResponse create() => TokenResponse._();
-  TokenResponse createEmptyInstance() => create();
-  static $pb.PbList<TokenResponse> createRepeated() => $pb.PbList<TokenResponse>();
+  static Token_Response create() => Token_Response._();
+  Token_Response createEmptyInstance() => create();
+  static $pb.PbList<Token_Response> createRepeated() => $pb.PbList<Token_Response>();
   @$core.pragma('dart2js:noInline')
-  static TokenResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<TokenResponse>(create);
-  static TokenResponse _defaultInstance;
+  static Token_Response getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Token_Response>(create);
+  static Token_Response _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.bool get ok => $_getBF(0);
@@ -113,5 +113,26 @@ class TokenResponse extends $pb.GeneratedMessage {
   void clearErr() => clearField(2);
   @$pb.TagNumber(2)
   $0.Error ensureErr() => $_ensure(1);
+}
+
+class Token extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Token', createEmptyInstance: create)
+    ..hasRequiredFields = false
+  ;
+
+  Token._() : super();
+  factory Token() => create();
+  factory Token.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Token.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  Token clone() => Token()..mergeFromMessage(this);
+  Token copyWith(void Function(Token) updates) => super.copyWith((message) => updates(message as Token));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Token create() => Token._();
+  Token createEmptyInstance() => create();
+  static $pb.PbList<Token> createRepeated() => $pb.PbList<Token>();
+  @$core.pragma('dart2js:noInline')
+  static Token getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Token>(create);
+  static Token _defaultInstance;
 }
 

@@ -23,14 +23,14 @@ class HomeModel extends BaseModel {
       return Status.Auth;
     }
 
-    final req = TokenRequest.create()
+    final req = Token_Request.create()
       ..email = prefs.email
       ..device = device.id
       ..time = prefs.time
       ..token = prefs.token;
 
     try {
-      await api.send<TokenRequest, TokenResponse>(req, TokenResponse());
+      await api.send<Token_Request, Token_Response>(req, Token_Response());
     } on AuthException {
       // only clear the auth data if we get an auth error
       await prefs.clear();

@@ -11,8 +11,8 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../error.pb.dart' as $0;
 
-class AuthRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('AuthRequest', createEmptyInstance: create)
+class Auth_Request extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Auth.Request', createEmptyInstance: create)
     ..aOS(1, 'device')
     ..aOS(2, 'email')
     ..aOS(3, 'time')
@@ -20,20 +20,20 @@ class AuthRequest extends $pb.GeneratedMessage {
     ..hasRequiredFields = false
   ;
 
-  AuthRequest._() : super();
-  factory AuthRequest() => create();
-  factory AuthRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory AuthRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  AuthRequest clone() => AuthRequest()..mergeFromMessage(this);
-  AuthRequest copyWith(void Function(AuthRequest) updates) => super.copyWith((message) => updates(message as AuthRequest));
+  Auth_Request._() : super();
+  factory Auth_Request() => create();
+  factory Auth_Request.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Auth_Request.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  Auth_Request clone() => Auth_Request()..mergeFromMessage(this);
+  Auth_Request copyWith(void Function(Auth_Request) updates) => super.copyWith((message) => updates(message as Auth_Request));
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static AuthRequest create() => AuthRequest._();
-  AuthRequest createEmptyInstance() => create();
-  static $pb.PbList<AuthRequest> createRepeated() => $pb.PbList<AuthRequest>();
+  static Auth_Request create() => Auth_Request._();
+  Auth_Request createEmptyInstance() => create();
+  static $pb.PbList<Auth_Request> createRepeated() => $pb.PbList<Auth_Request>();
   @$core.pragma('dart2js:noInline')
-  static AuthRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AuthRequest>(create);
-  static AuthRequest _defaultInstance;
+  static Auth_Request getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Auth_Request>(create);
+  static Auth_Request _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get device => $_getSZ(0);
@@ -72,27 +72,27 @@ class AuthRequest extends $pb.GeneratedMessage {
   void clearCode() => clearField(4);
 }
 
-class AuthResponse extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('AuthResponse', createEmptyInstance: create)
+class Auth_Response extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Auth.Response', createEmptyInstance: create)
     ..aOS(1, 'token')
     ..aOM<$0.Error>(2, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
   ;
 
-  AuthResponse._() : super();
-  factory AuthResponse() => create();
-  factory AuthResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory AuthResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  AuthResponse clone() => AuthResponse()..mergeFromMessage(this);
-  AuthResponse copyWith(void Function(AuthResponse) updates) => super.copyWith((message) => updates(message as AuthResponse));
+  Auth_Response._() : super();
+  factory Auth_Response() => create();
+  factory Auth_Response.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Auth_Response.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  Auth_Response clone() => Auth_Response()..mergeFromMessage(this);
+  Auth_Response copyWith(void Function(Auth_Response) updates) => super.copyWith((message) => updates(message as Auth_Response));
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static AuthResponse create() => AuthResponse._();
-  AuthResponse createEmptyInstance() => create();
-  static $pb.PbList<AuthResponse> createRepeated() => $pb.PbList<AuthResponse>();
+  static Auth_Response create() => Auth_Response._();
+  Auth_Response createEmptyInstance() => create();
+  static $pb.PbList<Auth_Response> createRepeated() => $pb.PbList<Auth_Response>();
   @$core.pragma('dart2js:noInline')
-  static AuthResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AuthResponse>(create);
-  static AuthResponse _defaultInstance;
+  static Auth_Response getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Auth_Response>(create);
+  static Auth_Response _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get token => $_getSZ(0);
@@ -113,5 +113,26 @@ class AuthResponse extends $pb.GeneratedMessage {
   void clearErr() => clearField(2);
   @$pb.TagNumber(2)
   $0.Error ensureErr() => $_ensure(1);
+}
+
+class Auth extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Auth', createEmptyInstance: create)
+    ..hasRequiredFields = false
+  ;
+
+  Auth._() : super();
+  factory Auth() => create();
+  factory Auth.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Auth.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  Auth clone() => Auth()..mergeFromMessage(this);
+  Auth copyWith(void Function(Auth) updates) => super.copyWith((message) => updates(message as Auth));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Auth create() => Auth._();
+  Auth createEmptyInstance() => create();
+  static $pb.PbList<Auth> createRepeated() => $pb.PbList<Auth>();
+  @$core.pragma('dart2js:noInline')
+  static Auth getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Auth>(create);
+  static Auth _defaultInstance;
 }
 

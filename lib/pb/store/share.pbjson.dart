@@ -11,17 +11,43 @@ const Share$json = const {
     const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
     const {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
   ],
+  '3': const [Share_Get$json, Share_Add$json, Share_Edit$json],
 };
 
-const NewShareRequest$json = const {
-  '1': 'NewShareRequest',
+const Share_Get$json = const {
+  '1': 'Get',
+  '3': const [Share_Get_Request$json, Share_Get_Response$json],
+};
+
+const Share_Get_Request$json = const {
+  '1': 'Request',
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+  ],
+};
+
+const Share_Get_Response$json = const {
+  '1': 'Response',
+  '2': const [
+    const {'1': 'version', '3': 1, '4': 1, '5': 9, '10': 'version'},
+    const {'1': 'share', '3': 2, '4': 1, '5': 11, '6': '.Share', '10': 'share'},
+  ],
+};
+
+const Share_Add$json = const {
+  '1': 'Add',
+  '3': const [Share_Add_Request$json, Share_Add_Response$json],
+};
+
+const Share_Add_Request$json = const {
+  '1': 'Request',
   '2': const [
     const {'1': 'share', '3': 1, '4': 1, '5': 11, '6': '.Share', '10': 'share'},
   ],
 };
 
-const NewShareResponse$json = const {
-  '1': 'NewShareResponse',
+const Share_Add_Response$json = const {
+  '1': 'Response',
   '2': const [
     const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
     const {'1': 'version', '3': 2, '4': 1, '5': 9, '10': 'version'},
@@ -29,8 +55,13 @@ const NewShareResponse$json = const {
   ],
 };
 
-const EditShareRequest$json = const {
-  '1': 'EditShareRequest',
+const Share_Edit$json = const {
+  '1': 'Edit',
+  '3': const [Share_Edit_Request$json, Share_Edit_Response$json],
+};
+
+const Share_Edit_Request$json = const {
+  '1': 'Request',
   '2': const [
     const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
     const {'1': 'version', '3': 2, '4': 1, '5': 9, '10': 'version'},
@@ -38,26 +69,11 @@ const EditShareRequest$json = const {
   ],
 };
 
-const EditShareResponse$json = const {
-  '1': 'EditShareResponse',
+const Share_Edit_Response$json = const {
+  '1': 'Response',
   '2': const [
     const {'1': 'version', '3': 1, '4': 1, '5': 9, '10': 'version'},
     const {'1': 'err', '3': 2, '4': 1, '5': 11, '6': '.Error', '10': 'err'},
-  ],
-};
-
-const GetShareRequest$json = const {
-  '1': 'GetShareRequest',
-  '2': const [
-    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
-  ],
-};
-
-const GetShareResponse$json = const {
-  '1': 'GetShareResponse',
-  '2': const [
-    const {'1': 'version', '3': 1, '4': 1, '5': 9, '10': 'version'},
-    const {'1': 'share', '3': 2, '4': 1, '5': 11, '6': '.Share', '10': 'share'},
   ],
 };
 

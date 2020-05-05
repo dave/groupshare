@@ -15,7 +15,7 @@ export 'error.pbenum.dart';
 
 class Error extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Error', createEmptyInstance: create)
-    ..e<Error_Types>(1, 'type', $pb.PbFieldType.OE, defaultOrMaker: Error_Types.ERROR, valueOf: Error_Types.valueOf, enumValues: Error_Types.values)
+    ..e<Error_Type>(1, 'type', $pb.PbFieldType.OE, defaultOrMaker: Error_Type.ERROR, valueOf: Error_Type.valueOf, enumValues: Error_Type.values)
     ..aOS(2, 'message')
     ..hasRequiredFields = false
   ;
@@ -36,9 +36,9 @@ class Error extends $pb.GeneratedMessage {
   static Error _defaultInstance;
 
   @$pb.TagNumber(1)
-  Error_Types get type => $_getN(0);
+  Error_Type get type => $_getN(0);
   @$pb.TagNumber(1)
-  set type(Error_Types v) { setField(1, v); }
+  set type(Error_Type v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasType() => $_has(0);
   @$pb.TagNumber(1)

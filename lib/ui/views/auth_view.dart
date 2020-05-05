@@ -64,11 +64,20 @@ class _AuthFormState extends State<AuthForm> {
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text(ex.message),
                 ));
-              } catch (ex) {
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text("Error"),
-                ));
+//              } catch (ex) {
+//                Scaffold.of(context).showSnackBar(SnackBar(
+//                  content: Text("Error"),
+//                ));
               }
+            }),
+          ),
+          RaisedButton(
+            child: Text("Log out"),
+            onPressed: (() async {
+              final model = locator<AuthModel>();
+              await model.logoff();
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/login', (_) => false);
             }),
           ),
         ],

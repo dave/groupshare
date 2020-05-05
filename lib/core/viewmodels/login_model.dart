@@ -12,12 +12,12 @@ class LoginModel extends BaseModel {
     final api = locator<Api>();
     final prefs = locator<Prefs>();
 
-    final req = LoginRequest.create()
+    final req = Login_Request.create()
       ..device = device.id
       ..email = email;
 
     final resp =
-        await api.send<LoginRequest, LoginResponse>(req, LoginResponse());
+        await api.send<Login_Request, Login_Response>(req, Login_Response());
     await prefs.setEmail(email);
     await prefs.setTime(resp.time);
     await prefs.removeToken();

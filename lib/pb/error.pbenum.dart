@@ -9,20 +9,20 @@
 import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-class Error_Types extends $pb.ProtobufEnum {
-  static const Error_Types ERROR = Error_Types._(0, 'ERROR');
-  static const Error_Types AUTH_EXPIRED = Error_Types._(1, 'AUTH_EXPIRED');
-  static const Error_Types AUTH_ERROR = Error_Types._(2, 'AUTH_ERROR');
+class Error_Type extends $pb.ProtobufEnum {
+  static const Error_Type ERROR = Error_Type._(0, 'ERROR');
+  static const Error_Type AUTH_EXPIRED = Error_Type._(1, 'AUTH_EXPIRED');
+  static const Error_Type AUTH_ERROR = Error_Type._(2, 'AUTH_ERROR');
 
-  static const $core.List<Error_Types> values = <Error_Types> [
+  static const $core.List<Error_Type> values = <Error_Type> [
     ERROR,
     AUTH_EXPIRED,
     AUTH_ERROR,
   ];
 
-  static final $core.Map<$core.int, Error_Types> _byValue = $pb.ProtobufEnum.initByValue(values);
-  static Error_Types valueOf($core.int value) => _byValue[value];
+  static final $core.Map<$core.int, Error_Type> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static Error_Type valueOf($core.int value) => _byValue[value];
 
-  const Error_Types._($core.int v, $core.String n) : super(v, n);
+  const Error_Type._($core.int v, $core.String n) : super(v, n);
 }
 

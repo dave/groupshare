@@ -12,13 +12,19 @@ class AuthModel extends BaseModel {
     final prefs = locator<Prefs>();
     final api = locator<Api>();
 
-    final req = AuthRequest.create()
+    final req = Auth_Request.create()
       ..email = prefs.email
       ..device = device.id
       ..time = prefs.time
       ..code = code;
 
-    final resp = await api.send<AuthRequest, AuthResponse>(req, AuthResponse());
+    final resp =
+        await api.send<Auth_Request, Auth_Response>(req, Auth_Response());
     await prefs.setToken(resp.token);
+  }
+
+  logoff() async {
+    final prefs = locator<Prefs>();
+    await prefs.clear();
   }
 }
