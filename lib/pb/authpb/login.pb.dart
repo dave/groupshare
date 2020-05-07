@@ -1,6 +1,6 @@
 ///
 //  Generated code. Do not modify.
-//  source: auth/login.proto
+//  source: authpb/login.proto
 //
 // @dart = 2.3
 // ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
@@ -12,7 +12,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import '../error.pb.dart' as $0;
 
 class Login_Request extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Login.Request', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Login.Request', package: const $pb.PackageName('authpb'), createEmptyInstance: create)
     ..aOS(1, 'device')
     ..aOS(2, 'email')
     ..hasRequiredFields = false
@@ -53,7 +53,7 @@ class Login_Request extends $pb.GeneratedMessage {
 }
 
 class Login_Response extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Login.Response', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Login.Response', package: const $pb.PackageName('authpb'), createEmptyInstance: create)
     ..aOS(1, 'time')
     ..aOM<$0.Error>(2, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
@@ -96,7 +96,7 @@ class Login_Response extends $pb.GeneratedMessage {
 }
 
 class Login extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Login', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Login', package: const $pb.PackageName('authpb'), createEmptyInstance: create)
     ..hasRequiredFields = false
   ;
 

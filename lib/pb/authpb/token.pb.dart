@@ -1,6 +1,6 @@
 ///
 //  Generated code. Do not modify.
-//  source: auth/token.proto
+//  source: authpb/token.proto
 //
 // @dart = 2.3
 // ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
@@ -12,7 +12,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import '../error.pb.dart' as $0;
 
 class Token_Request extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Token.Request', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Token.Request', package: const $pb.PackageName('authpb'), createEmptyInstance: create)
     ..aOS(1, 'device')
     ..aOS(2, 'email')
     ..aOS(3, 'time')
@@ -73,7 +73,7 @@ class Token_Request extends $pb.GeneratedMessage {
 }
 
 class Token_Response extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Token.Response', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Token.Response', package: const $pb.PackageName('authpb'), createEmptyInstance: create)
     ..aOB(1, 'ok')
     ..aOM<$0.Error>(2, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
@@ -116,7 +116,7 @@ class Token_Response extends $pb.GeneratedMessage {
 }
 
 class Token extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Token', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Token', package: const $pb.PackageName('authpb'), createEmptyInstance: create)
     ..hasRequiredFields = false
   ;
 

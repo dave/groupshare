@@ -1,6 +1,6 @@
 ///
 //  Generated code. Do not modify.
-//  source: auth/token.proto
+//  source: authpb/token.proto
 //
 // @dart = 2.3
 // ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
@@ -24,7 +24,7 @@ const Token_Response$json = const {
   '1': 'Response',
   '2': const [
     const {'1': 'ok', '3': 1, '4': 1, '5': 8, '10': 'ok'},
-    const {'1': 'err', '3': 2, '4': 1, '5': 11, '6': '.Error', '10': 'err'},
+    const {'1': 'err', '3': 2, '4': 1, '5': 11, '6': '.pb.Error', '10': 'err'},
   ],
 };
 

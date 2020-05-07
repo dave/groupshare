@@ -14,7 +14,7 @@ import 'error.pbenum.dart';
 export 'error.pbenum.dart';
 
 class Error extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Error', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Error', package: const $pb.PackageName('pb'), createEmptyInstance: create)
     ..e<Error_Type>(1, 'type', $pb.PbFieldType.OE, defaultOrMaker: Error_Type.ERROR, valueOf: Error_Type.valueOf, enumValues: Error_Type.values)
     ..aOS(2, 'message')
     ..hasRequiredFields = false

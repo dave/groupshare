@@ -1,6 +1,6 @@
 ///
 //  Generated code. Do not modify.
-//  source: store/share.proto
+//  source: storepb/share.proto
 //
 // @dart = 2.3
 // ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
@@ -9,11 +9,12 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'foopb/foo.pb.dart' as $2;
 import '../error.pb.dart' as $0;
-import 'change.pb.dart' as $2;
+import '../changepb/change.pb.dart' as $3;
 
 class Share_Get_Request extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Get.Request', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Get.Request', package: const $pb.PackageName('storepb'), createEmptyInstance: create)
     ..aOS(1, 'id')
     ..hasRequiredFields = false
   ;
@@ -44,7 +45,7 @@ class Share_Get_Request extends $pb.GeneratedMessage {
 }
 
 class Share_Get_Response extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Get.Response', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Get.Response', package: const $pb.PackageName('storepb'), createEmptyInstance: create)
     ..aOS(1, 'version')
     ..aOM<Share>(2, 'share', subBuilder: Share.create)
     ..hasRequiredFields = false
@@ -87,7 +88,7 @@ class Share_Get_Response extends $pb.GeneratedMessage {
 }
 
 class Share_Get extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Get', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Get', package: const $pb.PackageName('storepb'), createEmptyInstance: create)
     ..hasRequiredFields = false
   ;
 
@@ -108,7 +109,7 @@ class Share_Get extends $pb.GeneratedMessage {
 }
 
 class Share_Add_Request extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Add.Request', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Add.Request', package: const $pb.PackageName('storepb'), createEmptyInstance: create)
     ..aOM<Share>(1, 'share', subBuilder: Share.create)
     ..hasRequiredFields = false
   ;
@@ -141,7 +142,7 @@ class Share_Add_Request extends $pb.GeneratedMessage {
 }
 
 class Share_Add_Response extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Add.Response', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Add.Response', package: const $pb.PackageName('storepb'), createEmptyInstance: create)
     ..aOS(1, 'id')
     ..aOS(2, 'version')
     ..aOM<$0.Error>(3, 'err', subBuilder: $0.Error.create)
@@ -194,7 +195,7 @@ class Share_Add_Response extends $pb.GeneratedMessage {
 }
 
 class Share_Add extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Add', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Add', package: const $pb.PackageName('storepb'), createEmptyInstance: create)
     ..hasRequiredFields = false
   ;
 
@@ -215,10 +216,10 @@ class Share_Add extends $pb.GeneratedMessage {
 }
 
 class Share_Edit_Request extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Edit.Request', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Edit.Request', package: const $pb.PackageName('storepb'), createEmptyInstance: create)
     ..aOS(1, 'id')
     ..aOS(2, 'version')
-    ..pc<$2.Change>(3, 'changes', $pb.PbFieldType.PM, subBuilder: $2.Change.create)
+    ..pc<$3.Change>(3, 'changes', $pb.PbFieldType.PM, subBuilder: $3.Change.create)
     ..hasRequiredFields = false
   ;
 
@@ -256,11 +257,11 @@ class Share_Edit_Request extends $pb.GeneratedMessage {
   void clearVersion() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.List<$2.Change> get changes => $_getList(2);
+  $core.List<$3.Change> get changes => $_getList(2);
 }
 
 class Share_Edit_Response extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Edit.Response', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Edit.Response', package: const $pb.PackageName('storepb'), createEmptyInstance: create)
     ..aOS(1, 'version')
     ..aOM<$0.Error>(2, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
@@ -303,7 +304,7 @@ class Share_Edit_Response extends $pb.GeneratedMessage {
 }
 
 class Share_Edit extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Edit', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Edit', package: const $pb.PackageName('storepb'), createEmptyInstance: create)
     ..hasRequiredFields = false
   ;
 
@@ -324,9 +325,10 @@ class Share_Edit extends $pb.GeneratedMessage {
 }
 
 class Share extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share', package: const $pb.PackageName('storepb'), createEmptyInstance: create)
     ..aOS(1, 'id')
     ..aOS(2, 'name')
+    ..aOM<$2.Foo>(3, 'foo', subBuilder: $2.Foo.create)
     ..hasRequiredFields = false
   ;
 
@@ -362,5 +364,16 @@ class Share extends $pb.GeneratedMessage {
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
   void clearName() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $2.Foo get foo => $_getN(2);
+  @$pb.TagNumber(3)
+  set foo($2.Foo v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasFoo() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearFoo() => clearField(3);
+  @$pb.TagNumber(3)
+  $2.Foo ensureFoo() => $_ensure(2);
 }
 
