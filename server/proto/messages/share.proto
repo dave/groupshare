@@ -1,0 +1,43 @@
+syntax = "proto3";
+package messages;
+
+import "messages/error.proto";
+import "protod/proto/delta.proto";
+
+option go_package = "github.com/dave/groupshare/server/pb/messages;messages";
+
+message Share {
+  message Get {
+    message Request {
+      string id = 1;
+    }
+    message Response {
+      string version = 1;
+      Share share = 2;
+    }
+  }
+
+  message Add {
+    message Request {
+      Share share = 1;
+    }
+    message Response {
+      string id = 1;
+      string version = 2;
+      Error err = 3;
+    }
+  }
+
+  message Edit {
+    message Request {
+      string id = 1;
+      string version = 2;
+      repeated delta.Delta deltas = 3;
+    }
+    message Response {
+      string version = 1;
+      Error err = 2;
+    }
+  }
+
+}
