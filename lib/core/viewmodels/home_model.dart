@@ -4,7 +4,7 @@ import 'package:groupshare/core/services/device.dart';
 import 'package:groupshare/core/services/prefs.dart';
 import 'package:groupshare/core/viewmodels/base_model.dart';
 import 'package:groupshare/locator.dart';
-import 'package:groupshare/pb/authpb/token.pb.dart';
+import 'package:groupshare/pb/messages/token.pb.dart';
 
 enum Status { Empty, Auth, Done, Error }
 

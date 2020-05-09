@@ -1,5 +1,5 @@
 import 'package:groupshare/core/excpetions/exceptions.dart';
-import 'package:groupshare/pb/error.pb.dart';
+import 'package:groupshare/pb/messages/error.pb.dart';
 import 'package:http/http.dart';
 import 'package:protobuf/protobuf.dart';
 
