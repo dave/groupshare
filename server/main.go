@@ -1,18 +1,37 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 
+	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api/auth"
+	"github.com/dave/groupshare/server/api/store"
+	"google.golang.org/appengine"
 	"google.golang.org/protobuf/proto"
 )
 
+const PROJECT_ID = "groupshare-testing"
+
 func main() {
-	http.HandleFunc("/", indexHandler)
+
+	var app App
+
+	{
+		firestoreClient, err := firestore.NewClient(context.Background(), PROJECT_ID)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer firestoreClient.Close()
+
+		app.firestoreClient = firestoreClient
+	}
+
+	http.HandleFunc("/", app.indexHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -26,7 +45,14 @@ func main() {
 	}
 }
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
+type App struct {
+	firestoreClient *firestore.Client
+}
+
+func (a *App) indexHandler(w http.ResponseWriter, r *http.Request) {
+
+	ctx := appengine.NewContext(r)
+
 	requestBytes, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -36,11 +62,17 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	var response proto.Message
 	switch r.URL.Path {
 	case "/Login_Request":
-		response = auth.LoginRequest(requestBytes)
+		response = auth.LoginRequest(ctx, requestBytes)
 	case "/Auth_Request":
-		response = auth.AuthRequest(requestBytes)
-	case "/Token_Request":
-		response = auth.TokenRequest(requestBytes)
+		response = auth.AuthRequest(ctx, a.firestoreClient, requestBytes)
+	case "/Token_Validate_Request":
+		response = auth.TokenValidateRequest(ctx, a.firestoreClient, requestBytes)
+	case "/Share_Add_Request":
+		response = store.ShareAddRequest(ctx, a.firestoreClient, requestBytes)
+	case "/Share_Get_Request":
+		response = store.ShareGetRequest(ctx, a.firestoreClient, requestBytes)
+	case "/Share_List_Request":
+		response = store.ShareListRequest(ctx, a.firestoreClient, requestBytes)
 	}
 	if response == nil {
 		http.NotFound(w, r)

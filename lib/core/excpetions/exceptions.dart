@@ -1,4 +1,4 @@
-class UserException {
+class UserException implements Exception {
   String message;
   UserException(this.message);
 }

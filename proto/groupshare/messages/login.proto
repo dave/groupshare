@@ -1,0 +1,17 @@
+syntax = "proto3";
+package messages;
+
+import "groupshare/messages/error.proto";
+
+option go_package = "github.com/dave/groupshare/server/pb/groupshare/messages;messages";
+
+message Login {
+  message Request {
+    string device = 1;
+    string email = 2;
+  }
+  message Response {
+    string time = 1;
+    Error err = 2;
+  }
+}

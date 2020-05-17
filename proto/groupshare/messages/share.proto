@@ -1,0 +1,60 @@
+syntax = "proto3";
+package messages;
+
+import "groupshare/messages/token.proto";
+import "groupshare/messages/error.proto";
+import "groupshare/data/share.proto";
+import "protod/delta.proto";
+
+option go_package = "github.com/dave/groupshare/server/pb/groupshare/messages;messages";
+
+message Share {
+  message List {
+    message Request {
+      Token token = 1;
+    }
+    message Response {
+      repeated string shares = 2;
+      Error err = 3;
+    }
+  }
+
+  message Get {
+    message Request {
+      Token token = 1;
+      string id = 2;
+    }
+    message Response {
+      string version = 1;
+      data.Share share = 2;
+      Error err = 3;
+    }
+  }
+
+  message Add {
+    message Request {
+      Token token = 1;
+      data.Share share = 2;
+    }
+    message Response {
+      string id = 1;
+      string version = 2;
+      Error err = 3;
+    }
+  }
+
+  message Edit {
+    message Request {
+      Token token = 1;
+      string id = 2;
+      string version = 3;
+      repeated delta.Delta deltas = 4;
+    }
+    message Response {
+      string version = 1; // new version
+      repeated delta.Delta deltas = 2; // deltas to get to new version (may be more than in request)
+      Error err = 3;
+    }
+  }
+
+}

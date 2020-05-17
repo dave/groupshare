@@ -1,5 +1,5 @@
 import 'package:groupshare/core/excpetions/exceptions.dart';
-import 'package:groupshare/pb/messages/error.pb.dart';
+import 'package:groupshare/pb/groupshare/messages/error.pb.dart';
 import 'package:http/http.dart';
 import 'package:protobuf/protobuf.dart';
 
@@ -30,9 +30,9 @@ class Api {
     }
     final error = errorValue as Error;
     switch (error.type) {
-      case Error_Type.AUTH_ERROR:
+      case Error_Type.AUTH:
         throw AuthException(error.message);
-      case Error_Type.AUTH_EXPIRED:
+      case Error_Type.EXPIRED:
         throw AuthException(error.message, true);
       default:
         throw UserException(error.message);

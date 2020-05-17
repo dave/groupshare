@@ -1,9 +1,0 @@
-syntax = "proto3";
-package foo;
-
-option go_package = "github.com/dave/groupshare/server/pb/data/foo;foo";
-
-// [proto:data]
-message Foo {
-  string bar = 1;
-}
