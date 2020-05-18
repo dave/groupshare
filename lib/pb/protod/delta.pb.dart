@@ -296,7 +296,7 @@ enum Scalar_V {
   bool_13, 
   string, 
   bytes, 
-  delta, 
+  diff, 
   notSet
 }
 
@@ -317,7 +317,7 @@ class Scalar extends $pb.GeneratedMessage {
     13 : Scalar_V.bool_13,
     14 : Scalar_V.string,
     15 : Scalar_V.bytes,
-    16 : Scalar_V.delta,
+    16 : Scalar_V.diff,
     0 : Scalar_V.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Scalar', package: const $pb.PackageName('delta'), createEmptyInstance: create)
@@ -337,7 +337,7 @@ class Scalar extends $pb.GeneratedMessage {
     ..aOB(13, 'bool')
     ..aOS(14, 'string')
     ..a<$core.List<$core.int>>(15, 'bytes', $pb.PbFieldType.OY)
-    ..aOS(16, 'delta')
+    ..aOS(16, 'diff')
     ..hasRequiredFields = false
   ;
 
@@ -495,12 +495,12 @@ class Scalar extends $pb.GeneratedMessage {
   void clearBytes() => clearField(15);
 
   @$pb.TagNumber(16)
-  $core.String get delta => $_getSZ(15);
+  $core.String get diff => $_getSZ(15);
   @$pb.TagNumber(16)
-  set delta($core.String v) { $_setString(15, v); }
+  set diff($core.String v) { $_setString(15, v); }
   @$pb.TagNumber(16)
-  $core.bool hasDelta() => $_has(15);
+  $core.bool hasDiff() => $_has(15);
   @$pb.TagNumber(16)
-  void clearDelta() => clearField(16);
+  void clearDiff() => clearField(16);
 }
 

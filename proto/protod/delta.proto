@@ -59,6 +59,6 @@ message Scalar {
     bool bool = 13;
     string string = 14;
     bytes bytes = 15;
-    string delta = 16;
+    string diff = 16;
   }
 }
