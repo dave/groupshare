@@ -18,10 +18,11 @@ const Delta$json = const {
 const Delta_Type$json = const {
   '1': 'Type',
   '2': const [
-    const {'1': 'EditValue', '2': 0},
-    const {'1': 'DeleteFromList', '2': 1},
-    const {'1': 'AddToList', '2': 2},
-    const {'1': 'MoveInList', '2': 3},
+    const {'1': 'Edit', '2': 0},
+    const {'1': 'Append', '2': 1},
+    const {'1': 'Insert', '2': 2},
+    const {'1': 'Move', '2': 3},
+    const {'1': 'Delete', '2': 4},
   ],
 };
 
@@ -45,7 +46,7 @@ const Key$json = const {
     const {'1': 'int64', '3': 3, '4': 1, '5': 3, '9': 0, '10': 'int64'},
     const {'1': 'uint32', '3': 4, '4': 1, '5': 13, '9': 0, '10': 'uint32'},
     const {'1': 'uint64', '3': 5, '4': 1, '5': 4, '9': 0, '10': 'uint64'},
-    const {'1': 'str', '3': 6, '4': 1, '5': 9, '9': 0, '10': 'str'},
+    const {'1': 'string', '3': 6, '4': 1, '5': 9, '9': 0, '10': 'string'},
   ],
   '8': const [
     const {'1': 'v'},
@@ -76,7 +77,7 @@ const Scalar$json = const {
     const {'1': 'sfixed32', '3': 11, '4': 1, '5': 15, '9': 0, '10': 'sfixed32'},
     const {'1': 'sfixed64', '3': 12, '4': 1, '5': 16, '9': 0, '10': 'sfixed64'},
     const {'1': 'bool', '3': 13, '4': 1, '5': 8, '9': 0, '10': 'bool'},
-    const {'1': 'str', '3': 14, '4': 1, '5': 9, '9': 0, '10': 'str'},
+    const {'1': 'string', '3': 14, '4': 1, '5': 9, '9': 0, '10': 'string'},
     const {'1': 'bytes', '3': 15, '4': 1, '5': 12, '9': 0, '10': 'bytes'},
     const {'1': 'delta', '3': 16, '4': 1, '5': 9, '9': 0, '10': 'delta'},
   ],

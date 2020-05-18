@@ -10,16 +10,18 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class Delta_Type extends $pb.ProtobufEnum {
-  static const Delta_Type EditValue = Delta_Type._(0, 'EditValue');
-  static const Delta_Type DeleteFromList = Delta_Type._(1, 'DeleteFromList');
-  static const Delta_Type AddToList = Delta_Type._(2, 'AddToList');
-  static const Delta_Type MoveInList = Delta_Type._(3, 'MoveInList');
+  static const Delta_Type Edit = Delta_Type._(0, 'Edit');
+  static const Delta_Type Append = Delta_Type._(1, 'Append');
+  static const Delta_Type Insert = Delta_Type._(2, 'Insert');
+  static const Delta_Type Move = Delta_Type._(3, 'Move');
+  static const Delta_Type Delete = Delta_Type._(4, 'Delete');
 
   static const $core.List<Delta_Type> values = <Delta_Type> [
-    EditValue,
-    DeleteFromList,
-    AddToList,
-    MoveInList,
+    Edit,
+    Append,
+    Insert,
+    Move,
+    Delete,
   ];
 
   static final $core.Map<$core.int, Delta_Type> _byValue = $pb.ProtobufEnum.initByValue(values);

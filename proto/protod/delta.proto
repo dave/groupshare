@@ -7,10 +7,11 @@ option go_package = "github.com/dave/protod/delta;delta";
 
 message Delta {
   enum Type {
-    EditValue = 0;
-    DeleteFromList = 1;
-    AddToList = 2;
-    MoveInList = 3;
+    Edit = 0;   // edit the value or create a new value when the value is null
+    Append = 1; // append to the end of a list
+    Insert = 2; // insert at a specific location in a list or map
+    Move = 3;   // move in a list or change the key in a map
+    Delete = 4; // delete from a list or map, or make the value null
   }
   Type type = 1;
   repeated Locator location = 2;
@@ -32,7 +33,7 @@ message Key {
       int64 int64 = 3;
       uint32 uint32 = 4;
       uint64 uint64 = 5;
-      string str = 6;
+      string string = 6;
   }
 }
 
@@ -56,7 +57,7 @@ message Scalar {
     sfixed32 sfixed32 = 11;
     sfixed64 sfixed64 = 12;
     bool bool = 13;
-    string str = 14;
+    string string = 14;
     bytes bytes = 15;
     string delta = 16;
   }

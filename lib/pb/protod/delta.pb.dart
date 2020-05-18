@@ -18,7 +18,7 @@ export 'delta.pbenum.dart';
 
 class Delta extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Delta', package: const $pb.PackageName('delta'), createEmptyInstance: create)
-    ..e<Delta_Type>(1, 'type', $pb.PbFieldType.OE, defaultOrMaker: Delta_Type.EditValue, valueOf: Delta_Type.valueOf, enumValues: Delta_Type.values)
+    ..e<Delta_Type>(1, 'type', $pb.PbFieldType.OE, defaultOrMaker: Delta_Type.Edit, valueOf: Delta_Type.valueOf, enumValues: Delta_Type.values)
     ..pc<Locator>(2, 'location', $pb.PbFieldType.PM, subBuilder: Locator.create)
     ..aOM<$1.Any>(3, 'value', subBuilder: $1.Any.create)
     ..hasRequiredFields = false
@@ -141,7 +141,7 @@ enum Key_V {
   int64, 
   uint32, 
   uint64, 
-  str, 
+  string, 
   notSet
 }
 
@@ -152,7 +152,7 @@ class Key extends $pb.GeneratedMessage {
     3 : Key_V.int64,
     4 : Key_V.uint32,
     5 : Key_V.uint64,
-    6 : Key_V.str,
+    6 : Key_V.string,
     0 : Key_V.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Key', package: const $pb.PackageName('delta'), createEmptyInstance: create)
@@ -162,7 +162,7 @@ class Key extends $pb.GeneratedMessage {
     ..aInt64(3, 'int64')
     ..a<$core.int>(4, 'uint32', $pb.PbFieldType.OU3)
     ..a<$fixnum.Int64>(5, 'uint64', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
-    ..aOS(6, 'str')
+    ..aOS(6, 'string')
     ..hasRequiredFields = false
   ;
 
@@ -230,13 +230,13 @@ class Key extends $pb.GeneratedMessage {
   void clearUint64() => clearField(5);
 
   @$pb.TagNumber(6)
-  $core.String get str => $_getSZ(5);
+  $core.String get string => $_getSZ(5);
   @$pb.TagNumber(6)
-  set str($core.String v) { $_setString(5, v); }
+  set string($core.String v) { $_setString(5, v); }
   @$pb.TagNumber(6)
-  $core.bool hasStr() => $_has(5);
+  $core.bool hasString() => $_has(5);
   @$pb.TagNumber(6)
-  void clearStr() => clearField(6);
+  void clearString() => clearField(6);
 }
 
 class Field extends $pb.GeneratedMessage {
@@ -294,7 +294,7 @@ enum Scalar_V {
   sfixed32, 
   sfixed64, 
   bool_13, 
-  str, 
+  string, 
   bytes, 
   delta, 
   notSet
@@ -315,7 +315,7 @@ class Scalar extends $pb.GeneratedMessage {
     11 : Scalar_V.sfixed32,
     12 : Scalar_V.sfixed64,
     13 : Scalar_V.bool_13,
-    14 : Scalar_V.str,
+    14 : Scalar_V.string,
     15 : Scalar_V.bytes,
     16 : Scalar_V.delta,
     0 : Scalar_V.notSet
@@ -335,7 +335,7 @@ class Scalar extends $pb.GeneratedMessage {
     ..a<$core.int>(11, 'sfixed32', $pb.PbFieldType.OSF3)
     ..a<$fixnum.Int64>(12, 'sfixed64', $pb.PbFieldType.OSF6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOB(13, 'bool')
-    ..aOS(14, 'str')
+    ..aOS(14, 'string')
     ..a<$core.List<$core.int>>(15, 'bytes', $pb.PbFieldType.OY)
     ..aOS(16, 'delta')
     ..hasRequiredFields = false
@@ -477,13 +477,13 @@ class Scalar extends $pb.GeneratedMessage {
   void clearBool_13() => clearField(13);
 
   @$pb.TagNumber(14)
-  $core.String get str => $_getSZ(13);
+  $core.String get string => $_getSZ(13);
   @$pb.TagNumber(14)
-  set str($core.String v) { $_setString(13, v); }
+  set string($core.String v) { $_setString(13, v); }
   @$pb.TagNumber(14)
-  $core.bool hasStr() => $_has(13);
+  $core.bool hasString() => $_has(13);
   @$pb.TagNumber(14)
-  void clearStr() => clearField(14);
+  void clearString() => clearField(14);
 
   @$pb.TagNumber(15)
   $core.List<$core.int> get bytes => $_getN(14);
