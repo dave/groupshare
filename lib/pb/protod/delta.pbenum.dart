@@ -9,14 +9,14 @@
 import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-class Delta_Type extends $pb.ProtobufEnum {
-  static const Delta_Type Edit = Delta_Type._(0, 'Edit');
-  static const Delta_Type Append = Delta_Type._(1, 'Append');
-  static const Delta_Type Insert = Delta_Type._(2, 'Insert');
-  static const Delta_Type Move = Delta_Type._(3, 'Move');
-  static const Delta_Type Delete = Delta_Type._(4, 'Delete');
+class Op_Type extends $pb.ProtobufEnum {
+  static const Op_Type Edit = Op_Type._(0, 'Edit');
+  static const Op_Type Append = Op_Type._(1, 'Append');
+  static const Op_Type Insert = Op_Type._(2, 'Insert');
+  static const Op_Type Move = Op_Type._(3, 'Move');
+  static const Op_Type Delete = Op_Type._(4, 'Delete');
 
-  static const $core.List<Delta_Type> values = <Delta_Type> [
+  static const $core.List<Op_Type> values = <Op_Type> [
     Edit,
     Append,
     Insert,
@@ -24,9 +24,9 @@ class Delta_Type extends $pb.ProtobufEnum {
     Delete,
   ];
 
-  static final $core.Map<$core.int, Delta_Type> _byValue = $pb.ProtobufEnum.initByValue(values);
-  static Delta_Type valueOf($core.int value) => _byValue[value];
+  static final $core.Map<$core.int, Op_Type> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static Op_Type valueOf($core.int value) => _byValue[value];
 
-  const Delta_Type._($core.int v, $core.String n) : super(v, n);
+  const Op_Type._($core.int v, $core.String n) : super(v, n);
 }
 

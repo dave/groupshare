@@ -16,33 +16,33 @@ import 'delta.pbenum.dart';
 
 export 'delta.pbenum.dart';
 
-class Delta extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Delta', package: const $pb.PackageName('delta'), createEmptyInstance: create)
-    ..e<Delta_Type>(1, 'type', $pb.PbFieldType.OE, defaultOrMaker: Delta_Type.Edit, valueOf: Delta_Type.valueOf, enumValues: Delta_Type.values)
+class Op extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Op', package: const $pb.PackageName('delta'), createEmptyInstance: create)
+    ..e<Op_Type>(1, 'type', $pb.PbFieldType.OE, defaultOrMaker: Op_Type.Edit, valueOf: Op_Type.valueOf, enumValues: Op_Type.values)
     ..pc<Locator>(2, 'location', $pb.PbFieldType.PM, subBuilder: Locator.create)
     ..aOM<$1.Any>(3, 'value', subBuilder: $1.Any.create)
     ..hasRequiredFields = false
   ;
 
-  Delta._() : super();
-  factory Delta() => create();
-  factory Delta.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Delta.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  Delta clone() => Delta()..mergeFromMessage(this);
-  Delta copyWith(void Function(Delta) updates) => super.copyWith((message) => updates(message as Delta));
+  Op._() : super();
+  factory Op() => create();
+  factory Op.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Op.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  Op clone() => Op()..mergeFromMessage(this);
+  Op copyWith(void Function(Op) updates) => super.copyWith((message) => updates(message as Op));
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static Delta create() => Delta._();
-  Delta createEmptyInstance() => create();
-  static $pb.PbList<Delta> createRepeated() => $pb.PbList<Delta>();
+  static Op create() => Op._();
+  Op createEmptyInstance() => create();
+  static $pb.PbList<Op> createRepeated() => $pb.PbList<Op>();
   @$core.pragma('dart2js:noInline')
-  static Delta getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Delta>(create);
-  static Delta _defaultInstance;
+  static Op getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Op>(create);
+  static Op _defaultInstance;
 
   @$pb.TagNumber(1)
-  Delta_Type get type => $_getN(0);
+  Op_Type get type => $_getN(0);
   @$pb.TagNumber(1)
-  set type(Delta_Type v) { setField(1, v); }
+  set type(Op_Type v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasType() => $_has(0);
   @$pb.TagNumber(1)

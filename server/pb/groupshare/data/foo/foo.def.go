@@ -131,6 +131,6 @@ func FooDef() Foo_type {
 func (b Foo_type) Bar() delta.String_scalar {
 	return delta.NewString_scalar(delta.CopyAndAppend(b.location, &delta.Locator{V: &delta.Locator_Field{Field: &delta.Field{
 		Name:   "bar",
-		Number: int32(1),
+		Number: 1,
 	}}}))
 }

@@ -445,7 +445,7 @@ class Share_Edit_Request extends $pb.GeneratedMessage {
     ..aOM<$5.Token>(1, 'token', subBuilder: $5.Token.create)
     ..aOS(2, 'id')
     ..aOS(3, 'version')
-    ..pc<$7.Delta>(4, 'deltas', $pb.PbFieldType.PM, subBuilder: $7.Delta.create)
+    ..pc<$7.Op>(4, 'ops', $pb.PbFieldType.PM, subBuilder: $7.Op.create)
     ..hasRequiredFields = false;
 
   Share_Edit_Request._() : super();
@@ -509,14 +509,14 @@ class Share_Edit_Request extends $pb.GeneratedMessage {
   void clearVersion() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.List<$7.Delta> get deltas => $_getList(3);
+  $core.List<$7.Op> get ops => $_getList(3);
 }
 
 class Share_Edit_Response extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Edit.Response',
       package: const $pb.PackageName('messages'), createEmptyInstance: create)
     ..aOS(1, 'version')
-    ..pc<$7.Delta>(2, 'deltas', $pb.PbFieldType.PM, subBuilder: $7.Delta.create)
+    ..pc<$7.Op>(2, 'ops', $pb.PbFieldType.PM, subBuilder: $7.Op.create)
     ..aOM<$3.Error>(3, 'err', subBuilder: $3.Error.create)
     ..hasRequiredFields = false;
 
@@ -555,7 +555,7 @@ class Share_Edit_Response extends $pb.GeneratedMessage {
   void clearVersion() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.List<$7.Delta> get deltas => $_getList(1);
+  $core.List<$7.Op> get ops => $_getList(1);
 
   @$pb.TagNumber(3)
   $3.Error get err => $_getN(2);

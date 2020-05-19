@@ -48,11 +48,11 @@ message Share {
       Token token = 1;
       string id = 2;
       string version = 3;
-      repeated delta.Delta deltas = 4;
+      repeated delta.Op ops = 4;
     }
     message Response {
       string version = 1; // new version
-      repeated delta.Delta deltas = 2; // deltas to get to new version (may be more than in request)
+      repeated delta.Op ops = 2; // deltas to get to new version (may be more than in request)
       Error err = 3;
     }
   }

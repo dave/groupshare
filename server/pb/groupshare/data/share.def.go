@@ -134,18 +134,18 @@ func ShareDef() Share_type {
 func (b Share_type) Id() delta.String_scalar {
 	return delta.NewString_scalar(delta.CopyAndAppend(b.location, &delta.Locator{V: &delta.Locator_Field{Field: &delta.Field{
 		Name:   "id",
-		Number: int32(1),
+		Number: 1,
 	}}}))
 }
 func (b Share_type) Name() delta.String_scalar {
 	return delta.NewString_scalar(delta.CopyAndAppend(b.location, &delta.Locator{V: &delta.Locator_Field{Field: &delta.Field{
 		Name:   "name",
-		Number: int32(2),
+		Number: 2,
 	}}}))
 }
 func (b Share_type) Foo() foo.Foo_type {
 	return foo.NewFoo_type(delta.CopyAndAppend(b.location, &delta.Locator{V: &delta.Locator_Field{Field: &delta.Field{
 		Name:   "foo",
-		Number: int32(3),
+		Number: 3,
 	}}}))
 }
