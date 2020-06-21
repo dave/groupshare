@@ -9,14 +9,14 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'token.pb.dart' as $5;
-import 'error.pb.dart' as $3;
-import '../data/share.pb.dart' as $6;
-import '../../protod/delta.pb.dart' as $7;
+import 'token.pb.dart' as $2;
+import 'error.pb.dart' as $0;
+import '../data/share.pb.dart' as $3;
+import 'package:protod/delta.pb.dart' as $4;
 
 class Share_List_Request extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.List.Request', package: const $pb.PackageName('messages'), createEmptyInstance: create)
-    ..aOM<$5.Token>(1, 'token', subBuilder: $5.Token.create)
+    ..aOM<$2.Token>(1, 'token', subBuilder: $2.Token.create)
     ..hasRequiredFields = false
   ;
 
@@ -36,21 +36,21 @@ class Share_List_Request extends $pb.GeneratedMessage {
   static Share_List_Request _defaultInstance;
 
   @$pb.TagNumber(1)
-  $5.Token get token => $_getN(0);
+  $2.Token get token => $_getN(0);
   @$pb.TagNumber(1)
-  set token($5.Token v) { setField(1, v); }
+  set token($2.Token v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasToken() => $_has(0);
   @$pb.TagNumber(1)
   void clearToken() => clearField(1);
   @$pb.TagNumber(1)
-  $5.Token ensureToken() => $_ensure(0);
+  $2.Token ensureToken() => $_ensure(0);
 }
 
 class Share_List_Response extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.List.Response', package: const $pb.PackageName('messages'), createEmptyInstance: create)
     ..pPS(2, 'shares')
-    ..aOM<$3.Error>(3, 'err', subBuilder: $3.Error.create)
+    ..aOM<$0.Error>(3, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
   ;
 
@@ -73,15 +73,15 @@ class Share_List_Response extends $pb.GeneratedMessage {
   $core.List<$core.String> get shares => $_getList(0);
 
   @$pb.TagNumber(3)
-  $3.Error get err => $_getN(1);
+  $0.Error get err => $_getN(1);
   @$pb.TagNumber(3)
-  set err($3.Error v) { setField(3, v); }
+  set err($0.Error v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasErr() => $_has(1);
   @$pb.TagNumber(3)
   void clearErr() => clearField(3);
   @$pb.TagNumber(3)
-  $3.Error ensureErr() => $_ensure(1);
+  $0.Error ensureErr() => $_ensure(1);
 }
 
 class Share_List extends $pb.GeneratedMessage {
@@ -107,7 +107,7 @@ class Share_List extends $pb.GeneratedMessage {
 
 class Share_Get_Request extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Get.Request', package: const $pb.PackageName('messages'), createEmptyInstance: create)
-    ..aOM<$5.Token>(1, 'token', subBuilder: $5.Token.create)
+    ..aOM<$2.Token>(1, 'token', subBuilder: $2.Token.create)
     ..aOS(2, 'id')
     ..hasRequiredFields = false
   ;
@@ -128,15 +128,15 @@ class Share_Get_Request extends $pb.GeneratedMessage {
   static Share_Get_Request _defaultInstance;
 
   @$pb.TagNumber(1)
-  $5.Token get token => $_getN(0);
+  $2.Token get token => $_getN(0);
   @$pb.TagNumber(1)
-  set token($5.Token v) { setField(1, v); }
+  set token($2.Token v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasToken() => $_has(0);
   @$pb.TagNumber(1)
   void clearToken() => clearField(1);
   @$pb.TagNumber(1)
-  $5.Token ensureToken() => $_ensure(0);
+  $2.Token ensureToken() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.String get id => $_getSZ(1);
@@ -151,8 +151,8 @@ class Share_Get_Request extends $pb.GeneratedMessage {
 class Share_Get_Response extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Get.Response', package: const $pb.PackageName('messages'), createEmptyInstance: create)
     ..aOS(1, 'version')
-    ..aOM<$6.Share>(2, 'share', subBuilder: $6.Share.create)
-    ..aOM<$3.Error>(3, 'err', subBuilder: $3.Error.create)
+    ..aOM<$3.Share>(2, 'share', subBuilder: $3.Share.create)
+    ..aOM<$0.Error>(3, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
   ;
 
@@ -181,26 +181,26 @@ class Share_Get_Response extends $pb.GeneratedMessage {
   void clearVersion() => clearField(1);
 
   @$pb.TagNumber(2)
-  $6.Share get share => $_getN(1);
+  $3.Share get share => $_getN(1);
   @$pb.TagNumber(2)
-  set share($6.Share v) { setField(2, v); }
+  set share($3.Share v) { setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasShare() => $_has(1);
   @$pb.TagNumber(2)
   void clearShare() => clearField(2);
   @$pb.TagNumber(2)
-  $6.Share ensureShare() => $_ensure(1);
+  $3.Share ensureShare() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $3.Error get err => $_getN(2);
+  $0.Error get err => $_getN(2);
   @$pb.TagNumber(3)
-  set err($3.Error v) { setField(3, v); }
+  set err($0.Error v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasErr() => $_has(2);
   @$pb.TagNumber(3)
   void clearErr() => clearField(3);
   @$pb.TagNumber(3)
-  $3.Error ensureErr() => $_ensure(2);
+  $0.Error ensureErr() => $_ensure(2);
 }
 
 class Share_Get extends $pb.GeneratedMessage {
@@ -226,8 +226,8 @@ class Share_Get extends $pb.GeneratedMessage {
 
 class Share_Add_Request extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Add.Request', package: const $pb.PackageName('messages'), createEmptyInstance: create)
-    ..aOM<$5.Token>(1, 'token', subBuilder: $5.Token.create)
-    ..aOM<$6.Share>(2, 'share', subBuilder: $6.Share.create)
+    ..aOM<$2.Token>(1, 'token', subBuilder: $2.Token.create)
+    ..aOM<$3.Share>(2, 'share', subBuilder: $3.Share.create)
     ..hasRequiredFields = false
   ;
 
@@ -247,33 +247,33 @@ class Share_Add_Request extends $pb.GeneratedMessage {
   static Share_Add_Request _defaultInstance;
 
   @$pb.TagNumber(1)
-  $5.Token get token => $_getN(0);
+  $2.Token get token => $_getN(0);
   @$pb.TagNumber(1)
-  set token($5.Token v) { setField(1, v); }
+  set token($2.Token v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasToken() => $_has(0);
   @$pb.TagNumber(1)
   void clearToken() => clearField(1);
   @$pb.TagNumber(1)
-  $5.Token ensureToken() => $_ensure(0);
+  $2.Token ensureToken() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $6.Share get share => $_getN(1);
+  $3.Share get share => $_getN(1);
   @$pb.TagNumber(2)
-  set share($6.Share v) { setField(2, v); }
+  set share($3.Share v) { setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasShare() => $_has(1);
   @$pb.TagNumber(2)
   void clearShare() => clearField(2);
   @$pb.TagNumber(2)
-  $6.Share ensureShare() => $_ensure(1);
+  $3.Share ensureShare() => $_ensure(1);
 }
 
 class Share_Add_Response extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Add.Response', package: const $pb.PackageName('messages'), createEmptyInstance: create)
     ..aOS(1, 'id')
     ..aOS(2, 'version')
-    ..aOM<$3.Error>(3, 'err', subBuilder: $3.Error.create)
+    ..aOM<$0.Error>(3, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
   ;
 
@@ -311,15 +311,15 @@ class Share_Add_Response extends $pb.GeneratedMessage {
   void clearVersion() => clearField(2);
 
   @$pb.TagNumber(3)
-  $3.Error get err => $_getN(2);
+  $0.Error get err => $_getN(2);
   @$pb.TagNumber(3)
-  set err($3.Error v) { setField(3, v); }
+  set err($0.Error v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasErr() => $_has(2);
   @$pb.TagNumber(3)
   void clearErr() => clearField(3);
   @$pb.TagNumber(3)
-  $3.Error ensureErr() => $_ensure(2);
+  $0.Error ensureErr() => $_ensure(2);
 }
 
 class Share_Add extends $pb.GeneratedMessage {
@@ -345,10 +345,10 @@ class Share_Add extends $pb.GeneratedMessage {
 
 class Share_Edit_Request extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Edit.Request', package: const $pb.PackageName('messages'), createEmptyInstance: create)
-    ..aOM<$5.Token>(1, 'token', subBuilder: $5.Token.create)
+    ..aOM<$2.Token>(1, 'token', subBuilder: $2.Token.create)
     ..aOS(2, 'id')
     ..aOS(3, 'version')
-    ..pc<$7.Op>(4, 'ops', $pb.PbFieldType.PM, subBuilder: $7.Op.create)
+    ..pc<$4.Op>(4, 'ops', $pb.PbFieldType.PM, subBuilder: $4.Op.create)
     ..hasRequiredFields = false
   ;
 
@@ -368,15 +368,15 @@ class Share_Edit_Request extends $pb.GeneratedMessage {
   static Share_Edit_Request _defaultInstance;
 
   @$pb.TagNumber(1)
-  $5.Token get token => $_getN(0);
+  $2.Token get token => $_getN(0);
   @$pb.TagNumber(1)
-  set token($5.Token v) { setField(1, v); }
+  set token($2.Token v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasToken() => $_has(0);
   @$pb.TagNumber(1)
   void clearToken() => clearField(1);
   @$pb.TagNumber(1)
-  $5.Token ensureToken() => $_ensure(0);
+  $2.Token ensureToken() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.String get id => $_getSZ(1);
@@ -397,14 +397,14 @@ class Share_Edit_Request extends $pb.GeneratedMessage {
   void clearVersion() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.List<$7.Op> get ops => $_getList(3);
+  $core.List<$4.Op> get ops => $_getList(3);
 }
 
 class Share_Edit_Response extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Edit.Response', package: const $pb.PackageName('messages'), createEmptyInstance: create)
     ..aOS(1, 'version')
-    ..pc<$7.Op>(2, 'ops', $pb.PbFieldType.PM, subBuilder: $7.Op.create)
-    ..aOM<$3.Error>(3, 'err', subBuilder: $3.Error.create)
+    ..pc<$4.Op>(2, 'ops', $pb.PbFieldType.PM, subBuilder: $4.Op.create)
+    ..aOM<$0.Error>(3, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
   ;
 
@@ -433,18 +433,18 @@ class Share_Edit_Response extends $pb.GeneratedMessage {
   void clearVersion() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.List<$7.Op> get ops => $_getList(1);
+  $core.List<$4.Op> get ops => $_getList(1);
 
   @$pb.TagNumber(3)
-  $3.Error get err => $_getN(2);
+  $0.Error get err => $_getN(2);
   @$pb.TagNumber(3)
-  set err($3.Error v) { setField(3, v); }
+  set err($0.Error v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasErr() => $_has(2);
   @$pb.TagNumber(3)
   void clearErr() => clearField(3);
   @$pb.TagNumber(3)
-  $3.Error ensureErr() => $_ensure(2);
+  $0.Error ensureErr() => $_ensure(2);
 }
 
 class Share_Edit extends $pb.GeneratedMessage {

@@ -37,8 +37,8 @@ func (b Share_type) Foo() foo.Foo_type {
 func (b Share_type) Delete() *delta.Op {
 	return delta.Delete(b.location)
 }
-func (b Share_type) Replace(value *Share) *delta.Op {
-	return delta.Replace(b.location, value)
+func (b Share_type) Set(value *Share) *delta.Op {
+	return delta.Set(b.location, value)
 }
 
 type Share_type_list struct {
@@ -63,8 +63,8 @@ func (b Share_type_list) Move(from, to int) *delta.Op {
 func (b Share_type_list) Delete() *delta.Op {
 	return delta.Delete(b.location)
 }
-func (b Share_type_list) Replace(value []*Share) *delta.Op {
-	return delta.Replace(b.location, value)
+func (b Share_type_list) Set(value []*Share) *delta.Op {
+	return delta.Set(b.location, value)
 }
 
 type Share_type_bool_map struct {
@@ -80,17 +80,14 @@ func NewShare_type_bool_map(l []*delta.Locator) Share_type_bool_map {
 func (b Share_type_bool_map) Key(key bool) Share_type {
 	return NewShare_type(delta.CopyAndAppendKeyBool(b.location, key))
 }
-func (b Share_type_bool_map) Move(from, to bool) *delta.Op {
-	return delta.Move(delta.CopyAndAppendKeyBool(b.location, from), to)
-}
-func (b Share_type_bool_map) Insert(key bool, value *Share) *delta.Op {
-	return delta.Insert(delta.CopyAndAppendKeyBool(b.location, key), value)
+func (b Share_type_bool_map) Rename(from, to bool) *delta.Op {
+	return delta.Rename(delta.CopyAndAppendKeyBool(b.location, from), to)
 }
 func (b Share_type_bool_map) Delete() *delta.Op {
 	return delta.Delete(b.location)
 }
-func (b Share_type_bool_map) Replace(value map[bool]*Share) *delta.Op {
-	return delta.Replace(b.location, value)
+func (b Share_type_bool_map) Set(value map[bool]*Share) *delta.Op {
+	return delta.Set(b.location, value)
 }
 
 type Share_type_int32_map struct {
@@ -106,17 +103,14 @@ func NewShare_type_int32_map(l []*delta.Locator) Share_type_int32_map {
 func (b Share_type_int32_map) Key(key int) Share_type {
 	return NewShare_type(delta.CopyAndAppendKeyInt32(b.location, int32(key)))
 }
-func (b Share_type_int32_map) Move(from, to int) *delta.Op {
-	return delta.Move(delta.CopyAndAppendKeyInt32(b.location, int32(from)), int32(to))
-}
-func (b Share_type_int32_map) Insert(key int, value *Share) *delta.Op {
-	return delta.Insert(delta.CopyAndAppendKeyInt32(b.location, int32(key)), value)
+func (b Share_type_int32_map) Rename(from, to int) *delta.Op {
+	return delta.Rename(delta.CopyAndAppendKeyInt32(b.location, int32(from)), int32(to))
 }
 func (b Share_type_int32_map) Delete() *delta.Op {
 	return delta.Delete(b.location)
 }
-func (b Share_type_int32_map) Replace(value map[int32]*Share) *delta.Op {
-	return delta.Replace(b.location, value)
+func (b Share_type_int32_map) Set(value map[int32]*Share) *delta.Op {
+	return delta.Set(b.location, value)
 }
 
 type Share_type_int64_map struct {
@@ -132,17 +126,14 @@ func NewShare_type_int64_map(l []*delta.Locator) Share_type_int64_map {
 func (b Share_type_int64_map) Key(key int) Share_type {
 	return NewShare_type(delta.CopyAndAppendKeyInt64(b.location, int64(key)))
 }
-func (b Share_type_int64_map) Move(from, to int) *delta.Op {
-	return delta.Move(delta.CopyAndAppendKeyInt64(b.location, int64(from)), int64(to))
-}
-func (b Share_type_int64_map) Insert(key int, value *Share) *delta.Op {
-	return delta.Insert(delta.CopyAndAppendKeyInt64(b.location, int64(key)), value)
+func (b Share_type_int64_map) Rename(from, to int) *delta.Op {
+	return delta.Rename(delta.CopyAndAppendKeyInt64(b.location, int64(from)), int64(to))
 }
 func (b Share_type_int64_map) Delete() *delta.Op {
 	return delta.Delete(b.location)
 }
-func (b Share_type_int64_map) Replace(value map[int64]*Share) *delta.Op {
-	return delta.Replace(b.location, value)
+func (b Share_type_int64_map) Set(value map[int64]*Share) *delta.Op {
+	return delta.Set(b.location, value)
 }
 
 type Share_type_uint32_map struct {
@@ -158,17 +149,14 @@ func NewShare_type_uint32_map(l []*delta.Locator) Share_type_uint32_map {
 func (b Share_type_uint32_map) Key(key int) Share_type {
 	return NewShare_type(delta.CopyAndAppendKeyUint32(b.location, uint32(key)))
 }
-func (b Share_type_uint32_map) Move(from, to int) *delta.Op {
-	return delta.Move(delta.CopyAndAppendKeyUint32(b.location, uint32(from)), uint32(to))
-}
-func (b Share_type_uint32_map) Insert(key int, value *Share) *delta.Op {
-	return delta.Insert(delta.CopyAndAppendKeyUint32(b.location, uint32(key)), value)
+func (b Share_type_uint32_map) Rename(from, to int) *delta.Op {
+	return delta.Rename(delta.CopyAndAppendKeyUint32(b.location, uint32(from)), uint32(to))
 }
 func (b Share_type_uint32_map) Delete() *delta.Op {
 	return delta.Delete(b.location)
 }
-func (b Share_type_uint32_map) Replace(value map[uint32]*Share) *delta.Op {
-	return delta.Replace(b.location, value)
+func (b Share_type_uint32_map) Set(value map[uint32]*Share) *delta.Op {
+	return delta.Set(b.location, value)
 }
 
 type Share_type_uint64_map struct {
@@ -184,17 +172,14 @@ func NewShare_type_uint64_map(l []*delta.Locator) Share_type_uint64_map {
 func (b Share_type_uint64_map) Key(key int) Share_type {
 	return NewShare_type(delta.CopyAndAppendKeyUint64(b.location, uint64(key)))
 }
-func (b Share_type_uint64_map) Move(from, to int) *delta.Op {
-	return delta.Move(delta.CopyAndAppendKeyUint64(b.location, uint64(from)), uint64(to))
-}
-func (b Share_type_uint64_map) Insert(key int, value *Share) *delta.Op {
-	return delta.Insert(delta.CopyAndAppendKeyUint64(b.location, uint64(key)), value)
+func (b Share_type_uint64_map) Rename(from, to int) *delta.Op {
+	return delta.Rename(delta.CopyAndAppendKeyUint64(b.location, uint64(from)), uint64(to))
 }
 func (b Share_type_uint64_map) Delete() *delta.Op {
 	return delta.Delete(b.location)
 }
-func (b Share_type_uint64_map) Replace(value map[uint64]*Share) *delta.Op {
-	return delta.Replace(b.location, value)
+func (b Share_type_uint64_map) Set(value map[uint64]*Share) *delta.Op {
+	return delta.Set(b.location, value)
 }
 
 type Share_type_string_map struct {
@@ -210,15 +195,12 @@ func NewShare_type_string_map(l []*delta.Locator) Share_type_string_map {
 func (b Share_type_string_map) Key(key string) Share_type {
 	return NewShare_type(delta.CopyAndAppendKeyString(b.location, key))
 }
-func (b Share_type_string_map) Move(from, to string) *delta.Op {
-	return delta.Move(delta.CopyAndAppendKeyString(b.location, from), to)
-}
-func (b Share_type_string_map) Insert(key string, value *Share) *delta.Op {
-	return delta.Insert(delta.CopyAndAppendKeyString(b.location, key), value)
+func (b Share_type_string_map) Rename(from, to string) *delta.Op {
+	return delta.Rename(delta.CopyAndAppendKeyString(b.location, from), to)
 }
 func (b Share_type_string_map) Delete() *delta.Op {
 	return delta.Delete(b.location)
 }
-func (b Share_type_string_map) Replace(value map[string]*Share) *delta.Op {
-	return delta.Replace(b.location, value)
+func (b Share_type_string_map) Set(value map[string]*Share) *delta.Op {
+	return delta.Set(b.location, value)
 }

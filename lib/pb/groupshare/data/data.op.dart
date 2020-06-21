@@ -30,8 +30,8 @@ class Share_type extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op Replace(pb.Share value) {
-    return delta.replace(location, value);
+  delta.Op Set(pb.Share value) {
+    return delta.set(location, value);
   }
 
 }
@@ -53,8 +53,8 @@ class Share_type_list extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op Replace(List<pb.Share> value) {
-    return delta.replace(location, value);
+  delta.Op Set(List<pb.Share> value) {
+    return delta.set(location, value);
   }
 
 }
@@ -64,11 +64,7 @@ class Share_type_bool_map extends delta.Location {
   Share_type Key(bool key) {
     return Share_type(delta.copyAndAppendKeyBool(location, key));
   }
-  delta.Op Insert(bool key, pb.Share value) {
-    return delta.insert(delta.copyAndAppendKeyBool(location, key), value);
-  }
-
-  delta.Op Move(bool from, bool to) {
+  delta.Op Rename(bool from, bool to) {
     return delta.moveMap(delta.copyAndAppendKeyBool(location, from), delta.keyBool(to));
   }
 
@@ -76,8 +72,8 @@ class Share_type_bool_map extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op Replace(Map<bool, pb.Share> value) {
-    return delta.replace(location, value);
+  delta.Op Set(Map<bool, pb.Share> value) {
+    return delta.set(location, value);
   }
 
 }
@@ -87,11 +83,7 @@ class Share_type_int32_map extends delta.Location {
   Share_type Key(int key) {
     return Share_type(delta.copyAndAppendKeyInt32(location, key));
   }
-  delta.Op Insert(int key, pb.Share value) {
-    return delta.insert(delta.copyAndAppendKeyInt32(location, key), value);
-  }
-
-  delta.Op Move(int from, int to) {
+  delta.Op Rename(int from, int to) {
     return delta.moveMap(delta.copyAndAppendKeyInt32(location, from), delta.keyInt32(to));
   }
 
@@ -99,8 +91,8 @@ class Share_type_int32_map extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op Replace(Map<int, pb.Share> value) {
-    return delta.replace(location, value);
+  delta.Op Set(Map<int, pb.Share> value) {
+    return delta.set(location, value);
   }
 
 }
@@ -110,11 +102,7 @@ class Share_type_int64_map extends delta.Location {
   Share_type Key(int key) {
     return Share_type(delta.copyAndAppendKeyInt64(location, fixnum.Int64(key)));
   }
-  delta.Op Insert(int key, pb.Share value) {
-    return delta.insert(delta.copyAndAppendKeyInt64(location, fixnum.Int64(key)), value);
-  }
-
-  delta.Op Move(int from, int to) {
+  delta.Op Rename(int from, int to) {
     return delta.moveMap(delta.copyAndAppendKeyInt64(location, fixnum.Int64(from)), delta.keyInt64(fixnum.Int64(to)));
   }
 
@@ -122,8 +110,8 @@ class Share_type_int64_map extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op Replace(Map<fixnum.Int64, pb.Share> value) {
-    return delta.replace(location, value);
+  delta.Op Set(Map<fixnum.Int64, pb.Share> value) {
+    return delta.set(location, value);
   }
 
 }
@@ -133,11 +121,7 @@ class Share_type_uint32_map extends delta.Location {
   Share_type Key(int key) {
     return Share_type(delta.copyAndAppendKeyUint32(location, key));
   }
-  delta.Op Insert(int key, pb.Share value) {
-    return delta.insert(delta.copyAndAppendKeyUint32(location, key), value);
-  }
-
-  delta.Op Move(int from, int to) {
+  delta.Op Rename(int from, int to) {
     return delta.moveMap(delta.copyAndAppendKeyUint32(location, from), delta.keyUint32(to));
   }
 
@@ -145,8 +129,8 @@ class Share_type_uint32_map extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op Replace(Map<int, pb.Share> value) {
-    return delta.replace(location, value);
+  delta.Op Set(Map<int, pb.Share> value) {
+    return delta.set(location, value);
   }
 
 }
@@ -156,11 +140,7 @@ class Share_type_uint64_map extends delta.Location {
   Share_type Key(int key) {
     return Share_type(delta.copyAndAppendKeyUint64(location, fixnum.Int64(key)));
   }
-  delta.Op Insert(int key, pb.Share value) {
-    return delta.insert(delta.copyAndAppendKeyUint64(location, fixnum.Int64(key)), value);
-  }
-
-  delta.Op Move(int from, int to) {
+  delta.Op Rename(int from, int to) {
     return delta.moveMap(delta.copyAndAppendKeyUint64(location, fixnum.Int64(from)), delta.keyUint64(fixnum.Int64(to)));
   }
 
@@ -168,8 +148,8 @@ class Share_type_uint64_map extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op Replace(Map<fixnum.Int64, pb.Share> value) {
-    return delta.replace(location, value);
+  delta.Op Set(Map<fixnum.Int64, pb.Share> value) {
+    return delta.set(location, value);
   }
 
 }
@@ -179,11 +159,7 @@ class Share_type_string_map extends delta.Location {
   Share_type Key(String key) {
     return Share_type(delta.copyAndAppendKeyString(location, key));
   }
-  delta.Op Insert(String key, pb.Share value) {
-    return delta.insert(delta.copyAndAppendKeyString(location, key), value);
-  }
-
-  delta.Op Move(String from, String to) {
+  delta.Op Rename(String from, String to) {
     return delta.moveMap(delta.copyAndAppendKeyString(location, from), delta.keyString(to));
   }
 
@@ -191,8 +167,8 @@ class Share_type_string_map extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op Replace(Map<String, pb.Share> value) {
-    return delta.replace(location, value);
+  delta.Op Set(Map<String, pb.Share> value) {
+    return delta.set(location, value);
   }
 
 }
