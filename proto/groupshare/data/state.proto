@@ -1,0 +1,16 @@
+syntax = "proto3";
+package data;
+
+import "protod/delta.proto";
+
+option go_package = "github.com/dave/groupshare/server/pb/groupshare/data;data";
+
+message State {
+  string user = 1;   // user id
+  string type = 2;   // document type
+  string id = 3;     // document id
+  int64 state = 4;   // state of this document after the this op
+  string unique = 5; // the unique id supplied by the client (for de-duplicate / fail / retry)
+  delta.Op op2x = 6; // the operations that were applied to change the state from before->state
+  delta.Op op1x = 7; // the operations that were transmitted to the client to get it's state to state
+}

@@ -15,7 +15,8 @@ import (
 const (
 	DEV_ENV           = true
 	USERS_COLLECTION  = "users"
-	SHARES_COLLECTION = "users"
+	SHARES_COLLECTION = "shares"
+	STATE_COLLECTION  = "state"
 )
 
 type User struct {

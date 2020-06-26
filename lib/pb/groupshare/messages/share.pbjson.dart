@@ -84,17 +84,15 @@ const Share_Edit_Request$json = const {
   '2': const [
     const {'1': 'token', '3': 1, '4': 1, '5': 11, '6': '.messages.Token', '10': 'token'},
     const {'1': 'id', '3': 2, '4': 1, '5': 9, '10': 'id'},
-    const {'1': 'version', '3': 3, '4': 1, '5': 9, '10': 'version'},
-    const {'1': 'ops', '3': 4, '4': 3, '5': 11, '6': '.delta.Op', '10': 'ops'},
+    const {'1': 'req', '3': 3, '4': 1, '5': 11, '6': '.messages.State.Request', '10': 'req'},
   ],
 };
 
 const Share_Edit_Response$json = const {
   '1': 'Response',
   '2': const [
-    const {'1': 'version', '3': 1, '4': 1, '5': 9, '10': 'version'},
-    const {'1': 'ops', '3': 2, '4': 3, '5': 11, '6': '.delta.Op', '10': 'ops'},
-    const {'1': 'err', '3': 3, '4': 1, '5': 11, '6': '.messages.Error', '10': 'err'},
+    const {'1': 'resp', '3': 1, '4': 1, '5': 11, '6': '.messages.State.Response', '10': 'resp'},
+    const {'1': 'err', '3': 2, '4': 1, '5': 11, '6': '.messages.Error', '10': 'err'},
   ],
 };
 

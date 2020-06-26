@@ -9,7 +9,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'error.pb.dart' as $0;
+import 'error.pb.dart' as $1;
 
 class Login_Request extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Login.Request', package: const $pb.PackageName('messages'), createEmptyInstance: create)
@@ -55,7 +55,7 @@ class Login_Request extends $pb.GeneratedMessage {
 class Login_Response extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Login.Response', package: const $pb.PackageName('messages'), createEmptyInstance: create)
     ..aOS(1, 'time')
-    ..aOM<$0.Error>(2, 'err', subBuilder: $0.Error.create)
+    ..aOM<$1.Error>(2, 'err', subBuilder: $1.Error.create)
     ..hasRequiredFields = false
   ;
 
@@ -84,15 +84,15 @@ class Login_Response extends $pb.GeneratedMessage {
   void clearTime() => clearField(1);
 
   @$pb.TagNumber(2)
-  $0.Error get err => $_getN(1);
+  $1.Error get err => $_getN(1);
   @$pb.TagNumber(2)
-  set err($0.Error v) { setField(2, v); }
+  set err($1.Error v) { setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasErr() => $_has(1);
   @$pb.TagNumber(2)
   void clearErr() => clearField(2);
   @$pb.TagNumber(2)
-  $0.Error ensureErr() => $_ensure(1);
+  $1.Error ensureErr() => $_ensure(1);
 }
 
 class Login extends $pb.GeneratedMessage {

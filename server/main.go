@@ -74,6 +74,8 @@ func (a *App) indexHandler(w http.ResponseWriter, r *http.Request) {
 		response = store.ShareGetRequest(ctx, a.firestoreClient, requestBytes)
 	case "/Share_List_Request":
 		response = store.ShareListRequest(ctx, a.firestoreClient, requestBytes)
+	case "/Share_Edit_Request":
+		response = store.ShareEditRequest(ctx, a.firestoreClient, requestBytes)
 	default:
 		fmt.Println(r.URL.Path)
 	}

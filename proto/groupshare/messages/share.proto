@@ -1,10 +1,10 @@
 syntax = "proto3";
 package messages;
 
+import "groupshare/messages/state.proto";
 import "groupshare/messages/token.proto";
 import "groupshare/messages/error.proto";
 import "groupshare/data/share.proto";
-import "protod/delta.proto";
 
 option go_package = "github.com/dave/groupshare/server/pb/groupshare/messages;messages";
 
@@ -46,14 +46,12 @@ message Share {
   message Edit {
     message Request {
       Token token = 1;
-      string id = 2;
-      string version = 3;
-      repeated delta.Op ops = 4;
+      string id = 2; // document id
+      State.Request req = 3;
     }
     message Response {
-      string version = 1; // new version
-      repeated delta.Op ops = 2; // deltas to get to new version (may be more than in request)
-      Error err = 3;
+      State.Response resp = 1;
+      Error err = 2;
     }
   }
 
