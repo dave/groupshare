@@ -4,7 +4,6 @@ package messages;
 import "groupshare/messages/state.proto";
 import "groupshare/messages/token.proto";
 import "groupshare/messages/error.proto";
-import "groupshare/data/share.proto";
 
 option go_package = "github.com/dave/groupshare/server/pb/groupshare/messages;messages";
 
@@ -25,20 +24,22 @@ message Share {
       string id = 2;
     }
     message Response {
-      string version = 1;
-      data.Share share = 2;
-      Error err = 3;
+      string id = 1;
+      int64 state = 2;
+      bytes share = 3;
+      Error err = 4;
     }
   }
 
   message Add {
     message Request {
       Token token = 1;
-      data.Share share = 2;
+      string unique = 2;
+      bytes share = 3;
     }
     message Response {
       string id = 1;
-      string version = 2;
+      string unique = 2;
       Error err = 3;
     }
   }

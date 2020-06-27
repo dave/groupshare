@@ -11,13 +11,15 @@ class ShareNewModel extends BaseModel {
     final api = locator<Api>();
     final auth = locator<Auth>();
 
-    final req = Share_Add_Request.create()
+    final req = Share_Add_Request()
       ..token = auth.token()
-      ..share = (data.Share()..name = name);
+      ..unique = api.randomUnique()
+      ..share = (data.Share()..name = name).writeToBuffer();
 
-    await api.send<Share_Add_Request, Share_Add_Response>(
+    final resp = await api.send<Share_Add_Request, Share_Add_Response>(
       req,
       Share_Add_Response(),
     );
+    print(resp.unique);
   }
 }

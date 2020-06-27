@@ -10,17 +10,16 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'package:protod/delta.pb.dart' as $0;
-
 class State extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('State', package: const $pb.PackageName('data'), createEmptyInstance: create)
     ..aOS(1, 'user')
     ..aOS(2, 'type')
     ..aOS(3, 'id')
     ..aInt64(4, 'state')
-    ..aOS(5, 'unique')
-    ..aOM<$0.Op>(6, 'op2x', subBuilder: $0.Op.create)
-    ..aOM<$0.Op>(7, 'op1x', subBuilder: $0.Op.create)
+    ..aInt64(5, 'previous')
+    ..aOS(6, 'unique')
+    ..a<$core.List<$core.int>>(7, 'op2x', $pb.PbFieldType.OY)
+    ..a<$core.List<$core.int>>(8, 'op1x', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
@@ -76,34 +75,39 @@ class State extends $pb.GeneratedMessage {
   void clearState() => clearField(4);
 
   @$pb.TagNumber(5)
-  $core.String get unique => $_getSZ(4);
+  $fixnum.Int64 get previous => $_getI64(4);
   @$pb.TagNumber(5)
-  set unique($core.String v) { $_setString(4, v); }
+  set previous($fixnum.Int64 v) { $_setInt64(4, v); }
   @$pb.TagNumber(5)
-  $core.bool hasUnique() => $_has(4);
+  $core.bool hasPrevious() => $_has(4);
   @$pb.TagNumber(5)
-  void clearUnique() => clearField(5);
+  void clearPrevious() => clearField(5);
 
   @$pb.TagNumber(6)
-  $0.Op get op2x => $_getN(5);
+  $core.String get unique => $_getSZ(5);
   @$pb.TagNumber(6)
-  set op2x($0.Op v) { setField(6, v); }
+  set unique($core.String v) { $_setString(5, v); }
   @$pb.TagNumber(6)
-  $core.bool hasOp2x() => $_has(5);
+  $core.bool hasUnique() => $_has(5);
   @$pb.TagNumber(6)
-  void clearOp2x() => clearField(6);
-  @$pb.TagNumber(6)
-  $0.Op ensureOp2x() => $_ensure(5);
+  void clearUnique() => clearField(6);
 
   @$pb.TagNumber(7)
-  $0.Op get op1x => $_getN(6);
+  $core.List<$core.int> get op2x => $_getN(6);
   @$pb.TagNumber(7)
-  set op1x($0.Op v) { setField(7, v); }
+  set op2x($core.List<$core.int> v) { $_setBytes(6, v); }
   @$pb.TagNumber(7)
-  $core.bool hasOp1x() => $_has(6);
+  $core.bool hasOp2x() => $_has(6);
   @$pb.TagNumber(7)
-  void clearOp1x() => clearField(7);
-  @$pb.TagNumber(7)
-  $0.Op ensureOp1x() => $_ensure(6);
+  void clearOp2x() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.List<$core.int> get op1x => $_getN(7);
+  @$pb.TagNumber(8)
+  set op1x($core.List<$core.int> v) { $_setBytes(7, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasOp1x() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearOp1x() => clearField(8);
 }
 

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:groupshare/core/excpetions/exceptions.dart';
 import 'package:groupshare/pb/groupshare/messages/error.pb.dart';
 import 'package:http/http.dart';
@@ -10,9 +13,10 @@ class Api {
     T payload,
     U reply,
   ) async {
+    final bytes = payload.writeToBuffer();
     final request = await post(
       '$_domain/$T',
-      body: payload.writeToBuffer(),
+      body: bytes,
     );
     if (request.statusCode != 200) {
       throw UserException("Error ${request.statusCode}");
@@ -37,5 +41,11 @@ class Api {
       default:
         throw UserException(error.message);
     }
+  }
+
+  String randomUnique() {
+    var random = Random.secure();
+    var values = List<int>.generate(16, (i) => random.nextInt(255));
+    return base64UrlEncode(values);
   }
 }

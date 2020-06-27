@@ -1,20 +1,18 @@
 syntax = "proto3";
 package messages;
 
-import "protod/delta.proto";
-
 option go_package = "github.com/dave/groupshare/server/pb/groupshare/messages;messages";
 
 message State {
   message Request {
     string unique = 1; // unique id of this request (for de-duplicate / fail / retry)
     int64 state = 2;   // state of the document that this op is acting on
-    delta.Op op = 3;   // operation (compound if many operations)
+    bytes op = 3;      // operation (compound if many operations)
   }
 
   message Response {
     string unique = 1; // unique id of the request (for de-duplicate / fail / retry)
     int64 state = 2;   // state of the document after the op from the client and the response op have been applied
-    delta.Op op = 3;   // response op that must be applied to the document in order to get to the server state (compound if many operations)
+    bytes op = 3;      // response op that must be applied to the document in order to get to the server state (compound if many operations)
   }
 }

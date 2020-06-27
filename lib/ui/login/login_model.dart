@@ -12,7 +12,7 @@ class LoginModel extends BaseModel {
     final api = locator<Api>();
     final prefs = locator<Prefs>();
 
-    final req = Login_Request.create()
+    final req = Login_Request()
       ..device = device.id
       ..email = email;
 

@@ -41,7 +41,7 @@ Future<void> handle(
                 Navigator.of(context).pop();
               },
             ),
-          for (var b in buttons)
+          for (var b in buttons ?? [])
             FlatButton(
               child: Text(b.message),
               onPressed: () {

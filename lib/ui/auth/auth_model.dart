@@ -12,7 +12,7 @@ class AuthModel extends BaseModel {
     final prefs = locator<Prefs>();
     final api = locator<Api>();
 
-    final req = Auth_Request.create()
+    final req = Auth_Request()
       ..email = prefs.email
       ..device = device.id
       ..time = prefs.time

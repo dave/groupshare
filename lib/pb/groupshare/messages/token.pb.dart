@@ -9,7 +9,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'error.pb.dart' as $1;
+import 'error.pb.dart' as $0;
 
 class Token_Validate_Request extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Token.Validate.Request', package: const $pb.PackageName('messages'), createEmptyInstance: create)
@@ -46,7 +46,7 @@ class Token_Validate_Request extends $pb.GeneratedMessage {
 
 class Token_Validate_Response extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Token.Validate.Response', package: const $pb.PackageName('messages'), createEmptyInstance: create)
-    ..aOM<$1.Error>(3, 'err', subBuilder: $1.Error.create)
+    ..aOM<$0.Error>(3, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
   ;
 
@@ -66,15 +66,15 @@ class Token_Validate_Response extends $pb.GeneratedMessage {
   static Token_Validate_Response _defaultInstance;
 
   @$pb.TagNumber(3)
-  $1.Error get err => $_getN(0);
+  $0.Error get err => $_getN(0);
   @$pb.TagNumber(3)
-  set err($1.Error v) { setField(3, v); }
+  set err($0.Error v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasErr() => $_has(0);
   @$pb.TagNumber(3)
   void clearErr() => clearField(3);
   @$pb.TagNumber(3)
-  $1.Error ensureErr() => $_ensure(0);
+  $0.Error ensureErr() => $_ensure(0);
 }
 
 class Token_Validate extends $pb.GeneratedMessage {

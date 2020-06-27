@@ -15,7 +15,7 @@ const State_Request$json = const {
   '2': const [
     const {'1': 'unique', '3': 1, '4': 1, '5': 9, '10': 'unique'},
     const {'1': 'state', '3': 2, '4': 1, '5': 3, '10': 'state'},
-    const {'1': 'op', '3': 3, '4': 1, '5': 11, '6': '.delta.Op', '10': 'op'},
+    const {'1': 'op', '3': 3, '4': 1, '5': 12, '10': 'op'},
   ],
 };
 
@@ -24,7 +24,7 @@ const State_Response$json = const {
   '2': const [
     const {'1': 'unique', '3': 1, '4': 1, '5': 9, '10': 'unique'},
     const {'1': 'state', '3': 2, '4': 1, '5': 3, '10': 'state'},
-    const {'1': 'op', '3': 3, '4': 1, '5': 11, '6': '.delta.Op', '10': 'op'},
+    const {'1': 'op', '3': 3, '4': 1, '5': 12, '10': 'op'},
   ],
 };
 

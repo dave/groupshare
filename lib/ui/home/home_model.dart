@@ -30,7 +30,7 @@ class HomeModel extends BaseModel {
       return;
     }
 
-    final req = Token_Validate_Request.create()..token = auth.token();
+    final req = Token_Validate_Request()..token = auth.token();
 
     await api.send<Token_Validate_Request, Token_Validate_Response>(
       req,
