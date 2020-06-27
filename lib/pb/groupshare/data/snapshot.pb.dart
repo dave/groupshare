@@ -14,8 +14,9 @@ class Snapshot extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Snapshot', package: const $pb.PackageName('data'), createEmptyInstance: create)
     ..aOS(1, 'type')
     ..aOS(2, 'id')
-    ..aInt64(3, 'state')
-    ..a<$core.List<$core.int>>(4, 'value', $pb.PbFieldType.OY)
+    ..aOS(3, 'unique')
+    ..aInt64(4, 'state')
+    ..a<$core.List<$core.int>>(5, 'value', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
@@ -53,21 +54,30 @@ class Snapshot extends $pb.GeneratedMessage {
   void clearId() => clearField(2);
 
   @$pb.TagNumber(3)
-  $fixnum.Int64 get state => $_getI64(2);
+  $core.String get unique => $_getSZ(2);
   @$pb.TagNumber(3)
-  set state($fixnum.Int64 v) { $_setInt64(2, v); }
+  set unique($core.String v) { $_setString(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasState() => $_has(2);
+  $core.bool hasUnique() => $_has(2);
   @$pb.TagNumber(3)
-  void clearState() => clearField(3);
+  void clearUnique() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.List<$core.int> get value => $_getN(3);
+  $fixnum.Int64 get state => $_getI64(3);
   @$pb.TagNumber(4)
-  set value($core.List<$core.int> v) { $_setBytes(3, v); }
+  set state($fixnum.Int64 v) { $_setInt64(3, v); }
   @$pb.TagNumber(4)
-  $core.bool hasValue() => $_has(3);
+  $core.bool hasState() => $_has(3);
   @$pb.TagNumber(4)
-  void clearValue() => clearField(4);
+  void clearState() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.List<$core.int> get value => $_getN(4);
+  @$pb.TagNumber(5)
+  set value($core.List<$core.int> v) { $_setBytes(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasValue() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearValue() => clearField(5);
 }
 

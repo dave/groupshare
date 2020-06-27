@@ -7,7 +7,6 @@ option go_package = "github.com/dave/groupshare/server/pb/groupshare/data;data";
 
 // [proto:data]
 message Share {
-  string id = 1;
-  string name = 2;
-  foo.Foo foo = 3;
+  string name = 1;
+  foo.Foo foo = 2;
 }

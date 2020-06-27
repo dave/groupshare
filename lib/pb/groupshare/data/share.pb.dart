@@ -13,9 +13,8 @@ import 'foo/foo.pb.dart' as $3;
 
 class Share extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share', package: const $pb.PackageName('data'), createEmptyInstance: create)
-    ..aOS(1, 'id')
-    ..aOS(2, 'name')
-    ..aOM<$3.Foo>(3, 'foo', subBuilder: $3.Foo.create)
+    ..aOS(1, 'name')
+    ..aOM<$3.Foo>(2, 'foo', subBuilder: $3.Foo.create)
     ..hasRequiredFields = false
   ;
 
@@ -35,32 +34,23 @@ class Share extends $pb.GeneratedMessage {
   static Share _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get id => $_getSZ(0);
+  $core.String get name => $_getSZ(0);
   @$pb.TagNumber(1)
-  set id($core.String v) { $_setString(0, v); }
+  set name($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
+  $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
-  void clearId() => clearField(1);
+  void clearName() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get name => $_getSZ(1);
+  $3.Foo get foo => $_getN(1);
   @$pb.TagNumber(2)
-  set name($core.String v) { $_setString(1, v); }
+  set foo($3.Foo v) { setField(2, v); }
   @$pb.TagNumber(2)
-  $core.bool hasName() => $_has(1);
+  $core.bool hasFoo() => $_has(1);
   @$pb.TagNumber(2)
-  void clearName() => clearField(2);
-
-  @$pb.TagNumber(3)
-  $3.Foo get foo => $_getN(2);
-  @$pb.TagNumber(3)
-  set foo($3.Foo v) { setField(3, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasFoo() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearFoo() => clearField(3);
-  @$pb.TagNumber(3)
-  $3.Foo ensureFoo() => $_ensure(2);
+  void clearFoo() => clearField(2);
+  @$pb.TagNumber(2)
+  $3.Foo ensureFoo() => $_ensure(1);
 }
 

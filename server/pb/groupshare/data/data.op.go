@@ -25,14 +25,11 @@ func (b Share_type) Location_get() []*delta.Locator {
 func NewShare_type(l []*delta.Locator) Share_type {
 	return Share_type{location: l}
 }
-func (b Share_type) Id() delta.String_scalar {
-	return delta.NewString_scalar(delta.CopyAndAppendField(b.location, "id", 1))
-}
 func (b Share_type) Name() delta.String_scalar {
-	return delta.NewString_scalar(delta.CopyAndAppendField(b.location, "name", 2))
+	return delta.NewString_scalar(delta.CopyAndAppendField(b.location, "name", 1))
 }
 func (b Share_type) Foo() foo.Foo_type {
-	return foo.NewFoo_type(delta.CopyAndAppendField(b.location, "foo", 3))
+	return foo.NewFoo_type(delta.CopyAndAppendField(b.location, "foo", 2))
 }
 func (b Share_type) Delete() *delta.Op {
 	return delta.Delete(b.location)

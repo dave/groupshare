@@ -3,7 +3,6 @@ package store
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	"cloud.google.com/go/firestore"
@@ -37,46 +36,46 @@ func unmarshal(in map[string]interface{}, out proto.GeneratedMessage) error {
 }
 
 func TestStoreState(t *testing.T) {
-	state := &data.State{
-		User:     "a",
-		Type:     "b",
-		Id:       "c",
-		State:    1,
-		Previous: 0,
-		Unique:   "d",
-		Op2X:     data.Op().Share().Set(&data.Share{Id: "a", Name: "b"}),
-		Op1X:     data.Op().Share().Set(&data.Share{Id: "c", Name: "d"}),
-	}
-	stateMarshaled, err := marshal(state)
-
-	projectID := "groupshare-testing"
-
-	ctx := context.Background()
-	client, err := firestore.NewClient(ctx, projectID)
-	if err != nil {
-		t.Fatalf("creating client: %v", err)
-	}
-	defer client.Close()
-
-	stateRef := client.Collection(api.STATE_COLLECTION).NewDoc()
-	if _, err := stateRef.Set(ctx, stateMarshaled); err != nil {
-		t.Fatalf("adding state: %v", err)
-	}
-
-	snapshot, err := client.Collection(api.STATE_COLLECTION).Doc(stateRef.ID).Get(ctx)
-	if err != nil {
-		t.Fatalf("getting share: %v", err)
-	}
-	var s1 map[string]interface{}
-	if err := snapshot.DataTo(&s1); err != nil {
-		t.Fatalf("unpacking share: %v", err)
-	}
-	stateUnmarshaled := &data.State{}
-
-	if err := unmarshal(s1, stateUnmarshaled); err != nil {
-		t.Fatalf("unmarshaling: %v", err)
-	}
-	fmt.Println(stateUnmarshaled.Op2X.Value)
+	//state := &data.State{
+	//	User:     "a",
+	//	Type:     "b",
+	//	Id:       "c",
+	//	State:    1,
+	//	Previous: 0,
+	//	Unique:   "d",
+	//	Op2X:     data.Op().Share().Set(&data.Share{Id: "a", Name: "b"}),
+	//	Op1X:     data.Op().Share().Set(&data.Share{Id: "c", Name: "d"}),
+	//}
+	//stateMarshaled, err := marshal(state)
+	//
+	//projectID := "groupshare-testing"
+	//
+	//ctx := context.Background()
+	//client, err := firestore.NewClient(ctx, projectID)
+	//if err != nil {
+	//	t.Fatalf("creating client: %v", err)
+	//}
+	//defer client.Close()
+	//
+	//stateRef := client.Collection(api.STATE_COLLECTION).NewDoc()
+	//if _, err := stateRef.Set(ctx, stateMarshaled); err != nil {
+	//	t.Fatalf("adding state: %v", err)
+	//}
+	//
+	//snapshot, err := client.Collection(api.STATE_COLLECTION).Doc(stateRef.ID).Get(ctx)
+	//if err != nil {
+	//	t.Fatalf("getting share: %v", err)
+	//}
+	//var s1 map[string]interface{}
+	//if err := snapshot.DataTo(&s1); err != nil {
+	//	t.Fatalf("unpacking share: %v", err)
+	//}
+	//stateUnmarshaled := &data.State{}
+	//
+	//if err := unmarshal(s1, stateUnmarshaled); err != nil {
+	//	t.Fatalf("unmarshaling: %v", err)
+	//}
+	//fmt.Println(stateUnmarshaled.Op2X.Value)
 
 	//if s1.Name != s0.Name {
 	//	t.Fatalf("s1.Name should be %q, got %q", s0.Name, s1.Name)

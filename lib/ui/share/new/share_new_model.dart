@@ -20,6 +20,5 @@ class ShareNewModel extends BaseModel {
       req,
       Share_Add_Response(),
     );
-    print(resp.unique);
   }
 }

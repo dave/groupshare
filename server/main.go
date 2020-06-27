@@ -8,10 +8,12 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api/auth"
 	"github.com/dave/groupshare/server/api/store"
+	"github.com/dave/groupshare/server/pb/groupshare/messages"
 	"google.golang.org/appengine"
 	"google.golang.org/protobuf/proto"
 )
@@ -60,25 +62,8 @@ func (a *App) indexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var response proto.Message
-	switch r.URL.Path {
-	case "/Login_Request":
-		response = auth.LoginRequest(ctx, requestBytes)
-	case "/Auth_Request":
-		response = auth.AuthRequest(ctx, a.firestoreClient, requestBytes)
-	case "/Token_Validate_Request":
-		response = auth.TokenValidateRequest(ctx, a.firestoreClient, requestBytes)
-	case "/Share_Add_Request":
-		response = store.ShareAddRequest(ctx, a.firestoreClient, requestBytes)
-	case "/Share_Get_Request":
-		response = store.ShareGetRequest(ctx, a.firestoreClient, requestBytes)
-	case "/Share_List_Request":
-		response = store.ShareListRequest(ctx, a.firestoreClient, requestBytes)
-	case "/Share_Edit_Request":
-		response = store.ShareEditRequest(ctx, a.firestoreClient, requestBytes)
-	default:
-		fmt.Println(r.URL.Path)
-	}
+	response := a.ProcessRequest(ctx, r.URL.Path, requestBytes)
+
 	if response == nil {
 		http.NotFound(w, r)
 		return
@@ -101,4 +86,37 @@ func (a *App) indexHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
+}
+
+func (a *App) ProcessMessage(ctx context.Context, message proto.Message) proto.Message {
+	messageType := fmt.Sprintf("%T", message)
+	path := "/" + strings.TrimPrefix(messageType, "*messages.")
+	messageBytes, err := proto.Marshal(message)
+	if err != nil {
+		return &messages.Error{Message: "error marshaling message in ProcessMessage"}
+	}
+	return a.ProcessRequest(ctx, path, messageBytes)
+}
+
+func (a *App) ProcessRequest(ctx context.Context, path string, request []byte) proto.Message {
+	switch path {
+	case "/Login_Request":
+		return auth.LoginRequest(ctx, request)
+	case "/Auth_Request":
+		return auth.AuthRequest(ctx, a.firestoreClient, request)
+	case "/Token_Validate_Request":
+		return auth.TokenValidateRequest(ctx, a.firestoreClient, request)
+	case "/Share_Add_Request":
+		return store.ShareAddRequest(ctx, a.firestoreClient, request)
+	case "/Share_Get_Request":
+		return store.ShareGetRequest(ctx, a.firestoreClient, request)
+	case "/Share_List_Request":
+		return store.ShareListRequest(ctx, a.firestoreClient, request)
+	case "/Share_Edit_Request":
+		return store.ShareEditRequest(ctx, a.firestoreClient, request)
+	default:
+		fmt.Println(path)
+		return nil
+	}
+
 }

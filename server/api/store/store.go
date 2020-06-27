@@ -46,12 +46,14 @@ func ShareEditRequest(ctx context.Context, client *firestore.Client, requestByte
 		return wrap(api.UserError("Database error", fmt.Errorf("unpacking req.Req.Op: %w", err)))
 	}
 
+	shareRef := client.Collection(api.SHARES_COLLECTION).Doc(req.Id)
+
 	var response *messages.Share_Edit_Response
 
 	if err := client.RunTransaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
 
 		// 1) check that req.Req.Unique (UNIQUE) hasn't been applied before... if it has, reply with appropriate response
-		uniqueQuery := client.Collection(api.STATE_COLLECTION).Where("unique", "==", req.Req.Unique)
+		uniqueQuery := shareRef.Collection(api.STATE_COLLECTION).Where("Unique", "==", req.Req.Unique)
 		uniqueDocs, err := tx.Documents(uniqueQuery).GetAll()
 		if err != nil {
 			return api.UserError("Server error", fmt.Errorf("getting unique: %w", err))
@@ -63,12 +65,6 @@ func ShareEditRequest(ctx context.Context, client *firestore.Client, requestByte
 			uniqueState := &data.State{}
 			if err := uniqueDoc.DataTo(uniqueState); err != nil {
 				return api.UserError("Database error", fmt.Errorf("unpacking unique state: %w", err))
-			}
-			if uniqueState.Type != api.SHARES_COLLECTION {
-				return api.UserError("Database error", fmt.Errorf("unique type %q in database does not correspond to requested type %q", uniqueState.Type, api.SHARES_COLLECTION))
-			}
-			if uniqueState.Id != req.Id {
-				return api.UserError("Database error", fmt.Errorf("unique id %q in database does not correspond to requested id %q", uniqueState.Id, req.Id))
 			}
 			response = &messages.Share_Edit_Response{
 				Resp: &messages.State_Response{
@@ -82,11 +78,9 @@ func ShareEditRequest(ctx context.Context, client *firestore.Client, requestByte
 		}
 
 		// 2) get all ops that have been applied since req.Req.State and refer to them as OP1
-		stateQuery := client.Collection(api.STATE_COLLECTION).
-			Where("type", "==", api.SHARES_COLLECTION).
-			Where("id", "==", req.Id).
-			Where("state", ">=", req.Req.State).
-			OrderBy("state", firestore.Asc)
+		stateQuery := shareRef.Collection(api.STATE_COLLECTION).
+			Where("State", ">=", req.Req.State).
+			OrderBy("State", firestore.Asc)
 		stateIter := tx.Documents(stateQuery)
 
 		var count int
@@ -157,6 +151,7 @@ func ShareEditRequest(ctx context.Context, client *firestore.Client, requestByte
 		}
 
 		// 6) Store OP2x in the database, and increment the state counter (STATE)
+		newStateItemRef := shareRef.Collection(api.STATE_COLLECTION).NewDoc()
 		newState := finalState + 1
 		newStateItem := &data.State{
 			User:     userRef.ID,
@@ -168,7 +163,6 @@ func ShareEditRequest(ctx context.Context, client *firestore.Client, requestByte
 			Op2X:     op2xBytes,
 			Op1X:     op1xBytes,
 		}
-		newStateItemRef := client.Collection(api.SHARES_COLLECTION).NewDoc()
 
 		if err := tx.Set(newStateItemRef, newStateItem); err != nil {
 			return api.UserError("Database error", fmt.Errorf("setting new state item: %w", err))
@@ -194,13 +188,12 @@ func ShareEditRequest(ctx context.Context, client *firestore.Client, requestByte
 	updateSnapshot := response.Resp.State%10 == 0
 	if updateSnapshot {
 		// update the value snapshot
-		snapshotRef := client.Collection(api.SHARES_COLLECTION).Doc(req.Id)
-		snapshotDoc, err := snapshotRef.Get(ctx)
+		shareDoc, err := shareRef.Get(ctx)
 		if err != nil {
 			return wrap(api.UserError("Database error", fmt.Errorf("getting snapshot: %w", err)))
 		}
 		snapshot := &data.Snapshot{}
-		if err := snapshotDoc.DataTo(snapshot); err != nil {
+		if err := shareDoc.DataTo(snapshot); err != nil {
 			return wrap(api.UserError("Database error", fmt.Errorf("reading snapshot data: %w", err)))
 		}
 		currentState := snapshot.State
@@ -208,11 +201,9 @@ func ShareEditRequest(ctx context.Context, client *firestore.Client, requestByte
 		if err := proto.Unmarshal(snapshot.Value, value); err != nil {
 			return wrap(api.UserError("Database error", fmt.Errorf("unmarshaling shareValue: %w", err)))
 		}
-		stateQuery := client.Collection(api.SHARES_COLLECTION).
-			Where("type", "==", api.SHARES_COLLECTION).
-			Where("id", "==", req.Id).
-			Where("state", ">", snapshot.State).
-			OrderBy("state", firestore.Asc)
+		stateQuery := shareRef.Collection(api.STATE_COLLECTION).
+			Where("State", ">", snapshot.State).
+			OrderBy("State", firestore.Asc)
 		stateIter := stateQuery.Documents(ctx)
 		var count int
 		for {
@@ -249,12 +240,13 @@ func ShareEditRequest(ctx context.Context, client *firestore.Client, requestByte
 			return wrap(api.UserError("Database error", fmt.Errorf("marshaling snapshot value: %w", err)))
 		}
 		newSnapshot := &data.Snapshot{
-			Type:  api.SHARES_COLLECTION,
-			Id:    req.Id,
-			State: currentState,
-			Value: valueBytes,
+			Type:   api.SHARES_COLLECTION,
+			Id:     req.Id,
+			Unique: snapshot.Unique,
+			State:  currentState,
+			Value:  valueBytes,
 		}
-		if _, err := snapshotRef.Set(ctx, newSnapshot); err != nil {
+		if _, err := shareRef.Set(ctx, newSnapshot); err != nil {
 			return wrap(api.UserError("Database error", fmt.Errorf("setting new snapshot: %w", err)))
 		}
 	}
@@ -300,18 +292,23 @@ func ShareAddRequest(ctx context.Context, client *firestore.Client, requestBytes
 			return api.UserError("Invalid login token", api.AuthErrorf("verifying token: %w", err))
 		}
 
-		// check that req.Req.Unique (UNIQUE) hasn't been applied before... if it has, error
-		uniqueQuery := client.Collection(api.STATE_COLLECTION).Where("unique", "==", req.Unique)
+		// check that req.Req.Unique (UNIQUE) hasn't been added before... if it has, error
+		uniqueQuery := client.Collection(api.SHARES_COLLECTION).Where("Unique", "==", req.Unique)
 		uniqueDocs, err := tx.Documents(uniqueQuery).GetAll()
 		if err != nil {
 			return api.UserError("Server error", fmt.Errorf("getting unique: %w", err))
 		}
 		if len(uniqueDocs) != 0 {
-			return api.UserError("Database error", fmt.Errorf("unique %q found in add request", req.Unique))
+			share := &data.Snapshot{}
+			if err := uniqueDocs[0].DataTo(share); err != nil {
+				return api.UserError("Database error", fmt.Errorf("reading unique share: %w", err))
+			}
+			response = &messages.Share_Add_Response{Id: share.Id, Unique: req.Unique}
+			return nil
 		}
 
 		shareRef := client.Collection(api.SHARES_COLLECTION).NewDoc()
-		stateRef := client.Collection(api.STATE_COLLECTION).NewDoc()
+		stateRef := shareRef.Collection(api.STATE_COLLECTION).NewDoc()
 		state := &data.State{
 			User:     userRef.ID,
 			Type:     api.SHARES_COLLECTION,
@@ -322,20 +319,21 @@ func ShareAddRequest(ctx context.Context, client *firestore.Client, requestBytes
 			Op2X:     op2xBytes,
 			Op1X:     nil,
 		}
-		shareSnap := &data.Snapshot{
-			Type:  api.SHARES_COLLECTION,
-			Id:    shareRef.ID,
-			State: 1,
-			Value: shareBytes,
+		snapshot := &data.Snapshot{
+			Type:   api.SHARES_COLLECTION,
+			Id:     shareRef.ID,
+			Unique: req.Unique,
+			State:  1,
+			Value:  shareBytes,
 		}
 
 		user.Shares = append(user.Shares, shareRef.ID)
 
+		if err := tx.Set(shareRef, snapshot); err != nil {
+			return api.UserError("Server error", fmt.Errorf("setting new share: %w", err))
+		}
 		if err := tx.Set(stateRef, state); err != nil {
 			return api.UserError("Server error", fmt.Errorf("setting new state: %w", err))
-		}
-		if err := tx.Set(shareRef, shareSnap); err != nil {
-			return api.UserError("Server error", fmt.Errorf("setting new share: %w", err))
 		}
 		if err := tx.Set(userRef, user); err != nil {
 			return api.UserError("Server error", fmt.Errorf("setting updated user: %w", err))
@@ -384,8 +382,8 @@ func ShareGetRequest(ctx context.Context, client *firestore.Client, requestBytes
 		return wrap(api.UserError("Invalid login token", api.AuthErrorf("verifying token: %w", err)))
 	}
 
-	shareSnapRef := client.Collection(api.SHARES_COLLECTION).Doc(req.Id)
-	shareSnapDoc, err := shareSnapRef.Get(ctx)
+	shareRef := client.Collection(api.SHARES_COLLECTION).Doc(req.Id)
+	shareSnapDoc, err := shareRef.Get(ctx)
 	if err != nil {
 		return wrap(api.UserError("Database error", fmt.Errorf("getting snapshot: %w", err)))
 	}
@@ -400,9 +398,7 @@ func ShareGetRequest(ctx context.Context, client *firestore.Client, requestBytes
 	}
 
 	var count int
-	stateIter := client.Collection(api.SHARES_COLLECTION).
-		Where("type", "==", api.SHARES_COLLECTION).
-		Where("id", "==", req.Id).
+	stateIter := shareRef.Collection(api.STATE_COLLECTION).
 		Where("state", ">", shareSnap.State).
 		OrderBy("state", firestore.Asc).Documents(ctx)
 	for {
@@ -446,6 +442,5 @@ func ShareGetRequest(ctx context.Context, client *firestore.Client, requestBytes
 		Id:    req.Id,
 		State: currentState,
 		Share: newValue,
-		Err:   nil,
 	}
 }

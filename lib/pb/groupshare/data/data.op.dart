@@ -17,14 +17,11 @@ class Op_root_type {
 
 class Share_type extends delta.Location {
   Share_type(List<delta.Locator> location) : super(location);
-  delta.String_scalar Id() {
-    return delta.String_scalar(delta.copyAndAppendField(location, "id", 1));
-  }
   delta.String_scalar Name() {
-    return delta.String_scalar(delta.copyAndAppendField(location, "name", 2));
+    return delta.String_scalar(delta.copyAndAppendField(location, "name", 1));
   }
   groupshare_data_foo_foo.Foo_type Foo() {
-    return groupshare_data_foo_foo.Foo_type(delta.copyAndAppendField(location, "foo", 3));
+    return groupshare_data_foo_foo.Foo_type(delta.copyAndAppendField(location, "foo", 2));
   }
   delta.Op Delete() {
     return delta.delete(location);
