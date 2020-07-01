@@ -1,5 +1,5 @@
-import 'package:protod/delta.dart' as delta;
-import 'package:protod/delta.pb.dart' as delta;
+import 'package:protod/delta/delta.dart' as delta;
+import 'package:protod/delta/delta.pb.dart' as delta;
 import 'package:fixnum/fixnum.dart' as fixnum;
 import 'package:groupshare/pb/groupshare/data/foo/foo.pb.dart' as pb;
 

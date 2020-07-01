@@ -10,6 +10,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
+	"github.com/dave/pserver"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -30,7 +31,7 @@ func LoginRequest(ctx context.Context, requestBytes []byte) *messages.Login_Resp
 	return &messages.Login_Response{Time: fmt.Sprint(t)}
 }
 
-func TokenValidateRequest(ctx context.Context, client *firestore.Client, requestBytes []byte) *messages.Token_Validate_Response {
+func TokenValidateRequest(ctx context.Context, server *pserver.Server, requestBytes []byte) *messages.Token_Validate_Response {
 	wrap := func(err error) *messages.Token_Validate_Response {
 		return &messages.Token_Validate_Response{Err: api.Error(err)}
 	}
@@ -40,7 +41,7 @@ func TokenValidateRequest(ctx context.Context, client *firestore.Client, request
 		return wrap(api.UserError("Corrupt input", fmt.Errorf("unmarshaling: %w", err)))
 	}
 
-	_, _, err := api.GetUserVerify(ctx, client, nil, req.Token)
+	_, _, err := api.GetUserVerify(ctx, server.Firestore, nil, req.Token)
 	if err != nil {
 		return wrap(api.UserError("Invalid login token", api.AuthErrorf("verifying token: %w", err)))
 	}
@@ -48,7 +49,7 @@ func TokenValidateRequest(ctx context.Context, client *firestore.Client, request
 	return &messages.Token_Validate_Response{}
 }
 
-func AuthRequest(ctx context.Context, client *firestore.Client, requestBytes []byte) *messages.Auth_Response {
+func AuthRequest(ctx context.Context, server *pserver.Server, requestBytes []byte) *messages.Auth_Response {
 	wrap := func(err error) *messages.Auth_Response {
 		return &messages.Auth_Response{Err: api.Error(err)}
 	}
@@ -75,8 +76,8 @@ func AuthRequest(ctx context.Context, client *firestore.Client, requestBytes []b
 	// create or update user?
 	user := &api.User{}
 	var userRef *firestore.DocumentRef
-	if err := client.RunTransaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
-		query := client.Collection(api.USERS_COLLECTION).Where("email", "==", req.Email)
+	if err := server.Firestore.RunTransaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
+		query := server.Firestore.Collection(api.USERS_COLLECTION).Where("email", "==", req.Email)
 		users, err := tx.Documents(query).GetAll()
 		if err != nil {
 			return fmt.Errorf("selecting from users: %w", err)
@@ -93,7 +94,7 @@ func AuthRequest(ctx context.Context, client *firestore.Client, requestBytes []b
 		}
 
 		user = &api.User{Email: req.Email, Salt: randomString(30)}
-		userRef = client.Collection(api.USERS_COLLECTION).NewDoc()
+		userRef = server.Firestore.Collection(api.USERS_COLLECTION).NewDoc()
 
 		if err := tx.Set(userRef, user); err != nil {
 			return fmt.Errorf("selecting from users: %w", err)

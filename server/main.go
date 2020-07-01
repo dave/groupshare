@@ -14,6 +14,7 @@ import (
 	"github.com/dave/groupshare/server/api/auth"
 	"github.com/dave/groupshare/server/api/store"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
+	"github.com/dave/pserver"
 	"google.golang.org/appengine"
 	"google.golang.org/protobuf/proto"
 )
@@ -22,17 +23,12 @@ const PROJECT_ID = "groupshare-testing"
 
 func main() {
 
-	var app App
-
-	{
-		firestoreClient, err := firestore.NewClient(context.Background(), PROJECT_ID)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer firestoreClient.Close()
-
-		app.firestoreClient = firestoreClient
+	fc, err := firestore.NewClient(context.Background(), PROJECT_ID)
+	if err != nil {
+		log.Fatal(err)
 	}
+	app := &App{Server: pserver.New(fc)}
+	defer app.Server.Close()
 
 	http.HandleFunc("/", app.indexHandler)
 
@@ -49,7 +45,7 @@ func main() {
 }
 
 type App struct {
-	firestoreClient *firestore.Client
+	Server *pserver.Server
 }
 
 func (a *App) indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -103,17 +99,17 @@ func (a *App) ProcessRequest(ctx context.Context, path string, request []byte) p
 	case "/Login_Request":
 		return auth.LoginRequest(ctx, request)
 	case "/Auth_Request":
-		return auth.AuthRequest(ctx, a.firestoreClient, request)
+		return auth.AuthRequest(ctx, a.Server, request)
 	case "/Token_Validate_Request":
-		return auth.TokenValidateRequest(ctx, a.firestoreClient, request)
+		return auth.TokenValidateRequest(ctx, a.Server, request)
 	case "/Share_Add_Request":
-		return store.ShareAddRequest(ctx, a.firestoreClient, request)
+		return store.ShareAddRequest(ctx, a.Server, request)
 	case "/Share_Get_Request":
-		return store.ShareGetRequest(ctx, a.firestoreClient, request)
+		return store.ShareGetRequest(ctx, a.Server, request)
 	case "/Share_List_Request":
-		return store.ShareListRequest(ctx, a.firestoreClient, request)
+		return store.ShareListRequest(ctx, a.Server, request)
 	case "/Share_Edit_Request":
-		return store.ShareEditRequest(ctx, a.firestoreClient, request)
+		return store.ShareEditRequest(ctx, a.Server, request)
 	default:
 		fmt.Println(path)
 		return nil

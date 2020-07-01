@@ -10,11 +10,13 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../delta/delta.pb.dart' as $0;
+
 class State_Request extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('State.Request', package: const $pb.PackageName('messages'), createEmptyInstance: create)
     ..aOS(1, 'unique')
     ..aInt64(2, 'state')
-    ..a<$core.List<$core.int>>(3, 'op', $pb.PbFieldType.OY)
+    ..aOM<$0.Op>(3, 'op', subBuilder: $0.Op.create)
     ..hasRequiredFields = false
   ;
 
@@ -52,20 +54,22 @@ class State_Request extends $pb.GeneratedMessage {
   void clearState() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.List<$core.int> get op => $_getN(2);
+  $0.Op get op => $_getN(2);
   @$pb.TagNumber(3)
-  set op($core.List<$core.int> v) { $_setBytes(2, v); }
+  set op($0.Op v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasOp() => $_has(2);
   @$pb.TagNumber(3)
   void clearOp() => clearField(3);
+  @$pb.TagNumber(3)
+  $0.Op ensureOp() => $_ensure(2);
 }
 
 class State_Response extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('State.Response', package: const $pb.PackageName('messages'), createEmptyInstance: create)
     ..aOS(1, 'unique')
     ..aInt64(2, 'state')
-    ..a<$core.List<$core.int>>(3, 'op', $pb.PbFieldType.OY)
+    ..aOM<$0.Op>(3, 'op', subBuilder: $0.Op.create)
     ..hasRequiredFields = false
   ;
 
@@ -103,13 +107,15 @@ class State_Response extends $pb.GeneratedMessage {
   void clearState() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.List<$core.int> get op => $_getN(2);
+  $0.Op get op => $_getN(2);
   @$pb.TagNumber(3)
-  set op($core.List<$core.int> v) { $_setBytes(2, v); }
+  set op($0.Op v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasOp() => $_has(2);
   @$pb.TagNumber(3)
   void clearOp() => clearField(3);
+  @$pb.TagNumber(3)
+  $0.Op ensureOp() => $_ensure(2);
 }
 
 class State extends $pb.GeneratedMessage {

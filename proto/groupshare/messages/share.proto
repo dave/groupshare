@@ -1,9 +1,10 @@
 syntax = "proto3";
 package messages;
 
-import "groupshare/messages/state.proto";
 import "groupshare/messages/token.proto";
 import "groupshare/messages/error.proto";
+import "groupshare/data/share.proto";
+import "delta/delta.proto";
 
 option go_package = "github.com/dave/groupshare/server/pb/groupshare/messages;messages";
 
@@ -26,7 +27,7 @@ message Share {
     message Response {
       string id = 1;
       int64 state = 2;
-      bytes share = 3;
+      data.Share share = 3;
       Error err = 4;
     }
   }
@@ -34,13 +35,12 @@ message Share {
   message Add {
     message Request {
       Token token = 1;
-      string unique = 2;
-      bytes share = 3;
+      string request = 2; // random unique id for de-duplication
+      data.Share share = 3;
     }
     message Response {
       string id = 1;
-      string unique = 2;
-      Error err = 3;
+      Error err = 2;
     }
   }
 
@@ -48,12 +48,18 @@ message Share {
     message Request {
       Token token = 1;
       string id = 2; // document id
-      State.Request req = 3;
+
+      // required by pserver: request, state, op
+      string request = 3; // random unique id for this request
+      int64 state = 4;    // state of the document that this op is acting on
+      delta.Op op = 5;    // operation
     }
     message Response {
-      State.Response resp = 1;
-      Error err = 2;
+      // required by pserver: state, op
+      int64 state = 1;   // state of the document after the op from the client and the response op have been applied
+      delta.Op op = 2;   // response op that must be applied to the document in order to get to the server state
+
+      Error err = 3;
     }
   }
-
 }

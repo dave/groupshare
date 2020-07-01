@@ -1,12 +1,11 @@
 syntax = "proto3";
 package data;
 
+import "pserver/data.proto";
+
 option go_package = "github.com/dave/groupshare/server/pb/groupshare/data;data";
 
 message Snapshot {
-  string type = 1;   // document type
-  string id = 2;     // document id
-  string unique = 3; // unique from client when creating (for de-duplicate / fail / retry)
-  int64 state = 4;   // state of this document
-  bytes value = 5;   // marshaled protobuf
+  pserver.Snapshot value = 1; // the snapshot
+  string user = 2;            // user id
 }
