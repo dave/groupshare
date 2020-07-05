@@ -10,7 +10,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
-	"github.com/dave/pserver"
+	"github.com/dave/protod/pserver"
 	"google.golang.org/protobuf/proto"
 )
 

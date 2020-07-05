@@ -6,7 +6,6 @@ require (
 	cloud.google.com/go/firestore v1.2.0
 	github.com/dave/jennifer v1.4.0
 	github.com/dave/protod v0.0.1
-	github.com/dave/pserver v0.0.0-20200628150556-72e432756501
 	github.com/golang/protobuf v1.4.2
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/yoheimuta/go-protoparser/v4 v4.2.0
@@ -18,5 +17,3 @@ require (
 )
 
 replace github.com/dave/protod v0.0.1 => ../protod
-
-replace github.com/dave/pserver v0.0.0-20200628150556-72e432756501 => ../pserver

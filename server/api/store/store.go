@@ -9,7 +9,7 @@ import (
 	"github.com/dave/groupshare/server/pb/groupshare/data"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
 	"github.com/dave/protod/delta"
-	"github.com/dave/pserver"
+	"github.com/dave/protod/pserver"
 	"google.golang.org/protobuf/proto"
 )
 

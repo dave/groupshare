@@ -14,7 +14,7 @@ import (
 	"github.com/dave/groupshare/server/api/auth"
 	"github.com/dave/groupshare/server/api/store"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
-	"github.com/dave/pserver"
+	"github.com/dave/protod/pserver"
 	"google.golang.org/appengine"
 	"google.golang.org/protobuf/proto"
 )
