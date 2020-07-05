@@ -34,7 +34,7 @@ func ShareGetRequest(ctx context.Context, server *pserver.Server, requestBytes [
 		return wrap(api.UserError("Database error", fmt.Errorf("getting snapshot: %w", err)))
 	}
 
-	_, state, err = server.Changes(ctx, nil, SHARE_DOCUMENT_TYPE, ref, state, 0, func(op *delta.Op) error {
+	state, err = server.Changes(ctx, nil, SHARE_DOCUMENT_TYPE, ref, state, 0, func(op *delta.Op) error {
 		if err := delta.Apply(op, value); err != nil {
 			return fmt.Errorf("applying op to snapshot value: %w", err)
 		}
@@ -237,10 +237,10 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 func UpdateSnapshot(ctx context.Context, server *pserver.Server, t pserver.DocumentType, ref *firestore.DocumentRef) error {
 	// update the value snapshot. this doesn't need to be inside a transaction, because if the
 	// snapshot is slightly out of date it doesn't matter.
-	state, document, snapshotMessage, err := server.UnpackSnapshot(ctx, nil, t, ref)
+	snapshotState, document, snapshotMessage, err := server.UnpackSnapshot(ctx, nil, t, ref)
 	snapshot := snapshotMessage.(*data.Snapshot)
 
-	count, state, err := server.Changes(ctx, nil, t, ref, state, 0, func(op *delta.Op) error {
+	state, err := server.Changes(ctx, nil, t, ref, snapshotState, 0, func(op *delta.Op) error {
 		if err := delta.Apply(op, document); err != nil {
 			return fmt.Errorf("applying op to snapshot value: %w", err)
 		}
@@ -249,7 +249,7 @@ func UpdateSnapshot(ctx context.Context, server *pserver.Server, t pserver.Docum
 	if err != nil {
 		return api.UserError("Database error", fmt.Errorf("applying changes: %w", err))
 	}
-	if count == 0 {
+	if state == snapshotState {
 		return nil
 	}
 	valueBlob, err := server.MarshalToBlob(document)
