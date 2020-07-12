@@ -290,7 +290,7 @@ var SHARE_DOCUMENT_TYPE = pserver.DocumentType{
 	State:         unpackState,
 	StateField:    "Value",
 	SnapshotField: "Value",
-	Document:      func() proto.Message { return &data.Share{} },
+	Document:      &data.Share{},
 }
 
 func unpackSnapshot(s *firestore.DocumentSnapshot) (*pserver.Snapshot, proto.Message, error) {
