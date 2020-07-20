@@ -76,7 +76,7 @@ func AuthRequest(ctx context.Context, server *pserver.Server, requestBytes []byt
 	// create or update user?
 	user := &api.User{}
 	var userRef *firestore.DocumentRef
-	if err := server.Firestore.RunTransaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
+	f := func(ctx context.Context, tx *firestore.Transaction) error {
 		query := server.Firestore.Collection(api.USERS_COLLECTION).Where("email", "==", req.Email)
 		users, err := tx.Documents(query).GetAll()
 		if err != nil {
@@ -102,7 +102,8 @@ func AuthRequest(ctx context.Context, server *pserver.Server, requestBytes []byt
 
 		return nil
 
-	}); err != nil {
+	}
+	if err := server.Firestore.RunTransaction(ctx, f); err != nil {
 		return wrap(api.UserError("Server error", fmt.Errorf("running user transaction: %w", err)))
 	}
 

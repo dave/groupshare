@@ -98,20 +98,22 @@ func ShareAddRequest(ctx context.Context, server *pserver.Server, requestBytes [
 		}
 		// end share specific
 
+		const initialState = 1
+
 		snapshot := &data.Snapshot{
 			User:  userRef.ID,
-			Value: &pserver.Snapshot{Request: req.Request, State: 1, Value: shareBlob},
+			Value: &pserver.Snapshot{Request: req.Request, State: initialState, Value: shareBlob},
 		}
 		if err := tx.Set(ref, snapshot); err != nil {
 			return api.UserError("Server error", fmt.Errorf("setting new share: %w", err))
 		}
 
-		stateRef := ref.Collection(pserver.STATES_COLLECTION).NewDoc()
+		stateRef := ref.Collection(pserver.STATES_COLLECTION).Doc(fmt.Sprint(initialState))
 		state := &data.State{
 			User:  userRef.ID,
-			Value: &pserver.State{Request: req.Request, State: 1, Op: opBlob},
+			Value: &pserver.State{Request: req.Request, State: initialState, Op: opBlob},
 		}
-		if err := tx.Set(stateRef, state); err != nil {
+		if err := tx.Create(stateRef, state); err != nil {
 			return api.UserError("Server error", fmt.Errorf("setting new state: %w", err))
 		}
 
@@ -182,13 +184,13 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 		if err != nil {
 			return api.UserError("Database error", fmt.Errorf("marshaling op2x to blob: %w", err))
 		}
-		newStateRef := ref.Collection(pserver.STATES_COLLECTION).NewDoc()
 		newState := state + 1
+		newStateRef := ref.Collection(pserver.STATES_COLLECTION).Doc(fmt.Sprint(newState))
 		newStateItem := &data.State{
 			User:  userRef.ID,
 			Value: &pserver.State{Request: req.Request, State: newState, Op: op2xBlob},
 		}
-		if err := tx.Set(newStateRef, newStateItem); err != nil {
+		if err := tx.Create(newStateRef, newStateItem); err != nil {
 			return api.UserError("Database error", fmt.Errorf("setting new state item: %w", err))
 		}
 
