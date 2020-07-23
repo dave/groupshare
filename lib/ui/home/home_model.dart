@@ -32,10 +32,7 @@ class HomeModel extends BaseModel {
 
     final req = Token_Validate_Request()..token = auth.token();
 
-    await api.send<Token_Validate_Request, Token_Validate_Response>(
-      req,
-      Token_Validate_Response(),
-    );
+    await api.send(req, Token_Validate_Response());
     _status = Status.Done;
     setState(ViewState.Idle);
   }

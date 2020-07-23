@@ -7,7 +7,7 @@
 
 const Share$json = const {
   '1': 'Share',
-  '3': const [Share_List$json, Share_Get$json, Share_Add$json, Share_Edit$json],
+  '3': const [Share_List$json, Share_Get$json, Share_Add$json, Share_Edit$json, Share_Refresh$json],
 };
 
 const Share_List$json = const {
@@ -97,6 +97,25 @@ const Share_Edit_Response$json = const {
     const {'1': 'state', '3': 1, '4': 1, '5': 3, '10': 'state'},
     const {'1': 'op', '3': 2, '4': 1, '5': 11, '6': '.delta.Op', '10': 'op'},
     const {'1': 'err', '3': 3, '4': 1, '5': 11, '6': '.messages.Error', '10': 'err'},
+  ],
+};
+
+const Share_Refresh$json = const {
+  '1': 'Refresh',
+  '3': const [Share_Refresh_Request$json, Share_Refresh_Response$json],
+};
+
+const Share_Refresh_Request$json = const {
+  '1': 'Request',
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+  ],
+};
+
+const Share_Refresh_Response$json = const {
+  '1': 'Response',
+  '2': const [
+    const {'1': 'err', '3': 1, '4': 1, '5': 11, '6': '.messages.Error', '10': 'err'},
   ],
 };
 

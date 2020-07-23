@@ -62,4 +62,13 @@ message Share {
       Error err = 3;
     }
   }
+
+  message Refresh {
+    message Request {
+      string id = 1; // document id
+    }
+    message Response {
+      Error err = 1;
+    }
+  }
 }

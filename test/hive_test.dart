@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:groupshare/core/services/hive.dart';
 import 'package:groupshare/locator.dart';
-import 'package:groupshare/pb/groupshare/data/foo/foo.pb.dart';
 import 'package:groupshare/pb/groupshare/data/share.pb.dart';
 import 'package:hive/hive.dart';
 
@@ -14,13 +13,10 @@ void main() {
   });
   test('can save protobuf objects to hive', () async {
     final shares = locator<Box<Share>>();
-    final share = Share()
-      ..name = "Boat"
-      ..foo = (Foo()..bar = "baz");
+    final share = Share()..name = "Boat";
     final id = await shares.add(share);
     final share1 = shares.get(id);
     expect(share1.name, "Boat");
-    expect(share1.foo.bar, "baz");
   });
   tearDown(() async {
     await Hive.deleteFromDisk();

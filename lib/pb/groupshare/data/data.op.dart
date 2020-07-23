@@ -1,8 +1,6 @@
 import 'package:protod/delta/delta.dart' as delta;
 import 'package:protod/delta/delta.pb.dart' as delta;
 import 'package:fixnum/fixnum.dart' as fixnum;
-import 'package:groupshare/pb/groupshare/data/foo/foo.op.dart' as groupshare_data_foo_foo;
-import 'package:groupshare/pb/groupshare/data/bar.pb.dart' as pb;
 import 'package:groupshare/pb/groupshare/data/share.pb.dart' as pb;
 
 Op_root_type Op() {
@@ -11,173 +9,15 @@ Op_root_type Op() {
 
 class Op_root_type {
   Op_root_type();
-  Bar_type Bar() {
-    return Bar_type([]);
-  }
   Share_type Share() {
     return Share_type([]);
   }
-}
-
-class Bar_type extends delta.Location {
-  Bar_type(List<delta.Locator> location) : super(location);
-  delta.String_scalar Name() {
-    return delta.String_scalar(delta.copyAndAppendField(location, "name", 1));
-  }
-  delta.Op Delete() {
-    return delta.delete(location);
-  }
-
-  delta.Op Set(pb.Bar value) {
-    return delta.set(location, value);
-  }
-
-}
-
-class Bar_type_list extends delta.Location {
-  Bar_type_list(List<delta.Locator> location) : super(location);
-  Bar_type Index(int i) {
-    return Bar_type(delta.copyAndAppendIndex(location, fixnum.Int64(i)));
-  }
-  delta.Op Insert(int index, pb.Bar value) {
-    return delta.insert(delta.copyAndAppendIndex(location, fixnum.Int64(index)), value);
-  }
-
-  delta.Op Move(int from, int to) {
-    return delta.move(delta.copyAndAppendIndex(location, fixnum.Int64(from)), fixnum.Int64(to));
-  }
-
-  delta.Op Delete() {
-    return delta.delete(location);
-  }
-
-  delta.Op Set(List<pb.Bar> value) {
-    return delta.set(location, value);
-  }
-
-}
-
-class Bar_type_bool_map extends delta.Location {
-  Bar_type_bool_map(List<delta.Locator> location) : super(location);
-  Bar_type Key(bool key) {
-    return Bar_type(delta.copyAndAppendKeyBool(location, key));
-  }
-  delta.Op Rename(bool from, bool to) {
-    return delta.rename(delta.copyAndAppendKeyBool(location, from), delta.keyBool(to));
-  }
-
-  delta.Op Delete() {
-    return delta.delete(location);
-  }
-
-  delta.Op Set(Map<bool, pb.Bar> value) {
-    return delta.set(location, value);
-  }
-
-}
-
-class Bar_type_int32_map extends delta.Location {
-  Bar_type_int32_map(List<delta.Locator> location) : super(location);
-  Bar_type Key(int key) {
-    return Bar_type(delta.copyAndAppendKeyInt32(location, key));
-  }
-  delta.Op Rename(int from, int to) {
-    return delta.rename(delta.copyAndAppendKeyInt32(location, from), delta.keyInt32(to));
-  }
-
-  delta.Op Delete() {
-    return delta.delete(location);
-  }
-
-  delta.Op Set(Map<int, pb.Bar> value) {
-    return delta.set(location, value);
-  }
-
-}
-
-class Bar_type_int64_map extends delta.Location {
-  Bar_type_int64_map(List<delta.Locator> location) : super(location);
-  Bar_type Key(int key) {
-    return Bar_type(delta.copyAndAppendKeyInt64(location, fixnum.Int64(key)));
-  }
-  delta.Op Rename(int from, int to) {
-    return delta.rename(delta.copyAndAppendKeyInt64(location, fixnum.Int64(from)), delta.keyInt64(fixnum.Int64(to)));
-  }
-
-  delta.Op Delete() {
-    return delta.delete(location);
-  }
-
-  delta.Op Set(Map<fixnum.Int64, pb.Bar> value) {
-    return delta.set(location, value);
-  }
-
-}
-
-class Bar_type_uint32_map extends delta.Location {
-  Bar_type_uint32_map(List<delta.Locator> location) : super(location);
-  Bar_type Key(int key) {
-    return Bar_type(delta.copyAndAppendKeyUint32(location, key));
-  }
-  delta.Op Rename(int from, int to) {
-    return delta.rename(delta.copyAndAppendKeyUint32(location, from), delta.keyUint32(to));
-  }
-
-  delta.Op Delete() {
-    return delta.delete(location);
-  }
-
-  delta.Op Set(Map<int, pb.Bar> value) {
-    return delta.set(location, value);
-  }
-
-}
-
-class Bar_type_uint64_map extends delta.Location {
-  Bar_type_uint64_map(List<delta.Locator> location) : super(location);
-  Bar_type Key(int key) {
-    return Bar_type(delta.copyAndAppendKeyUint64(location, fixnum.Int64(key)));
-  }
-  delta.Op Rename(int from, int to) {
-    return delta.rename(delta.copyAndAppendKeyUint64(location, fixnum.Int64(from)), delta.keyUint64(fixnum.Int64(to)));
-  }
-
-  delta.Op Delete() {
-    return delta.delete(location);
-  }
-
-  delta.Op Set(Map<fixnum.Int64, pb.Bar> value) {
-    return delta.set(location, value);
-  }
-
-}
-
-class Bar_type_string_map extends delta.Location {
-  Bar_type_string_map(List<delta.Locator> location) : super(location);
-  Bar_type Key(String key) {
-    return Bar_type(delta.copyAndAppendKeyString(location, key));
-  }
-  delta.Op Rename(String from, String to) {
-    return delta.rename(delta.copyAndAppendKeyString(location, from), delta.keyString(to));
-  }
-
-  delta.Op Delete() {
-    return delta.delete(location);
-  }
-
-  delta.Op Set(Map<String, pb.Bar> value) {
-    return delta.set(location, value);
-  }
-
 }
 
 class Share_type extends delta.Location {
   Share_type(List<delta.Locator> location) : super(location);
   delta.String_scalar Name() {
     return delta.String_scalar(delta.copyAndAppendField(location, "name", 1));
-  }
-  groupshare_data_foo_foo.Foo_type Foo() {
-    return groupshare_data_foo_foo.Foo_type(delta.copyAndAppendField(location, "foo", 2));
   }
   delta.Op Delete() {
     return delta.delete(location);

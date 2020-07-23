@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"os"
 	"testing"
@@ -18,15 +21,16 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+const TARGET = LocalInProcess
+
 func TestOps(t *testing.T) {
 	ctx := context.Background()
-	resetDatabase(t)
-	app := getApp(ctx, t)
-	defer app.Server.Close()
+	c := NewClient(ctx, t, TARGET)
+	defer c.Close()
 
-	token := getToken(ctx, t, app, "a@b.c")
+	token := getToken(ctx, t, c, "a@b.c")
 
-	add := app.ProcessMessage(ctx, &messages.Share_Add_Request{
+	add := c.MustRequest(ctx, t, &messages.Share_Add_Request{
 		Token:   token,
 		Request: "a",
 		Share:   &data.Share{Name: "b"},
@@ -35,7 +39,7 @@ func TestOps(t *testing.T) {
 		t.Fatalf("resp1 error: %s", add.Err.Message)
 	}
 
-	editC := app.ProcessMessage(ctx, &messages.Share_Edit_Request{
+	editC := c.MustRequest(ctx, t, &messages.Share_Edit_Request{
 		Token:   token,
 		Id:      add.Id,
 		Request: "b",
@@ -46,7 +50,7 @@ func TestOps(t *testing.T) {
 		t.Fatalf("resp2 error: %s", editC.Err.Message)
 	}
 
-	editD := app.ProcessMessage(ctx, &messages.Share_Edit_Request{
+	editD := c.MustRequest(ctx, t, &messages.Share_Edit_Request{
 		Token:   token,
 		Id:      add.Id,
 		Request: "c",
@@ -57,7 +61,7 @@ func TestOps(t *testing.T) {
 		t.Fatalf("resp3 error: %s", editD.Err.Message)
 	}
 
-	get := app.ProcessMessage(ctx, &messages.Share_Get_Request{
+	get := c.MustRequest(ctx, t, &messages.Share_Get_Request{
 		Token: token,
 		Id:    add.Id,
 	}).(*messages.Share_Get_Response)
@@ -70,12 +74,12 @@ func TestOps(t *testing.T) {
 
 func TestDeduplicationAdd(t *testing.T) {
 	ctx := context.Background()
-	resetDatabase(t)
-	app := getApp(ctx, t)
-	defer app.Server.Close()
-	token := getToken(ctx, t, app, "a@b.c")
+	c := NewClient(ctx, t, TARGET)
+	defer c.Close()
 
-	add1 := app.ProcessMessage(ctx, &messages.Share_Add_Request{
+	token := getToken(ctx, t, c, "a@b.c")
+
+	add1 := c.MustRequest(ctx, t, &messages.Share_Add_Request{
 		Token:   token,
 		Request: "a",
 		Share:   &data.Share{Name: "b"},
@@ -84,7 +88,7 @@ func TestDeduplicationAdd(t *testing.T) {
 		t.Fatal("add1 error")
 	}
 
-	add2 := app.ProcessMessage(ctx, &messages.Share_Add_Request{
+	add2 := c.MustRequest(ctx, t, &messages.Share_Add_Request{
 		Token:   token,
 		Request: "a",
 		Share:   &data.Share{Name: "c"},
@@ -103,7 +107,7 @@ func resetDatabase(t *testing.T) {
 		t.Fatal("can't find FIRESTORE_EMULATOR_HOST env")
 	}
 	client := &http.Client{}
-	url := fmt.Sprintf("http://%s/emulator/v1/projects/%s/databases/(default)/documents", addr, PROJECT_ID)
+	url := fmt.Sprintf("http://%s/emulator/v1/projects/%s/databases/(default)/documents", addr, TESTING_PROJECT_ID)
 	req, err := http.NewRequest(http.MethodDelete, url, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -117,16 +121,7 @@ func resetDatabase(t *testing.T) {
 	}
 }
 
-func getApp(ctx context.Context, t *testing.T) *App {
-	fc, err := firestore.NewClient(ctx, PROJECT_ID)
-	if err != nil {
-		t.Fatal(err)
-	}
-	app := &App{Server: pserver.New(fc)}
-	return app
-}
-
-func getToken(ctx context.Context, t *testing.T, app *App, email string) *messages.Token {
+func getToken(ctx context.Context, t *testing.T, c *Client, email string) *messages.Token {
 	device := "a"
 	authTime := time.Now().Unix()
 	code, err := api.GenerateCode(device, email, authTime)
@@ -139,7 +134,7 @@ func getToken(ctx context.Context, t *testing.T, app *App, email string) *messag
 		Time:   fmt.Sprintf("%d", authTime),
 		Code:   code,
 	}
-	authResponse := app.ProcessMessage(ctx, authRequest).(*messages.Auth_Response)
+	authResponse := c.MustRequest(ctx, t, authRequest).(*messages.Auth_Response)
 	return &messages.Token{
 		Id:     authResponse.Id,
 		Device: device,
@@ -183,4 +178,117 @@ func mustUnmarshalShare(b []byte) *data.Share {
 		panic(err)
 	}
 	return value
+}
+
+type TargetType int
+
+const (
+	LocalInProcess  TargetType = 1
+	LocalHttpServer TargetType = 2
+	GaeHttpServer   TargetType = 3
+)
+
+type Client struct {
+	target TargetType
+	local  *pserver.Server
+	prefix string
+}
+
+func NewClient(ctx context.Context, t *testing.T, targetType TargetType) *Client {
+	c := &Client{target: targetType}
+	switch targetType {
+	case LocalInProcess:
+		resetDatabase(t)
+		fc, err := firestore.NewClient(ctx, TESTING_PROJECT_ID)
+		if err != nil {
+			t.Fatal(err)
+		}
+		c.local = &pserver.Server{Firestore: fc, Project: TESTING_PROJECT_ID}
+	case LocalHttpServer:
+		resetDatabase(t)
+		c.prefix = LOCAL_PREFIX
+	case GaeHttpServer:
+		c.prefix = PREFIX
+	}
+	return c
+}
+
+func (c *Client) MustRequest(ctx context.Context, t *testing.T, request proto.Message) proto.Message {
+	response, err := c.Request(ctx, request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return response
+}
+
+func (c *Client) Request(ctx context.Context, request proto.Message) (proto.Message, error) {
+	switch c.target {
+	case LocalInProcess:
+		return c.localRequest(ctx, request)
+	case LocalHttpServer, GaeHttpServer:
+		return c.httpRequest(ctx, request)
+	}
+	panic("")
+}
+
+func (c *Client) localRequest(ctx context.Context, request proto.Message) (response proto.Message, err error) {
+	return ProcessMessage(ctx, c.local, request)
+}
+
+const REQUEST_RETRIES = 20
+
+func (c *Client) httpRequest(ctx context.Context, request proto.Message) (response proto.Message, err error) {
+	for i := 0; i < REQUEST_RETRIES; i++ {
+		if i > 0 {
+			delay := 500 + rand.Intn(500*(1<<i))
+			time.Sleep(time.Duration(delay) * time.Millisecond)
+		}
+		path := c.prefix + pserver.Path(request)
+		var messageBytes []byte
+		messageBytes, err = proto.Marshal(request)
+		if err != nil {
+			return nil, fmt.Errorf("marshaling message: %w", err) // <- return error without retry
+		}
+		buf := bytes.NewBuffer(messageBytes)
+		var resp *http.Response
+		resp, err = http.Post(path, "application/protobuf", buf)
+		if err != nil {
+			err = fmt.Errorf("http post: %w", err)
+			continue // <- restart the loop or exit when retry count exceeded
+		}
+		var body []byte
+		body, err = ioutil.ReadAll(resp.Body)
+		if err != nil {
+			err = fmt.Errorf("reading body: %w", err)
+			continue // <- restart the loop or exit when retry count exceeded
+		}
+		if resp.StatusCode != 200 {
+			if resp.StatusCode == 404 {
+				err = pserver.PathNotFound
+			} else if resp.StatusCode == 503 {
+				err = pserver.ServerBusy
+			} else {
+				fmt.Printf("status %q: %q\n", resp.Status, string(body))
+				err = fmt.Errorf("status %q: %q", resp.Status, string(body))
+			}
+			continue // <- restart the loop or exit when retry count exceeded
+		}
+		response = GetResponse(request)
+		err = proto.Unmarshal(body, response)
+		if err != nil {
+			err = fmt.Errorf("unmarshaling response: %w", err)
+			continue // <- restart the loop or exit when retry count exceeded
+		}
+		break // <- finish the loop and continue executing
+	}
+	if err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+func (c *Client) Close() {
+	if c.target == LocalInProcess {
+		_ = c.local.Firestore.Close()
+	}
 }

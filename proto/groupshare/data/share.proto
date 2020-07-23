@@ -1,12 +1,9 @@
 syntax = "proto3";
 package data;
 
-import "groupshare/data/foo/foo.proto";
-
 option go_package = "github.com/dave/groupshare/server/pb/groupshare/data;data";
 
 // [proto:data]
 message Share {
   string name = 1;
-  foo.Foo foo = 2;
 }

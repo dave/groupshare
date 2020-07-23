@@ -18,8 +18,7 @@ class AuthModel extends BaseModel {
       ..time = prefs.time
       ..code = code;
 
-    final resp =
-        await api.send<Auth_Request, Auth_Response>(req, Auth_Response());
+    final resp = await api.send(req, Auth_Response());
     await prefs.setId(resp.id);
     await prefs.setHash(resp.hash);
   }

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/rand"
 	"strconv"
@@ -14,63 +15,63 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func LoginRequest(ctx context.Context, requestBytes []byte) *messages.Login_Response {
-	wrap := func(err error) *messages.Login_Response {
-		return &messages.Login_Response{Err: api.Error(err)}
+func LoginRequest(ctx context.Context, requestBytes []byte) (*messages.Login_Response, error) {
+	wrap := func(t messages.Error_Type, m string, err error) (*messages.Login_Response, error) {
+		return &messages.Login_Response{Err: api.Error(t, m, err)}, err
 	}
 
 	req := &messages.Login_Request{}
 	if err := proto.Unmarshal(requestBytes, req); err != nil {
-		return wrap(api.UserError("Corrupt input", fmt.Errorf("unmarshaling: %w", err)))
+		return wrap(messages.Error_ERROR, "Corrupt input", fmt.Errorf("unmarshaling: %w", err))
 	}
 	t := time.Now().Unix()
 
 	// TODO: Send an email with deep link
 	fmt.Println(api.GenerateCode(req.Device, req.Email, t))
 
-	return &messages.Login_Response{Time: fmt.Sprint(t)}
+	return &messages.Login_Response{Time: fmt.Sprint(t)}, nil
 }
 
-func TokenValidateRequest(ctx context.Context, server *pserver.Server, requestBytes []byte) *messages.Token_Validate_Response {
-	wrap := func(err error) *messages.Token_Validate_Response {
-		return &messages.Token_Validate_Response{Err: api.Error(err)}
+func TokenValidateRequest(ctx context.Context, server *pserver.Server, requestBytes []byte) (*messages.Token_Validate_Response, error) {
+	wrap := func(t messages.Error_Type, m string, err error) (*messages.Token_Validate_Response, error) {
+		return &messages.Token_Validate_Response{Err: api.Error(t, m, err)}, err
 	}
 
 	req := &messages.Token_Validate_Request{}
 	if err := proto.Unmarshal(requestBytes, req); err != nil {
-		return wrap(api.UserError("Corrupt input", fmt.Errorf("unmarshaling: %w", err)))
+		return wrap(messages.Error_ERROR, "Corrupt input", fmt.Errorf("unmarshaling: %w", err))
 	}
 
 	_, _, err := api.GetUserVerify(ctx, server.Firestore, nil, req.Token)
 	if err != nil {
-		return wrap(api.UserError("Invalid login token", api.AuthErrorf("verifying token: %w", err)))
+		return wrap(messages.Error_AUTH, "Invalid login token", fmt.Errorf("verifying token: %w", err))
 	}
 
-	return &messages.Token_Validate_Response{}
+	return &messages.Token_Validate_Response{}, nil
 }
 
-func AuthRequest(ctx context.Context, server *pserver.Server, requestBytes []byte) *messages.Auth_Response {
-	wrap := func(err error) *messages.Auth_Response {
-		return &messages.Auth_Response{Err: api.Error(err)}
+func AuthRequest(ctx context.Context, server *pserver.Server, requestBytes []byte) (*messages.Auth_Response, error) {
+	wrap := func(t messages.Error_Type, m string, err error) (*messages.Auth_Response, error) {
+		return &messages.Auth_Response{Err: api.Error(t, m, err)}, err
 	}
 
 	req := &messages.Auth_Request{}
 	if err := proto.Unmarshal(requestBytes, req); err != nil {
-		return wrap(api.UserError("Corrupt input", fmt.Errorf("unmarshaling: %w", err)))
+		return wrap(messages.Error_ERROR, "Corrupt input", fmt.Errorf("unmarshaling: %w", err))
 	}
 	timeInt64, err := strconv.ParseInt(req.Time, 10, 64)
 	if err != nil {
-		return wrap(api.UserError("Corrupt input", api.AuthErrorf("parsing time: %w", err)))
+		return wrap(messages.Error_AUTH, "Corrupt input", fmt.Errorf("parsing time: %w", err))
 	}
 	code, err := api.GenerateCode(req.Device, req.Email, timeInt64)
 	if err != nil {
-		return wrap(api.UserError("Corrupt input", api.AuthErrorf("getting code: %w", err)))
+		return wrap(messages.Error_AUTH, "Corrupt input", fmt.Errorf("getting code: %w", err))
 	}
 	if code != req.Code {
-		return wrap(api.UserError("Wrong code", api.AuthErrorf("wrong code")))
+		return wrap(messages.Error_AUTH, "Wrong code", errors.New("wrong code"))
 	}
 	if time.Unix(timeInt64, 0).Add(time.Minute * 30).Before(time.Now()) {
-		return wrap(api.UserError("Code expired", api.ExpiredErrorf("code expired")))
+		return wrap(messages.Error_EXPIRED, "Code expired", errors.New("code expired"))
 	}
 
 	// create or update user?
@@ -104,15 +105,15 @@ func AuthRequest(ctx context.Context, server *pserver.Server, requestBytes []byt
 
 	}
 	if err := server.Firestore.RunTransaction(ctx, f); err != nil {
-		return wrap(api.UserError("Server error", fmt.Errorf("running user transaction: %w", err)))
+		return wrap(messages.Error_ERROR, "Server error", fmt.Errorf("running user transaction: %w", err))
 	}
 
 	hash, err := api.GenerateHash(userRef.ID, req.Device, user.Salt)
 	if err != nil {
-		return wrap(api.UserError("Corrupt data", api.AuthErrorf("getting hash: %w", err)))
+		return wrap(messages.Error_AUTH, "Corrupt data", fmt.Errorf("getting hash: %w", err))
 	}
 
-	return &messages.Auth_Response{Id: userRef.ID, Hash: hash}
+	return &messages.Auth_Response{Id: userRef.ID, Hash: hash}, nil
 }
 
 var seededRand = rand.New(rand.NewSource(time.Now().UnixNano()))

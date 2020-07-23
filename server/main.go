@@ -2,13 +2,13 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
+	"testing"
 
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api/auth"
@@ -19,100 +19,160 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-const PROJECT_ID = "groupshare-testing"
+const PROJECT_ID = "groupshare"
+const TESTING_PROJECT_ID = "groupshare-testing"
+const LOCATION_ID = "europe-west2"
+const TASKS_QUEUE = "tasks"
+const PREFIX = "https://groupshare.uc.r.appspot.com"
+const LOCAL_PREFIX = "http://localhost:8080"
 
 func main() {
 
-	fc, err := firestore.NewClient(context.Background(), PROJECT_ID)
+	var prefix, project, location, queue string
+	if appengine.IsAppEngine() {
+		prefix = PREFIX
+		project = PROJECT_ID
+		location = LOCATION_ID
+		queue = TASKS_QUEUE
+	} else {
+		prefix = LOCAL_PREFIX
+		project = TESTING_PROJECT_ID
+		location = "" // not used when local
+		queue = ""    // not used when local
+	}
+	fc, err := firestore.NewClient(context.Background(), project)
 	if err != nil {
 		log.Fatal(err)
 	}
-	app := &App{Server: pserver.New(fc)}
-	defer app.Server.Close()
-
-	http.HandleFunc("/", app.indexHandler)
-
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-		log.Printf("Defaulting to port %s", port)
+	server := &pserver.Server{
+		Firestore: fc,
+		Prefix:    prefix,
+		Project:   project,
+		Location:  location,
+		Queue:     queue,
 	}
+	defer func() { _ = server.Close() }()
 
-	log.Printf("Listening on port %s", port)
-	if err := http.ListenAndServe(":"+port, nil); err != nil && err != http.ErrServerClosed {
-		log.Fatal(err)
+	http.HandleFunc("/", indexHandler(server))
+
+	if appengine.IsAppEngine() {
+		appengine.Main()
+	} else {
+		port := os.Getenv("PORT")
+		if port == "" {
+			port = "8080"
+		}
+		fmt.Println("Serving...")
+		if err := http.ListenAndServe(":"+port, nil); err != nil && err != http.ErrServerClosed {
+			log.Fatal(err)
+		}
 	}
 }
 
-type App struct {
-	Server *pserver.Server
+func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Request) {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := appengine.NewContext(r)
+
+		requestBytes, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
+
+		response, err := ProcessRequest(ctx, server, r.URL.Path, requestBytes)
+
+		if err == pserver.ServerBusy {
+			http.Error(w, "503 server busy", http.StatusServiceUnavailable)
+			return
+		}
+		if err == pserver.PathNotFound {
+			http.NotFound(w, r)
+			return
+		}
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
+
+		if response != nil {
+			responseBytes, err := proto.Marshal(response)
+			if err != nil {
+				http.Error(w, err.Error(), 500)
+				return
+			}
+			if _, err = w.Write(responseBytes); err != nil {
+				http.Error(w, err.Error(), 500)
+				return
+			}
+		}
+	}
 }
 
-func (a *App) indexHandler(w http.ResponseWriter, r *http.Request) {
-
-	ctx := appengine.NewContext(r)
-
-	requestBytes, err := ioutil.ReadAll(r.Body)
+func TestProcessMessage(ctx context.Context, t *testing.T, server *pserver.Server, message proto.Message) proto.Message {
+	response, err := ProcessMessage(ctx, server, message)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
+		t.Fatal(err)
 	}
-
-	response := a.ProcessRequest(ctx, r.URL.Path, requestBytes)
-
-	if response == nil {
-		http.NotFound(w, r)
-		return
-	}
-
-	// TODO: debug code
-	const debug = true
-	if debug {
-		e := json.NewEncoder(os.Stdout)
-		e.SetIndent("", "\t")
-		_ = e.Encode(response)
-	}
-
-	responseBytes, err := proto.Marshal(response)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	if _, err = w.Write(responseBytes); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+	return response
 }
 
-func (a *App) ProcessMessage(ctx context.Context, message proto.Message) proto.Message {
+func ProcessMessage(ctx context.Context, server *pserver.Server, message proto.Message) (proto.Message, error) {
 	messageType := fmt.Sprintf("%T", message)
 	path := "/" + strings.TrimPrefix(messageType, "*messages.")
 	messageBytes, err := proto.Marshal(message)
 	if err != nil {
-		return &messages.Error{Message: "error marshaling message in ProcessMessage"}
+		return nil, fmt.Errorf("marshaling message: %w", err)
 	}
-	return a.ProcessRequest(ctx, path, messageBytes)
+	response, err := ProcessRequest(ctx, server, path, messageBytes)
+	if err != nil {
+		return nil, err
+	}
+	return response, nil
 }
 
-func (a *App) ProcessRequest(ctx context.Context, path string, request []byte) proto.Message {
+func ProcessRequest(ctx context.Context, server *pserver.Server, path string, request []byte) (proto.Message, error) {
 	switch path {
-	case "/Login_Request":
+	case pserver.Path(&messages.Login_Request{}):
 		return auth.LoginRequest(ctx, request)
-	case "/Auth_Request":
-		return auth.AuthRequest(ctx, a.Server, request)
-	case "/Token_Validate_Request":
-		return auth.TokenValidateRequest(ctx, a.Server, request)
-	case "/Share_Add_Request":
-		return store.ShareAddRequest(ctx, a.Server, request)
-	case "/Share_Get_Request":
-		return store.ShareGetRequest(ctx, a.Server, request)
-	case "/Share_List_Request":
-		return store.ShareListRequest(ctx, a.Server, request)
-	case "/Share_Edit_Request":
-		return store.ShareEditRequest(ctx, a.Server, request)
+	case pserver.Path(&messages.Auth_Request{}):
+		return auth.AuthRequest(ctx, server, request)
+	case pserver.Path(&messages.Token_Validate_Request{}):
+		return auth.TokenValidateRequest(ctx, server, request)
+	case pserver.Path(&messages.Share_Add_Request{}):
+		return store.ShareAddRequest(ctx, server, request)
+	case pserver.Path(&messages.Share_Get_Request{}):
+		return store.ShareGetRequest(ctx, server, request)
+	case pserver.Path(&messages.Share_List_Request{}):
+		return store.ShareListRequest(ctx, server, request)
+	case pserver.Path(&messages.Share_Edit_Request{}):
+		return store.ShareEditRequest(ctx, server, request)
+	case pserver.Path(&messages.Share_Refresh_Request{}):
+		return nil, store.ShareRefreshRequest(ctx, server, request)
 	default:
-		fmt.Println(path)
-		return nil
+		return nil, pserver.PathNotFound
 	}
+}
 
+func GetResponse(request proto.Message) proto.Message {
+	switch request.(type) {
+	case *messages.Login_Request:
+		return &messages.Login_Response{}
+	case *messages.Auth_Request:
+		return &messages.Auth_Response{}
+	case *messages.Token_Validate_Request:
+		return &messages.Token_Validate_Response{}
+	case *messages.Share_Add_Request:
+		return &messages.Share_Add_Response{}
+	case *messages.Share_Get_Request:
+		return &messages.Share_Get_Response{}
+	case *messages.Share_List_Request:
+		return &messages.Share_List_Response{}
+	case *messages.Share_Edit_Request:
+		return &messages.Share_Edit_Response{}
+	case *messages.Share_Refresh_Request:
+		return &messages.Share_Refresh_Response{}
+	default:
+		panic(fmt.Sprintf("response not found for %T", request))
+	}
 }

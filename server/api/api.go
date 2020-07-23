@@ -5,7 +5,6 @@ import (
 	"crypto/sha1"
 	"encoding/binary"
 	"encoding/json"
-	"errors"
 	"fmt"
 
 	"cloud.google.com/go/firestore"
@@ -24,31 +23,38 @@ type User struct {
 	Shares []string `firestore:"shares"`
 }
 
-func Error(err error) *messages.Error {
-	errorType := messages.Error_ERROR
-	if expiredErr := new(ExpiredErrorStruct); errors.As(err, expiredErr) {
-		errorType = messages.Error_EXPIRED
-	} else if authErr := new(AuthErrorStruct); errors.As(err, authErr) {
-		errorType = messages.Error_AUTH
-	}
-	message := "Server error"
-	if userErr := new(UserErrorStruct); errors.As(err, userErr) {
-		message = userErr.Message()
-	}
+func Error(errorType messages.Error_Type, message string, err error) *messages.Error {
 	if DEV_ENV {
 		message += fmt.Sprintf("\n[%+v]", err)
 	}
 	return &messages.Error{Message: message, Type: errorType}
 }
 
+//func Error(t messages.Error_Type, message string) *messages.Error {
+//	errorType := messages.Error_ERROR
+//	if expiredErr := new(ExpiredErrorStruct); errors.As(err, expiredErr) {
+//		errorType = messages.Error_EXPIRED
+//	} else if authErr := new(AuthErrorStruct); errors.As(err, authErr) {
+//		errorType = messages.Error_AUTH
+//	}
+//	message := "Server error"
+//	if userErr := new(UserErrorStruct); errors.As(err, userErr) {
+//		message = userErr.Message()
+//	}
+//	if DEV_ENV {
+//		message += fmt.Sprintf("\n[%+v]", err)
+//	}
+//	return &messages.Error{Message: message, Type: errorType}
+//}
+
 func GetUserVerify(ctx context.Context, client *firestore.Client, tx *firestore.Transaction, token *messages.Token) (*firestore.DocumentRef, *User, error) {
 	ref := client.Collection(USERS_COLLECTION).Doc(token.Id)
 	var snap *firestore.DocumentSnapshot
 	var err error
-	if tx != nil {
-		snap, err = tx.Get(ref)
-	} else {
+	if tx == nil {
 		snap, err = ref.Get(ctx)
+	} else {
+		snap, err = tx.Get(ref)
 	}
 	if err != nil {
 		return nil, nil, fmt.Errorf("getting user: %w", err)
@@ -123,52 +129,52 @@ func GenerateHash(id, device, salt string) (string, error) {
 	return fmt.Sprintf("%x", hash), nil
 }
 
-func UserError(message string, err error) UserErrorStruct {
-	return UserErrorStruct{
-		message: message,
-		err:     err,
-	}
-}
-func AuthErrorf(format string, a ...interface{}) AuthErrorStruct {
-	return AuthErrorStruct{
-		err: fmt.Errorf(format, a...),
-	}
-}
-func ExpiredErrorf(format string, a ...interface{}) ExpiredErrorStruct {
-	return ExpiredErrorStruct{
-		err: fmt.Errorf(format, a...),
-	}
-}
+//func UserError(message string, err error) UserErrorStruct {
+//	return UserErrorStruct{
+//		message: message,
+//		err:     err,
+//	}
+//}
+//func AuthErrorf(format string, a ...interface{}) AuthErrorStruct {
+//	return AuthErrorStruct{
+//		err: fmt.Errorf(format, a...),
+//	}
+//}
+//func ExpiredErrorf(format string, a ...interface{}) ExpiredErrorStruct {
+//	return ExpiredErrorStruct{
+//		err: fmt.Errorf(format, a...),
+//	}
+//}
 
-type UserErrorStruct struct {
-	message string
-	err     error
-}
-type AuthErrorStruct struct {
-	err error
-}
-type ExpiredErrorStruct struct {
-	err error
-}
-
-func (a UserErrorStruct) Message() string {
-	return a.message
-}
-func (a UserErrorStruct) Error() string {
-	return a.err.Error()
-}
-func (a AuthErrorStruct) Error() string {
-	return a.err.Error()
-}
-func (a ExpiredErrorStruct) Error() string {
-	return a.err.Error()
-}
-func (a UserErrorStruct) Unwrap() error {
-	return a.err
-}
-func (a AuthErrorStruct) Unwrap() error {
-	return a.err
-}
-func (a ExpiredErrorStruct) Unwrap() error {
-	return a.err
-}
+//type UserErrorStruct struct {
+//	message string
+//	err     error
+//}
+//type AuthErrorStruct struct {
+//	err error
+//}
+//type ExpiredErrorStruct struct {
+//	err error
+//}
+//
+//func (a UserErrorStruct) Message() string {
+//	return a.message
+//}
+//func (a UserErrorStruct) Error() string {
+//	return a.err.Error()
+//}
+//func (a AuthErrorStruct) Error() string {
+//	return a.err.Error()
+//}
+//func (a ExpiredErrorStruct) Error() string {
+//	return a.err.Error()
+//}
+//func (a UserErrorStruct) Unwrap() error {
+//	return a.err
+//}
+//func (a AuthErrorStruct) Unwrap() error {
+//	return a.err
+//}
+//func (a ExpiredErrorStruct) Unwrap() error {
+//	return a.err
+//}

@@ -9,12 +9,9 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'foo/foo.pb.dart' as $1;
-
 class Share extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share', package: const $pb.PackageName('data'), createEmptyInstance: create)
     ..aOS(1, 'name')
-    ..aOM<$1.Foo>(2, 'foo', subBuilder: $1.Foo.create)
     ..hasRequiredFields = false
   ;
 
@@ -41,16 +38,5 @@ class Share extends $pb.GeneratedMessage {
   $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
   void clearName() => clearField(1);
-
-  @$pb.TagNumber(2)
-  $1.Foo get foo => $_getN(1);
-  @$pb.TagNumber(2)
-  set foo($1.Foo v) { setField(2, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasFoo() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearFoo() => clearField(2);
-  @$pb.TagNumber(2)
-  $1.Foo ensureFoo() => $_ensure(1);
 }
 

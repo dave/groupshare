@@ -217,6 +217,44 @@ func (*Share_Edit) Descriptor() ([]byte, []int) {
 	return file_groupshare_messages_share_proto_rawDescGZIP(), []int{0, 3}
 }
 
+type Share_Refresh struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *Share_Refresh) Reset() {
+	*x = Share_Refresh{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_groupshare_messages_share_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Share_Refresh) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Share_Refresh) ProtoMessage() {}
+
+func (x *Share_Refresh) ProtoReflect() protoreflect.Message {
+	mi := &file_groupshare_messages_share_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Share_Refresh.ProtoReflect.Descriptor instead.
+func (*Share_Refresh) Descriptor() ([]byte, []int) {
+	return file_groupshare_messages_share_proto_rawDescGZIP(), []int{0, 4}
+}
+
 type Share_List_Request struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -228,7 +266,7 @@ type Share_List_Request struct {
 func (x *Share_List_Request) Reset() {
 	*x = Share_List_Request{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_groupshare_messages_share_proto_msgTypes[5]
+		mi := &file_groupshare_messages_share_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -241,7 +279,7 @@ func (x *Share_List_Request) String() string {
 func (*Share_List_Request) ProtoMessage() {}
 
 func (x *Share_List_Request) ProtoReflect() protoreflect.Message {
-	mi := &file_groupshare_messages_share_proto_msgTypes[5]
+	mi := &file_groupshare_messages_share_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -276,7 +314,7 @@ type Share_List_Response struct {
 func (x *Share_List_Response) Reset() {
 	*x = Share_List_Response{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_groupshare_messages_share_proto_msgTypes[6]
+		mi := &file_groupshare_messages_share_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -289,7 +327,7 @@ func (x *Share_List_Response) String() string {
 func (*Share_List_Response) ProtoMessage() {}
 
 func (x *Share_List_Response) ProtoReflect() protoreflect.Message {
-	mi := &file_groupshare_messages_share_proto_msgTypes[6]
+	mi := &file_groupshare_messages_share_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -331,7 +369,7 @@ type Share_Get_Request struct {
 func (x *Share_Get_Request) Reset() {
 	*x = Share_Get_Request{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_groupshare_messages_share_proto_msgTypes[7]
+		mi := &file_groupshare_messages_share_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -344,7 +382,7 @@ func (x *Share_Get_Request) String() string {
 func (*Share_Get_Request) ProtoMessage() {}
 
 func (x *Share_Get_Request) ProtoReflect() protoreflect.Message {
-	mi := &file_groupshare_messages_share_proto_msgTypes[7]
+	mi := &file_groupshare_messages_share_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -388,7 +426,7 @@ type Share_Get_Response struct {
 func (x *Share_Get_Response) Reset() {
 	*x = Share_Get_Response{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_groupshare_messages_share_proto_msgTypes[8]
+		mi := &file_groupshare_messages_share_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -401,7 +439,7 @@ func (x *Share_Get_Response) String() string {
 func (*Share_Get_Response) ProtoMessage() {}
 
 func (x *Share_Get_Response) ProtoReflect() protoreflect.Message {
-	mi := &file_groupshare_messages_share_proto_msgTypes[8]
+	mi := &file_groupshare_messages_share_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -458,7 +496,7 @@ type Share_Add_Request struct {
 func (x *Share_Add_Request) Reset() {
 	*x = Share_Add_Request{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_groupshare_messages_share_proto_msgTypes[9]
+		mi := &file_groupshare_messages_share_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -471,7 +509,7 @@ func (x *Share_Add_Request) String() string {
 func (*Share_Add_Request) ProtoMessage() {}
 
 func (x *Share_Add_Request) ProtoReflect() protoreflect.Message {
-	mi := &file_groupshare_messages_share_proto_msgTypes[9]
+	mi := &file_groupshare_messages_share_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -520,7 +558,7 @@ type Share_Add_Response struct {
 func (x *Share_Add_Response) Reset() {
 	*x = Share_Add_Response{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_groupshare_messages_share_proto_msgTypes[10]
+		mi := &file_groupshare_messages_share_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -533,7 +571,7 @@ func (x *Share_Add_Response) String() string {
 func (*Share_Add_Response) ProtoMessage() {}
 
 func (x *Share_Add_Response) ProtoReflect() protoreflect.Message {
-	mi := &file_groupshare_messages_share_proto_msgTypes[10]
+	mi := &file_groupshare_messages_share_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -579,7 +617,7 @@ type Share_Edit_Request struct {
 func (x *Share_Edit_Request) Reset() {
 	*x = Share_Edit_Request{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_groupshare_messages_share_proto_msgTypes[11]
+		mi := &file_groupshare_messages_share_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -592,7 +630,7 @@ func (x *Share_Edit_Request) String() string {
 func (*Share_Edit_Request) ProtoMessage() {}
 
 func (x *Share_Edit_Request) ProtoReflect() protoreflect.Message {
-	mi := &file_groupshare_messages_share_proto_msgTypes[11]
+	mi := &file_groupshare_messages_share_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -657,7 +695,7 @@ type Share_Edit_Response struct {
 func (x *Share_Edit_Response) Reset() {
 	*x = Share_Edit_Response{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_groupshare_messages_share_proto_msgTypes[12]
+		mi := &file_groupshare_messages_share_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -670,7 +708,7 @@ func (x *Share_Edit_Response) String() string {
 func (*Share_Edit_Response) ProtoMessage() {}
 
 func (x *Share_Edit_Response) ProtoReflect() protoreflect.Message {
-	mi := &file_groupshare_messages_share_proto_msgTypes[12]
+	mi := &file_groupshare_messages_share_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -707,6 +745,100 @@ func (x *Share_Edit_Response) GetErr() *Error {
 	return nil
 }
 
+type Share_Refresh_Request struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // document id
+}
+
+func (x *Share_Refresh_Request) Reset() {
+	*x = Share_Refresh_Request{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_groupshare_messages_share_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Share_Refresh_Request) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Share_Refresh_Request) ProtoMessage() {}
+
+func (x *Share_Refresh_Request) ProtoReflect() protoreflect.Message {
+	mi := &file_groupshare_messages_share_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Share_Refresh_Request.ProtoReflect.Descriptor instead.
+func (*Share_Refresh_Request) Descriptor() ([]byte, []int) {
+	return file_groupshare_messages_share_proto_rawDescGZIP(), []int{0, 4, 0}
+}
+
+func (x *Share_Refresh_Request) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type Share_Refresh_Response struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Err *Error `protobuf:"bytes,1,opt,name=err,proto3" json:"err,omitempty"`
+}
+
+func (x *Share_Refresh_Response) Reset() {
+	*x = Share_Refresh_Response{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_groupshare_messages_share_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Share_Refresh_Response) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Share_Refresh_Response) ProtoMessage() {}
+
+func (x *Share_Refresh_Response) ProtoReflect() protoreflect.Message {
+	mi := &file_groupshare_messages_share_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Share_Refresh_Response.ProtoReflect.Descriptor instead.
+func (*Share_Refresh_Response) Descriptor() ([]byte, []int) {
+	return file_groupshare_messages_share_proto_rawDescGZIP(), []int{0, 4, 1}
+}
+
+func (x *Share_Refresh_Response) GetErr() *Error {
+	if x != nil {
+		return x.Err
+	}
+	return nil
+}
+
 var File_groupshare_messages_share_proto protoreflect.FileDescriptor
 
 var file_groupshare_messages_share_proto_rawDesc = []byte{
@@ -719,7 +851,7 @@ var file_groupshare_messages_share_proto_rawDesc = []byte{
 	0x73, 0x2f, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1b, 0x67,
 	0x72, 0x6f, 0x75, 0x70, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2f, 0x64, 0x61, 0x74, 0x61, 0x2f, 0x73,
 	0x68, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x11, 0x64, 0x65, 0x6c, 0x74,
-	0x61, 0x2f, 0x64, 0x65, 0x6c, 0x74, 0x61, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xf7, 0x05,
+	0x61, 0x2f, 0x64, 0x65, 0x6c, 0x74, 0x61, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xcc, 0x06,
 	0x0a, 0x05, 0x53, 0x68, 0x61, 0x72, 0x65, 0x1a, 0x7f, 0x0a, 0x04, 0x4c, 0x69, 0x73, 0x74, 0x1a,
 	0x30, 0x0a, 0x07, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x25, 0x0a, 0x05, 0x74, 0x6f,
 	0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x6d, 0x65, 0x73, 0x73,
@@ -767,12 +899,17 @@ var file_groupshare_messages_share_proto_rawDesc = []byte{
 	0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x09, 0x2e, 0x64, 0x65, 0x6c, 0x74, 0x61, 0x2e, 0x4f, 0x70,
 	0x52, 0x02, 0x6f, 0x70, 0x12, 0x21, 0x0a, 0x03, 0x65, 0x72, 0x72, 0x18, 0x03, 0x20, 0x01, 0x28,
 	0x0b, 0x32, 0x0f, 0x2e, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x2e, 0x45, 0x72, 0x72,
-	0x6f, 0x72, 0x52, 0x03, 0x65, 0x72, 0x72, 0x42, 0x43, 0x5a, 0x41, 0x67, 0x69, 0x74, 0x68, 0x75,
-	0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x64, 0x61, 0x76, 0x65, 0x2f, 0x67, 0x72, 0x6f, 0x75, 0x70,
-	0x73, 0x68, 0x61, 0x72, 0x65, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x2f, 0x70, 0x62, 0x2f,
-	0x67, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2f, 0x6d, 0x65, 0x73, 0x73, 0x61,
-	0x67, 0x65, 0x73, 0x3b, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+	0x6f, 0x72, 0x52, 0x03, 0x65, 0x72, 0x72, 0x1a, 0x53, 0x0a, 0x07, 0x52, 0x65, 0x66, 0x72, 0x65,
+	0x73, 0x68, 0x1a, 0x19, 0x0a, 0x07, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a,
+	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x1a, 0x2d, 0x0a,
+	0x08, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x21, 0x0a, 0x03, 0x65, 0x72, 0x72,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
+	0x73, 0x2e, 0x45, 0x72, 0x72, 0x6f, 0x72, 0x52, 0x03, 0x65, 0x72, 0x72, 0x42, 0x43, 0x5a, 0x41,
+	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x64, 0x61, 0x76, 0x65, 0x2f,
+	0x67, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x65,
+	0x72, 0x2f, 0x70, 0x62, 0x2f, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2f,
+	0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x3b, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
+	0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -787,44 +924,48 @@ func file_groupshare_messages_share_proto_rawDescGZIP() []byte {
 	return file_groupshare_messages_share_proto_rawDescData
 }
 
-var file_groupshare_messages_share_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_groupshare_messages_share_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_groupshare_messages_share_proto_goTypes = []interface{}{
-	(*Share)(nil),               // 0: messages.Share
-	(*Share_List)(nil),          // 1: messages.Share.List
-	(*Share_Get)(nil),           // 2: messages.Share.Get
-	(*Share_Add)(nil),           // 3: messages.Share.Add
-	(*Share_Edit)(nil),          // 4: messages.Share.Edit
-	(*Share_List_Request)(nil),  // 5: messages.Share.List.Request
-	(*Share_List_Response)(nil), // 6: messages.Share.List.Response
-	(*Share_Get_Request)(nil),   // 7: messages.Share.Get.Request
-	(*Share_Get_Response)(nil),  // 8: messages.Share.Get.Response
-	(*Share_Add_Request)(nil),   // 9: messages.Share.Add.Request
-	(*Share_Add_Response)(nil),  // 10: messages.Share.Add.Response
-	(*Share_Edit_Request)(nil),  // 11: messages.Share.Edit.Request
-	(*Share_Edit_Response)(nil), // 12: messages.Share.Edit.Response
-	(*Token)(nil),               // 13: messages.Token
-	(*Error)(nil),               // 14: messages.Error
-	(*data.Share)(nil),          // 15: data.Share
-	(*delta.Op)(nil),            // 16: delta.Op
+	(*Share)(nil),                  // 0: messages.Share
+	(*Share_List)(nil),             // 1: messages.Share.List
+	(*Share_Get)(nil),              // 2: messages.Share.Get
+	(*Share_Add)(nil),              // 3: messages.Share.Add
+	(*Share_Edit)(nil),             // 4: messages.Share.Edit
+	(*Share_Refresh)(nil),          // 5: messages.Share.Refresh
+	(*Share_List_Request)(nil),     // 6: messages.Share.List.Request
+	(*Share_List_Response)(nil),    // 7: messages.Share.List.Response
+	(*Share_Get_Request)(nil),      // 8: messages.Share.Get.Request
+	(*Share_Get_Response)(nil),     // 9: messages.Share.Get.Response
+	(*Share_Add_Request)(nil),      // 10: messages.Share.Add.Request
+	(*Share_Add_Response)(nil),     // 11: messages.Share.Add.Response
+	(*Share_Edit_Request)(nil),     // 12: messages.Share.Edit.Request
+	(*Share_Edit_Response)(nil),    // 13: messages.Share.Edit.Response
+	(*Share_Refresh_Request)(nil),  // 14: messages.Share.Refresh.Request
+	(*Share_Refresh_Response)(nil), // 15: messages.Share.Refresh.Response
+	(*Token)(nil),                  // 16: messages.Token
+	(*Error)(nil),                  // 17: messages.Error
+	(*data.Share)(nil),             // 18: data.Share
+	(*delta.Op)(nil),               // 19: delta.Op
 }
 var file_groupshare_messages_share_proto_depIdxs = []int32{
-	13, // 0: messages.Share.List.Request.token:type_name -> messages.Token
-	14, // 1: messages.Share.List.Response.err:type_name -> messages.Error
-	13, // 2: messages.Share.Get.Request.token:type_name -> messages.Token
-	15, // 3: messages.Share.Get.Response.share:type_name -> data.Share
-	14, // 4: messages.Share.Get.Response.err:type_name -> messages.Error
-	13, // 5: messages.Share.Add.Request.token:type_name -> messages.Token
-	15, // 6: messages.Share.Add.Request.share:type_name -> data.Share
-	14, // 7: messages.Share.Add.Response.err:type_name -> messages.Error
-	13, // 8: messages.Share.Edit.Request.token:type_name -> messages.Token
-	16, // 9: messages.Share.Edit.Request.op:type_name -> delta.Op
-	16, // 10: messages.Share.Edit.Response.op:type_name -> delta.Op
-	14, // 11: messages.Share.Edit.Response.err:type_name -> messages.Error
-	12, // [12:12] is the sub-list for method output_type
-	12, // [12:12] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	16, // 0: messages.Share.List.Request.token:type_name -> messages.Token
+	17, // 1: messages.Share.List.Response.err:type_name -> messages.Error
+	16, // 2: messages.Share.Get.Request.token:type_name -> messages.Token
+	18, // 3: messages.Share.Get.Response.share:type_name -> data.Share
+	17, // 4: messages.Share.Get.Response.err:type_name -> messages.Error
+	16, // 5: messages.Share.Add.Request.token:type_name -> messages.Token
+	18, // 6: messages.Share.Add.Request.share:type_name -> data.Share
+	17, // 7: messages.Share.Add.Response.err:type_name -> messages.Error
+	16, // 8: messages.Share.Edit.Request.token:type_name -> messages.Token
+	19, // 9: messages.Share.Edit.Request.op:type_name -> delta.Op
+	19, // 10: messages.Share.Edit.Response.op:type_name -> delta.Op
+	17, // 11: messages.Share.Edit.Response.err:type_name -> messages.Error
+	17, // 12: messages.Share.Refresh.Response.err:type_name -> messages.Error
+	13, // [13:13] is the sub-list for method output_type
+	13, // [13:13] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_groupshare_messages_share_proto_init() }
@@ -896,7 +1037,7 @@ func file_groupshare_messages_share_proto_init() {
 			}
 		}
 		file_groupshare_messages_share_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Share_List_Request); i {
+			switch v := v.(*Share_Refresh); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -908,7 +1049,7 @@ func file_groupshare_messages_share_proto_init() {
 			}
 		}
 		file_groupshare_messages_share_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Share_List_Response); i {
+			switch v := v.(*Share_List_Request); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -920,7 +1061,7 @@ func file_groupshare_messages_share_proto_init() {
 			}
 		}
 		file_groupshare_messages_share_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Share_Get_Request); i {
+			switch v := v.(*Share_List_Response); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -932,7 +1073,7 @@ func file_groupshare_messages_share_proto_init() {
 			}
 		}
 		file_groupshare_messages_share_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Share_Get_Response); i {
+			switch v := v.(*Share_Get_Request); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -944,7 +1085,7 @@ func file_groupshare_messages_share_proto_init() {
 			}
 		}
 		file_groupshare_messages_share_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Share_Add_Request); i {
+			switch v := v.(*Share_Get_Response); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -956,7 +1097,7 @@ func file_groupshare_messages_share_proto_init() {
 			}
 		}
 		file_groupshare_messages_share_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Share_Add_Response); i {
+			switch v := v.(*Share_Add_Request); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -968,7 +1109,7 @@ func file_groupshare_messages_share_proto_init() {
 			}
 		}
 		file_groupshare_messages_share_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Share_Edit_Request); i {
+			switch v := v.(*Share_Add_Response); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -980,7 +1121,43 @@ func file_groupshare_messages_share_proto_init() {
 			}
 		}
 		file_groupshare_messages_share_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Share_Edit_Request); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_groupshare_messages_share_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Share_Edit_Response); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_groupshare_messages_share_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Share_Refresh_Request); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_groupshare_messages_share_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Share_Refresh_Response); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -998,7 +1175,7 @@ func file_groupshare_messages_share_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_groupshare_messages_share_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   13,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

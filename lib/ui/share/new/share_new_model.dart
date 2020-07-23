@@ -13,12 +13,9 @@ class ShareNewModel extends BaseModel {
 
     final req = Share_Add_Request()
       ..token = auth.token()
-      ..unique = api.randomUnique()
-      ..share = (data.Share()..name = name).writeToBuffer();
+      ..request = api.randomUnique()
+      ..share = (data.Share()..name = name);
 
-    final resp = await api.send<Share_Add_Request, Share_Add_Response>(
-      req,
-      Share_Add_Response(),
-    );
+    final resp = await api.send(req, Share_Add_Response());
   }
 }
