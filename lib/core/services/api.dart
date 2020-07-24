@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:groupshare/core/excpetions/exceptions.dart';
@@ -6,23 +7,38 @@ import 'package:groupshare/pb/groupshare/messages/error.pb.dart';
 import 'package:http/http.dart';
 import 'package:protobuf/protobuf.dart';
 
-const _domain = 'http://localhost:8080';
+const LOCAL_PREFIX = 'http://localhost:8080';
+const LIVE_PREFIX = 'https://groupshare.uc.r.appspot.com';
 
 class Api {
+  final _prefix;
+  final _retries;
+  final _rand = Random();
+
+  Api({String prefix = LOCAL_PREFIX, int retries = 20})
+      : _retries = retries,
+        _prefix = prefix;
+
   Future<U> send<T extends GeneratedMessage, U extends GeneratedMessage>(
     T payload,
     U reply,
   ) async {
     final bytes = payload.writeToBuffer();
-    final request = await post(
-      '$_domain/$T',
-      body: bytes,
-    );
-    if (request.statusCode != 200) {
-      throw UserException("Error ${request.statusCode}");
+    Response response;
+    for (var i = 0; i < _retries; i++) {
+      response = await post(
+        '$_prefix/$T',
+        body: bytes,
+      );
+      if (response.statusCode == 200) {
+        break;
+      }
+      sleep(Duration(milliseconds: (500 + _rand.nextInt(500 * (1 << i)))));
     }
-    // TODO: Need "(reply as GeneratedMessage)" for IntelliJ code completion. Remove?
-    (reply as GeneratedMessage).mergeFromBuffer(request.bodyBytes);
+    if (response.statusCode != 200) {
+      throw UserException("Error ${response.statusCode}");
+    }
+    reply.mergeFromBuffer(response.bodyBytes);
 
     final errorField = reply.getTagNumber("err");
     if (errorField == null) {
@@ -44,8 +60,7 @@ class Api {
   }
 
   String randomUnique() {
-    var random = Random.secure();
-    var values = List<int>.generate(16, (i) => random.nextInt(255));
+    var values = List<int>.generate(16, (i) => _rand.nextInt(255));
     return base64UrlEncode(values);
   }
 }

@@ -9,7 +9,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../pserver/data.pb.dart' as $4;
+import 'package:protod/pserver/data.pb.dart' as $4;
 
 class State extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('State', package: const $pb.PackageName('data'), createEmptyInstance: create)
