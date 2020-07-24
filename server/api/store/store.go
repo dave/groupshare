@@ -49,7 +49,6 @@ func ShareGetRequest(ctx context.Context, server *pserver.Server, requestBytes [
 	}
 
 	return &messages.Share_Get_Response{
-		Id:    req.Id,
 		State: state,
 		Share: value.(*data.Share),
 	}, nil

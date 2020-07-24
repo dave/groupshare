@@ -17,6 +17,7 @@ class Auth_Request extends $pb.GeneratedMessage {
     ..aOS(2, 'email')
     ..aOS(3, 'time')
     ..aOS(4, 'code')
+    ..aOB(5, 'test')
     ..hasRequiredFields = false
   ;
 
@@ -70,6 +71,15 @@ class Auth_Request extends $pb.GeneratedMessage {
   $core.bool hasCode() => $_has(3);
   @$pb.TagNumber(4)
   void clearCode() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.bool get test => $_getBF(4);
+  @$pb.TagNumber(5)
+  set test($core.bool v) { $_setBool(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasTest() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearTest() => clearField(5);
 }
 
 class Auth_Response extends $pb.GeneratedMessage {

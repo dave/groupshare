@@ -25,10 +25,9 @@ message Share {
       string id = 2;
     }
     message Response {
-      string id = 1;
-      int64 state = 2;
-      data.Share share = 3;
-      Error err = 4;
+      int64 state = 1;
+      data.Share share = 2;
+      Error err = 3;
     }
   }
 

@@ -151,10 +151,9 @@ class Share_Get_Request extends $pb.GeneratedMessage {
 
 class Share_Get_Response extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Get.Response', package: const $pb.PackageName('messages'), createEmptyInstance: create)
-    ..aOS(1, 'id')
-    ..aInt64(2, 'state')
-    ..aOM<$2.Share>(3, 'share', subBuilder: $2.Share.create)
-    ..aOM<$0.Error>(4, 'err', subBuilder: $0.Error.create)
+    ..aInt64(1, 'state')
+    ..aOM<$2.Share>(2, 'share', subBuilder: $2.Share.create)
+    ..aOM<$0.Error>(3, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
   ;
 
@@ -174,44 +173,35 @@ class Share_Get_Response extends $pb.GeneratedMessage {
   static Share_Get_Response _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get id => $_getSZ(0);
+  $fixnum.Int64 get state => $_getI64(0);
   @$pb.TagNumber(1)
-  set id($core.String v) { $_setString(0, v); }
+  set state($fixnum.Int64 v) { $_setInt64(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
+  $core.bool hasState() => $_has(0);
   @$pb.TagNumber(1)
-  void clearId() => clearField(1);
+  void clearState() => clearField(1);
 
   @$pb.TagNumber(2)
-  $fixnum.Int64 get state => $_getI64(1);
+  $2.Share get share => $_getN(1);
   @$pb.TagNumber(2)
-  set state($fixnum.Int64 v) { $_setInt64(1, v); }
+  set share($2.Share v) { setField(2, v); }
   @$pb.TagNumber(2)
-  $core.bool hasState() => $_has(1);
+  $core.bool hasShare() => $_has(1);
   @$pb.TagNumber(2)
-  void clearState() => clearField(2);
+  void clearShare() => clearField(2);
+  @$pb.TagNumber(2)
+  $2.Share ensureShare() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $2.Share get share => $_getN(2);
+  $0.Error get err => $_getN(2);
   @$pb.TagNumber(3)
-  set share($2.Share v) { setField(3, v); }
+  set err($0.Error v) { setField(3, v); }
   @$pb.TagNumber(3)
-  $core.bool hasShare() => $_has(2);
+  $core.bool hasErr() => $_has(2);
   @$pb.TagNumber(3)
-  void clearShare() => clearField(3);
+  void clearErr() => clearField(3);
   @$pb.TagNumber(3)
-  $2.Share ensureShare() => $_ensure(2);
-
-  @$pb.TagNumber(4)
-  $0.Error get err => $_getN(3);
-  @$pb.TagNumber(4)
-  set err($0.Error v) { setField(4, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasErr() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearErr() => clearField(4);
-  @$pb.TagNumber(4)
-  $0.Error ensureErr() => $_ensure(3);
+  $0.Error ensureErr() => $_ensure(2);
 }
 
 class Share_Get extends $pb.GeneratedMessage {

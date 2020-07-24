@@ -17,6 +17,7 @@ const Auth_Request$json = const {
     const {'1': 'email', '3': 2, '4': 1, '5': 9, '10': 'email'},
     const {'1': 'time', '3': 3, '4': 1, '5': 9, '10': 'time'},
     const {'1': 'code', '3': 4, '4': 1, '5': 9, '10': 'code'},
+    const {'1': 'test', '3': 5, '4': 1, '5': 8, '10': 'test'},
   ],
 };
 

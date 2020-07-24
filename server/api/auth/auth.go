@@ -12,6 +12,7 @@ import (
 	"github.com/dave/groupshare/server/api"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
 	"github.com/dave/protod/pserver"
+	"google.golang.org/appengine"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -67,7 +68,16 @@ func AuthRequest(ctx context.Context, server *pserver.Server, requestBytes []byt
 	if err != nil {
 		return wrap(messages.Error_AUTH, "Corrupt input", fmt.Errorf("getting code: %w", err))
 	}
-	if code != req.Code {
+	checkCode := true
+	if req.Test {
+		// the client is requesting that we skip the code check. This should throw an error
+		// in production environments
+		if appengine.IsAppEngine() {
+			return wrap(messages.Error_ERROR, "Corrupt input", errors.New("test flag set in production"))
+		}
+		checkCode = false
+	}
+	if checkCode && code != req.Code {
 		return wrap(messages.Error_AUTH, "Wrong code", errors.New("wrong code"))
 	}
 	if time.Unix(timeInt64, 0).Add(time.Minute * 30).Before(time.Now()) {

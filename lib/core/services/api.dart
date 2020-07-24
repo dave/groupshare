@@ -33,6 +33,8 @@ class Api {
       if (response.statusCode == 200) {
         break;
       }
+      //print(response.statusCode);
+      //print(response.body);
       sleep(Duration(milliseconds: (500 + _rand.nextInt(500 * (1 << i)))));
     }
     if (response.statusCode != 200) {
