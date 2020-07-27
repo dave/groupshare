@@ -20,35 +20,38 @@ class Api {
         _prefix = prefix;
 
   Future<U> send<T extends GeneratedMessage, U extends GeneratedMessage>(
-    T payload,
-    U reply,
+    T request,
+    U response,
   ) async {
-    final bytes = payload.writeToBuffer();
-    Response response;
+    final requestBytes = request.writeToBuffer();
+    Response httpResponse;
     for (var i = 0; i < _retries; i++) {
-      response = await post(
+      if (i > 0) {
+        sleep(Duration(milliseconds: (500 + _rand.nextInt(500 * (1 << i)))));
+      }
+      httpResponse = await post(
         '$_prefix/$T',
-        body: bytes,
+        body: requestBytes,
       );
-      if (response.statusCode == 200) {
+      if (httpResponse.statusCode == 200) {
         break;
       }
-      //print(response.statusCode);
-      //print(response.body);
-      sleep(Duration(milliseconds: (500 + _rand.nextInt(500 * (1 << i)))));
+      if (httpResponse.statusCode == 503) {
+        continue;
+      }
+      //print(httpResponse.statusCode);
+      //print(httpResponse.body);
+      throw UserException("Error ${httpResponse.statusCode}");
     }
-    if (response.statusCode != 200) {
-      throw UserException("Error ${response.statusCode}");
-    }
-    reply.mergeFromBuffer(response.bodyBytes);
+    response.mergeFromBuffer(httpResponse.bodyBytes);
 
-    final errorField = reply.getTagNumber("err");
+    final errorField = response.getTagNumber("err");
     if (errorField == null) {
-      return reply;
+      return response;
     }
-    final errorValue = reply.getFieldOrNull(errorField);
+    final errorValue = response.getFieldOrNull(errorField);
     if (errorValue == null) {
-      return reply;
+      return response;
     }
     final error = errorValue as Error;
     switch (error.type) {

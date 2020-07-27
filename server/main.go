@@ -90,7 +90,7 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 			http.NotFound(w, r)
 			return
 		}
-		if err != nil {
+		if err != nil && response == nil {
 			http.Error(w, err.Error(), 500)
 			return
 		}

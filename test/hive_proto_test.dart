@@ -5,9 +5,11 @@ import 'package:groupshare/pb/groupshare/data/share.pb.dart';
 import 'package:hive/hive.dart';
 
 void main() {
+  // TODO: ProtoAdapter is unused now... remove it?
+
   setUp(() async {
     Hive.init('.');
-    Hive.registerAdapter(ProtoAdapter<Share>(1, "data"));
+    Hive.registerAdapter(ProtoAdapter<Share>(0));
     final box = await Hive.openBox<Share>('shares');
     locator.registerSingleton<Box<Share>>(box);
   });

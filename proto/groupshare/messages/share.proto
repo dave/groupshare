@@ -4,7 +4,7 @@ package messages;
 import "groupshare/messages/token.proto";
 import "groupshare/messages/error.proto";
 import "groupshare/data/share.proto";
-import "delta/delta.proto";
+import "pserver/data.proto";
 
 option go_package = "github.com/dave/groupshare/server/pb/groupshare/messages;messages";
 
@@ -14,18 +14,18 @@ message Share {
       Token token = 1;
     }
     message Response {
-      repeated string shares = 2;
-      Error err = 3;
+      repeated string shares = 1;
+      Error err = 2;
     }
   }
 
   message Get {
     message Request {
       Token token = 1;
-      string id = 2;
+      pserver.Payload.Get.Request payload = 2;
     }
     message Response {
-      int64 state = 1;
+      pserver.Payload.Get.Response payload = 1;
       data.Share share = 2;
       Error err = 3;
     }
@@ -34,11 +34,11 @@ message Share {
   message Add {
     message Request {
       Token token = 1;
-      string request = 2; // random unique id for de-duplication
+      pserver.Payload.Add.Request payload = 2;
       data.Share share = 3;
     }
     message Response {
-      string id = 1;
+      pserver.Payload.Add.Response payload = 1;
       Error err = 2;
     }
   }
@@ -46,22 +46,16 @@ message Share {
   message Edit {
     message Request {
       Token token = 1;
-      string id = 2; // document id
-
-      // required by pserver: request, state, op
-      string request = 3; // random unique id for this request
-      int64 state = 4;    // state of the document that this op is acting on
-      delta.Op op = 5;    // operation
+      pserver.Payload.Edit.Request payload = 2;
     }
     message Response {
-      // required by pserver: state, op
-      int64 state = 1;   // state of the document after the op from the client and the response op have been applied
-      delta.Op op = 2;   // response op that must be applied to the document in order to get to the server state
-
-      Error err = 3;
+      pserver.Payload.Edit.Response payload = 1;
+      Error err = 2;
     }
   }
 
+  // Never sent by the client... only used internally by the task queue to trigger the
+  // refresh of the snapshot.
   message Refresh {
     message Request {
       string id = 1; // document id

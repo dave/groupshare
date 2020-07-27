@@ -18,6 +18,8 @@ class ShareListModel extends BaseModel {
     final resp = await api.send(req, Share_List_Response());
     _shares = resp.shares;
     setState(ViewState.Idle);
+
+    // TODO: add Store code in here
   }
 
   logoff() async {

@@ -31,31 +31,37 @@ func TestOps(t *testing.T) {
 	token := getToken(ctx, t, c, "a@b.c")
 
 	add := c.MustRequest(ctx, t, &messages.Share_Add_Request{
-		Token:   token,
-		Request: "a",
-		Share:   &data.Share{Name: "b"},
+		Token: token,
+		Payload: &pserver.Payload_Add_Request{
+			Request: "a",
+		},
+		Share: &data.Share{Name: "b"},
 	}).(*messages.Share_Add_Response)
 	if add.Err != nil {
 		t.Fatalf("resp1 error: %s", add.Err.Message)
 	}
 
 	editC := c.MustRequest(ctx, t, &messages.Share_Edit_Request{
-		Token:   token,
-		Id:      add.Id,
-		Request: "b",
-		State:   1,
-		Op:      data.Op().Share().Name().Edit("b", "bC"),
+		Token: token,
+		Payload: &pserver.Payload_Edit_Request{
+			Id:      add.Payload.Id,
+			Request: "b",
+			State:   1,
+			Op:      data.Op().Share().Name().Edit("b", "bC"),
+		},
 	}).(*messages.Share_Edit_Response)
 	if editC.Err != nil {
 		t.Fatalf("resp2 error: %s", editC.Err.Message)
 	}
 
 	editD := c.MustRequest(ctx, t, &messages.Share_Edit_Request{
-		Token:   token,
-		Id:      add.Id,
-		Request: "c",
-		State:   1,
-		Op:      data.Op().Share().Name().Edit("b", "bD"),
+		Token: token,
+		Payload: &pserver.Payload_Edit_Request{
+			Id:      add.Payload.Id,
+			Request: "c",
+			State:   1,
+			Op:      data.Op().Share().Name().Edit("b", "bD"),
+		},
 	}).(*messages.Share_Edit_Response)
 	if editD.Err != nil {
 		t.Fatalf("resp3 error: %s", editD.Err.Message)
@@ -63,7 +69,9 @@ func TestOps(t *testing.T) {
 
 	get := c.MustRequest(ctx, t, &messages.Share_Get_Request{
 		Token: token,
-		Id:    add.Id,
+		Payload: &pserver.Payload_Get_Request{
+			Id: add.Payload.Id,
+		},
 	}).(*messages.Share_Get_Response)
 
 	expected := "bCD"
@@ -80,23 +88,27 @@ func TestDeduplicationAdd(t *testing.T) {
 	token := getToken(ctx, t, c, "a@b.c")
 
 	add1 := c.MustRequest(ctx, t, &messages.Share_Add_Request{
-		Token:   token,
-		Request: "a",
-		Share:   &data.Share{Name: "b"},
+		Token: token,
+		Payload: &pserver.Payload_Add_Request{
+			Request: "a",
+		},
+		Share: &data.Share{Name: "b"},
 	}).(*messages.Share_Add_Response)
 	if add1.Err != nil {
 		t.Fatal("add1 error")
 	}
 
 	add2 := c.MustRequest(ctx, t, &messages.Share_Add_Request{
-		Token:   token,
-		Request: "a",
-		Share:   &data.Share{Name: "c"},
+		Token: token,
+		Payload: &pserver.Payload_Add_Request{
+			Request: "a",
+		},
+		Share: &data.Share{Name: "c"},
 	}).(*messages.Share_Add_Response)
 	if add2.Err != nil {
 		t.Fatal("add2 error")
 	}
-	if add2.Id != add1.Id {
+	if add2.Payload.Id != add1.Payload.Id {
 		t.Fatal("id mismatch")
 	}
 }

@@ -25,8 +25,8 @@ const Share_List_Request$json = const {
 const Share_List_Response$json = const {
   '1': 'Response',
   '2': const [
-    const {'1': 'shares', '3': 2, '4': 3, '5': 9, '10': 'shares'},
-    const {'1': 'err', '3': 3, '4': 1, '5': 11, '6': '.messages.Error', '10': 'err'},
+    const {'1': 'shares', '3': 1, '4': 3, '5': 9, '10': 'shares'},
+    const {'1': 'err', '3': 2, '4': 1, '5': 11, '6': '.messages.Error', '10': 'err'},
   ],
 };
 
@@ -39,14 +39,14 @@ const Share_Get_Request$json = const {
   '1': 'Request',
   '2': const [
     const {'1': 'token', '3': 1, '4': 1, '5': 11, '6': '.messages.Token', '10': 'token'},
-    const {'1': 'id', '3': 2, '4': 1, '5': 9, '10': 'id'},
+    const {'1': 'payload', '3': 2, '4': 1, '5': 11, '6': '.pserver.Payload.Get.Request', '10': 'payload'},
   ],
 };
 
 const Share_Get_Response$json = const {
   '1': 'Response',
   '2': const [
-    const {'1': 'state', '3': 1, '4': 1, '5': 3, '10': 'state'},
+    const {'1': 'payload', '3': 1, '4': 1, '5': 11, '6': '.pserver.Payload.Get.Response', '10': 'payload'},
     const {'1': 'share', '3': 2, '4': 1, '5': 11, '6': '.data.Share', '10': 'share'},
     const {'1': 'err', '3': 3, '4': 1, '5': 11, '6': '.messages.Error', '10': 'err'},
   ],
@@ -61,7 +61,7 @@ const Share_Add_Request$json = const {
   '1': 'Request',
   '2': const [
     const {'1': 'token', '3': 1, '4': 1, '5': 11, '6': '.messages.Token', '10': 'token'},
-    const {'1': 'request', '3': 2, '4': 1, '5': 9, '10': 'request'},
+    const {'1': 'payload', '3': 2, '4': 1, '5': 11, '6': '.pserver.Payload.Add.Request', '10': 'payload'},
     const {'1': 'share', '3': 3, '4': 1, '5': 11, '6': '.data.Share', '10': 'share'},
   ],
 };
@@ -69,7 +69,7 @@ const Share_Add_Request$json = const {
 const Share_Add_Response$json = const {
   '1': 'Response',
   '2': const [
-    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    const {'1': 'payload', '3': 1, '4': 1, '5': 11, '6': '.pserver.Payload.Add.Response', '10': 'payload'},
     const {'1': 'err', '3': 2, '4': 1, '5': 11, '6': '.messages.Error', '10': 'err'},
   ],
 };
@@ -83,19 +83,15 @@ const Share_Edit_Request$json = const {
   '1': 'Request',
   '2': const [
     const {'1': 'token', '3': 1, '4': 1, '5': 11, '6': '.messages.Token', '10': 'token'},
-    const {'1': 'id', '3': 2, '4': 1, '5': 9, '10': 'id'},
-    const {'1': 'request', '3': 3, '4': 1, '5': 9, '10': 'request'},
-    const {'1': 'state', '3': 4, '4': 1, '5': 3, '10': 'state'},
-    const {'1': 'op', '3': 5, '4': 1, '5': 11, '6': '.delta.Op', '10': 'op'},
+    const {'1': 'payload', '3': 2, '4': 1, '5': 11, '6': '.pserver.Payload.Edit.Request', '10': 'payload'},
   ],
 };
 
 const Share_Edit_Response$json = const {
   '1': 'Response',
   '2': const [
-    const {'1': 'state', '3': 1, '4': 1, '5': 3, '10': 'state'},
-    const {'1': 'op', '3': 2, '4': 1, '5': 11, '6': '.delta.Op', '10': 'op'},
-    const {'1': 'err', '3': 3, '4': 1, '5': 11, '6': '.messages.Error', '10': 'err'},
+    const {'1': 'payload', '3': 1, '4': 1, '5': 11, '6': '.pserver.Payload.Edit.Response', '10': 'payload'},
+    const {'1': 'err', '3': 2, '4': 1, '5': 11, '6': '.messages.Error', '10': 'err'},
   ],
 };
 

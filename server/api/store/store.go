@@ -31,7 +31,7 @@ func ShareGetRequest(ctx context.Context, server *pserver.Server, requestBytes [
 		return wrap(messages.Error_AUTH, "Invalid login token", fmt.Errorf("verifying token: %w", err))
 	}
 
-	ref := server.Firestore.Collection(api.SHARES_COLLECTION).Doc(req.Id)
+	ref := server.Firestore.Collection(api.SHARES_COLLECTION).Doc(req.Payload.Id)
 
 	state, value, _, err := server.UnpackSnapshot(ctx, nil, SHARE_DOCUMENT_TYPE, ref)
 	if err != nil {
@@ -49,7 +49,9 @@ func ShareGetRequest(ctx context.Context, server *pserver.Server, requestBytes [
 	}
 
 	return &messages.Share_Get_Response{
-		State: state,
+		Payload: &pserver.Payload_Get_Response{
+			State: state,
+		},
 		Share: value.(*data.Share),
 	}, nil
 }
@@ -81,12 +83,16 @@ func ShareAddRequest(ctx context.Context, server *pserver.Server, requestBytes [
 	if err := server.Firestore.RunTransaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
 
 		// check for documents with the same unique request id
-		duplicate, err := server.QuerySnapshot(ctx, tx, SHARE_DOCUMENT_TYPE, req.Request)
+		duplicate, err := server.QuerySnapshot(ctx, tx, SHARE_DOCUMENT_TYPE, req.Payload.Request)
 		if err != nil {
 			return fmt.Errorf("querying snapshot request: %w", err)
 		}
 		if duplicate != nil {
-			response = &messages.Share_Add_Response{Id: duplicate.ID}
+			response = &messages.Share_Add_Response{
+				Payload: &pserver.Payload_Add_Response{
+					Id: duplicate.ID,
+				},
+			}
 			return nil
 		}
 
@@ -108,8 +114,12 @@ func ShareAddRequest(ctx context.Context, server *pserver.Server, requestBytes [
 		const initialState = 1
 
 		snapshot := &data.Snapshot{
-			User:  userRef.ID,
-			Value: &pserver.Snapshot{Request: req.Request, State: initialState, Value: shareBlob},
+			User: userRef.ID,
+			Value: &pserver.Snapshot{
+				Request: req.Payload.Request,
+				State:   initialState,
+				Value:   shareBlob,
+			},
 		}
 		if err := tx.Set(ref, snapshot); err != nil {
 			return fmt.Errorf("setting new share: %w", err)
@@ -117,14 +127,22 @@ func ShareAddRequest(ctx context.Context, server *pserver.Server, requestBytes [
 
 		stateRef := ref.Collection(pserver.STATES_COLLECTION).Doc(fmt.Sprint(initialState))
 		state := &data.State{
-			User:  userRef.ID,
-			Value: &pserver.State{Request: req.Request, State: initialState, Op: opBlob},
+			User: userRef.ID,
+			Value: &pserver.State{
+				Request: req.Payload.Request,
+				State:   initialState,
+				Op:      opBlob,
+			},
 		}
 		if err := tx.Create(stateRef, state); err != nil {
 			return fmt.Errorf("setting new state: %w", err)
 		}
 
-		response = &messages.Share_Add_Response{Id: ref.ID}
+		response = &messages.Share_Add_Response{
+			Payload: &pserver.Payload_Add_Response{
+				Id: ref.ID,
+			},
+		}
 		return nil
 
 	}); err != nil {
@@ -152,7 +170,7 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 
 	var found bool
 	for _, share := range user.Shares {
-		if share == req.Id {
+		if share == req.Payload.Id {
 			found = true
 			break
 		}
@@ -162,9 +180,9 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 	}
 
 	// 3) Let's refer to req.Op as OP2
-	op2 := req.Op
+	op2 := req.Payload.Op
 
-	ref := server.Firestore.Collection(api.SHARES_COLLECTION).Doc(req.Id)
+	ref := server.Firestore.Collection(api.SHARES_COLLECTION).Doc(req.Payload.Id)
 
 	var response *messages.Share_Edit_Response
 	var duplicate *firestore.DocumentSnapshot
@@ -174,7 +192,7 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 	f := func(ctx context.Context, tx *firestore.Transaction) error {
 
 		var err error
-		duplicate, err = server.QueryState(ctx, tx, SHARE_DOCUMENT_TYPE, ref, req.Request)
+		duplicate, err = server.QueryState(ctx, tx, SHARE_DOCUMENT_TYPE, ref, req.Payload.Request)
 		if err != nil {
 			return fmt.Errorf("getting previous request state: %w", err)
 		}
@@ -183,7 +201,7 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 			return nil
 		}
 
-		state, op1x, op2x, err := server.Transform(ctx, tx, SHARE_DOCUMENT_TYPE, ref, op2, req.State, 0)
+		state, op1x, op2x, err := server.Transform(ctx, tx, SHARE_DOCUMENT_TYPE, ref, op2, req.Payload.State, 0)
 		if err != nil {
 			return fmt.Errorf("transforming: %w", err)
 		}
@@ -197,7 +215,7 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 		newStateRef := ref.Collection(pserver.STATES_COLLECTION).Doc(fmt.Sprint(newState))
 		newStateItem := &data.State{
 			User:  userRef.ID,
-			Value: &pserver.State{Request: req.Request, State: newState, Op: op2xBlob},
+			Value: &pserver.State{Request: req.Payload.Request, State: newState, Op: op2xBlob},
 		}
 		if err := tx.Create(newStateRef, newStateItem); err != nil {
 			return fmt.Errorf("setting new state item: %w", err)
@@ -205,8 +223,10 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 
 		// 7) Response: {unique: UNIQUE, state: COUNT, op: OP1x}
 		response = &messages.Share_Edit_Response{
-			State: newState,
-			Op:    op1x,
+			Payload: &pserver.Payload_Edit_Response{
+				State: newState,
+				Op:    op1x,
+			},
 		}
 		return nil
 
@@ -227,19 +247,22 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 			return wrap(messages.Error_ERROR, "Database error", fmt.Errorf("unpacking previous state: %w", err))
 		}
 
-		_, op1x, _, err := server.Transform(ctx, nil, SHARE_DOCUMENT_TYPE, ref, op2, req.State, after.State)
+		_, op1x, _, err := server.Transform(ctx, nil, SHARE_DOCUMENT_TYPE, ref, op2, req.Payload.State, after.State)
 		if err != nil {
 			return wrap(messages.Error_ERROR, "Database error", fmt.Errorf("transforming: %w", err))
 		}
 
 		return &messages.Share_Edit_Response{
-			State: after.State,
-			Op:    op1x,
+			Payload: &pserver.Payload_Edit_Response{
+				State: after.State,
+				Op:    op1x,
+			},
 		}, nil
 	}
 
-	if response.State%UPDATE_SNAPSHOT_FREQUENCY == 0 {
-		if _, err := TriggerRefreshTask(ctx, server, &messages.Share_Refresh_Request{Id: req.Id}); err != nil {
+	if response.Payload.State%UPDATE_SNAPSHOT_FREQUENCY == 0 {
+		request := &messages.Share_Refresh_Request{Id: req.Payload.Id}
+		if _, err := TriggerRefreshTask(ctx, server, request); err != nil {
 			return wrap(messages.Error_ERROR, "Server error", fmt.Errorf("triggering refresh task: %w", err))
 		}
 	}
@@ -249,7 +272,7 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 
 func ShareRefreshRequest(ctx context.Context, server *pserver.Server, requestBytes []byte) error {
 
-	req := &messages.Share_Edit_Request{}
+	req := &messages.Share_Refresh_Request{}
 	if err := proto.Unmarshal(requestBytes, req); err != nil {
 		return fmt.Errorf("unmarshaling: %w", err)
 	}

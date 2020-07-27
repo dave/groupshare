@@ -9,6 +9,7 @@ import 'package:groupshare/pb/groupshare/messages/login.pb.dart';
 import 'package:groupshare/pb/groupshare/messages/share.pb.dart';
 import 'package:groupshare/pb/groupshare/messages/token.pb.dart';
 import 'package:protod/delta/delta.dart';
+import 'package:protod/pserver/data.pb.dart';
 
 void main() {
   setUp(() async {
@@ -24,11 +25,11 @@ void main() {
     final session1addResponse = await api.send(
       Share_Add_Request()
         ..token = token
-        ..request = api.randomUnique()
+        ..payload = (Payload_Add_Request()..request = api.randomUnique())
         ..share = session1share,
       Share_Add_Response(),
     );
-    final id = session1addResponse.id;
+    final id = session1addResponse.payload.id;
 
     final session1opSetName = Op().Share().Name().Set("b");
     apply(session1opSetName, session1share);
@@ -36,26 +37,29 @@ void main() {
     final session1editResponse1 = await api.send(
       Share_Edit_Request()
         ..token = token
-        ..request = api.randomUnique()
-        ..id = id
-        ..state = session1state
-        ..op = session1opSetName,
+        ..payload = (Payload_Edit_Request()
+          ..request = api.randomUnique()
+          ..id = id
+          ..state = session1state
+          ..op = session1opSetName),
       Share_Edit_Response(),
     );
-    session1state = session1editResponse1.state;
-    apply(session1editResponse1.op, session1share);
+    session1state = session1editResponse1.payload.state;
+    apply(session1editResponse1.payload.op, session1share);
     expect(session1share.name, "b");
+    expect(session1state, Int64(2));
 
     // session2 - gets the share and edits the name
     final session2getResponse = await api.send(
       Share_Get_Request()
         ..token = token
-        ..id = id,
+        ..payload = (Payload_Get_Request()..id = id),
       Share_Get_Response(),
     );
-    var session2state = session2getResponse.state;
+    var session2state = session2getResponse.payload.state;
     var session2share = session2getResponse.share;
     expect(session2share.name, "b");
+    expect(session2state, Int64(2));
 
     final session2opEditNameAppendC = Op().Share().Name().Edit("b", "bc");
     apply(session2opEditNameAppendC, session2share);
@@ -63,15 +67,17 @@ void main() {
     final session2editResponse1 = await api.send(
       Share_Edit_Request()
         ..token = token
-        ..request = api.randomUnique()
-        ..id = id
-        ..state = session2state
-        ..op = session2opEditNameAppendC,
+        ..payload = (Payload_Edit_Request()
+          ..request = api.randomUnique()
+          ..id = id
+          ..state = session2state
+          ..op = session2opEditNameAppendC),
       Share_Edit_Response(),
     );
-    session2state = session2editResponse1.state;
-    apply(session2editResponse1.op, session2share);
+    session2state = session2editResponse1.payload.state;
+    apply(session2editResponse1.payload.op, session2share);
     expect(session2share.name, "bc");
+    expect(session2state, Int64(3));
 
     // session1 - edits name
     final session1opEditNameAppendD = Op().Share().Name().Edit("b", "bd");
@@ -80,15 +86,17 @@ void main() {
     final session1editResponse2 = await api.send(
       Share_Edit_Request()
         ..token = token
-        ..request = api.randomUnique()
-        ..id = id
-        ..state = session1state
-        ..op = session1opEditNameAppendD,
+        ..payload = (Payload_Edit_Request()
+          ..request = api.randomUnique()
+          ..id = id
+          ..state = session1state
+          ..op = session1opEditNameAppendD),
       Share_Edit_Response(),
     );
-    session1state = session1editResponse2.state;
-    apply(session1editResponse2.op, session1share);
+    session1state = session1editResponse2.payload.state;
+    apply(session1editResponse2.payload.op, session1share);
     expect(session1share.name, "bcd");
+    expect(session1state, Int64(4));
   });
 }
 

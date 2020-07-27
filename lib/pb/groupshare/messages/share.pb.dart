@@ -7,13 +7,12 @@
 
 import 'dart:core' as $core;
 
-import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'token.pb.dart' as $1;
 import 'error.pb.dart' as $0;
-import '../data/share.pb.dart' as $2;
-import 'package:protod/delta/delta.pb.dart' as $3;
+import 'package:protod/pserver/data.pb.dart' as $2;
+import '../data/share.pb.dart' as $3;
 
 class Share_List_Request extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.List.Request', package: const $pb.PackageName('messages'), createEmptyInstance: create)
@@ -50,8 +49,8 @@ class Share_List_Request extends $pb.GeneratedMessage {
 
 class Share_List_Response extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.List.Response', package: const $pb.PackageName('messages'), createEmptyInstance: create)
-    ..pPS(2, 'shares')
-    ..aOM<$0.Error>(3, 'err', subBuilder: $0.Error.create)
+    ..pPS(1, 'shares')
+    ..aOM<$0.Error>(2, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
   ;
 
@@ -70,18 +69,18 @@ class Share_List_Response extends $pb.GeneratedMessage {
   static Share_List_Response getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Share_List_Response>(create);
   static Share_List_Response _defaultInstance;
 
-  @$pb.TagNumber(2)
+  @$pb.TagNumber(1)
   $core.List<$core.String> get shares => $_getList(0);
 
-  @$pb.TagNumber(3)
+  @$pb.TagNumber(2)
   $0.Error get err => $_getN(1);
-  @$pb.TagNumber(3)
-  set err($0.Error v) { setField(3, v); }
-  @$pb.TagNumber(3)
+  @$pb.TagNumber(2)
+  set err($0.Error v) { setField(2, v); }
+  @$pb.TagNumber(2)
   $core.bool hasErr() => $_has(1);
-  @$pb.TagNumber(3)
-  void clearErr() => clearField(3);
-  @$pb.TagNumber(3)
+  @$pb.TagNumber(2)
+  void clearErr() => clearField(2);
+  @$pb.TagNumber(2)
   $0.Error ensureErr() => $_ensure(1);
 }
 
@@ -109,7 +108,7 @@ class Share_List extends $pb.GeneratedMessage {
 class Share_Get_Request extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Get.Request', package: const $pb.PackageName('messages'), createEmptyInstance: create)
     ..aOM<$1.Token>(1, 'token', subBuilder: $1.Token.create)
-    ..aOS(2, 'id')
+    ..aOM<$2.Payload_Get_Request>(2, 'payload', subBuilder: $2.Payload_Get_Request.create)
     ..hasRequiredFields = false
   ;
 
@@ -140,19 +139,21 @@ class Share_Get_Request extends $pb.GeneratedMessage {
   $1.Token ensureToken() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.String get id => $_getSZ(1);
+  $2.Payload_Get_Request get payload => $_getN(1);
   @$pb.TagNumber(2)
-  set id($core.String v) { $_setString(1, v); }
+  set payload($2.Payload_Get_Request v) { setField(2, v); }
   @$pb.TagNumber(2)
-  $core.bool hasId() => $_has(1);
+  $core.bool hasPayload() => $_has(1);
   @$pb.TagNumber(2)
-  void clearId() => clearField(2);
+  void clearPayload() => clearField(2);
+  @$pb.TagNumber(2)
+  $2.Payload_Get_Request ensurePayload() => $_ensure(1);
 }
 
 class Share_Get_Response extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Get.Response', package: const $pb.PackageName('messages'), createEmptyInstance: create)
-    ..aInt64(1, 'state')
-    ..aOM<$2.Share>(2, 'share', subBuilder: $2.Share.create)
+    ..aOM<$2.Payload_Get_Response>(1, 'payload', subBuilder: $2.Payload_Get_Response.create)
+    ..aOM<$3.Share>(2, 'share', subBuilder: $3.Share.create)
     ..aOM<$0.Error>(3, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
   ;
@@ -173,24 +174,26 @@ class Share_Get_Response extends $pb.GeneratedMessage {
   static Share_Get_Response _defaultInstance;
 
   @$pb.TagNumber(1)
-  $fixnum.Int64 get state => $_getI64(0);
+  $2.Payload_Get_Response get payload => $_getN(0);
   @$pb.TagNumber(1)
-  set state($fixnum.Int64 v) { $_setInt64(0, v); }
+  set payload($2.Payload_Get_Response v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasState() => $_has(0);
+  $core.bool hasPayload() => $_has(0);
   @$pb.TagNumber(1)
-  void clearState() => clearField(1);
+  void clearPayload() => clearField(1);
+  @$pb.TagNumber(1)
+  $2.Payload_Get_Response ensurePayload() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $2.Share get share => $_getN(1);
+  $3.Share get share => $_getN(1);
   @$pb.TagNumber(2)
-  set share($2.Share v) { setField(2, v); }
+  set share($3.Share v) { setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasShare() => $_has(1);
   @$pb.TagNumber(2)
   void clearShare() => clearField(2);
   @$pb.TagNumber(2)
-  $2.Share ensureShare() => $_ensure(1);
+  $3.Share ensureShare() => $_ensure(1);
 
   @$pb.TagNumber(3)
   $0.Error get err => $_getN(2);
@@ -228,8 +231,8 @@ class Share_Get extends $pb.GeneratedMessage {
 class Share_Add_Request extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Add.Request', package: const $pb.PackageName('messages'), createEmptyInstance: create)
     ..aOM<$1.Token>(1, 'token', subBuilder: $1.Token.create)
-    ..aOS(2, 'request')
-    ..aOM<$2.Share>(3, 'share', subBuilder: $2.Share.create)
+    ..aOM<$2.Payload_Add_Request>(2, 'payload', subBuilder: $2.Payload_Add_Request.create)
+    ..aOM<$3.Share>(3, 'share', subBuilder: $3.Share.create)
     ..hasRequiredFields = false
   ;
 
@@ -260,29 +263,31 @@ class Share_Add_Request extends $pb.GeneratedMessage {
   $1.Token ensureToken() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.String get request => $_getSZ(1);
+  $2.Payload_Add_Request get payload => $_getN(1);
   @$pb.TagNumber(2)
-  set request($core.String v) { $_setString(1, v); }
+  set payload($2.Payload_Add_Request v) { setField(2, v); }
   @$pb.TagNumber(2)
-  $core.bool hasRequest() => $_has(1);
+  $core.bool hasPayload() => $_has(1);
   @$pb.TagNumber(2)
-  void clearRequest() => clearField(2);
+  void clearPayload() => clearField(2);
+  @$pb.TagNumber(2)
+  $2.Payload_Add_Request ensurePayload() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $2.Share get share => $_getN(2);
+  $3.Share get share => $_getN(2);
   @$pb.TagNumber(3)
-  set share($2.Share v) { setField(3, v); }
+  set share($3.Share v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasShare() => $_has(2);
   @$pb.TagNumber(3)
   void clearShare() => clearField(3);
   @$pb.TagNumber(3)
-  $2.Share ensureShare() => $_ensure(2);
+  $3.Share ensureShare() => $_ensure(2);
 }
 
 class Share_Add_Response extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Add.Response', package: const $pb.PackageName('messages'), createEmptyInstance: create)
-    ..aOS(1, 'id')
+    ..aOM<$2.Payload_Add_Response>(1, 'payload', subBuilder: $2.Payload_Add_Response.create)
     ..aOM<$0.Error>(2, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
   ;
@@ -303,13 +308,15 @@ class Share_Add_Response extends $pb.GeneratedMessage {
   static Share_Add_Response _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get id => $_getSZ(0);
+  $2.Payload_Add_Response get payload => $_getN(0);
   @$pb.TagNumber(1)
-  set id($core.String v) { $_setString(0, v); }
+  set payload($2.Payload_Add_Response v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
+  $core.bool hasPayload() => $_has(0);
   @$pb.TagNumber(1)
-  void clearId() => clearField(1);
+  void clearPayload() => clearField(1);
+  @$pb.TagNumber(1)
+  $2.Payload_Add_Response ensurePayload() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $0.Error get err => $_getN(1);
@@ -347,10 +354,7 @@ class Share_Add extends $pb.GeneratedMessage {
 class Share_Edit_Request extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Edit.Request', package: const $pb.PackageName('messages'), createEmptyInstance: create)
     ..aOM<$1.Token>(1, 'token', subBuilder: $1.Token.create)
-    ..aOS(2, 'id')
-    ..aOS(3, 'request')
-    ..aInt64(4, 'state')
-    ..aOM<$3.Op>(5, 'op', subBuilder: $3.Op.create)
+    ..aOM<$2.Payload_Edit_Request>(2, 'payload', subBuilder: $2.Payload_Edit_Request.create)
     ..hasRequiredFields = false
   ;
 
@@ -381,49 +385,21 @@ class Share_Edit_Request extends $pb.GeneratedMessage {
   $1.Token ensureToken() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.String get id => $_getSZ(1);
+  $2.Payload_Edit_Request get payload => $_getN(1);
   @$pb.TagNumber(2)
-  set id($core.String v) { $_setString(1, v); }
+  set payload($2.Payload_Edit_Request v) { setField(2, v); }
   @$pb.TagNumber(2)
-  $core.bool hasId() => $_has(1);
+  $core.bool hasPayload() => $_has(1);
   @$pb.TagNumber(2)
-  void clearId() => clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get request => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set request($core.String v) { $_setString(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasRequest() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearRequest() => clearField(3);
-
-  @$pb.TagNumber(4)
-  $fixnum.Int64 get state => $_getI64(3);
-  @$pb.TagNumber(4)
-  set state($fixnum.Int64 v) { $_setInt64(3, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasState() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearState() => clearField(4);
-
-  @$pb.TagNumber(5)
-  $3.Op get op => $_getN(4);
-  @$pb.TagNumber(5)
-  set op($3.Op v) { setField(5, v); }
-  @$pb.TagNumber(5)
-  $core.bool hasOp() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearOp() => clearField(5);
-  @$pb.TagNumber(5)
-  $3.Op ensureOp() => $_ensure(4);
+  void clearPayload() => clearField(2);
+  @$pb.TagNumber(2)
+  $2.Payload_Edit_Request ensurePayload() => $_ensure(1);
 }
 
 class Share_Edit_Response extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share.Edit.Response', package: const $pb.PackageName('messages'), createEmptyInstance: create)
-    ..aInt64(1, 'state')
-    ..aOM<$3.Op>(2, 'op', subBuilder: $3.Op.create)
-    ..aOM<$0.Error>(3, 'err', subBuilder: $0.Error.create)
+    ..aOM<$2.Payload_Edit_Response>(1, 'payload', subBuilder: $2.Payload_Edit_Response.create)
+    ..aOM<$0.Error>(2, 'err', subBuilder: $0.Error.create)
     ..hasRequiredFields = false
   ;
 
@@ -443,35 +419,26 @@ class Share_Edit_Response extends $pb.GeneratedMessage {
   static Share_Edit_Response _defaultInstance;
 
   @$pb.TagNumber(1)
-  $fixnum.Int64 get state => $_getI64(0);
+  $2.Payload_Edit_Response get payload => $_getN(0);
   @$pb.TagNumber(1)
-  set state($fixnum.Int64 v) { $_setInt64(0, v); }
+  set payload($2.Payload_Edit_Response v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasState() => $_has(0);
+  $core.bool hasPayload() => $_has(0);
   @$pb.TagNumber(1)
-  void clearState() => clearField(1);
+  void clearPayload() => clearField(1);
+  @$pb.TagNumber(1)
+  $2.Payload_Edit_Response ensurePayload() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $3.Op get op => $_getN(1);
+  $0.Error get err => $_getN(1);
   @$pb.TagNumber(2)
-  set op($3.Op v) { setField(2, v); }
+  set err($0.Error v) { setField(2, v); }
   @$pb.TagNumber(2)
-  $core.bool hasOp() => $_has(1);
+  $core.bool hasErr() => $_has(1);
   @$pb.TagNumber(2)
-  void clearOp() => clearField(2);
+  void clearErr() => clearField(2);
   @$pb.TagNumber(2)
-  $3.Op ensureOp() => $_ensure(1);
-
-  @$pb.TagNumber(3)
-  $0.Error get err => $_getN(2);
-  @$pb.TagNumber(3)
-  set err($0.Error v) { setField(3, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasErr() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearErr() => clearField(3);
-  @$pb.TagNumber(3)
-  $0.Error ensureErr() => $_ensure(2);
+  $0.Error ensureErr() => $_ensure(1);
 }
 
 class Share_Edit extends $pb.GeneratedMessage {

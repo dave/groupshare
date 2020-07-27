@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:groupshare/core/services/hive.dart';
+import 'package:groupshare/core/services/store.dart';
 import 'package:groupshare/locator.dart';
 import 'package:groupshare/ui/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupHive();
+  await setupStores();
   await setupLocator();
   runApp(MyApp());
 }
