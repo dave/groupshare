@@ -38,8 +38,8 @@ void main() {
       Share_Edit_Request()
         ..token = token
         ..payload = (Payload_Request()
-          ..request = api.randomUnique()
-          ..id = id
+          ..stateId = api.randomUnique()
+          ..documentId = id
           ..state = session1state
           ..op = session1opSetName),
       Share_Edit_Response(),
@@ -68,8 +68,8 @@ void main() {
       Share_Edit_Request()
         ..token = token
         ..payload = (Payload_Request()
-          ..request = api.randomUnique()
-          ..id = id
+          ..stateId = api.randomUnique()
+          ..documentId = id
           ..state = session2state
           ..op = session2opEditNameAppendC),
       Share_Edit_Response(),
@@ -87,8 +87,8 @@ void main() {
       Share_Edit_Request()
         ..token = token
         ..payload = (Payload_Request()
-          ..request = api.randomUnique()
-          ..id = id
+          ..stateId = api.randomUnique()
+          ..documentId = id
           ..state = session1state
           ..op = session1opEditNameAppendD),
       Share_Edit_Response(),
