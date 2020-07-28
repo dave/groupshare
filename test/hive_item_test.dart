@@ -35,7 +35,7 @@ void main() {
 
     expect(item1.value, null);
     expect(item1.state, Int64(0));
-    expect(item1.request, '');
+    expect(item1.requestId, '');
     expect(item1.buffer.length, 0);
     expect(item1.overflow.length, 0);
   });
@@ -45,7 +45,7 @@ void main() {
     final item = Item<Share>()
       ..value = (Share()..name = "a")
       ..state = Int64(2)
-      ..request = 'a'
+      ..requestId = 'a'
       ..buffer = [
         Op().Share().Name().Set("b"),
         null,
@@ -72,7 +72,7 @@ void main() {
 
     expect(item1.value, Share()..name = "a");
     expect(item1.state, Int64(2));
-    expect(item1.request, 'a');
+    expect(item1.requestId, 'a');
     expect(item1.buffer[0], Op().Share().Name().Set("b"));
     expect(item1.buffer[1], null);
     expect(item1.buffer[2], Op().Share().Name().Edit("b", "c"));
