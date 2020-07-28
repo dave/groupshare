@@ -43,10 +43,10 @@ func TestOps(t *testing.T) {
 	editC := c.MustRequest(ctx, t, &messages.Share_Edit_Request{
 		Token: token,
 		Payload: &pserver.Payload_Request{
-			DocumentId: id,
-			StateId:    "b",
-			State:      1,
-			Op:         data.Op().Share().Name().Edit("b", "bC"),
+			Id:       "b",
+			Document: id,
+			State:    1,
+			Op:       data.Op().Share().Name().Edit("b", "bC"),
 		},
 	}).(*messages.Share_Edit_Response)
 	if editC.Err != nil {
@@ -56,10 +56,10 @@ func TestOps(t *testing.T) {
 	editD := c.MustRequest(ctx, t, &messages.Share_Edit_Request{
 		Token: token,
 		Payload: &pserver.Payload_Request{
-			DocumentId: id,
-			StateId:    "c",
-			State:      1,
-			Op:         data.Op().Share().Name().Edit("b", "bD"),
+			Id:       "c",
+			Document: id,
+			State:    1,
+			Op:       data.Op().Share().Name().Edit("b", "bD"),
 		},
 	}).(*messages.Share_Edit_Response)
 	if editD.Err != nil {

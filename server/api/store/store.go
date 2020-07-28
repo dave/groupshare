@@ -160,7 +160,7 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 
 	var found bool
 	for _, share := range user.Shares {
-		if share == req.Payload.DocumentId {
+		if share == req.Payload.Document {
 			found = true
 			break
 		}
@@ -172,7 +172,7 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 	// 3) Let's refer to req.Op as OP2
 	op2 := req.Payload.Op
 
-	ref := server.Firestore.Collection(api.SHARES_COLLECTION).Doc(req.Payload.DocumentId)
+	ref := server.Firestore.Collection(api.SHARES_COLLECTION).Doc(req.Payload.Document)
 
 	var response *messages.Share_Edit_Response
 	var duplicate *firestore.DocumentSnapshot
@@ -182,7 +182,7 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 	f := func(ctx context.Context, tx *firestore.Transaction) error {
 
 		var err error
-		duplicate, err = server.QueryState(ctx, tx, ref, req.Payload.StateId)
+		duplicate, err = server.QueryState(ctx, tx, ref, req.Payload.Id)
 		if err != nil {
 			return fmt.Errorf("getting previous request state: %w", err)
 		}
@@ -202,7 +202,7 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 			return fmt.Errorf("marshaling op2x to blob: %w", err)
 		}
 		newState := state + 1
-		newStateRef := ref.Collection(pserver.STATES_COLLECTION).Doc(req.Payload.StateId)
+		newStateRef := ref.Collection(pserver.STATES_COLLECTION).Doc(req.Payload.Id)
 		newStateItem := &data.State{
 			User:  userRef.ID,
 			Value: &pserver.State{State: newState, Op: op2xBlob},
@@ -251,7 +251,7 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 	}
 
 	if response.Payload.State%UPDATE_SNAPSHOT_FREQUENCY == 0 {
-		request := &messages.Share_Refresh_Request{Id: req.Payload.DocumentId}
+		request := &messages.Share_Refresh_Request{Id: req.Payload.Document}
 		if _, err := TriggerRefreshTask(ctx, server, request); err != nil {
 			return wrap(messages.Error_ERROR, "Server error", fmt.Errorf("triggering refresh task: %w", err))
 		}
