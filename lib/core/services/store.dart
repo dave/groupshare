@@ -3,15 +3,8 @@ import 'package:groupshare/core/services/auth.dart';
 import 'package:groupshare/locator.dart';
 import 'package:groupshare/pb/groupshare/data/share.pb.dart';
 import 'package:groupshare/pb/groupshare/messages/share.pb.dart' as messages;
-import 'package:hive/hive.dart';
 import 'package:protod/pserver/data.pb.dart';
 import 'package:protod/pserver/store.dart';
-
-setupStores() async {
-  locator.registerSingleton<Store<Share>>(
-    Store<Share>(await Hive.openBox<Item<Share>>('shares'), ShareAdapter()),
-  );
-}
 
 class ShareAdapter extends StoreAdapter<Share> {
   final Api _api;
