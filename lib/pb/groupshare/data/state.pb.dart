@@ -9,11 +9,11 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'package:protod/pserver/data.pb.dart' as $2;
+import 'package:protod/pserver/data.pb.dart' as $3;
 
 class State extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('State', package: const $pb.PackageName('data'), createEmptyInstance: create)
-    ..aOM<$2.State>(1, 'value', subBuilder: $2.State.create)
+    ..aOM<$3.State>(1, 'value', subBuilder: $3.State.create)
     ..aOS(2, 'user')
     ..hasRequiredFields = false
   ;
@@ -34,15 +34,15 @@ class State extends $pb.GeneratedMessage {
   static State _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.State get value => $_getN(0);
+  $3.State get value => $_getN(0);
   @$pb.TagNumber(1)
-  set value($2.State v) { setField(1, v); }
+  set value($3.State v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasValue() => $_has(0);
   @$pb.TagNumber(1)
   void clearValue() => clearField(1);
   @$pb.TagNumber(1)
-  $2.State ensureValue() => $_ensure(0);
+  $3.State ensureValue() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.String get user => $_getSZ(1);

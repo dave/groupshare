@@ -3,6 +3,8 @@ package store
 import (
 	"context"
 	"fmt"
+	"math/rand"
+	"time"
 
 	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
 	"cloud.google.com/go/firestore"
@@ -31,7 +33,7 @@ func ShareGetRequest(ctx context.Context, server *pserver.Server, requestBytes [
 		return wrap(messages.Error_AUTH, "Invalid login token", fmt.Errorf("verifying token: %w", err))
 	}
 
-	ref := server.Firestore.Collection(api.SHARES_COLLECTION).Doc(req.Payload.Id)
+	ref := server.Firestore.Collection(api.SHARES_COLLECTION).Doc(req.Id)
 
 	state, value, _, err := server.UnpackSnapshot(ctx, nil, SHARE_DOCUMENT_TYPE, ref)
 	if err != nil {
@@ -49,9 +51,7 @@ func ShareGetRequest(ctx context.Context, server *pserver.Server, requestBytes [
 	}
 
 	return &messages.Share_Get_Response{
-		Payload: &pserver.Payload_Get_Response{
-			State: state,
-		},
+		State: state,
 		Share: value.(*data.Share),
 	}, nil
 }
@@ -76,27 +76,23 @@ func ShareAddRequest(ctx context.Context, server *pserver.Server, requestBytes [
 		return wrap(messages.Error_ERROR, "Server error", fmt.Errorf("marshaling share to blob: %w", err))
 	}
 
+	ref := server.Firestore.Collection(SHARE_DOCUMENT_TYPE.Collection).Doc(req.Id)
+
 	var response *messages.Share_Add_Response
 	errType := messages.Error_ERROR
 	errMessage := "Database error"
 
 	if err := server.Firestore.RunTransaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
 
-		// check for documents with the same unique request id
-		duplicate, err := server.QuerySnapshot(ctx, tx, SHARE_DOCUMENT_TYPE, req.Payload.Request)
+		// check for documents with the same id
+		found, err := server.DocumentExists(ctx, tx, ref)
 		if err != nil {
-			return fmt.Errorf("querying snapshot request: %w", err)
+			return fmt.Errorf("finding document: %w", err)
 		}
-		if duplicate != nil {
-			response = &messages.Share_Add_Response{
-				Payload: &pserver.Payload_Add_Response{
-					Id: duplicate.ID,
-				},
-			}
+		if found {
+			response = &messages.Share_Add_Response{}
 			return nil
 		}
-
-		ref := server.Firestore.Collection(api.SHARES_COLLECTION).NewDoc()
 
 		// share specific
 		userRef, user, err := api.GetUserVerify(ctx, server.Firestore, tx, req.Token)
@@ -116,9 +112,8 @@ func ShareAddRequest(ctx context.Context, server *pserver.Server, requestBytes [
 		snapshot := &data.Snapshot{
 			User: userRef.ID,
 			Value: &pserver.Snapshot{
-				Request: req.Payload.Request,
-				State:   initialState,
-				Value:   shareBlob,
+				State: initialState,
+				Value: shareBlob,
 			},
 		}
 		if err := tx.Set(ref, snapshot); err != nil {
@@ -129,7 +124,7 @@ func ShareAddRequest(ctx context.Context, server *pserver.Server, requestBytes [
 		state := &data.State{
 			User: userRef.ID,
 			Value: &pserver.State{
-				Request: req.Payload.Request,
+				Request: uniqueID(),
 				State:   initialState,
 				Op:      opBlob,
 			},
@@ -138,11 +133,7 @@ func ShareAddRequest(ctx context.Context, server *pserver.Server, requestBytes [
 			return fmt.Errorf("setting new state: %w", err)
 		}
 
-		response = &messages.Share_Add_Response{
-			Payload: &pserver.Payload_Add_Response{
-				Id: ref.ID,
-			},
-		}
+		response = &messages.Share_Add_Response{}
 		return nil
 
 	}); err != nil {
@@ -223,7 +214,7 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 
 		// 7) Response: {unique: UNIQUE, state: COUNT, op: OP1x}
 		response = &messages.Share_Edit_Response{
-			Payload: &pserver.Payload_Edit_Response{
+			Payload: &pserver.Payload_Response{
 				State: newState,
 				Op:    op1x,
 			},
@@ -253,7 +244,7 @@ func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes 
 		}
 
 		return &messages.Share_Edit_Response{
-			Payload: &pserver.Payload_Edit_Response{
+			Payload: &pserver.Payload_Response{
 				State: after.State,
 				Op:    op1x,
 			},
@@ -392,4 +383,21 @@ func unpackState(s *firestore.DocumentSnapshot) (*pserver.State, proto.Message, 
 		return nil, nil, err
 	}
 	return state.Value, state, nil
+}
+
+const alphanum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+func uniqueID() string {
+	b := make([]byte, 20)
+	if _, err := rand.Read(b); err != nil {
+		panic(fmt.Sprintf("firestore: crypto/rand.Read error: %v", err))
+	}
+	for i, byt := range b {
+		b[i] = alphanum[int(byt)%len(alphanum)]
+	}
+	return string(b)
+}
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
 }

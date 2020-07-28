@@ -19,17 +19,17 @@ void main() {
     final api = locator<Api>();
     final token = await getToken(api, "a@b.c");
 
+    final id = api.randomUnique();
     // session1 - adds the share then sets the name
     var session1share = data.Share()..name = "a";
     var session1state = Int64(1);
-    final session1addResponse = await api.send(
+    await api.send(
       Share_Add_Request()
         ..token = token
-        ..payload = (Payload_Add_Request()..request = api.randomUnique())
+        ..id = id
         ..share = session1share,
       Share_Add_Response(),
     );
-    final id = session1addResponse.payload.id;
 
     final session1opSetName = Op().Share().Name().Set("b");
     apply(session1opSetName, session1share);
@@ -37,7 +37,7 @@ void main() {
     final session1editResponse1 = await api.send(
       Share_Edit_Request()
         ..token = token
-        ..payload = (Payload_Edit_Request()
+        ..payload = (Payload_Request()
           ..request = api.randomUnique()
           ..id = id
           ..state = session1state
@@ -53,10 +53,10 @@ void main() {
     final session2getResponse = await api.send(
       Share_Get_Request()
         ..token = token
-        ..payload = (Payload_Get_Request()..id = id),
+        ..id = id,
       Share_Get_Response(),
     );
-    var session2state = session2getResponse.payload.state;
+    var session2state = session2getResponse.state;
     var session2share = session2getResponse.share;
     expect(session2share.name, "b");
     expect(session2state, Int64(2));
@@ -67,7 +67,7 @@ void main() {
     final session2editResponse1 = await api.send(
       Share_Edit_Request()
         ..token = token
-        ..payload = (Payload_Edit_Request()
+        ..payload = (Payload_Request()
           ..request = api.randomUnique()
           ..id = id
           ..state = session2state
@@ -86,7 +86,7 @@ void main() {
     final session1editResponse2 = await api.send(
       Share_Edit_Request()
         ..token = token
-        ..payload = (Payload_Edit_Request()
+        ..payload = (Payload_Request()
           ..request = api.randomUnique()
           ..id = id
           ..state = session1state

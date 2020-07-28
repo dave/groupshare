@@ -21,16 +21,16 @@ class ShareAdapter extends StoreAdapter<Share> {
         this._auth = locator<Auth>();
 
   @override
-  Future<GetResponse<Share>> get(Payload_Get_Request payload) async {
+  Future<GetResponse<Share>> get(String id) async {
     final request = messages.Share_Get_Request()
       ..token = _auth.token()
-      ..payload = payload;
+      ..id = id;
     final response = await _api.send(request, messages.Share_Get_Response());
-    return GetResponse<Share>(response.payload, response.share);
+    return GetResponse<Share>(response.state, response.share);
   }
 
   @override
-  Future<Payload_Edit_Response> edit(Payload_Edit_Request payload) async {
+  Future<Payload_Response> edit(Payload_Request payload) async {
     final request = messages.Share_Edit_Request()
       ..token = _auth.token()
       ..payload = payload;
@@ -39,15 +39,12 @@ class ShareAdapter extends StoreAdapter<Share> {
   }
 
   @override
-  Future<Payload_Add_Response> add(
-    Payload_Add_Request payload,
-    Share value,
-  ) async {
+  Future<void> add(String id, Share value) async {
     final request = messages.Share_Add_Request()
       ..token = _auth.token()
-      ..share = value
-      ..payload = payload;
-    final response = await _api.send(request, messages.Share_Add_Response());
-    return response.payload;
+      ..id = id
+      ..share = value;
+    await _api.send(request, messages.Share_Add_Response());
+    return;
   }
 }

@@ -22,10 +22,10 @@ message Share {
   message Get {
     message Request {
       Token token = 1;
-      pserver.Payload.Get.Request payload = 2;
+      string id = 2;
     }
     message Response {
-      pserver.Payload.Get.Response payload = 1;
+      int64 state = 1;
       data.Share share = 2;
       Error err = 3;
     }
@@ -34,11 +34,10 @@ message Share {
   message Add {
     message Request {
       Token token = 1;
-      pserver.Payload.Add.Request payload = 2;
+      string id = 2;
       data.Share share = 3;
     }
     message Response {
-      pserver.Payload.Add.Response payload = 1;
       Error err = 2;
     }
   }
@@ -46,10 +45,10 @@ message Share {
   message Edit {
     message Request {
       Token token = 1;
-      pserver.Payload.Edit.Request payload = 2;
+      pserver.Payload.Request payload = 2;
     }
     message Response {
-      pserver.Payload.Edit.Response payload = 1;
+      pserver.Payload.Response payload = 1;
       Error err = 2;
     }
   }

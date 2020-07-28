@@ -29,12 +29,11 @@ func TestOps(t *testing.T) {
 	defer c.Close()
 
 	token := getToken(ctx, t, c, "a@b.c")
+	id := uniqueID()
 
 	add := c.MustRequest(ctx, t, &messages.Share_Add_Request{
 		Token: token,
-		Payload: &pserver.Payload_Add_Request{
-			Request: "a",
-		},
+		Id:    id,
 		Share: &data.Share{Name: "b"},
 	}).(*messages.Share_Add_Response)
 	if add.Err != nil {
@@ -43,8 +42,8 @@ func TestOps(t *testing.T) {
 
 	editC := c.MustRequest(ctx, t, &messages.Share_Edit_Request{
 		Token: token,
-		Payload: &pserver.Payload_Edit_Request{
-			Id:      add.Payload.Id,
+		Payload: &pserver.Payload_Request{
+			Id:      id,
 			Request: "b",
 			State:   1,
 			Op:      data.Op().Share().Name().Edit("b", "bC"),
@@ -56,8 +55,8 @@ func TestOps(t *testing.T) {
 
 	editD := c.MustRequest(ctx, t, &messages.Share_Edit_Request{
 		Token: token,
-		Payload: &pserver.Payload_Edit_Request{
-			Id:      add.Payload.Id,
+		Payload: &pserver.Payload_Request{
+			Id:      id,
 			Request: "c",
 			State:   1,
 			Op:      data.Op().Share().Name().Edit("b", "bD"),
@@ -69,9 +68,7 @@ func TestOps(t *testing.T) {
 
 	get := c.MustRequest(ctx, t, &messages.Share_Get_Request{
 		Token: token,
-		Payload: &pserver.Payload_Get_Request{
-			Id: add.Payload.Id,
-		},
+		Id:    id,
 	}).(*messages.Share_Get_Response)
 
 	expected := "bCD"
@@ -86,12 +83,11 @@ func TestDeduplicationAdd(t *testing.T) {
 	defer c.Close()
 
 	token := getToken(ctx, t, c, "a@b.c")
+	id := uniqueID()
 
 	add1 := c.MustRequest(ctx, t, &messages.Share_Add_Request{
 		Token: token,
-		Payload: &pserver.Payload_Add_Request{
-			Request: "a",
-		},
+		Id:    id,
 		Share: &data.Share{Name: "b"},
 	}).(*messages.Share_Add_Response)
 	if add1.Err != nil {
@@ -100,16 +96,23 @@ func TestDeduplicationAdd(t *testing.T) {
 
 	add2 := c.MustRequest(ctx, t, &messages.Share_Add_Request{
 		Token: token,
-		Payload: &pserver.Payload_Add_Request{
-			Request: "a",
-		},
+		Id:    id,
 		Share: &data.Share{Name: "c"},
 	}).(*messages.Share_Add_Response)
 	if add2.Err != nil {
 		t.Fatal("add2 error")
 	}
-	if add2.Payload.Id != add1.Payload.Id {
-		t.Fatal("id mismatch")
+
+	get1 := c.MustRequest(ctx, t, &messages.Share_Get_Request{
+		Token: token,
+		Id:    id,
+	}).(*messages.Share_Get_Response)
+	if get1.Err != nil {
+		t.Fatal("add1 error")
+	}
+
+	if get1.Share.Name != "b" {
+		t.Fatal("name mismatch")
 	}
 }
 
@@ -303,4 +306,21 @@ func (c *Client) Close() {
 	if c.target == LocalInProcess {
 		_ = c.local.Firestore.Close()
 	}
+}
+
+const alphanum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+func uniqueID() string {
+	b := make([]byte, 20)
+	if _, err := rand.Read(b); err != nil {
+		panic(fmt.Sprintf("firestore: crypto/rand.Read error: %v", err))
+	}
+	for i, byt := range b {
+		b[i] = alphanum[int(byt)%len(alphanum)]
+	}
+	return string(b)
+}
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
 }

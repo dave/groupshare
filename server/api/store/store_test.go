@@ -8,7 +8,6 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api"
 	"github.com/dave/groupshare/server/pb/groupshare/data"
-	"github.com/dave/groupshare/server/pb/groupshare/data/foo"
 	"github.com/golang/protobuf/proto"
 	"google.golang.org/protobuf/encoding/protojson"
 )
@@ -46,7 +45,7 @@ func TestStore(t *testing.T) {
 	}
 	defer client.Close()
 
-	s0 := data.Share{Name: "foo", Foo: &foo.Foo{Bar: "baz"}}
+	s0 := data.Share{Name: "foo"}
 
 	ref, _, err := client.Collection(api.SHARES_COLLECTION).Add(ctx, &s0)
 	if err != nil {
@@ -63,8 +62,5 @@ func TestStore(t *testing.T) {
 	}
 	if s1.Name != s0.Name {
 		t.Fatalf("s1.Name should be %q, got %q", s0.Name, s1.Name)
-	}
-	if s1.Foo.Bar != s0.Foo.Bar {
-		t.Fatalf("s1.Foo.Bar should be %q, got %q", s0.Foo.Bar, s1.Foo.Bar)
 	}
 }

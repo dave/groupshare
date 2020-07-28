@@ -9,11 +9,11 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'package:protod/pserver/data.pb.dart' as $2;
+import 'package:protod/pserver/data.pb.dart' as $3;
 
 class Snapshot extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Snapshot', package: const $pb.PackageName('data'), createEmptyInstance: create)
-    ..aOM<$2.Snapshot>(1, 'value', subBuilder: $2.Snapshot.create)
+    ..aOM<$3.Snapshot>(1, 'value', subBuilder: $3.Snapshot.create)
     ..aOS(2, 'user')
     ..hasRequiredFields = false
   ;
@@ -34,15 +34,15 @@ class Snapshot extends $pb.GeneratedMessage {
   static Snapshot _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Snapshot get value => $_getN(0);
+  $3.Snapshot get value => $_getN(0);
   @$pb.TagNumber(1)
-  set value($2.Snapshot v) { setField(1, v); }
+  set value($3.Snapshot v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasValue() => $_has(0);
   @$pb.TagNumber(1)
   void clearValue() => clearField(1);
   @$pb.TagNumber(1)
-  $2.Snapshot ensureValue() => $_ensure(0);
+  $3.Snapshot ensureValue() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.String get user => $_getSZ(1);
