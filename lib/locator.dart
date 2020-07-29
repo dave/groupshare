@@ -17,16 +17,16 @@ import 'package:protod/pserver/store.dart';
 GetIt locator = GetIt.instance;
 
 setupLocator() async {
+  locator.registerSingleton(await Prefs.initialise());
+  locator.registerSingleton(await Device.initialise());
   locator.registerSingleton(Api());
+  locator.registerSingleton(Auth());
   locator.registerSingleton(
     Store<Share>(
       await Hive.openBox('shares'),
       ShareAdapter(),
     ),
   );
-  locator.registerSingleton(await Prefs.initialise());
-  locator.registerSingleton(await Device.initialise());
-  locator.registerSingleton(Auth());
 
   locator.registerFactory(() => HomeModel());
   locator.registerFactory(() => AuthModel());

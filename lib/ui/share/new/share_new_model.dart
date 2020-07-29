@@ -7,10 +7,12 @@ class ShareNewModel extends BaseModel {
   Future newShare(String name) async {
     final store = locator<Store<data.Share>>();
 
-    final item =
-        await store.add(store.randomUnique(), data.Share()..name = name);
+    final share = data.Share()..name = name;
+    final response = store.add(share);
 
-    print(item.value.name);
-    // TODO: unfinished
+    print(response.id);
+    print(response.item.value.name);
+    await response.future;
+    print('future done');
   }
 }

@@ -39,8 +39,6 @@ class Api {
       if (httpResponse.statusCode == 503) {
         continue;
       }
-      //print(httpResponse.statusCode);
-      //print(httpResponse.body);
       throw UserException("Error ${httpResponse.statusCode}");
     }
     response.mergeFromBuffer(httpResponse.bodyBytes);

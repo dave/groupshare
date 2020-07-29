@@ -14,12 +14,12 @@ class ShareAdapter extends StoreAdapter<Share> {
         this._auth = locator<Auth>();
 
   @override
-  Future<GetResponse<Share>> get(String id) async {
+  Future<StoreAdapterGetResponse<Share>> get(String id) async {
     final request = messages.Share_Get_Request()
       ..token = _auth.token()
       ..id = id;
     final response = await _api.send(request, messages.Share_Get_Response());
-    return GetResponse<Share>(response.state, response.share);
+    return StoreAdapterGetResponse<Share>(response.state, response.share);
   }
 
   @override
