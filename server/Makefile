@@ -2,7 +2,15 @@
 CONFIG=groupshare
 
 deploy:
+	make gcloud
 	gcloud app deploy --configuration ${CONFIG} --quiet
+	make default
+
+gcloud:
+	cp ../go.mod.gcloud ../go.mod
+
+default:
+	cp ../go.mod.default ../go.mod
 
 logs:
 	gcloud app logs tail -s default --configuration ${CONFIG}
