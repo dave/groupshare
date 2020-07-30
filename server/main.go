@@ -133,11 +133,11 @@ func ProcessMessage(ctx context.Context, server *pserver.Server, message proto.M
 
 func ProcessRequest(ctx context.Context, server *pserver.Server, path string, request []byte) (proto.Message, error) {
 	switch path {
-	case pserver.Path(&messages.Login_Request{}):
+	case fmt.Sprintf("/%T", &messages.Login_Request{}):
 		return auth.LoginRequest(ctx, request)
-	case pserver.Path(&messages.Auth_Request{}):
+	case fmt.Sprintf("/%T", &messages.Auth_Request{}):
 		return auth.AuthRequest(ctx, server, request)
-	case pserver.Path(&messages.Token_Validate_Request{}):
+	case fmt.Sprintf("/%T", &messages.Token_Validate_Request{}):
 		return auth.TokenValidateRequest(ctx, server, request)
 	case pserver.Path(&messages.Share_Add_Request{}):
 		return store.ShareAddRequest(ctx, server, request)

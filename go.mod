@@ -19,3 +19,4 @@ require (
 )
 
 replace github.com/dave/protod => ./package_links/protod
+//replace github.com/dave/protod => ../protod
