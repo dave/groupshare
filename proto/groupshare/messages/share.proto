@@ -1,66 +1,12 @@
 syntax = "proto3";
 package messages;
 
-import "groupshare/messages/token.proto";
-import "groupshare/messages/error.proto";
-import "groupshare/data/share.proto";
-import "pserver/data.proto";
-
 option go_package = "github.com/dave/groupshare/server/pb/groupshare/messages;messages";
 
-message Share {
-  message List {
-    message Request {
-      Token token = 1;
-    }
-    message Response {
-      repeated string shares = 1;
-      Error err = 2;
-    }
-  }
-
-  message Get {
-    message Request {
-      Token token = 1;
-      string id = 2;
-    }
-    message Response {
-      int64 state = 1;
-      data.Share share = 2;
-      Error err = 3;
-    }
-  }
-
-  message Add {
-    message Request {
-      Token token = 1;
-      string id = 2;
-      data.Share share = 3;
-    }
-    message Response {
-      Error err = 2;
-    }
-  }
-
-  message Edit {
-    message Request {
-      Token token = 1;
-      pserver.Payload.Request payload = 2;
-    }
-    message Response {
-      pserver.Payload.Response payload = 1;
-      Error err = 2;
-    }
-  }
-
-  // Never sent by the client... only used internally by the task queue to trigger the
-  // refresh of the snapshot.
-  message Refresh {
-    message Request {
-      string id = 1; // document id
-    }
-    message Response {
-      Error err = 1;
-    }
-  }
+message Share_List_Request {
+  // empty
+}
+message Share_List_Response {
+  repeated string shares = 1;
+  map<string, string> names = 2;
 }

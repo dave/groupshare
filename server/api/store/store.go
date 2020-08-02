@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/rand"
 	"time"
@@ -12,311 +13,162 @@ import (
 	"github.com/dave/groupshare/server/pb/groupshare/data"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
 	"github.com/dave/protod/delta"
+	"github.com/dave/protod/pmsg"
 	"github.com/dave/protod/pserver"
+	"github.com/dave/protod/pstore"
 	taskspb "google.golang.org/genproto/googleapis/cloud/tasks/v2"
 	"google.golang.org/protobuf/proto"
 )
 
 const UPDATE_SNAPSHOT_FREQUENCY = 100
 
-func ShareGetRequest(ctx context.Context, server *pserver.Server, requestBytes []byte) (*messages.Share_Get_Response, error) {
-	wrap := func(t messages.Error_Type, m string, err error) (*messages.Share_Get_Response, error) {
-		return &messages.Share_Get_Response{Err: api.Error(t, m, err)}, err
+type ContextKey struct{}
+
+var UserContextKey ContextKey // User (*api.User)
+
+func GetRequest(ctx context.Context, server *pserver.Server, user *api.User, request, response *pmsg.Bundle) error {
+
+	req := &pstore.Payload_Get_Request{}
+	if _, err := request.Get(req); err != nil {
+		api.Error(response, "Invalid input")
+		return err
 	}
 
-	req := &messages.Share_Get_Request{}
-	if err := proto.Unmarshal(requestBytes, req); err != nil {
-		return wrap(messages.Error_ERROR, "Corrupt input", fmt.Errorf("unmarshaling: %w", err))
+	t := server.Type(req.DocumentType)
+	if t == nil {
+		api.Error(response, "Server error")
+		return fmt.Errorf("type %q not found", req.DocumentType)
 	}
 
-	if _, _, err := api.GetUserVerify(ctx, server.Firestore, nil, req.Token); err != nil {
-		return wrap(messages.Error_AUTH, "Invalid login token", fmt.Errorf("verifying token: %w", err))
-	}
-
-	ref := server.Firestore.Collection(api.SHARES_COLLECTION).Doc(req.Id)
-
-	state, value, _, err := server.UnpackSnapshot(ctx, nil, SHARE_DOCUMENT_TYPE, ref)
+	state, document, err := pstore.Get(ctx, server, t, req.DocumentId)
 	if err != nil {
-		return wrap(messages.Error_ERROR, "Database error", fmt.Errorf("getting snapshot: %w", err))
+		api.Error(response, "Server error")
+		return fmt.Errorf("pstore get: %w", err)
 	}
 
-	state, err = server.Changes(ctx, nil, SHARE_DOCUMENT_TYPE, ref, state, 0, func(op *delta.Op) error {
-		if err := delta.Apply(op, value); err != nil {
-			return fmt.Errorf("applying op to snapshot value: %w", err)
-		}
-		return nil
-	})
+	value, err := delta.MarshalAny(document)
 	if err != nil {
-		return wrap(messages.Error_ERROR, "Database error", fmt.Errorf("applying changes: %w", err))
+		api.Error(response, "Server error")
+		return fmt.Errorf("marshaling document: %w", err)
 	}
 
-	return &messages.Share_Get_Response{
-		State: state,
-		Share: value.(*data.Share),
-	}, nil
+	response.MustSet(&pstore.Payload_Get_Response{State: state, Value: value})
+
+	return nil
+
 }
 
-func ShareAddRequest(ctx context.Context, server *pserver.Server, requestBytes []byte) (*messages.Share_Add_Response, error) {
-	wrap := func(t messages.Error_Type, m string, err error) (*messages.Share_Add_Response, error) {
-		return &messages.Share_Add_Response{Err: api.Error(t, m, err)}, err
+func AddRequest(ctx context.Context, server *pserver.Server, user *api.User, request, response *pmsg.Bundle) error {
+
+	req := &pstore.Payload_Add_Request{}
+	if _, err := request.Get(req); err != nil {
+		api.Error(response, "Invalid input")
+		return err
 	}
 
-	req := &messages.Share_Add_Request{}
-	if err := proto.Unmarshal(requestBytes, req); err != nil {
-		return wrap(messages.Error_ERROR, "Corrupt input", fmt.Errorf("unmarshaling: %w", err))
+	t := server.Type(req.DocumentType)
+	if t == nil {
+		api.Error(response, "Server error")
+		return fmt.Errorf("type %q not found", req.DocumentType)
 	}
 
-	// do as much marshaling and unmarshaling as we can before opening the transaction
-	opBlob, err := server.MarshalToBlob(delta.Set(nil, req.Share))
+	document, err := delta.UnmarshalAny(req.Value)
 	if err != nil {
-		return wrap(messages.Error_ERROR, "Server error", fmt.Errorf("marshaling op to blob: %w", err))
-	}
-	shareBlob, err := server.MarshalToBlob(req.Share)
-	if err != nil {
-		return wrap(messages.Error_ERROR, "Server error", fmt.Errorf("marshaling share to blob: %w", err))
+		api.Error(response, "Server error")
+		return fmt.Errorf("unmarshaling document: %w", err)
 	}
 
-	ref := server.Firestore.Collection(SHARE_DOCUMENT_TYPE.Collection).Doc(req.Id)
-
-	var response *messages.Share_Add_Response
-	errType := messages.Error_ERROR
-	errMessage := "Database error"
-
-	if err := server.Firestore.RunTransaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
-
-		// check for documents with the same id
-		found, err := server.DocumentExists(ctx, tx, ref)
-		if err != nil {
-			return fmt.Errorf("finding document: %w", err)
-		}
-		if found {
-			response = &messages.Share_Add_Response{}
-			return nil
-		}
-
-		// share specific
-		userRef, user, err := api.GetUserVerify(ctx, server.Firestore, tx, req.Token)
-		if err != nil {
-			errMessage = "Invalid login token"
-			errType = messages.Error_AUTH
-			return fmt.Errorf("verifying token: %w", err)
-		}
-		user.Shares = append(user.Shares, ref.ID)
-		if err := tx.Set(userRef, user); err != nil {
-			return fmt.Errorf("setting updated user: %w", err)
-		}
-		// end share specific
-
-		const initialState = 1
-
-		snapshot := &data.Snapshot{
-			User: userRef.ID,
-			Value: &pserver.Snapshot{
-				State: initialState,
-				Value: shareBlob,
-			},
-		}
-		if err := tx.Set(ref, snapshot); err != nil {
-			return fmt.Errorf("setting new share: %w", err)
-		}
-
-		stateRef := ref.Collection(pserver.STATES_COLLECTION).Doc(uniqueID())
-		state := &data.State{
-			User: userRef.ID,
-			Value: &pserver.State{
-				State: initialState,
-				Op:    opBlob,
-			},
-		}
-		if err := tx.Create(stateRef, state); err != nil {
-			return fmt.Errorf("setting new state: %w", err)
-		}
-
-		response = &messages.Share_Add_Response{}
-		return nil
-
-	}); err != nil {
-		return wrap(errType, errMessage, err)
+	if err := pstore.Add(ctx, server, t, req.DocumentId, document); err != nil {
+		api.Error(response, "Server error")
+		return fmt.Errorf("pstore add: %w", err)
 	}
 
-	return response, nil
-}
-
-func ShareEditRequest(ctx context.Context, server *pserver.Server, requestBytes []byte) (*messages.Share_Edit_Response, error) {
-	wrap := func(t messages.Error_Type, m string, err error) (*messages.Share_Edit_Response, error) {
-		return &messages.Share_Edit_Response{Err: api.Error(t, m, err)}, err
-	}
-
-	req := &messages.Share_Edit_Request{}
-	if err := proto.Unmarshal(requestBytes, req); err != nil {
-		return wrap(messages.Error_ERROR, "Corrupt input", fmt.Errorf("unmarshaling: %w", err))
-	}
-
-	// TODO: should this be inside the transaction? hmm
-	userRef, user, err := api.GetUserVerify(ctx, server.Firestore, nil, req.Token)
-	if err != nil {
-		return wrap(messages.Error_AUTH, "Invalid login token", fmt.Errorf("verifying token: %w", err))
-	}
-
-	var found bool
-	for _, share := range user.Shares {
-		if share == req.Payload.Document {
-			found = true
-			break
-		}
-	}
-	if !found {
-		return wrap(messages.Error_ERROR, "You don't have permission to edit this item", fmt.Errorf("verifying token: %w", err))
-	}
-
-	// 3) Let's refer to req.Op as OP2
-	op2 := req.Payload.Op
-
-	ref := server.Firestore.Collection(api.SHARES_COLLECTION).Doc(req.Payload.Document)
-
-	var response *messages.Share_Edit_Response
-	var duplicate *firestore.DocumentSnapshot
-	errType := messages.Error_ERROR
-	errMessage := "Database error"
-
-	f := func(ctx context.Context, tx *firestore.Transaction) error {
-
-		var err error
-		duplicate, err = server.QueryState(ctx, tx, ref, req.Payload.Id)
-		if err != nil {
-			return fmt.Errorf("getting previous request state: %w", err)
-		}
-		if duplicate != nil {
-			// exit from transaction and continue processing outside (no writes needed)
-			return nil
-		}
-
-		state, op1x, op2x, err := server.Transform(ctx, tx, SHARE_DOCUMENT_TYPE, ref, op2, req.Payload.State, 0)
-		if err != nil {
-			return fmt.Errorf("transforming: %w", err)
-		}
-
-		// 6) Store OP2x in the database, and increment the state counter (STATE)
-		op2xBlob, err := server.MarshalToBlob(op2x)
-		if err != nil {
-			return fmt.Errorf("marshaling op2x to blob: %w", err)
-		}
-		newState := state + 1
-		newStateRef := ref.Collection(pserver.STATES_COLLECTION).Doc(req.Payload.Id)
-		newStateItem := &data.State{
-			User:  userRef.ID,
-			Value: &pserver.State{State: newState, Op: op2xBlob},
-		}
-		if err := tx.Create(newStateRef, newStateItem); err != nil {
-			return fmt.Errorf("setting new state item: %w", err)
-		}
-
-		// 7) Response: {unique: UNIQUE, state: COUNT, op: OP1x}
-		response = &messages.Share_Edit_Response{
-			Payload: &pserver.Payload_Response{
-				State: newState,
-				Op:    op1x,
-			},
-		}
-		return nil
-
-	}
-
-	tf := func() error {
-		return server.Firestore.RunTransaction(ctx, f)
-	}
-	if err := pserver.Lock(ctx, ref.Path, tf); err != nil {
-		return wrap(errType, errMessage, err)
-	}
-
-	if duplicate != nil {
-		// This request has already been processed. We can recreate the correct response, and nothing
-		// needs to be stored in the database.
-		after, _, err := server.UnpackState(duplicate, SHARE_DOCUMENT_TYPE)
-		if err != nil {
-			return wrap(messages.Error_ERROR, "Database error", fmt.Errorf("unpacking previous state: %w", err))
-		}
-
-		_, op1x, _, err := server.Transform(ctx, nil, SHARE_DOCUMENT_TYPE, ref, op2, req.Payload.State, after.State)
-		if err != nil {
-			return wrap(messages.Error_ERROR, "Database error", fmt.Errorf("transforming: %w", err))
-		}
-
-		return &messages.Share_Edit_Response{
-			Payload: &pserver.Payload_Response{
-				State: after.State,
-				Op:    op1x,
-			},
-		}, nil
-	}
-
-	if response.Payload.State%UPDATE_SNAPSHOT_FREQUENCY == 0 {
-		request := &messages.Share_Refresh_Request{Id: req.Payload.Document}
-		if _, err := TriggerRefreshTask(ctx, server, request); err != nil {
-			return wrap(messages.Error_ERROR, "Server error", fmt.Errorf("triggering refresh task: %w", err))
-		}
-	}
-
-	return response, nil
-}
-
-func ShareRefreshRequest(ctx context.Context, server *pserver.Server, requestBytes []byte) error {
-
-	req := &messages.Share_Refresh_Request{}
-	if err := proto.Unmarshal(requestBytes, req); err != nil {
-		return fmt.Errorf("unmarshaling: %w", err)
-	}
-
-	ref := server.Firestore.Collection(api.SHARES_COLLECTION).Doc(req.Id)
-
-	//func UpdateSnapshot(ctx context.Context, server *pserver.Server, t pserver.DocumentType, ref *firestore.DocumentRef) error {
-	// update the value snapshot. this doesn't need to be inside a transaction, because if the
-	// snapshot is slightly out of date it doesn't matter.
-	snapshotState, document, snapshotMessage, err := server.UnpackSnapshot(ctx, nil, SHARE_DOCUMENT_TYPE, ref)
-	snapshot := snapshotMessage.(*data.Snapshot)
-
-	state, err := server.Changes(ctx, nil, SHARE_DOCUMENT_TYPE, ref, snapshotState, 0, func(op *delta.Op) error {
-		if err := delta.Apply(op, document); err != nil {
-			return fmt.Errorf("applying op to snapshot value: %w", err)
-		}
-		return nil
-	})
-	if err != nil {
-		return fmt.Errorf("applying changes: %w", err)
-	}
-	if state == snapshotState {
-		return nil
-	}
-	valueBlob, err := server.MarshalToBlob(document)
-	if err != nil {
-		return fmt.Errorf("marshaling snapshot to blob: %w", err)
-	}
-	newSnapshot := &data.Snapshot{
-		User:  snapshot.User,
-		Value: &pserver.Snapshot{State: state, Value: valueBlob},
-	}
-	if _, err := ref.Set(ctx, newSnapshot); err != nil {
-		return fmt.Errorf("setting new snapshot: %w", err)
-	}
 	return nil
 }
 
-func ShareListRequest(ctx context.Context, server *pserver.Server, requestBytes []byte) (*messages.Share_List_Response, error) {
-	wrap := func(t messages.Error_Type, m string, err error) (*messages.Share_List_Response, error) {
-		return &messages.Share_List_Response{Err: api.Error(t, m, err)}, err
+func EditRequest(ctx context.Context, server *pserver.Server, user *api.User, request, response *pmsg.Bundle) error {
+
+	req := &pstore.Payload_Edit_Request{}
+	if _, err := request.Get(req); err != nil {
+		api.Error(response, "Invalid input")
+		return err
 	}
 
-	req := &messages.Share_Get_Request{}
-	if err := proto.Unmarshal(requestBytes, req); err != nil {
-		return wrap(messages.Error_ERROR, "Corrupt input", fmt.Errorf("unmarshaling: %w", err))
+	t := server.Type(req.DocumentType)
+	if t == nil {
+		api.Error(response, "Server error")
+		return fmt.Errorf("type %q not found", req.DocumentType)
 	}
 
-	_, user, err := api.GetUserVerify(ctx, server.Firestore, nil, req.Token)
+	state, op, err := pstore.Edit(ctx, server, t, req.StateId, req.DocumentId, req.State, req.Op)
 	if err != nil {
-		return wrap(messages.Error_AUTH, "Invalid login token", fmt.Errorf("verifying token: %w", err))
+		api.Error(response, "Server error")
+		return fmt.Errorf("pstore edit: %w", err)
 	}
 
-	return &messages.Share_List_Response{Shares: user.Shares}, nil
+	response.MustSet(&pstore.Payload_Edit_Response{State: state, Op: op})
+
+	if state%UPDATE_SNAPSHOT_FREQUENCY == 0 {
+		refreshRequest := pmsg.New()
+		refreshRequest.MustSet(&pstore.Payload_Refresh_Request{DocumentType: req.DocumentType, DocumentId: req.DocumentId})
+		if _, err := TriggerRefreshTask(ctx, server, refreshRequest); err != nil {
+			api.Error(response, "Server error")
+			return fmt.Errorf("triggering refresh task: %w", err)
+		}
+	}
+
+	return nil
+}
+
+func RefreshRequest(ctx context.Context, server *pserver.Server, user *api.User, request, response *pmsg.Bundle) error {
+
+	req := &pstore.Payload_Refresh_Request{}
+	if _, err := request.Get(req); err != nil {
+		api.Error(response, "Invalid input")
+		return err
+	}
+
+	t := server.Type(req.DocumentType)
+	if t == nil {
+		api.Error(response, "Server error")
+		return fmt.Errorf("type %q not found", req.DocumentType)
+	}
+
+	if err := pstore.Refresh(ctx, server, t, req.DocumentId); err != nil {
+		api.Error(response, "Server error")
+		return fmt.Errorf("pstore refresh: %w", err)
+	}
+
+	return nil
+}
+
+func ShareListRequest(ctx context.Context, server *pserver.Server, user *api.User, request, response *pmsg.Bundle) error {
+
+	if len(user.Shares) == 0 {
+		response.MustSet(&messages.Share_List_Response{})
+		return nil
+	}
+
+	docs, err := server.Firestore.Collection(SHARE_DOCUMENT_TYPE.CollectionName()).
+		Query.
+		Where(SHARE_DOCUMENT_TYPE.SnapshotFieldSelector("Id"), "in", user.Shares).
+		Select("Name").
+		Documents(server.FirestoreContext(ctx)).
+		GetAll()
+	if err != nil {
+		return err
+	}
+	m := map[string]string{}
+	for _, doc := range docs {
+		snap := &data.ShareSnapshot{}
+		if err := doc.DataTo(snap); err != nil {
+			return err
+		}
+		m[doc.Ref.ID] = snap.Name
+	}
+	response.MustSet(&messages.Share_List_Response{Shares: user.Shares, Names: m})
+
+	return nil
 }
 
 func TriggerRefreshTask(ctx context.Context, server *pserver.Server, message proto.Message) (*taskspb.Task, error) {
@@ -332,12 +184,12 @@ func TriggerRefreshTask(ctx context.Context, server *pserver.Server, message pro
 	}
 
 	req := &taskspb.CreateTaskRequest{
-		Parent: fmt.Sprintf("projects/%s/locations/%s/queues/%s", server.Project, server.Location, server.Queue),
+		Parent: fmt.Sprintf("projects/%s/locations/%s/queues/%s", server.Config.Project, server.Config.Location, server.Config.Queue),
 		Task: &taskspb.Task{
 			MessageType: &taskspb.Task_HttpRequest{
 				HttpRequest: &taskspb.HttpRequest{
 					HttpMethod: taskspb.HttpMethod_POST,
-					Url:        server.Prefix + pserver.Path(message),
+					Url:        server.Config.Prefix + "/",
 					Body:       body,
 					Headers:    map[string]string{"Content-Type": "application/protobuf"},
 				},
@@ -354,13 +206,61 @@ func TriggerRefreshTask(ctx context.Context, server *pserver.Server, message pro
 
 }
 
-var SHARE_DOCUMENT_TYPE = pserver.DocumentType{
-	Collection:    api.SHARES_COLLECTION,
-	Snapshot:      unpackSnapshot,
-	State:         unpackState,
-	StateField:    "Value",
-	SnapshotField: "Value",
-	Document:      &data.Share{},
+var SHARE_DOCUMENT_TYPE = &pserver.DocumentType{
+	Document: &data.Share{},
+	PackSnapshot: func(ctx context.Context, s *pserver.Snapshot, old proto.Message, document proto.Message) (proto.Message, error) {
+		var userId string
+		if old != nil {
+			// When refreshing a snapshot, this is done as a task, so we don't have a user... so copy from the old value.
+			userId = old.(*data.Snapshot).User
+		} else {
+			userId = ctx.Value(UserContextKey).(*api.User).Id
+		}
+		return &data.ShareSnapshot{
+			Value: s,
+			User:  userId,
+			Name:  document.(*data.Share).Name,
+		}, nil
+	},
+	UnpackSnapshot: unpackSnapshot,
+	PackState:      packState,
+	UnpackState:    unpackState,
+	StateField:     "Value",
+	SnapshotField:  "Value",
+	OnAdd: func(ctx context.Context, server *pserver.Server, tx *firestore.Transaction, documentId string) error {
+		user := ctx.Value(UserContextKey).(*api.User)
+		ref, user, err := api.GetUser(ctx, server, tx, user.Id)
+		if err != nil {
+			return fmt.Errorf("verifying token: %w", err)
+		}
+		user.Shares = append(user.Shares, documentId)
+		if err := tx.Set(ref, user); err != nil {
+			return fmt.Errorf("setting updated user: %w", err)
+		}
+		return nil
+	},
+	PreEdit: func(ctx context.Context, server *pserver.Server, documentId string) error {
+		user := ctx.Value(UserContextKey).(*api.User)
+		var found bool
+		for _, share := range user.Shares {
+			if share == documentId {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return errors.New("user does not have permission")
+		}
+		return nil
+	},
+}
+
+func packState(ctx context.Context, s *pserver.State) (proto.Message, error) {
+	user := ctx.Value(UserContextKey).(*api.User)
+	return &data.State{
+		Value: s,
+		User:  user.Id,
+	}, nil
 }
 
 func unpackSnapshot(s *firestore.DocumentSnapshot) (*pserver.Snapshot, proto.Message, error) {

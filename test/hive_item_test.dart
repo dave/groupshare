@@ -7,7 +7,7 @@ import 'package:groupshare/pb/groupshare/data/data.op.dart';
 import 'package:groupshare/pb/groupshare/data/share.pb.dart';
 import 'package:groupshare/pb/registry.dart';
 import 'package:hive/hive.dart';
-import 'package:protod/pserver/store.dart';
+import 'package:protod/pserver/pserver.dart';
 
 const BOX_NAME = 'shares-hive-test';
 

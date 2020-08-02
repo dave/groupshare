@@ -1,7 +1,7 @@
 syntax = "proto3";
 package data;
 
-import "pserver/data.proto";
+import "pserver/pserver.proto";
 
 option go_package = "github.com/dave/groupshare/server/pb/groupshare/data;data";
 

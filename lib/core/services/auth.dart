@@ -1,11 +1,16 @@
 import 'package:groupshare/core/services/device.dart';
 import 'package:groupshare/core/services/prefs.dart';
 import 'package:groupshare/locator.dart';
-import 'package:groupshare/pb/groupshare/messages/token.pb.dart';
+import 'package:groupshare/pb/groupshare/messages/auth.pb.dart';
 
 enum Status { Empty, Auth, Done }
 
-class Auth {
+abstract class Auth {
+  Token token();
+  Status status();
+}
+
+class AuthImpl implements Auth {
   Token token() {
     final prefs = locator<Prefs>();
     final device = locator<Device>();
@@ -25,4 +30,14 @@ class Auth {
     }
     return Status.Done;
   }
+}
+
+class AuthMock implements Auth {
+  Token t;
+  Status s;
+
+  AuthMock();
+
+  Token token() => t;
+  Status status() => s;
 }

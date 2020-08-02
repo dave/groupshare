@@ -11,77 +11,64 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
+	"github.com/dave/protod/pmsg"
 	"github.com/dave/protod/pserver"
 	"google.golang.org/appengine"
-	"google.golang.org/protobuf/proto"
 )
 
-func LoginRequest(ctx context.Context, requestBytes []byte) (*messages.Login_Response, error) {
-	wrap := func(t messages.Error_Type, m string, err error) (*messages.Login_Response, error) {
-		return &messages.Login_Response{Err: api.Error(t, m, err)}, err
-	}
+func LoginRequest(ctx context.Context, request, response *pmsg.Bundle) error {
 
 	req := &messages.Login_Request{}
-	if err := proto.Unmarshal(requestBytes, req); err != nil {
-		return wrap(messages.Error_ERROR, "Corrupt input", fmt.Errorf("unmarshaling: %w", err))
+	if _, err := request.Get(req); err != nil {
+		api.Error(response, "Invalid input")
+		return err
 	}
+
 	t := time.Now().Unix()
 
 	// TODO: Send an email with deep link
 	fmt.Println(api.GenerateCode(req.Device, req.Email, t))
 
-	return &messages.Login_Response{Time: fmt.Sprint(t)}, nil
+	response.MustSet(&messages.Login_Response{Time: fmt.Sprint(t)})
+
+	return nil
 }
 
-func TokenValidateRequest(ctx context.Context, server *pserver.Server, requestBytes []byte) (*messages.Token_Validate_Response, error) {
-	wrap := func(t messages.Error_Type, m string, err error) (*messages.Token_Validate_Response, error) {
-		return &messages.Token_Validate_Response{Err: api.Error(t, m, err)}, err
-	}
-
-	req := &messages.Token_Validate_Request{}
-	if err := proto.Unmarshal(requestBytes, req); err != nil {
-		return wrap(messages.Error_ERROR, "Corrupt input", fmt.Errorf("unmarshaling: %w", err))
-	}
-
-	_, _, err := api.GetUserVerify(ctx, server.Firestore, nil, req.Token)
-	if err != nil {
-		return wrap(messages.Error_AUTH, "Invalid login token", fmt.Errorf("verifying token: %w", err))
-	}
-
-	return &messages.Token_Validate_Response{}, nil
-}
-
-func AuthRequest(ctx context.Context, server *pserver.Server, requestBytes []byte) (*messages.Auth_Response, error) {
-	wrap := func(t messages.Error_Type, m string, err error) (*messages.Auth_Response, error) {
-		return &messages.Auth_Response{Err: api.Error(t, m, err)}, err
-	}
+func AuthRequest(ctx context.Context, server *pserver.Server, request, response *pmsg.Bundle) error {
 
 	req := &messages.Auth_Request{}
-	if err := proto.Unmarshal(requestBytes, req); err != nil {
-		return wrap(messages.Error_ERROR, "Corrupt input", fmt.Errorf("unmarshaling: %w", err))
+	if _, err := request.Get(req); err != nil {
+		api.Error(response, "Invalid input")
+		return err
 	}
+
 	timeInt64, err := strconv.ParseInt(req.Time, 10, 64)
 	if err != nil {
-		return wrap(messages.Error_AUTH, "Corrupt input", fmt.Errorf("parsing time: %w", err))
+		api.AuthError(response, "Invalid input")
+		return fmt.Errorf("parsing time: %w", err)
 	}
 	code, err := api.GenerateCode(req.Device, req.Email, timeInt64)
 	if err != nil {
-		return wrap(messages.Error_AUTH, "Corrupt input", fmt.Errorf("getting code: %w", err))
+		api.AuthError(response, "Invalid input")
+		return fmt.Errorf("getting code: %w", err)
 	}
 	checkCode := true
 	if req.Test {
 		// the client is requesting that we skip the code check. This should throw an error
 		// in production environments
 		if appengine.IsAppEngine() {
-			return wrap(messages.Error_ERROR, "Corrupt input", errors.New("test flag set in production"))
+			api.Error(response, "Invalid input")
+			return errors.New("test flag set in production")
 		}
 		checkCode = false
 	}
 	if checkCode && code != req.Code {
-		return wrap(messages.Error_AUTH, "Wrong code", errors.New("wrong code"))
+		api.AuthError(response, "Wrong code")
+		return errors.New("wrong code")
 	}
 	if time.Unix(timeInt64, 0).Add(time.Minute * 30).Before(time.Now()) {
-		return wrap(messages.Error_EXPIRED, "Code expired", errors.New("code expired"))
+		api.ExpiredError(response, "Code expired")
+		return errors.New("code expired")
 	}
 
 	// create or update user?
@@ -104,8 +91,8 @@ func AuthRequest(ctx context.Context, server *pserver.Server, requestBytes []byt
 			return fmt.Errorf("%d users with email address %q", len(users), req.Email)
 		}
 
-		user = &api.User{Email: req.Email, Salt: randomString(30)}
 		userRef = server.Firestore.Collection(api.USERS_COLLECTION).NewDoc()
+		user = &api.User{Id: userRef.ID, Email: req.Email, Salt: randomString(30)}
 
 		if err := tx.Set(userRef, user); err != nil {
 			return fmt.Errorf("selecting from users: %w", err)
@@ -114,16 +101,19 @@ func AuthRequest(ctx context.Context, server *pserver.Server, requestBytes []byt
 		return nil
 
 	}
-	if err := server.Firestore.RunTransaction(ctx, f); err != nil {
-		return wrap(messages.Error_ERROR, "Server error", fmt.Errorf("running user transaction: %w", err))
+	if err := server.Firestore.RunTransaction(server.FirestoreContext(ctx), f); err != nil {
+		api.Error(response, "Server error")
+		return fmt.Errorf("running user transaction: %w", err)
 	}
 
 	hash, err := api.GenerateHash(userRef.ID, req.Device, user.Salt)
 	if err != nil {
-		return wrap(messages.Error_AUTH, "Corrupt data", fmt.Errorf("getting hash: %w", err))
+		api.Error(response, "Server error")
+		return fmt.Errorf("getting hash: %w", err)
 	}
 
-	return &messages.Auth_Response{Id: userRef.ID, Hash: hash}, nil
+	response.MustSet(&messages.Auth_Response{Id: userRef.ID, Hash: hash})
+	return nil
 }
 
 var seededRand = rand.New(rand.NewSource(time.Now().UnixNano()))

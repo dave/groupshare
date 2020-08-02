@@ -8,72 +8,94 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"reflect"
 	"testing"
 	"time"
 
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api"
+	"github.com/dave/groupshare/server/api/store"
 	"github.com/dave/groupshare/server/pb/groupshare/data"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
 	"github.com/dave/protod/delta"
+	"github.com/dave/protod/pmsg"
 	"github.com/dave/protod/pserver"
-	"google.golang.org/protobuf/encoding/protojson"
+	"github.com/dave/protod/pstore"
 	"google.golang.org/protobuf/proto"
 )
 
 const TARGET = LocalInProcess
+
+func TestList(t *testing.T) {
+	ctx := context.Background()
+	c := NewClient(ctx, t, TARGET)
+	defer c.Close()
+
+	documentType := string((&data.Share{}).ProtoReflect().Descriptor().FullName())
+	token := getToken(ctx, t, c, "a@b.c")
+	id := uniqueID()
+
+	c.MustRequest(ctx, t, token, &pstore.Payload_Add_Request{
+		DocumentType: documentType,
+		DocumentId:   id,
+		Value:        delta.MustMarshalAny(&data.Share{Name: "b"}),
+	})
+
+	list := &messages.Share_List_Response{}
+	c.MustRequest(ctx, t, token, &messages.Share_List_Request{}).MustGet(list)
+
+	if !reflect.DeepEqual(list.Shares, []string{id}) {
+		t.Fatalf("expect %v, found %v", []string{id}, list.Shares)
+	}
+	if !reflect.DeepEqual(list.Names, map[string]string{id: "b"}) {
+		t.Fatalf("expect %v, found %v", map[string]string{id: "b"}, list.Names)
+	}
+
+}
 
 func TestOps(t *testing.T) {
 	ctx := context.Background()
 	c := NewClient(ctx, t, TARGET)
 	defer c.Close()
 
+	documentType := string((&data.Share{}).ProtoReflect().Descriptor().FullName())
 	token := getToken(ctx, t, c, "a@b.c")
 	id := uniqueID()
 
-	add := c.MustRequest(ctx, t, &messages.Share_Add_Request{
-		Token: token,
-		Id:    id,
-		Share: &data.Share{Name: "b"},
-	}).(*messages.Share_Add_Response)
-	if add.Err != nil {
-		t.Fatalf("resp1 error: %s", add.Err.Message)
-	}
+	_ = c.MustRequest(ctx, t, token, &pstore.Payload_Add_Request{
+		DocumentType: documentType,
+		DocumentId:   id,
+		Value:        delta.MustMarshalAny(&data.Share{Name: "b"}),
+	})
 
-	editC := c.MustRequest(ctx, t, &messages.Share_Edit_Request{
-		Token: token,
-		Payload: &pserver.Payload_Request{
-			Id:       "b",
-			Document: id,
-			State:    1,
-			Op:       data.Op().Share().Name().Edit("b", "bC"),
-		},
-	}).(*messages.Share_Edit_Response)
-	if editC.Err != nil {
-		t.Fatalf("resp2 error: %s", editC.Err.Message)
-	}
+	editC := &pstore.Payload_Edit_Response{}
+	c.MustRequest(ctx, t, token, &pstore.Payload_Edit_Request{
+		DocumentType: documentType,
+		DocumentId:   id,
+		StateId:      "b",
+		State:        1,
+		Op:           data.Op().Share().Name().Edit("b", "bC"),
+	}).MustGet(editC)
 
-	editD := c.MustRequest(ctx, t, &messages.Share_Edit_Request{
-		Token: token,
-		Payload: &pserver.Payload_Request{
-			Id:       "c",
-			Document: id,
-			State:    1,
-			Op:       data.Op().Share().Name().Edit("b", "bD"),
-		},
-	}).(*messages.Share_Edit_Response)
-	if editD.Err != nil {
-		t.Fatalf("resp3 error: %s", editD.Err.Message)
-	}
+	editD := &pstore.Payload_Edit_Response{}
+	c.MustRequest(ctx, t, token, &pstore.Payload_Edit_Request{
+		DocumentType: documentType,
+		DocumentId:   id,
+		StateId:      "c",
+		State:        1,
+		Op:           data.Op().Share().Name().Edit("b", "bD"),
+	}).MustGet(editD)
 
-	get := c.MustRequest(ctx, t, &messages.Share_Get_Request{
-		Token: token,
-		Id:    id,
-	}).(*messages.Share_Get_Response)
+	get := &pstore.Payload_Get_Response{}
+	c.MustRequest(ctx, t, token, &pstore.Payload_Get_Request{
+		DocumentType: documentType,
+		DocumentId:   id,
+	}).MustGet(get)
 
 	expected := "bCD"
-	if get.Share.Name != expected {
-		t.Fatalf("expected %q, found %q", expected, get.Share.Name)
+	share := delta.MustUnmarshalAny(get.Value).(*data.Share)
+	if share.Name != expected {
+		t.Fatalf("expected %q, found %q", expected, share.Name)
 	}
 }
 
@@ -82,41 +104,38 @@ func TestDeduplicationAdd(t *testing.T) {
 	c := NewClient(ctx, t, TARGET)
 	defer c.Close()
 
+	documentType := string((&data.Share{}).ProtoReflect().Descriptor().FullName())
 	token := getToken(ctx, t, c, "a@b.c")
 	id := uniqueID()
 
-	add1 := c.MustRequest(ctx, t, &messages.Share_Add_Request{
-		Token: token,
-		Id:    id,
-		Share: &data.Share{Name: "b"},
-	}).(*messages.Share_Add_Response)
-	if add1.Err != nil {
-		t.Fatal("add1 error")
-	}
+	c.MustRequest(ctx, t, token, &pstore.Payload_Add_Request{
+		DocumentType: documentType,
+		DocumentId:   id,
+		Value:        delta.MustMarshalAny(&data.Share{Name: "b"}),
+	})
 
-	add2 := c.MustRequest(ctx, t, &messages.Share_Add_Request{
-		Token: token,
-		Id:    id,
-		Share: &data.Share{Name: "c"},
-	}).(*messages.Share_Add_Response)
-	if add2.Err != nil {
-		t.Fatal("add2 error")
-	}
+	c.MustRequest(ctx, t, token, &pstore.Payload_Add_Request{
+		DocumentType: documentType,
+		DocumentId:   id,
+		Value:        delta.MustMarshalAny(&data.Share{Name: "c"}),
+	})
 
-	get1 := c.MustRequest(ctx, t, &messages.Share_Get_Request{
-		Token: token,
-		Id:    id,
-	}).(*messages.Share_Get_Response)
-	if get1.Err != nil {
-		t.Fatal("add1 error")
-	}
+	get1 := &pstore.Payload_Get_Response{}
+	c.MustRequest(ctx, t, token, &pstore.Payload_Get_Request{
+		DocumentType: documentType,
+		DocumentId:   id,
+	}).MustGet(get1)
 
-	if get1.Share.Name != "b" {
+	share := delta.MustUnmarshalAny(get1.Value).(*data.Share)
+	if share.Name != "b" {
 		t.Fatal("name mismatch")
 	}
 }
 
 func resetDatabase(t *testing.T) {
+	if TARGET == GaeHttpServer {
+		return
+	}
 	addr := os.Getenv("FIRESTORE_EMULATOR_HOST")
 	if addr == "" {
 		t.Fatal("can't find FIRESTORE_EMULATOR_HOST env")
@@ -149,20 +168,13 @@ func getToken(ctx context.Context, t *testing.T, c *Client, email string) *messa
 		Time:   fmt.Sprintf("%d", authTime),
 		Code:   code,
 	}
-	authResponse := c.MustRequest(ctx, t, authRequest).(*messages.Auth_Response)
+	authResponse := &messages.Auth_Response{}
+	c.MustRequest(ctx, t, nil, authRequest).MustGet(authResponse)
 	return &messages.Token{
 		Id:     authResponse.Id,
 		Device: device,
 		Hash:   authResponse.Hash,
 	}
-}
-
-func mustJson(message proto.Message) string {
-	b, err := protojson.Marshal(message)
-	if err != nil {
-		panic(err)
-	}
-	return string(b)
 }
 
 func mustMarshal(message proto.Message) []byte {
@@ -218,7 +230,10 @@ func NewClient(ctx context.Context, t *testing.T, targetType TargetType) *Client
 		if err != nil {
 			t.Fatal(err)
 		}
-		c.local = &pserver.Server{Firestore: fc, Project: TESTING_PROJECT_ID}
+		config := pserver.Config{
+			Project: TESTING_PROJECT_ID,
+		}
+		c.local = pserver.New(fc, config, store.SHARE_DOCUMENT_TYPE)
 	case LocalHttpServer:
 		resetDatabase(t)
 		c.prefix = LOCAL_PREFIX
@@ -228,43 +243,57 @@ func NewClient(ctx context.Context, t *testing.T, targetType TargetType) *Client
 	return c
 }
 
-func (c *Client) MustRequest(ctx context.Context, t *testing.T, request proto.Message) proto.Message {
-	response, err := c.Request(ctx, request)
+func (c *Client) MustRequest(ctx context.Context, t *testing.T, token *messages.Token, request proto.Message) *pmsg.Bundle {
+	response, err := c.Request(ctx, token, request)
 	if err != nil {
 		t.Fatal(err)
+	}
+	e := &messages.Error{}
+	found, err := response.Get(e)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if found {
+		t.Fatal(e.Message)
 	}
 	return response
 }
 
-func (c *Client) Request(ctx context.Context, request proto.Message) (proto.Message, error) {
+func (c *Client) Request(ctx context.Context, token *messages.Token, request proto.Message) (*pmsg.Bundle, error) {
 	switch c.target {
 	case LocalInProcess:
-		return c.localRequest(ctx, request)
+		return c.localRequest(ctx, token, request)
 	case LocalHttpServer, GaeHttpServer:
-		return c.httpRequest(ctx, request)
+		return c.httpRequest(ctx, token, request)
 	}
 	panic("")
 }
 
-func (c *Client) localRequest(ctx context.Context, request proto.Message) (response proto.Message, err error) {
-	return ProcessMessage(ctx, c.local, request)
+func (c *Client) localRequest(ctx context.Context, token *messages.Token, request proto.Message) (response *pmsg.Bundle, err error) {
+	return ProcessMessage(ctx, c.local, token, request)
 }
 
 const REQUEST_RETRIES = 20
 
-func (c *Client) httpRequest(ctx context.Context, request proto.Message) (response proto.Message, err error) {
+func (c *Client) httpRequest(ctx context.Context, token *messages.Token, request proto.Message) (response *pmsg.Bundle, err error) {
 	for i := 0; i < REQUEST_RETRIES; i++ {
 		if i > 0 {
 			delay := 500 + rand.Intn(500*(1<<i))
 			time.Sleep(time.Duration(delay) * time.Millisecond)
 		}
-		path := c.prefix + pserver.Path(request)
-		var messageBytes []byte
-		messageBytes, err = proto.Marshal(request)
-		if err != nil {
-			return nil, fmt.Errorf("marshaling message: %w", err) // <- return error without retry
+		path := c.prefix + "/"
+		requestBundle := pmsg.New()
+		if token != nil {
+			requestBundle.MustSet(token)
 		}
-		buf := bytes.NewBuffer(messageBytes)
+		requestBundle.MustSet(request)
+
+		var requestBundleBytes []byte
+		requestBundleBytes, err = proto.Marshal(requestBundle)
+		if err != nil {
+			return nil, fmt.Errorf("marshaling request bundle: %w", err) // <- return error without retry
+		}
+		buf := bytes.NewBuffer(requestBundleBytes)
 		var resp *http.Response
 		resp, err = http.Post(path, "application/protobuf", buf)
 		if err != nil {
@@ -288,10 +317,10 @@ func (c *Client) httpRequest(ctx context.Context, request proto.Message) (respon
 			}
 			continue // <- restart the loop or exit when retry count exceeded
 		}
-		response = GetResponse(request)
+		response = pmsg.New()
 		err = proto.Unmarshal(body, response)
 		if err != nil {
-			err = fmt.Errorf("unmarshaling response: %w", err)
+			err = fmt.Errorf("unmarshaling response bundle: %w", err)
 			continue // <- restart the loop or exit when retry count exceeded
 		}
 		break // <- finish the loop and continue executing

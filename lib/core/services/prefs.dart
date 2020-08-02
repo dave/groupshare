@@ -7,13 +7,29 @@ enum _prefsKey {
   Hash,
 }
 
-class Prefs {
+abstract class Prefs {
+  String get email;
+  String get time;
+  String get id;
+  String get hash;
+
+  Future<bool> setEmail(String value);
+  Future<bool> setTime(String value);
+  Future<bool> setId(String value);
+  Future<bool> setHash(String value);
+  Future<bool> removeId();
+  Future<bool> removeHash();
+
+  clear();
+}
+
+class PrefsImpl implements Prefs {
   final SharedPreferences _prefs;
 
-  Prefs(SharedPreferences prefs) : _prefs = prefs;
+  PrefsImpl(SharedPreferences prefs) : _prefs = prefs;
 
   static Future<Prefs> initialise() async {
-    return Prefs(await SharedPreferences.getInstance());
+    return PrefsImpl(await SharedPreferences.getInstance());
   }
 
   clear() async {

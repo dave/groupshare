@@ -13,3 +13,12 @@ const Snapshot$json = const {
   ],
 };
 
+const ShareSnapshot$json = const {
+  '1': 'ShareSnapshot',
+  '2': const [
+    const {'1': 'value', '3': 1, '4': 1, '5': 11, '6': '.pserver.Snapshot', '10': 'value'},
+    const {'1': 'user', '3': 2, '4': 1, '5': 9, '10': 'user'},
+    const {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
+  ],
+};
+

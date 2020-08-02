@@ -16,6 +16,7 @@ class AuthModel extends BaseModel {
       ..email = prefs.email
       ..device = device.id
       ..time = prefs.time
+      ..test = true
       ..code = code;
 
     final resp = await api.send(req, Auth_Response());

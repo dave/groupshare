@@ -39,7 +39,8 @@ class ShareListView extends StatelessWidget {
               : ListView.builder(
                   itemCount: model.shares.length,
                   itemBuilder: (context, index) {
-                    return ListTile(title: Text(model.shares[index]));
+                    return ListTile(
+                        title: Text(model.names[model.shares[index]]));
                   },
                 ),
         );

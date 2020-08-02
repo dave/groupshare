@@ -3,7 +3,7 @@ import 'package:groupshare/pb/registry.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:protobuf/protobuf.dart';
-import 'package:protod/pserver/store.dart';
+import 'package:protod/pserver/pserver.dart';
 
 setupHive() async {
   await Hive.initFlutter();

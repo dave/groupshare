@@ -3,7 +3,7 @@ import 'package:groupshare/core/services/api.dart';
 import 'package:groupshare/core/services/auth.dart';
 import 'package:groupshare/core/services/prefs.dart';
 import 'package:groupshare/locator.dart';
-import 'package:groupshare/pb/groupshare/messages/token.pb.dart';
+import 'package:groupshare/pb/groupshare/messages/auth.pb.dart';
 import 'package:groupshare/ui/base_model.dart';
 
 class HomeModel extends BaseModel {
@@ -30,9 +30,8 @@ class HomeModel extends BaseModel {
       return;
     }
 
-    final req = Token_Validate_Request()..token = auth.token();
-
-    await api.send(req, Token_Validate_Response());
+    final req = Validate_Request();
+    await api.send(req, null);
     _status = Status.Done;
     setState(ViewState.Idle);
   }

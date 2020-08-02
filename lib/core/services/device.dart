@@ -1,15 +1,25 @@
 import 'package:device_id/device_id.dart';
 
-class Device {
+abstract class Device {
+  String get id;
+}
+
+class DeviceImpl implements Device {
   final String _id;
 
-  Device(String id) : _id = id;
+  DeviceImpl(String id) : _id = id;
 
-  static Future<Device> initialise() async {
-    return Device(await DeviceId.getID);
+  static Future<DeviceImpl> initialise() async {
+    return DeviceImpl(await DeviceId.getID);
   }
 
-  String get id {
-    return _id;
-  }
+  String get id => _id;
+}
+
+class DeviceMock implements Device {
+  final String _id;
+
+  DeviceMock(String id) : _id = id;
+
+  String get id => _id;
 }

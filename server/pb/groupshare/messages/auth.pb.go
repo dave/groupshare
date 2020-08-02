@@ -25,14 +25,17 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
-type Auth struct {
+type Login_Request struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
+	Device string `protobuf:"bytes,1,opt,name=device,proto3" json:"device,omitempty"`
+	Email  string `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
 }
 
-func (x *Auth) Reset() {
-	*x = Auth{}
+func (x *Login_Request) Reset() {
+	*x = Login_Request{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_groupshare_messages_auth_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -40,13 +43,13 @@ func (x *Auth) Reset() {
 	}
 }
 
-func (x *Auth) String() string {
+func (x *Login_Request) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Auth) ProtoMessage() {}
+func (*Login_Request) ProtoMessage() {}
 
-func (x *Auth) ProtoReflect() protoreflect.Message {
+func (x *Login_Request) ProtoReflect() protoreflect.Message {
 	mi := &file_groupshare_messages_auth_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -58,9 +61,70 @@ func (x *Auth) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Auth.ProtoReflect.Descriptor instead.
-func (*Auth) Descriptor() ([]byte, []int) {
+// Deprecated: Use Login_Request.ProtoReflect.Descriptor instead.
+func (*Login_Request) Descriptor() ([]byte, []int) {
 	return file_groupshare_messages_auth_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *Login_Request) GetDevice() string {
+	if x != nil {
+		return x.Device
+	}
+	return ""
+}
+
+func (x *Login_Request) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+type Login_Response struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Time string `protobuf:"bytes,1,opt,name=time,proto3" json:"time,omitempty"`
+}
+
+func (x *Login_Response) Reset() {
+	*x = Login_Response{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_groupshare_messages_auth_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Login_Response) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Login_Response) ProtoMessage() {}
+
+func (x *Login_Response) ProtoReflect() protoreflect.Message {
+	mi := &file_groupshare_messages_auth_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Login_Response.ProtoReflect.Descriptor instead.
+func (*Login_Response) Descriptor() ([]byte, []int) {
+	return file_groupshare_messages_auth_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Login_Response) GetTime() string {
+	if x != nil {
+		return x.Time
+	}
+	return ""
 }
 
 type Auth_Request struct {
@@ -78,7 +142,7 @@ type Auth_Request struct {
 func (x *Auth_Request) Reset() {
 	*x = Auth_Request{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_groupshare_messages_auth_proto_msgTypes[1]
+		mi := &file_groupshare_messages_auth_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -91,7 +155,7 @@ func (x *Auth_Request) String() string {
 func (*Auth_Request) ProtoMessage() {}
 
 func (x *Auth_Request) ProtoReflect() protoreflect.Message {
-	mi := &file_groupshare_messages_auth_proto_msgTypes[1]
+	mi := &file_groupshare_messages_auth_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -104,7 +168,7 @@ func (x *Auth_Request) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Auth_Request.ProtoReflect.Descriptor instead.
 func (*Auth_Request) Descriptor() ([]byte, []int) {
-	return file_groupshare_messages_auth_proto_rawDescGZIP(), []int{0, 0}
+	return file_groupshare_messages_auth_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Auth_Request) GetDevice() string {
@@ -149,13 +213,12 @@ type Auth_Response struct {
 
 	Id   string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Hash string `protobuf:"bytes,2,opt,name=hash,proto3" json:"hash,omitempty"`
-	Err  *Error `protobuf:"bytes,3,opt,name=err,proto3" json:"err,omitempty"`
 }
 
 func (x *Auth_Response) Reset() {
 	*x = Auth_Response{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_groupshare_messages_auth_proto_msgTypes[2]
+		mi := &file_groupshare_messages_auth_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -168,7 +231,7 @@ func (x *Auth_Response) String() string {
 func (*Auth_Response) ProtoMessage() {}
 
 func (x *Auth_Response) ProtoReflect() protoreflect.Message {
-	mi := &file_groupshare_messages_auth_proto_msgTypes[2]
+	mi := &file_groupshare_messages_auth_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -181,7 +244,7 @@ func (x *Auth_Response) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Auth_Response.ProtoReflect.Descriptor instead.
 func (*Auth_Response) Descriptor() ([]byte, []int) {
-	return file_groupshare_messages_auth_proto_rawDescGZIP(), []int{0, 1}
+	return file_groupshare_messages_auth_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Auth_Response) GetId() string {
@@ -198,11 +261,105 @@ func (x *Auth_Response) GetHash() string {
 	return ""
 }
 
-func (x *Auth_Response) GetErr() *Error {
-	if x != nil {
-		return x.Err
+type Validate_Request struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *Validate_Request) Reset() {
+	*x = Validate_Request{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_groupshare_messages_auth_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
 	}
-	return nil
+}
+
+func (x *Validate_Request) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Validate_Request) ProtoMessage() {}
+
+func (x *Validate_Request) ProtoReflect() protoreflect.Message {
+	mi := &file_groupshare_messages_auth_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Validate_Request.ProtoReflect.Descriptor instead.
+func (*Validate_Request) Descriptor() ([]byte, []int) {
+	return file_groupshare_messages_auth_proto_rawDescGZIP(), []int{4}
+}
+
+type Token struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id     string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Device string `protobuf:"bytes,2,opt,name=device,proto3" json:"device,omitempty"`
+	Hash   string `protobuf:"bytes,5,opt,name=hash,proto3" json:"hash,omitempty"`
+}
+
+func (x *Token) Reset() {
+	*x = Token{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_groupshare_messages_auth_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Token) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Token) ProtoMessage() {}
+
+func (x *Token) ProtoReflect() protoreflect.Message {
+	mi := &file_groupshare_messages_auth_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Token.ProtoReflect.Descriptor instead.
+func (*Token) Descriptor() ([]byte, []int) {
+	return file_groupshare_messages_auth_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *Token) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Token) GetDevice() string {
+	if x != nil {
+		return x.Device
+	}
+	return ""
+}
+
+func (x *Token) GetHash() string {
+	if x != nil {
+		return x.Hash
+	}
+	return ""
 }
 
 var File_groupshare_messages_auth_proto protoreflect.FileDescriptor
@@ -210,27 +367,35 @@ var File_groupshare_messages_auth_proto protoreflect.FileDescriptor
 var file_groupshare_messages_auth_proto_rawDesc = []byte{
 	0x0a, 0x1e, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2f, 0x6d, 0x65, 0x73,
 	0x73, 0x61, 0x67, 0x65, 0x73, 0x2f, 0x61, 0x75, 0x74, 0x68, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x12, 0x08, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x1a, 0x1f, 0x67, 0x72, 0x6f, 0x75,
-	0x70, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x2f,
-	0x65, 0x72, 0x72, 0x6f, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xce, 0x01, 0x0a, 0x04,
-	0x41, 0x75, 0x74, 0x68, 0x1a, 0x73, 0x0a, 0x07, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x12, 0x08, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x22, 0x3d, 0x0a, 0x0d, 0x4c, 0x6f,
+	0x67, 0x69, 0x6e, 0x5f, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x64,
+	0x65, 0x76, 0x69, 0x63, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x64, 0x65, 0x76,
+	0x69, 0x63, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x22, 0x24, 0x0a, 0x0e, 0x4c, 0x6f, 0x67,
+	0x69, 0x6e, 0x5f, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74,
+	0x69, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x69, 0x6d, 0x65, 0x22,
+	0x78, 0x0a, 0x0c, 0x41, 0x75, 0x74, 0x68, 0x5f, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
 	0x16, 0x0a, 0x06, 0x64, 0x65, 0x76, 0x69, 0x63, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
 	0x06, 0x64, 0x65, 0x76, 0x69, 0x63, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c,
 	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x12, 0x12, 0x0a,
 	0x04, 0x74, 0x69, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x69, 0x6d,
 	0x65, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52,
 	0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x65, 0x73, 0x74, 0x18, 0x05, 0x20,
-	0x01, 0x28, 0x08, 0x52, 0x04, 0x74, 0x65, 0x73, 0x74, 0x1a, 0x51, 0x0a, 0x08, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x68, 0x61, 0x73, 0x68, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x04, 0x68, 0x61, 0x73, 0x68, 0x12, 0x21, 0x0a, 0x03, 0x65, 0x72, 0x72,
-	0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
-	0x73, 0x2e, 0x45, 0x72, 0x72, 0x6f, 0x72, 0x52, 0x03, 0x65, 0x72, 0x72, 0x42, 0x43, 0x5a, 0x41,
-	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x64, 0x61, 0x76, 0x65, 0x2f,
-	0x67, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x65,
-	0x72, 0x2f, 0x70, 0x62, 0x2f, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2f,
-	0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x3b, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
-	0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x01, 0x28, 0x08, 0x52, 0x04, 0x74, 0x65, 0x73, 0x74, 0x22, 0x33, 0x0a, 0x0d, 0x41, 0x75, 0x74,
+	0x68, 0x5f, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x68, 0x61,
+	0x73, 0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x68, 0x61, 0x73, 0x68, 0x22, 0x12,
+	0x0a, 0x10, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x5f, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x22, 0x43, 0x0a, 0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x0e, 0x0a, 0x02, 0x69,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x64,
+	0x65, 0x76, 0x69, 0x63, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x64, 0x65, 0x76,
+	0x69, 0x63, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x68, 0x61, 0x73, 0x68, 0x18, 0x05, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x04, 0x68, 0x61, 0x73, 0x68, 0x42, 0x43, 0x5a, 0x41, 0x67, 0x69, 0x74, 0x68, 0x75,
+	0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x64, 0x61, 0x76, 0x65, 0x2f, 0x67, 0x72, 0x6f, 0x75, 0x70,
+	0x73, 0x68, 0x61, 0x72, 0x65, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x2f, 0x70, 0x62, 0x2f,
+	0x67, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x68, 0x61, 0x72, 0x65, 0x2f, 0x6d, 0x65, 0x73, 0x73, 0x61,
+	0x67, 0x65, 0x73, 0x3b, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -245,20 +410,21 @@ func file_groupshare_messages_auth_proto_rawDescGZIP() []byte {
 	return file_groupshare_messages_auth_proto_rawDescData
 }
 
-var file_groupshare_messages_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_groupshare_messages_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_groupshare_messages_auth_proto_goTypes = []interface{}{
-	(*Auth)(nil),          // 0: messages.Auth
-	(*Auth_Request)(nil),  // 1: messages.Auth.Request
-	(*Auth_Response)(nil), // 2: messages.Auth.Response
-	(*Error)(nil),         // 3: messages.Error
+	(*Login_Request)(nil),    // 0: messages.Login_Request
+	(*Login_Response)(nil),   // 1: messages.Login_Response
+	(*Auth_Request)(nil),     // 2: messages.Auth_Request
+	(*Auth_Response)(nil),    // 3: messages.Auth_Response
+	(*Validate_Request)(nil), // 4: messages.Validate_Request
+	(*Token)(nil),            // 5: messages.Token
 }
 var file_groupshare_messages_auth_proto_depIdxs = []int32{
-	3, // 0: messages.Auth.Response.err:type_name -> messages.Error
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0, // [0:0] is the sub-list for method output_type
+	0, // [0:0] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_groupshare_messages_auth_proto_init() }
@@ -266,10 +432,9 @@ func file_groupshare_messages_auth_proto_init() {
 	if File_groupshare_messages_auth_proto != nil {
 		return
 	}
-	file_groupshare_messages_error_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_groupshare_messages_auth_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Auth); i {
+			switch v := v.(*Login_Request); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -281,7 +446,7 @@ func file_groupshare_messages_auth_proto_init() {
 			}
 		}
 		file_groupshare_messages_auth_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Auth_Request); i {
+			switch v := v.(*Login_Response); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -293,7 +458,43 @@ func file_groupshare_messages_auth_proto_init() {
 			}
 		}
 		file_groupshare_messages_auth_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Auth_Request); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_groupshare_messages_auth_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Auth_Response); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_groupshare_messages_auth_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Validate_Request); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_groupshare_messages_auth_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Token); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -311,7 +512,7 @@ func file_groupshare_messages_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_groupshare_messages_auth_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
