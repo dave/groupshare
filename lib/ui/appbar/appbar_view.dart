@@ -16,6 +16,16 @@ class AppBarView extends StatelessWidget implements PreferredSizeWidget {
         return AppBar(
           title: Text(_pageTitle),
           actions: [
+            PopupMenuButton(
+              icon: Icon(model.indicatorIcon),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child: ListTile(
+                    title: Text(model.indicatorText),
+                  ),
+                ),
+              ],
+            ),
             if (model.status == Status.Done || model.status == Status.Auth)
               PopupMenuButton(
                 icon: Icon(Icons.settings),

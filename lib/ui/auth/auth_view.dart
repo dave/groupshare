@@ -66,14 +66,7 @@ class _AuthFormState extends State<AuthForm> {
                     Navigator.pushNamedAndRemoveUntil(
                         context, '/share/list', (_) => false);
                   } catch (ex) {
-                    handle(context, ex, [
-                      Button('Log off', () async {
-                        await model.logoff();
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, '/login', (_) => false);
-                      }),
-                      Button('Retry'),
-                    ]);
+                    handle(context, ex);
                   }
                 }),
               ),

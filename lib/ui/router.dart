@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:groupshare/ui/auth/auth_view.dart';
 import 'package:groupshare/ui/home/home_view.dart';
 import 'package:groupshare/ui/login/login_view.dart';
+import 'package:groupshare/ui/share/add/share_add_view.dart';
 import 'package:groupshare/ui/share/list/share_list_view.dart';
-import 'package:groupshare/ui/share/new/share_new_view.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -17,8 +17,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => AuthView());
       case '/share/list':
         return MaterialPageRoute(builder: (_) => ShareListView());
-      case '/share/new':
-        return MaterialPageRoute(builder: (_) => ShareNewView());
+      case '/share/add':
+        return MaterialPageRoute(builder: (_) => ShareAddView());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

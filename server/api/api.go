@@ -5,10 +5,12 @@ import (
 	"crypto/sha1"
 	"encoding/binary"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
+	"github.com/dave/protod/perr"
 	"github.com/dave/protod/pmsg"
 	"github.com/dave/protod/pserver"
 )
@@ -35,11 +37,11 @@ func GetUser(ctx context.Context, server *pserver.Server, tx *firestore.Transact
 		snap, err = tx.Get(ref)
 	}
 	if err != nil {
-		return nil, nil, fmt.Errorf("getting user record: %w", err)
+		return nil, nil, perr.Wrap(err, "getting user record")
 	}
 	user := &User{}
 	if err := snap.DataTo(user); err != nil {
-		return nil, nil, fmt.Errorf("unmarshaling user: %w", err)
+		return nil, nil, perr.Wrap(err, "unmarshaling user")
 	}
 	return ref, user, nil
 }
@@ -47,14 +49,14 @@ func GetUser(ctx context.Context, server *pserver.Server, tx *firestore.Transact
 func GetUserVerify(ctx context.Context, server *pserver.Server, tx *firestore.Transaction, token *messages.Token) (*firestore.DocumentRef, *User, error) {
 	ref, user, err := GetUser(ctx, server, tx, token.Id)
 	if err != nil {
-		return nil, nil, fmt.Errorf("getting user: %w", err)
+		return nil, nil, perr.Wrap(err, "getting user")
 	}
 	hash, err := GenerateHash(token.Id, token.Device, user.Salt)
 	if err != nil {
-		return nil, nil, fmt.Errorf("generating token: %w", err)
+		return nil, nil, perr.Wrap(err, "generating token")
 	}
 	if hash != token.Hash {
-		return nil, nil, fmt.Errorf("hash doesn't match")
+		return nil, nil, errors.New("hash doesn't match")
 	}
 	return ref, user, nil
 }
@@ -79,7 +81,7 @@ func GenerateCode(device, email string, time int64) (string, error) {
 	}
 	b, err := json.Marshal(d)
 	if err != nil {
-		return "", fmt.Errorf("marshaling code: %w", err)
+		return "", perr.Wrap(err, "marshaling code")
 	}
 	s := sha1.New()
 	s.Write(b)
@@ -107,7 +109,7 @@ func GenerateHash(id, device, salt string) (string, error) {
 	}
 	b, err := json.Marshal(d)
 	if err != nil {
-		return "", fmt.Errorf("marshaling token: %w", err)
+		return "", perr.Wrap(err, "marshaling token")
 	}
 	s := sha1.New()
 	s.Write(b)

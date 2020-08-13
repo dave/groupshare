@@ -4,8 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"math/rand"
-	"time"
 
 	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
 	"cloud.google.com/go/firestore"
@@ -13,6 +11,7 @@ import (
 	"github.com/dave/groupshare/server/pb/groupshare/data"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
 	"github.com/dave/protod/delta"
+	"github.com/dave/protod/perr"
 	"github.com/dave/protod/pmsg"
 	"github.com/dave/protod/pserver"
 	"github.com/dave/protod/pstore"
@@ -34,56 +33,22 @@ func GetRequest(ctx context.Context, server *pserver.Server, user *api.User, req
 		return err
 	}
 
-	t := server.Type(req.DocumentType)
-	if t == nil {
-		api.Error(response, "Server error")
-		return fmt.Errorf("type %q not found", req.DocumentType)
-	}
-
-	state, document, err := pstore.Get(ctx, server, t, req.DocumentId)
+	state, document, err := pstore.Get(ctx, server, req.DocumentType, pstore.DocumentId(req.DocumentId), req.Create)
 	if err != nil {
 		api.Error(response, "Server error")
-		return fmt.Errorf("pstore get: %w", err)
+		return perr.Wrap(err, "pstore get")
 	}
 
 	value, err := delta.MarshalAny(document)
 	if err != nil {
 		api.Error(response, "Server error")
-		return fmt.Errorf("marshaling document: %w", err)
+		return perr.Wrap(err, "marshaling document")
 	}
 
 	response.MustSet(&pstore.Payload_Get_Response{State: state, Value: value})
 
 	return nil
 
-}
-
-func AddRequest(ctx context.Context, server *pserver.Server, user *api.User, request, response *pmsg.Bundle) error {
-
-	req := &pstore.Payload_Add_Request{}
-	if _, err := request.Get(req); err != nil {
-		api.Error(response, "Invalid input")
-		return err
-	}
-
-	t := server.Type(req.DocumentType)
-	if t == nil {
-		api.Error(response, "Server error")
-		return fmt.Errorf("type %q not found", req.DocumentType)
-	}
-
-	document, err := delta.UnmarshalAny(req.Value)
-	if err != nil {
-		api.Error(response, "Server error")
-		return fmt.Errorf("unmarshaling document: %w", err)
-	}
-
-	if err := pstore.Add(ctx, server, t, req.DocumentId, document); err != nil {
-		api.Error(response, "Server error")
-		return fmt.Errorf("pstore add: %w", err)
-	}
-
-	return nil
 }
 
 func EditRequest(ctx context.Context, server *pserver.Server, user *api.User, request, response *pmsg.Bundle) error {
@@ -94,33 +59,43 @@ func EditRequest(ctx context.Context, server *pserver.Server, user *api.User, re
 		return err
 	}
 
-	t := server.Type(req.DocumentType)
-	if t == nil {
-		api.Error(response, "Server error")
-		return fmt.Errorf("type %q not found", req.DocumentType)
+	var refresh bool
+	if req.DocumentType == SHARE_DOCUMENT_TYPE.Type() {
+		// TODO: this isn't ideal...
+		for _, op := range req.Op.Flatten() {
+			if op.Affects(data.Op().Share().Name()) {
+				refresh = true
+				break
+			}
+		}
 	}
 
-	state, op, err := pstore.Edit(ctx, server, t, req.StateId, req.DocumentId, req.State, req.Op)
+	state, op, err := pstore.Edit(ctx, server, req.DocumentType, pstore.DocumentId(req.DocumentId), pstore.StateId(req.StateId), req.State, req.Op)
 	if err != nil {
 		api.Error(response, "Server error")
-		return fmt.Errorf("pstore edit: %w", err)
+		return perr.Wrap(err, "pstore edit")
 	}
 
 	response.MustSet(&pstore.Payload_Edit_Response{State: state, Op: op})
 
-	if state%UPDATE_SNAPSHOT_FREQUENCY == 0 {
+	if refresh {
+		if err := pstore.Refresh(ctx, server, req.DocumentType, pstore.DocumentId(req.DocumentId)); err != nil {
+			api.Error(response, "Server error")
+			return perr.Wrap(err, "pstore refresh")
+		}
+	} else if state%UPDATE_SNAPSHOT_FREQUENCY == 0 {
 		refreshRequest := pmsg.New()
 		refreshRequest.MustSet(&pstore.Payload_Refresh_Request{DocumentType: req.DocumentType, DocumentId: req.DocumentId})
 		if _, err := TriggerRefreshTask(ctx, server, refreshRequest); err != nil {
 			api.Error(response, "Server error")
-			return fmt.Errorf("triggering refresh task: %w", err)
+			return perr.Wrap(err, "triggering refresh task")
 		}
 	}
 
 	return nil
 }
 
-func RefreshRequest(ctx context.Context, server *pserver.Server, user *api.User, request, response *pmsg.Bundle) error {
+func RefreshRequest(ctx context.Context, server *pserver.Server, request, response *pmsg.Bundle) error {
 
 	req := &pstore.Payload_Refresh_Request{}
 	if _, err := request.Get(req); err != nil {
@@ -128,15 +103,9 @@ func RefreshRequest(ctx context.Context, server *pserver.Server, user *api.User,
 		return err
 	}
 
-	t := server.Type(req.DocumentType)
-	if t == nil {
+	if err := pstore.Refresh(ctx, server, req.DocumentType, pstore.DocumentId(req.DocumentId)); err != nil {
 		api.Error(response, "Server error")
-		return fmt.Errorf("type %q not found", req.DocumentType)
-	}
-
-	if err := pstore.Refresh(ctx, server, t, req.DocumentId); err != nil {
-		api.Error(response, "Server error")
-		return fmt.Errorf("pstore refresh: %w", err)
+		return perr.Wrap(err, "pstore refresh")
 	}
 
 	return nil
@@ -149,24 +118,25 @@ func ShareListRequest(ctx context.Context, server *pserver.Server, user *api.Use
 		return nil
 	}
 
-	docs, err := server.Firestore.Collection(SHARE_DOCUMENT_TYPE.CollectionName()).
-		Query.
-		Where(SHARE_DOCUMENT_TYPE.SnapshotFieldSelector("Id"), "in", user.Shares).
-		Select("Name").
-		Documents(server.FirestoreContext(ctx)).
-		GetAll()
+	shares := make([]*firestore.DocumentRef, len(user.Shares))
+	for i, share := range user.Shares {
+		shares[i] = server.Firestore.Collection(SHARE_DOCUMENT_TYPE.CollectionName()).Doc(share)
+	}
+
+	docs, err := server.Firestore.GetAll(ctx, shares)
 	if err != nil {
 		return err
 	}
-	m := map[string]string{}
+
+	var items []*messages.Share_List_Response_Item
 	for _, doc := range docs {
 		snap := &data.ShareSnapshot{}
 		if err := doc.DataTo(snap); err != nil {
 			return err
 		}
-		m[doc.Ref.ID] = snap.Name
+		items = append(items, &messages.Share_List_Response_Item{Id: doc.Ref.ID, Name: snap.Name})
 	}
-	response.MustSet(&messages.Share_List_Response{Shares: user.Shares, Names: m})
+	response.MustSet(&messages.Share_List_Response{Items: items})
 
 	return nil
 }
@@ -175,12 +145,12 @@ func TriggerRefreshTask(ctx context.Context, server *pserver.Server, message pro
 
 	client, err := cloudtasks.NewClient(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("getting new cloudtasks client: %w", err)
+		return nil, perr.Wrap(err, "getting new cloudtasks client")
 	}
 
 	body, err := proto.Marshal(message)
 	if err != nil {
-		return nil, fmt.Errorf("marshaling refresh message: %w", err)
+		return nil, perr.Wrap(err, "marshaling refresh message")
 	}
 
 	req := &taskspb.CreateTaskRequest{
@@ -199,20 +169,26 @@ func TriggerRefreshTask(ctx context.Context, server *pserver.Server, message pro
 
 	task, err := client.CreateTask(ctx, req)
 	if err != nil {
-		return nil, fmt.Errorf("creating task: %v", err)
+		return nil, perr.Wrap(err, "creating task")
 	}
 
 	return task, nil
 
 }
 
+var USER_DOCUMENT_TYPE = &pserver.DocumentType{
+	Document: &data.User{},
+}
+
 var SHARE_DOCUMENT_TYPE = &pserver.DocumentType{
 	Document: &data.Share{},
+	Snapshot: &data.ShareSnapshot{},
+	State:    &data.State{},
 	PackSnapshot: func(ctx context.Context, s *pserver.Snapshot, old proto.Message, document proto.Message) (proto.Message, error) {
 		var userId string
 		if old != nil {
 			// When refreshing a snapshot, this is done as a task, so we don't have a user... so copy from the old value.
-			userId = old.(*data.Snapshot).User
+			userId = old.(*data.ShareSnapshot).User
 		} else {
 			userId = ctx.Value(UserContextKey).(*api.User).Id
 		}
@@ -222,76 +198,73 @@ var SHARE_DOCUMENT_TYPE = &pserver.DocumentType{
 			Name:  document.(*data.Share).Name,
 		}, nil
 	},
-	UnpackSnapshot: unpackSnapshot,
-	PackState:      packState,
-	UnpackState:    unpackState,
-	StateField:     "Value",
-	SnapshotField:  "Value",
+	UnpackSnapshot: func(snap proto.Message) (*pserver.Snapshot, error) {
+		return snap.(*data.ShareSnapshot).Value, nil
+	},
+	PackState:       statePacker,
+	UnpackState:     stateUnpacker,
+	StateQueryField: stateQueryField,
 	OnAdd: func(ctx context.Context, server *pserver.Server, tx *firestore.Transaction, documentId string) error {
 		user := ctx.Value(UserContextKey).(*api.User)
 		ref, user, err := api.GetUser(ctx, server, tx, user.Id)
 		if err != nil {
-			return fmt.Errorf("verifying token: %w", err)
+			return perr.Wrap(err, "verifying token")
 		}
 		user.Shares = append(user.Shares, documentId)
 		if err := tx.Set(ref, user); err != nil {
-			return fmt.Errorf("setting updated user: %w", err)
+			return perr.Wrap(err, "setting updated user")
 		}
 		return nil
 	},
-	PreEdit: func(ctx context.Context, server *pserver.Server, documentId string) error {
-		user := ctx.Value(UserContextKey).(*api.User)
-		var found bool
-		for _, share := range user.Shares {
-			if share == documentId {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return errors.New("user does not have permission")
-		}
-		return nil
+	OnGet: func(ctx context.Context, server *pserver.Server, id string) error {
+		return checkSharePermission(ctx, id)
+	},
+	OnEdit: func(ctx context.Context, server *pserver.Server, tx *firestore.Transaction, id string) error {
+		return checkSharePermission(ctx, id)
 	},
 }
 
-func packState(ctx context.Context, s *pserver.State) (proto.Message, error) {
+func checkSharePermission(ctx context.Context, documentId string) error {
 	user := ctx.Value(UserContextKey).(*api.User)
-	return &data.State{
+	var found bool
+	for _, share := range user.Shares {
+		if share == documentId {
+			found = true
+			break
+		}
+	}
+	if !found {
+		return errors.New("user does not have permission")
+	}
+	return nil
+}
+
+func snapshotPacker(ctx context.Context, s *pserver.Snapshot, old proto.Message, document proto.Message) (proto.Message, error) {
+	var userId string
+	if old != nil {
+		// When refreshing a snapshot, this is done as a task, so we don't have a user... so copy from the old value.
+		userId = old.(*data.Snapshot).User
+	} else {
+		userId = ctx.Value(UserContextKey).(*api.User).Id
+	}
+	return &data.ShareSnapshot{
 		Value: s,
-		User:  user.Id,
+		User:  userId,
+		Name:  document.(*data.Share).Name,
 	}, nil
 }
 
-func unpackSnapshot(s *firestore.DocumentSnapshot) (*pserver.Snapshot, proto.Message, error) {
-	snap := &data.Snapshot{}
-	if err := s.DataTo(snap); err != nil {
-		return nil, nil, err
-	}
-	return snap.Value, snap, nil
+func snapshotUnpacker(snap proto.Message) (*pserver.Snapshot, error) {
+	return snap.(*data.Snapshot).Value, nil
 }
 
-func unpackState(s *firestore.DocumentSnapshot) (*pserver.State, proto.Message, error) {
-	state := &data.State{}
-	if err := s.DataTo(state); err != nil {
-		return nil, nil, err
-	}
-	return state.Value, state, nil
+func statePacker(ctx context.Context, s *pserver.State) (proto.Message, error) {
+	user := ctx.Value(UserContextKey).(*api.User)
+	return &data.State{Value: s, User: user.Id}, nil
 }
 
-const alphanum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-
-func uniqueID() string {
-	b := make([]byte, 20)
-	if _, err := rand.Read(b); err != nil {
-		panic(fmt.Sprintf("firestore: crypto/rand.Read error: %v", err))
-	}
-	for i, byt := range b {
-		b[i] = alphanum[int(byt)%len(alphanum)]
-	}
-	return string(b)
+func stateUnpacker(state proto.Message) (*pserver.State, error) {
+	return state.(*data.State).Value, nil
 }
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
+const stateQueryField = "Value.State"

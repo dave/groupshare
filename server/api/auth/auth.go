@@ -11,9 +11,11 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
+	"github.com/dave/protod/perr"
 	"github.com/dave/protod/pmsg"
 	"github.com/dave/protod/pserver"
 	"google.golang.org/appengine"
+	"google.golang.org/appengine/mail"
 )
 
 func LoginRequest(ctx context.Context, request, response *pmsg.Bundle) error {
@@ -26,8 +28,26 @@ func LoginRequest(ctx context.Context, request, response *pmsg.Bundle) error {
 
 	t := time.Now().Unix()
 
-	// TODO: Send an email with deep link
-	fmt.Println(api.GenerateCode(req.Device, req.Email, t))
+	code, err := api.GenerateCode(req.Device, req.Email, t)
+	if err != nil {
+		api.Error(response, "Server error")
+		return err
+	}
+
+	if appengine.IsAppEngine() {
+		msg := &mail.Message{
+			Sender:  "Dave Brophy <dave@davidbrophy.com>",
+			To:      []string{req.Email},
+			Subject: "Group Share login code",
+			Body:    fmt.Sprintf("This is your code: %v", code),
+		}
+		if err := mail.Send(ctx, msg); err != nil {
+			api.Error(response, "Server error")
+			return err
+		}
+	} else {
+		fmt.Println("code", code)
+	}
 
 	response.MustSet(&messages.Login_Response{Time: fmt.Sprint(t)})
 
@@ -45,22 +65,19 @@ func AuthRequest(ctx context.Context, server *pserver.Server, request, response 
 	timeInt64, err := strconv.ParseInt(req.Time, 10, 64)
 	if err != nil {
 		api.AuthError(response, "Invalid input")
-		return fmt.Errorf("parsing time: %w", err)
+		return perr.Wrap(err, "parsing time")
 	}
 	code, err := api.GenerateCode(req.Device, req.Email, timeInt64)
 	if err != nil {
 		api.AuthError(response, "Invalid input")
-		return fmt.Errorf("getting code: %w", err)
+		return perr.Wrap(err, "getting code")
 	}
 	checkCode := true
 	if req.Test {
-		// the client is requesting that we skip the code check. This should throw an error
-		// in production environments
-		if appengine.IsAppEngine() {
-			api.Error(response, "Invalid input")
-			return errors.New("test flag set in production")
+		// the client is requesting that we skip the code check. This should only work in dev env.
+		if !appengine.IsAppEngine() {
+			checkCode = false
 		}
-		checkCode = false
 	}
 	if checkCode && code != req.Code {
 		api.AuthError(response, "Wrong code")
@@ -78,12 +95,12 @@ func AuthRequest(ctx context.Context, server *pserver.Server, request, response 
 		query := server.Firestore.Collection(api.USERS_COLLECTION).Where("email", "==", req.Email)
 		users, err := tx.Documents(query).GetAll()
 		if err != nil {
-			return fmt.Errorf("selecting from users: %w", err)
+			return perr.Wrap(err, "selecting from users")
 		}
 		if len(users) == 1 {
 			userRef = users[0].Ref
 			if err := users[0].DataTo(user); err != nil {
-				return fmt.Errorf("unpacking user: %w", err)
+				return perr.Wrap(err, "unpacking user")
 			}
 			return nil
 		} else if len(users) > 1 {
@@ -95,7 +112,7 @@ func AuthRequest(ctx context.Context, server *pserver.Server, request, response 
 		user = &api.User{Id: userRef.ID, Email: req.Email, Salt: randomString(30)}
 
 		if err := tx.Set(userRef, user); err != nil {
-			return fmt.Errorf("selecting from users: %w", err)
+			return perr.Wrap(err, "selecting from users")
 		}
 
 		return nil
@@ -103,13 +120,13 @@ func AuthRequest(ctx context.Context, server *pserver.Server, request, response 
 	}
 	if err := server.Firestore.RunTransaction(server.FirestoreContext(ctx), f); err != nil {
 		api.Error(response, "Server error")
-		return fmt.Errorf("running user transaction: %w", err)
+		return perr.Wrap(err, "running user transaction")
 	}
 
 	hash, err := api.GenerateHash(userRef.ID, req.Device, user.Salt)
 	if err != nil {
 		api.Error(response, "Server error")
-		return fmt.Errorf("getting hash: %w", err)
+		return perr.Wrap(err, "getting hash")
 	}
 
 	response.MustSet(&messages.Auth_Response{Id: userRef.ID, Hash: hash})

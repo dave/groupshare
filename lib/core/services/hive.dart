@@ -1,13 +1,15 @@
 import 'package:groupshare/pb/groupshare/data/share.pb.dart';
+import 'package:groupshare/pb/groupshare/data/user.pb.dart';
 import 'package:groupshare/pb/registry.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:protobuf/protobuf.dart';
 import 'package:protod/pserver/pserver.dart';
 
-setupHive() async {
+Future<void> setupHive() async {
   await Hive.initFlutter();
   Hive.registerAdapter(ItemAdapter<Share>(0, types));
+  Hive.registerAdapter(ItemAdapter<User>(1, types));
 }
 
 class ProtoAdapter<T extends GeneratedMessage> extends TypeAdapter<T> {

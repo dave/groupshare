@@ -18,6 +18,7 @@ import (
 	"github.com/dave/groupshare/server/pb/groupshare/data"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
 	"github.com/dave/protod/delta"
+	"github.com/dave/protod/perr"
 	"github.com/dave/protod/pmsg"
 	"github.com/dave/protod/pserver"
 	"github.com/dave/protod/pstore"
@@ -33,22 +34,34 @@ func TestList(t *testing.T) {
 
 	documentType := string((&data.Share{}).ProtoReflect().Descriptor().FullName())
 	token := getToken(ctx, t, c, "a@b.c")
-	id := uniqueID()
+	id := pstore.NewDocumentID()
 
-	c.MustRequest(ctx, t, token, &pstore.Payload_Add_Request{
+	add := &pstore.Payload_Edit_Response{}
+	c.MustRequest(ctx, t, token, &pstore.Payload_Edit_Request{
 		DocumentType: documentType,
-		DocumentId:   id,
-		Value:        delta.MustMarshalAny(&data.Share{Name: "b"}),
+		DocumentId:   string(id),
+		StateId:      string(pstore.NewStateID()),
+		State:        0,
+		Op:           delta.Root(&data.Share{Name: "b"}),
+	}).MustGet(add)
+	if add.State != 1 {
+		t.Fatal("unexpected state")
+	}
+	if add.Op != nil {
+		t.Fatal("unexpected op")
+	}
+
+	// TODO: do something about this!
+	c.MustRequest(ctx, t, nil, &pstore.Payload_Refresh_Request{
+		DocumentType: documentType,
+		DocumentId:   string(id),
 	})
 
 	list := &messages.Share_List_Response{}
 	c.MustRequest(ctx, t, token, &messages.Share_List_Request{}).MustGet(list)
 
-	if !reflect.DeepEqual(list.Shares, []string{id}) {
-		t.Fatalf("expect %v, found %v", []string{id}, list.Shares)
-	}
-	if !reflect.DeepEqual(list.Names, map[string]string{id: "b"}) {
-		t.Fatalf("expect %v, found %v", map[string]string{id: "b"}, list.Names)
+	if !reflect.DeepEqual(list.Items, []*messages.Share_List_Response_Item{{Id: string(id), Name: "b"}}) {
+		t.Fatalf("expect %v, found %v", []*messages.Share_List_Response_Item{{Id: string(id), Name: "b"}}, list.Items)
 	}
 
 }
@@ -60,19 +73,28 @@ func TestOps(t *testing.T) {
 
 	documentType := string((&data.Share{}).ProtoReflect().Descriptor().FullName())
 	token := getToken(ctx, t, c, "a@b.c")
-	id := uniqueID()
+	id := pstore.NewDocumentID()
 
-	_ = c.MustRequest(ctx, t, token, &pstore.Payload_Add_Request{
+	add := &pstore.Payload_Edit_Response{}
+	c.MustRequest(ctx, t, token, &pstore.Payload_Edit_Request{
 		DocumentType: documentType,
-		DocumentId:   id,
-		Value:        delta.MustMarshalAny(&data.Share{Name: "b"}),
-	})
+		DocumentId:   string(id),
+		StateId:      string(pstore.NewStateID()),
+		State:        0,
+		Op:           delta.Root(&data.Share{Name: "b"}),
+	}).MustGet(add)
+	if add.State != 1 {
+		t.Fatal("unexpected state")
+	}
+	if add.Op != nil {
+		t.Fatal("unexpected op")
+	}
 
 	editC := &pstore.Payload_Edit_Response{}
 	c.MustRequest(ctx, t, token, &pstore.Payload_Edit_Request{
 		DocumentType: documentType,
-		DocumentId:   id,
-		StateId:      "b",
+		DocumentId:   string(id),
+		StateId:      string(pstore.NewStateID()),
 		State:        1,
 		Op:           data.Op().Share().Name().Edit("b", "bC"),
 	}).MustGet(editC)
@@ -80,8 +102,8 @@ func TestOps(t *testing.T) {
 	editD := &pstore.Payload_Edit_Response{}
 	c.MustRequest(ctx, t, token, &pstore.Payload_Edit_Request{
 		DocumentType: documentType,
-		DocumentId:   id,
-		StateId:      "c",
+		DocumentId:   string(id),
+		StateId:      string(pstore.NewStateID()),
 		State:        1,
 		Op:           data.Op().Share().Name().Edit("b", "bD"),
 	}).MustGet(editD)
@@ -89,7 +111,7 @@ func TestOps(t *testing.T) {
 	get := &pstore.Payload_Get_Response{}
 	c.MustRequest(ctx, t, token, &pstore.Payload_Get_Request{
 		DocumentType: documentType,
-		DocumentId:   id,
+		DocumentId:   string(id),
 	}).MustGet(get)
 
 	expected := "bCD"
@@ -106,28 +128,34 @@ func TestDeduplicationAdd(t *testing.T) {
 
 	documentType := string((&data.Share{}).ProtoReflect().Descriptor().FullName())
 	token := getToken(ctx, t, c, "a@b.c")
-	id := uniqueID()
+	id := pstore.NewDocumentID()
 
-	c.MustRequest(ctx, t, token, &pstore.Payload_Add_Request{
+	add1 := &pstore.Payload_Edit_Response{}
+	c.MustRequest(ctx, t, token, &pstore.Payload_Edit_Request{
 		DocumentType: documentType,
-		DocumentId:   id,
-		Value:        delta.MustMarshalAny(&data.Share{Name: "b"}),
-	})
+		DocumentId:   string(id),
+		StateId:      string(pstore.NewStateID()),
+		State:        0,
+		Op:           delta.Root(&data.Share{Name: "b"}),
+	}).MustGet(add1)
 
-	c.MustRequest(ctx, t, token, &pstore.Payload_Add_Request{
+	add2 := &pstore.Payload_Edit_Response{}
+	c.MustRequest(ctx, t, token, &pstore.Payload_Edit_Request{
 		DocumentType: documentType,
-		DocumentId:   id,
-		Value:        delta.MustMarshalAny(&data.Share{Name: "c"}),
-	})
+		DocumentId:   string(id),
+		StateId:      string(pstore.NewStateID()),
+		State:        0,
+		Op:           delta.Root(&data.Share{Name: "c"}),
+	}).MustGet(add2)
 
 	get1 := &pstore.Payload_Get_Response{}
 	c.MustRequest(ctx, t, token, &pstore.Payload_Get_Request{
 		DocumentType: documentType,
-		DocumentId:   id,
+		DocumentId:   string(id),
 	}).MustGet(get1)
 
 	share := delta.MustUnmarshalAny(get1.Value).(*data.Share)
-	if share.Name != "b" {
+	if share.Name != "c" {
 		t.Fatal("name mismatch")
 	}
 }
@@ -244,6 +272,7 @@ func NewClient(ctx context.Context, t *testing.T, targetType TargetType) *Client
 }
 
 func (c *Client) MustRequest(ctx context.Context, t *testing.T, token *messages.Token, request proto.Message) *pmsg.Bundle {
+	t.Helper()
 	response, err := c.Request(ctx, token, request)
 	if err != nil {
 		t.Fatal(err)
@@ -291,19 +320,19 @@ func (c *Client) httpRequest(ctx context.Context, token *messages.Token, request
 		var requestBundleBytes []byte
 		requestBundleBytes, err = proto.Marshal(requestBundle)
 		if err != nil {
-			return nil, fmt.Errorf("marshaling request bundle: %w", err) // <- return error without retry
+			return nil, perr.Wrap(err, "marshaling request bundle") // <- return error without retry
 		}
 		buf := bytes.NewBuffer(requestBundleBytes)
 		var resp *http.Response
 		resp, err = http.Post(path, "application/protobuf", buf)
 		if err != nil {
-			err = fmt.Errorf("http post: %w", err)
+			err = perr.Wrap(err, "http post")
 			continue // <- restart the loop or exit when retry count exceeded
 		}
 		var body []byte
 		body, err = ioutil.ReadAll(resp.Body)
 		if err != nil {
-			err = fmt.Errorf("reading body: %w", err)
+			err = perr.Wrap(err, "reading body")
 			continue // <- restart the loop or exit when retry count exceeded
 		}
 		if resp.StatusCode != 200 {
@@ -320,7 +349,7 @@ func (c *Client) httpRequest(ctx context.Context, token *messages.Token, request
 		response = pmsg.New()
 		err = proto.Unmarshal(body, response)
 		if err != nil {
-			err = fmt.Errorf("unmarshaling response bundle: %w", err)
+			err = perr.Wrap(err, "unmarshaling response bundle")
 			continue // <- restart the loop or exit when retry count exceeded
 		}
 		break // <- finish the loop and continue executing
@@ -335,21 +364,4 @@ func (c *Client) Close() {
 	if c.target == LocalInProcess {
 		_ = c.local.Firestore.Close()
 	}
-}
-
-const alphanum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-
-func uniqueID() string {
-	b := make([]byte, 20)
-	if _, err := rand.Read(b); err != nil {
-		panic(fmt.Sprintf("firestore: crypto/rand.Read error: %v", err))
-	}
-	for i, byt := range b {
-		b[i] = alphanum[int(byt)%len(alphanum)]
-	}
-	return string(b)
-}
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
 }

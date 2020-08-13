@@ -2,32 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:groupshare/ui/appbar/appbar_view.dart';
 import 'package:groupshare/ui/base_view.dart';
 import 'package:groupshare/ui/handle.dart';
-import 'package:groupshare/ui/share/new/share_new_model.dart';
+import 'package:groupshare/ui/share/edit/share_edit_model.dart';
 
-class ShareNewView extends StatelessWidget {
+class ShareEditView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarView('Add share'),
+      appBar: AppBarView('Edit share'),
       body: Center(
-        child: ShareNewForm(),
+        child: ShareEditForm(),
       ),
     );
   }
 }
 
-class ShareNewForm extends StatefulWidget {
+class ShareEditForm extends StatefulWidget {
   @override
-  _ShareNewFormState createState() => _ShareNewFormState();
+  _ShareEditFormState createState() => _ShareEditFormState();
 }
 
-class _ShareNewFormState extends State<ShareNewForm> {
+class _ShareEditFormState extends State<ShareEditForm> {
   String _name;
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<ShareNewModel>(
+    return BaseView<ShareEditModel>(
       builder: (context, model, child) {
         return Form(
           key: _formKey,
@@ -63,7 +63,7 @@ class _ShareNewFormState extends State<ShareNewForm> {
                   OutlineButton(
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(30.0)),
-                    child: Text("Add"),
+                    child: Text("Edit"),
                     onPressed: (() async {
                       final FormState form = _formKey.currentState;
 
@@ -74,7 +74,7 @@ class _ShareNewFormState extends State<ShareNewForm> {
                       form.save();
 
                       try {
-                        await model.newShare(_name);
+                        await model.editShare();
                         Navigator.pushNamedAndRemoveUntil(
                             context, '/share/list', (_) => false);
                       } catch (ex) {

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:groupshare/core/excpetions/exceptions.dart';
-
-class Button {
-  final String message;
-  final Function() press;
-  Button(this.message, [this.press]);
-}
+import 'package:groupshare/core/services/auth.dart';
+import 'package:groupshare/locator.dart';
 
 Future<void> handle(
   BuildContext context,
@@ -13,12 +9,13 @@ Future<void> handle(
   List<Button> buttons,
 ]) async {
   var message = "Server error";
-  print('ex.runtimeType: ${ex.runtimeType}');
   if (ex is UserException) {
+    print("error: ${ex.message}");
     message = ex.message;
   } else if (ex is Error) {
     throw ex;
   }
+  var _auth = locator<Auth>();
 
   return showDialog<void>(
     context: context,
@@ -51,8 +48,23 @@ Future<void> handle(
                 }
               },
             ),
+          if (_auth.status == Status.Done || _auth.status == Status.Auth)
+            FlatButton(
+              child: Text("Log off"),
+              onPressed: () async {
+                await _auth.logoff();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/login', (_) => false);
+              },
+            ),
         ],
       );
     },
   );
+}
+
+class Button {
+  final String message;
+  final Function() press;
+  Button(this.message, [this.press]);
 }

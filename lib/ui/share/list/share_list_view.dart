@@ -9,18 +9,16 @@ class ShareListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseView<ShareListModel>(
       onModelReady: (model) async {
-        try {
-          await model.initialise();
-        } catch (ex) {
-          handle(context, ex, [
-            Button("Log off", () async {
-              await model.logoff();
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/login', (_) => false);
-            }),
-          ]);
-          return;
+        action() async {
+          try {
+            await model.initialise();
+          } catch (ex) {
+            handle(context, ex, [Button("Retry", action)]);
+            return;
+          }
         }
+
+        await action();
       },
       builder: (context, model, child) {
         return Scaffold(
@@ -28,21 +26,40 @@ class ShareListView extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () {
-              Navigator.pushNamed(context, '/share/new');
+              Navigator.pushNamed(context, '/share/add');
             },
           ),
           body: model.busy
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [Center(child: CircularProgressIndicator())])
-              : ListView.builder(
-                  itemCount: model.shares.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                        title: Text(model.names[model.shares[index]]));
-                  },
-                ),
+                  children: [Center(child: CircularProgressIndicator())],
+                )
+              : model.offline
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Text(
+                            "We can't display this page "
+                            "because you don't have an "
+                            "internet connection.",
+                          ),
+                        )
+                      ],
+                    )
+                  : RefreshIndicator(
+                      onRefresh: () async {
+                        await model.initialise();
+                      },
+                      child: ListView.builder(
+                        itemCount: model.items.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(title: Text(model.items[index].name));
+                        },
+                      ),
+                    ),
         );
       },
     );

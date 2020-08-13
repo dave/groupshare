@@ -7,6 +7,9 @@ message Share_List_Request {
   // empty
 }
 message Share_List_Response {
-  repeated string shares = 1;
-  map<string, string> names = 2;
+  repeated Item items = 1;
+  message Item {
+    string id = 1;
+    string name = 2;
+  }
 }

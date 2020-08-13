@@ -7,7 +7,6 @@ import 'package:groupshare/pb/groupshare/data/data.op.dart';
 import 'package:groupshare/pb/groupshare/data/share.pb.dart';
 import 'package:groupshare/pb/groupshare/messages/auth.pb.dart';
 import 'package:protod/delta/delta.dart';
-import 'package:protod/google/protobuf/any.pb.dart';
 import 'package:protod/pstore/pstore.pb.dart';
 
 void main() {
@@ -30,14 +29,17 @@ void main() {
     final type = Share().info_.qualifiedMessageName;
     // session1 - adds the share then sets the name
     var session1share = Share()..name = "a";
-    var session1state = Int64(1);
-    await api.send(
-      Payload_Add_Request()
+    var session1state = Int64(0);
+    final session1addResponse1 = await api.send(
+      Payload_Edit_Request()
         ..documentType = type
         ..documentId = id
-        ..value = Any.pack(session1share),
-      null,
+        ..stateId = api.randomUnique()
+        ..state = session1state
+        ..op = root(session1share),
+      Payload_Edit_Response(),
     );
+    session1state = session1addResponse1.state;
 
     final session1opSetName = Op().Share().Name().Set("b");
     apply(session1opSetName, session1share);

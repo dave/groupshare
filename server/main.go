@@ -15,6 +15,7 @@ import (
 	"github.com/dave/groupshare/server/api/auth"
 	"github.com/dave/groupshare/server/api/store"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
+	"github.com/dave/protod/perr"
 	"github.com/dave/protod/pmsg"
 	"github.com/dave/protod/pserver"
 	"github.com/dave/protod/pstore"
@@ -54,7 +55,7 @@ func main() {
 		Location: location,
 		Queue:    queue,
 	}
-	server := pserver.New(fc, config, store.SHARE_DOCUMENT_TYPE)
+	server := pserver.New(fc, config, store.SHARE_DOCUMENT_TYPE, store.USER_DOCUMENT_TYPE)
 	defer func() { _ = server.Close() }()
 
 	http.HandleFunc("/", indexHandler(server))
@@ -106,18 +107,28 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 
 		response := pmsg.New()
 		err = ProcessBundle(ctx, server, request, response)
-		if err == pserver.ServerBusy {
+
+		if pserver.IsBusyError(err) {
+			fmt.Println("error: 503 server busy")
 			http.Error(w, "503 server busy", http.StatusServiceUnavailable)
 			return
 		}
+
 		if err == pserver.PathNotFound {
+			fmt.Println("error: 404 path not found")
 			http.NotFound(w, r)
 			return
 		}
+
 		if err != nil && !response.Has(&messages.Error{}) {
 			// if we got an error, but no error was added to the response, add a generic server error
 			api.Error(response, "Server error")
 		}
+
+		if err != nil {
+			fmt.Printf("error: %+v\n", err)
+		}
+
 		fmt.Println(mustJson(response))
 		responseBytes, err := proto.Marshal(response)
 		if err != nil {
@@ -185,6 +196,8 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 		return auth.LoginRequest(ctx, request, response)
 	case request.Has(&messages.Auth_Request{}):
 		return auth.AuthRequest(ctx, server, request, response)
+	case request.Has(&pstore.Payload_Refresh_Request{}):
+		return store.RefreshRequest(ctx, server, request, response)
 	}
 
 	var user *api.User
@@ -192,7 +205,7 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 	found, err := request.Get(token)
 	if err != nil {
 		api.AuthError(response, "Invalid login token")
-		return fmt.Errorf("unpacking token: %w", err)
+		return perr.Wrap(err, "unpacking token")
 	}
 	if !found {
 		api.AuthError(response, "Login token missing")
@@ -200,7 +213,7 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 	}
 	if _, user, err = api.GetUserVerify(ctx, server, nil, token); err != nil {
 		api.AuthError(response, "Login token error")
-		return fmt.Errorf("verifying token: %w", err)
+		return perr.Wrap(err, "verifying token")
 	}
 
 	ctx = context.WithValue(ctx, store.UserContextKey, user)
@@ -213,14 +226,12 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 
 	// pstore requests
 	switch {
-	case request.Has(&pstore.Payload_Add_Request{}):
-		return store.AddRequest(ctx, server, user, request, response)
+	//case request.Has(&pstore.Payload_Add_Request{}):
+	//	return store.AddRequest(ctx, server, user, request, response)
 	case request.Has(&pstore.Payload_Get_Request{}):
 		return store.GetRequest(ctx, server, user, request, response)
 	case request.Has(&pstore.Payload_Edit_Request{}):
 		return store.EditRequest(ctx, server, user, request, response)
-	case request.Has(&pstore.Payload_Refresh_Request{}):
-		return store.RefreshRequest(ctx, server, user, request, response)
 	}
 
 	// other requests
