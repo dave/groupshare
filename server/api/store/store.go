@@ -8,6 +8,7 @@ import (
 	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api"
+	datapb "github.com/dave/groupshare/server/pb/data"
 	"github.com/dave/groupshare/server/pb/groupshare/data"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
 	"github.com/dave/protod/delta"
@@ -63,7 +64,7 @@ func EditRequest(ctx context.Context, server *pserver.Server, user *api.User, re
 	if req.DocumentType == SHARE_DOCUMENT_TYPE.Type() {
 		// TODO: this isn't ideal...
 		for _, op := range req.Op.Flatten() {
-			if op.Affects(data.Op().Share().Name()) {
+			if op.Affects(datapb.Op().Share().Name()) {
 				refresh = true
 				break
 			}
@@ -177,11 +178,11 @@ func TriggerRefreshTask(ctx context.Context, server *pserver.Server, message pro
 }
 
 var USER_DOCUMENT_TYPE = &pserver.DocumentType{
-	Document: &data.User{},
+	Document: &datapb.User{},
 }
 
 var SHARE_DOCUMENT_TYPE = &pserver.DocumentType{
-	Document: &data.Share{},
+	Document: &datapb.Share{},
 	Snapshot: &data.ShareSnapshot{},
 	State:    &data.State{},
 	PackSnapshot: func(ctx context.Context, s *pserver.Snapshot, old proto.Message, document proto.Message) (proto.Message, error) {
@@ -195,7 +196,7 @@ var SHARE_DOCUMENT_TYPE = &pserver.DocumentType{
 		return &data.ShareSnapshot{
 			Value: s,
 			User:  userId,
-			Name:  document.(*data.Share).Name,
+			Name:  document.(*datapb.Share).Name,
 		}, nil
 	},
 	UnpackSnapshot: func(snap proto.Message) (*pserver.Snapshot, error) {
@@ -250,7 +251,7 @@ func snapshotPacker(ctx context.Context, s *pserver.Snapshot, old proto.Message,
 	return &data.ShareSnapshot{
 		Value: s,
 		User:  userId,
-		Name:  document.(*data.Share).Name,
+		Name:  document.(*datapb.Share).Name,
 	}, nil
 }
 

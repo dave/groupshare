@@ -14,6 +14,8 @@ import (
 	"github.com/dave/groupshare/server/api"
 	"github.com/dave/groupshare/server/api/auth"
 	"github.com/dave/groupshare/server/api/store"
+	apipb "github.com/dave/groupshare/server/pb/api"
+	authpb "github.com/dave/groupshare/server/pb/auth"
 	"github.com/dave/groupshare/server/pb/groupshare/messages"
 	"github.com/dave/protod/perr"
 	"github.com/dave/protod/pmsg"
@@ -120,7 +122,7 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 			return
 		}
 
-		if err != nil && !response.Has(&messages.Error{}) {
+		if err != nil && !response.Has(&apipb.Error{}) {
 			// if we got an error, but no error was added to the response, add a generic server error
 			api.Error(response, "Server error")
 		}
@@ -142,7 +144,7 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 	}
 }
 
-func TestProcessMessage(ctx context.Context, t *testing.T, server *pserver.Server, token *messages.Token, message proto.Message) *pmsg.Bundle {
+func TestProcessMessage(ctx context.Context, t *testing.T, server *pserver.Server, token *authpb.Token, message proto.Message) *pmsg.Bundle {
 	response, err := ProcessMessage(ctx, server, token, message)
 	if err != nil {
 		t.Fatal(err)
@@ -150,7 +152,7 @@ func TestProcessMessage(ctx context.Context, t *testing.T, server *pserver.Serve
 	return response
 }
 
-func ProcessMessage(ctx context.Context, server *pserver.Server, token *messages.Token, message proto.Message) (*pmsg.Bundle, error) {
+func ProcessMessage(ctx context.Context, server *pserver.Server, token *authpb.Token, message proto.Message) (*pmsg.Bundle, error) {
 	request := pmsg.New()
 	if token != nil {
 		request.MustSet(token)
@@ -166,6 +168,8 @@ func ProcessMessage(ctx context.Context, server *pserver.Server, token *messages
 const DEBUG = true
 
 func ProcessBundle(ctx context.Context, server *pserver.Server, request, response *pmsg.Bundle) (err error) {
+
+	fmt.Printf("incoming: %v\n", mustJson(request))
 
 	if appengine.IsAppEngine() {
 		// when running in app engine, catch panics and convert to errors
@@ -192,16 +196,16 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 
 	// handle requests that don't need auth token
 	switch {
-	case request.Has(&messages.Login_Request{}):
+	case request.Has(&authpb.Login_Request{}):
 		return auth.LoginRequest(ctx, request, response)
-	case request.Has(&messages.Auth_Request{}):
-		return auth.AuthRequest(ctx, server, request, response)
+	case request.Has(&authpb.Code_Request{}):
+		return auth.CodeRequest(ctx, server, request, response)
 	case request.Has(&pstore.Payload_Refresh_Request{}):
 		return store.RefreshRequest(ctx, server, request, response)
 	}
 
 	var user *api.User
-	token := &messages.Token{}
+	token := &authpb.Token{}
 	found, err := request.Get(token)
 	if err != nil {
 		api.AuthError(response, "Invalid login token")
@@ -219,7 +223,7 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 	ctx = context.WithValue(ctx, store.UserContextKey, user)
 
 	switch {
-	case request.Has(&messages.Validate_Request{}):
+	case request.Has(&authpb.Validate_Request{}):
 		// validate request just sends back no error if user validated OK
 		return nil
 	}

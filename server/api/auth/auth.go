@@ -10,7 +10,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api"
-	"github.com/dave/groupshare/server/pb/groupshare/messages"
+	"github.com/dave/groupshare/server/pb/auth"
 	"github.com/dave/protod/perr"
 	"github.com/dave/protod/pmsg"
 	"github.com/dave/protod/pserver"
@@ -20,7 +20,7 @@ import (
 
 func LoginRequest(ctx context.Context, request, response *pmsg.Bundle) error {
 
-	req := &messages.Login_Request{}
+	req := &auth.Login_Request{}
 	if _, err := request.Get(req); err != nil {
 		api.Error(response, "Invalid input")
 		return err
@@ -49,14 +49,14 @@ func LoginRequest(ctx context.Context, request, response *pmsg.Bundle) error {
 		fmt.Println("code", code)
 	}
 
-	response.MustSet(&messages.Login_Response{Time: fmt.Sprint(t)})
+	response.MustSet(&auth.Login_Response{Time: fmt.Sprint(t)})
 
 	return nil
 }
 
-func AuthRequest(ctx context.Context, server *pserver.Server, request, response *pmsg.Bundle) error {
+func CodeRequest(ctx context.Context, server *pserver.Server, request, response *pmsg.Bundle) error {
 
-	req := &messages.Auth_Request{}
+	req := &auth.Code_Request{}
 	if _, err := request.Get(req); err != nil {
 		api.Error(response, "Invalid input")
 		return err
@@ -129,7 +129,7 @@ func AuthRequest(ctx context.Context, server *pserver.Server, request, response 
 		return perr.Wrap(err, "getting hash")
 	}
 
-	response.MustSet(&messages.Auth_Response{Id: userRef.ID, Hash: hash})
+	response.MustSet(&auth.Code_Response{Id: userRef.ID, Hash: hash})
 	return nil
 }
 

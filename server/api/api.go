@@ -9,7 +9,8 @@ import (
 	"fmt"
 
 	"cloud.google.com/go/firestore"
-	"github.com/dave/groupshare/server/pb/groupshare/messages"
+	"github.com/dave/groupshare/server/pb/api"
+	"github.com/dave/groupshare/server/pb/auth"
 	"github.com/dave/protod/perr"
 	"github.com/dave/protod/pmsg"
 	"github.com/dave/protod/pserver"
@@ -46,7 +47,7 @@ func GetUser(ctx context.Context, server *pserver.Server, tx *firestore.Transact
 	return ref, user, nil
 }
 
-func GetUserVerify(ctx context.Context, server *pserver.Server, tx *firestore.Transaction, token *messages.Token) (*firestore.DocumentRef, *User, error) {
+func GetUserVerify(ctx context.Context, server *pserver.Server, tx *firestore.Transaction, token *auth.Token) (*firestore.DocumentRef, *User, error) {
 	ref, user, err := GetUser(ctx, server, tx, token.Id)
 	if err != nil {
 		return nil, nil, perr.Wrap(err, "getting user")
@@ -118,22 +119,22 @@ func GenerateHash(id, device, salt string) (string, error) {
 }
 
 func Error(response *pmsg.Bundle, message string) {
-	response.MustSet(&messages.Error{
-		Type:    messages.Error_ERROR,
+	response.MustSet(&api.Error{
+		Type:    api.Error_ERROR,
 		Message: message,
 	})
 }
 
 func AuthError(response *pmsg.Bundle, message string) {
-	response.MustSet(&messages.Error{
-		Type:    messages.Error_AUTH,
+	response.MustSet(&api.Error{
+		Type:    api.Error_AUTH,
 		Message: message,
 	})
 }
 
 func ExpiredError(response *pmsg.Bundle, message string) {
-	response.MustSet(&messages.Error{
-		Type:    messages.Error_EXPIRED,
+	response.MustSet(&api.Error{
+		Type:    api.Error_EXPIRED,
 		Message: message,
 	})
 }

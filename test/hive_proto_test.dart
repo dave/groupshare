@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:groupshare/core/services/hive.dart';
 import 'package:groupshare/locator.dart';
 import 'package:groupshare/pb/groupshare/data/share.pb.dart';
+import 'package:groupshare/services/hive.dart';
 import 'package:hive/hive.dart';
 
 void main() {

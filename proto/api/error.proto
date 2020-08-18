@@ -1,0 +1,14 @@
+syntax = "proto3";
+package messages;
+
+option go_package = "github.com/dave/groupshare/server/pb/api;api";
+
+message Error {
+  enum Type {
+    ERROR = 0;
+    AUTH = 1;
+    EXPIRED = 2;
+  }
+  Type type = 1;
+  string message = 2;
+}

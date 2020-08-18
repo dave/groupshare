@@ -22,7 +22,8 @@ environment:
 
 # TODO: remove this!
 dependency_overrides:
-  path: 1.7.0
+  analyzer: '0.39.14'
+  #path: 1.7.0
 
 dependencies:
   flutter:
@@ -34,28 +35,40 @@ dependencies:
 
   protod:
     path: "../protod"
-  stacked: ^1.5.0
+  #stacked: ^1.5.0
   get_it: ^4.0.2
-  injectable: ^0.3.0
-  flutter_hooks: ^0.9.0
-  get: ^2.0.3
-  protobuf: ^1.0.1
-  http: ^0.12.1
-  device_id: ^0.2.0
+  #injectable: ^0.3.0
+  #flutter_hooks: ^0.9.0
+  #get: ^2.0.3
   hive: ^1.4.1
   hive_flutter: ^0.3.0
-  connectivity: ">=0.4.9 <2.0.0"
-  bloc: ^6.0.0
-  flutter_bloc: ^6.0.0
+  bloc: ^6.0.1
+  flutter_bloc: ^6.0.1
+  freezed_annotation:
+  formz:
+  api_repository:
+    path: repositories/api_repository
+  auth_repository:
+    path: repositories/auth_repository
+  device_repository:
+    path: repositories/device_repository
+  connection_repository:
+    path: repositories/connection_repository
+  exceptions_repository:
+    path: repositories/exceptions_repository
+  data_repository:
+    path: repositories/data_repository
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   #hive_generator: ^0.7.1
-  injectable_generator: ^0.3.5
+  #injectable_generator: ^0.3.5
   build_runner:
   test: ^1.14.3
+  freezed:
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

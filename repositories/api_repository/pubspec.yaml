@@ -1,0 +1,22 @@
+name: api_repository
+description: Dart package which manages the api.
+version: 1.0.0
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^0.12.1
+  protobuf: ^1.0.1
+  exceptions_repository:
+    path: '../exceptions_repository'
+  connection_repository:
+    path: '../connection_repository'
+  protod:
+    path: "../../../protod"
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
