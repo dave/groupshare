@@ -41,6 +41,7 @@ class Api {
 
   // tokens is a list of messages that are added to all api requests. Used by
   // the auth package to add the auth token.
+  // TODO: improve this!
   Map<dynamic, GeneratedMessage> tokens = {};
 
   Future<R> send<R extends GeneratedMessage, Q extends GeneratedMessage>(
@@ -112,10 +113,10 @@ class Api {
     return base64UrlEncode(values);
   }
 
-  Map<String, ConnectionState> _connections = {};
+  Map<String, ConnectionStatus> _connections = {};
 
   _changed() {
-    final _new = _state;
+    final _new = _status;
     if (_previous == null || _new != _previous) {
       _controller.add(_new);
       _previous = _new;
@@ -128,12 +129,12 @@ class Api {
   }
 
   _connecting(String key) {
-    _connections[key] = ConnectionState.Connecting;
+    _connections[key] = ConnectionStatus.Connecting;
     _changed();
   }
 
   _waiting(String key) {
-    _connections[key] = ConnectionState.Waiting;
+    _connections[key] = ConnectionStatus.Waiting;
     _changed();
   }
 
@@ -142,33 +143,33 @@ class Api {
     _changed();
   }
 
-  ConnectionState _previous;
+  ConnectionStatus _previous;
 
-  ConnectionState get _state {
+  ConnectionStatus get _status {
     if (!_online) {
-      return ConnectionState.Offline;
+      return ConnectionStatus.Offline;
     } else {
-      if (_connections.containsValue(ConnectionState.Connecting)) {
-        return ConnectionState.Connecting;
-      } else if (_connections.containsValue(ConnectionState.Waiting)) {
-        return ConnectionState.Waiting;
+      if (_connections.containsValue(ConnectionStatus.Connecting)) {
+        return ConnectionStatus.Connecting;
+      } else if (_connections.containsValue(ConnectionStatus.Waiting)) {
+        return ConnectionStatus.Waiting;
       } else {
-        return ConnectionState.Saved;
+        return ConnectionStatus.Saved;
       }
     }
   }
 
-  final _controller = StreamController<ConnectionState>.broadcast();
+  final _controller = StreamController<ConnectionStatus>.broadcast();
 
-  Stream<ConnectionState> get state async* {
-    yield _state;
+  Stream<ConnectionStatus> get statusChange async* {
+    yield _status;
     yield* _controller.stream;
   }
 
   void dispose() => _controller.close();
 }
 
-enum ConnectionState {
+enum ConnectionStatus {
   Saved,
   Connecting,
   Waiting,

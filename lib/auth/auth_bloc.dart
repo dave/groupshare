@@ -4,7 +4,7 @@ import 'package:auth_repository/auth_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'auth.freezed.dart';
+part 'auth_bloc.freezed.dart';
 
 @freezed
 abstract class AuthState with _$AuthState {

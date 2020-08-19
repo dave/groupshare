@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math/rand"
+	"time"
 
 	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
 	"cloud.google.com/go/firestore"
@@ -53,6 +55,11 @@ func GetRequest(ctx context.Context, server *pserver.Server, user *api.User, req
 }
 
 func EditRequest(ctx context.Context, server *pserver.Server, user *api.User, request, response *pmsg.Bundle) error {
+
+	if rand.Float64() > 0.5 {
+		time.Sleep(time.Second)
+		return pserver.ServerBusy
+	}
 
 	req := &pstore.Payload_Edit_Request{}
 	if _, err := request.Get(req); err != nil {

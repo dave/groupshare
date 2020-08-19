@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:auth_repository/auth_repository.dart';
+import 'package:data_repository/data_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -21,7 +22,7 @@ abstract class LoginState with _$LoginState {
   }) = LoginStateCode;
 
   const factory LoginState.error(
-    Exception error,
+    dynamic error,
   ) = LoginStateError;
 
   const factory LoginState.done() = LoginStateDone;
@@ -29,10 +30,12 @@ abstract class LoginState with _$LoginState {
 
 class LoginCubit extends Cubit<LoginState> {
   Auth _auth;
+  Data _data;
   StreamSubscription<Status> _statusSubscription;
 
-  LoginCubit(Auth auth)
+  LoginCubit(Auth auth, Data data)
       : _auth = auth,
+        _data = data,
         super(LoginState.email()) {
     if (_statusSubscription == null) {
       _statusSubscription = _auth.statusChange.listen(
@@ -88,12 +91,9 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> sendCode() async {
     try {
       await _auth.code((state as LoginStateCode).code.value);
+      await _data.initUser();
     } catch (ex) {
       emit(LoginState.error(ex));
     }
-  }
-
-  Future<void> logoff() async {
-    await _auth.logoff();
   }
 }

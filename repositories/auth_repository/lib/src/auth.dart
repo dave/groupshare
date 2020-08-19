@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:api_repository/api_repository.dart';
 import 'package:auth_repository/pb/auth/auth.pb.dart';
 import 'package:device_repository/device_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 enum Status { Empty, Auth, Done }
@@ -11,13 +12,21 @@ class Auth {
   final Api _api;
   final Device _device;
   final Box<String> _box;
+  final _apiTokenKey = GlobalKey();
 
   Auth(Api api, Box<String> box, Device device)
       : this._api = api,
         this._box = box,
         this._device = device;
 
+  Future<void> init() async {
+    if (status == Status.Done) {
+      _api.tokens[_apiTokenKey] = token;
+    }
+  }
+
   Future<void> logoff() async {
+    _api.tokens.remove(_apiTokenKey);
     await _box.clear();
   }
 
@@ -27,6 +36,9 @@ class Auth {
   String get hash => _box.get(_key.Hash.toString());
 
   Token get token {
+    if (status != Status.Done) {
+      return null;
+    }
     return Token()
       ..id = id
       ..hash = hash
@@ -62,6 +74,7 @@ class Auth {
       _key.Id.toString(): resp.id,
       _key.Hash.toString(): resp.hash,
     });
+    _api.tokens[_apiTokenKey] = token;
     _controller.add(Status.Done);
   }
 

@@ -75,9 +75,10 @@ func CodeRequest(ctx context.Context, server *pserver.Server, request, response 
 	checkCode := true
 	if req.Test {
 		// the client is requesting that we skip the code check. This should only work in dev env.
-		if !appengine.IsAppEngine() {
-			checkCode = false
-		}
+		//if !appengine.IsAppEngine() {
+		//	checkCode = false
+		//}
+		checkCode = false
 	}
 	if checkCode && code != req.Code {
 		api.AuthError(response, "Wrong code")

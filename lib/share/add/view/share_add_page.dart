@@ -1,6 +1,7 @@
 import 'package:data_repository/data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/share/add/add.dart';
 
 class ShareAddPage extends StatelessWidget {
@@ -11,7 +12,7 @@ class ShareAddPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('ShareAdd')),
+      appBar: AppBarWidget('Add'),
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: BlocProvider(

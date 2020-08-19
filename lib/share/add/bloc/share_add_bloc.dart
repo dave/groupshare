@@ -16,7 +16,7 @@ abstract class ShareAddState with _$ShareAddState {
   }) = ShareAddStateForm;
 
   const factory ShareAddState.error(
-    Exception error,
+    dynamic error,
   ) = ShareAddStateError;
 
   const factory ShareAddState.done() = ShareAddStateDone;

@@ -30,9 +30,9 @@ class _$ShareListStateTearOff {
   }
 
 // ignore: unused_element
-  ShareListStateError error({Exception error}) {
+  ShareListStateError error(dynamic error) {
     return ShareListStateError(
-      error: error,
+      error,
     );
   }
 }
@@ -46,14 +46,14 @@ mixin _$ShareListState {
     @required Result offline(),
     @required Result loading(),
     @required Result list(List<User_AvailableShare> shares),
-    @required Result error(Exception error),
+    @required Result error(dynamic error),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result offline(),
     Result loading(),
     Result list(List<User_AvailableShare> shares),
-    Result error(Exception error),
+    Result error(dynamic error),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -127,7 +127,7 @@ class _$ShareListStateOffline implements ShareListStateOffline {
     @required Result offline(),
     @required Result loading(),
     @required Result list(List<User_AvailableShare> shares),
-    @required Result error(Exception error),
+    @required Result error(dynamic error),
   }) {
     assert(offline != null);
     assert(loading != null);
@@ -142,7 +142,7 @@ class _$ShareListStateOffline implements ShareListStateOffline {
     Result offline(),
     Result loading(),
     Result list(List<User_AvailableShare> shares),
-    Result error(Exception error),
+    Result error(dynamic error),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -227,7 +227,7 @@ class _$ShareListStateLoading implements ShareListStateLoading {
     @required Result offline(),
     @required Result loading(),
     @required Result list(List<User_AvailableShare> shares),
-    @required Result error(Exception error),
+    @required Result error(dynamic error),
   }) {
     assert(offline != null);
     assert(loading != null);
@@ -242,7 +242,7 @@ class _$ShareListStateLoading implements ShareListStateLoading {
     Result offline(),
     Result loading(),
     Result list(List<User_AvailableShare> shares),
-    Result error(Exception error),
+    Result error(dynamic error),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -350,7 +350,7 @@ class _$ShareListStateList implements ShareListStateList {
     @required Result offline(),
     @required Result loading(),
     @required Result list(List<User_AvailableShare> shares),
-    @required Result error(Exception error),
+    @required Result error(dynamic error),
   }) {
     assert(offline != null);
     assert(loading != null);
@@ -365,7 +365,7 @@ class _$ShareListStateList implements ShareListStateList {
     Result offline(),
     Result loading(),
     Result list(List<User_AvailableShare> shares),
-    Result error(Exception error),
+    Result error(dynamic error),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -419,7 +419,7 @@ abstract class $ShareListStateErrorCopyWith<$Res> {
   factory $ShareListStateErrorCopyWith(
           ShareListStateError value, $Res Function(ShareListStateError) then) =
       _$ShareListStateErrorCopyWithImpl<$Res>;
-  $Res call({Exception error});
+  $Res call({dynamic error});
 }
 
 class _$ShareListStateErrorCopyWithImpl<$Res>
@@ -437,16 +437,16 @@ class _$ShareListStateErrorCopyWithImpl<$Res>
     Object error = freezed,
   }) {
     return _then(ShareListStateError(
-      error: error == freezed ? _value.error : error as Exception,
+      error == freezed ? _value.error : error as dynamic,
     ));
   }
 }
 
 class _$ShareListStateError implements ShareListStateError {
-  const _$ShareListStateError({this.error});
+  const _$ShareListStateError(this.error) : assert(error != null);
 
   @override
-  final Exception error;
+  final dynamic error;
 
   @override
   String toString() {
@@ -475,7 +475,7 @@ class _$ShareListStateError implements ShareListStateError {
     @required Result offline(),
     @required Result loading(),
     @required Result list(List<User_AvailableShare> shares),
-    @required Result error(Exception error),
+    @required Result error(dynamic error),
   }) {
     assert(offline != null);
     assert(loading != null);
@@ -490,7 +490,7 @@ class _$ShareListStateError implements ShareListStateError {
     Result offline(),
     Result loading(),
     Result list(List<User_AvailableShare> shares),
-    Result error(Exception error),
+    Result error(dynamic error),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -533,8 +533,8 @@ class _$ShareListStateError implements ShareListStateError {
 }
 
 abstract class ShareListStateError implements ShareListState {
-  const factory ShareListStateError({Exception error}) = _$ShareListStateError;
+  const factory ShareListStateError(dynamic error) = _$ShareListStateError;
 
-  Exception get error;
+  dynamic get error;
   $ShareListStateErrorCopyWith<ShareListStateError> get copyWith;
 }

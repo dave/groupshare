@@ -108,6 +108,9 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 		}
 
 		response := pmsg.New()
+
+		fmt.Println("request:", mustJson(request))
+
 		err = ProcessBundle(ctx, server, request, response)
 
 		if pserver.IsBusyError(err) {
@@ -131,7 +134,7 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 			fmt.Printf("error: %+v\n", err)
 		}
 
-		fmt.Println(mustJson(response))
+		fmt.Println("response:", mustJson(response))
 		responseBytes, err := proto.Marshal(response)
 		if err != nil {
 			http.Error(w, err.Error(), 500)
@@ -168,8 +171,6 @@ func ProcessMessage(ctx context.Context, server *pserver.Server, token *authpb.T
 const DEBUG = true
 
 func ProcessBundle(ctx context.Context, server *pserver.Server, request, response *pmsg.Bundle) (err error) {
-
-	fmt.Printf("incoming: %v\n", mustJson(request))
 
 	if appengine.IsAppEngine() {
 		// when running in app engine, catch panics and convert to errors

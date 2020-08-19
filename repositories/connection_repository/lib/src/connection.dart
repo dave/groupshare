@@ -3,11 +3,18 @@ import 'package:connectivity/connectivity.dart';
 class Connection {
   final Connectivity _connectivity = Connectivity();
 
-  Stream<bool> get changed => _connectivity.onConnectivityChanged
-      .map((ConnectivityResult result) => result != ConnectivityResult.none);
+  Stream<bool> get changed {
+    return _connectivity.onConnectivityChanged.map(
+      (ConnectivityResult result) {
+        print(result.toString());
+        return result != ConnectivityResult.none;
+      },
+    );
+  }
 
-  Future<bool> check() async =>
-      await _connectivity.checkConnectivity() != ConnectivityResult.none;
+  Future<bool> check() async {
+    return await _connectivity.checkConnectivity() != ConnectivityResult.none;
+  }
 }
 
 //abstract class Device {

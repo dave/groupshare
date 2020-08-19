@@ -1,7 +1,9 @@
 import 'package:api_repository/api_repository.dart';
 import 'package:data_repository/data_repository.dart';
+import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/share/add/add.dart';
 import 'package:groupshare/share/list/list.dart';
 import 'package:groupshare/ui/handle.dart';
@@ -13,26 +15,41 @@ class ShareListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ShareListCubit, ShareListState>(
-      cubit: ShareListCubit(
+    return BlocProvider(
+      create: (context) => ShareListCubit(
         RepositoryProvider.of<Data>(context),
         RepositoryProvider.of<Api>(context),
-      ),
+      )..initialise(),
+      child: ShareListPageContent(),
+    );
+  }
+}
+
+class ShareListPageContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<ShareListCubit, ShareListState>(
       listener: (context, state) {
         if (state is ShareListStateError) {
-          handle(context, state.error);
+          handle(
+            context,
+            state.error,
+            [
+              Button(
+                "Retry",
+                () => context.bloc<ShareListCubit>().initialise(),
+              ),
+            ],
+          );
         }
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(title: const Text('Shares')),
+          appBar: AppBarWidget('Shares'),
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () {
-              Navigator.of(context).pushAndRemoveUntil(
-                ShareAddPage.route(),
-                (route) => false,
-              );
+              Navigator.of(context).push(ShareAddPage.route());
             },
           ),
           body: Padding(
@@ -58,7 +75,14 @@ class ShareListPage extends StatelessWidget {
                 loading: () => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [Center(child: CircularProgressIndicator())],
+                  children: [
+                    Center(child: CircularProgressIndicator()),
+                    RaisedButton(
+                      child: Text("retry"),
+                      onPressed: () =>
+                          context.bloc<ShareListCubit>().initialise(),
+                    )
+                  ],
                 ),
                 list: (shares) => ListView.builder(
                   itemCount: shares.length,
@@ -66,7 +90,13 @@ class ShareListPage extends StatelessWidget {
                     return ListTile(title: Text(shares[index].name));
                   },
                 ),
-                error: (ex) => Text("error"),
+                error: (ex) {
+                  if (ex is UserException) {
+                    return Text("error, ${ex.message}");
+                  } else {
+                    return Text("error, $ex");
+                  }
+                },
               ),
             ),
           ),

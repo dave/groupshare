@@ -32,7 +32,7 @@ class _$LoginStateTearOff {
   }
 
 // ignore: unused_element
-  LoginStateError error(Exception error) {
+  LoginStateError error(dynamic error) {
     return LoginStateError(
       error,
     );
@@ -52,14 +52,14 @@ mixin _$LoginState {
   Result when<Result extends Object>({
     @required Result email(FormzStatus status, Email email),
     @required Result code(FormzStatus status, Code code),
-    @required Result error(Exception error),
+    @required Result error(dynamic error),
     @required Result done(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result email(FormzStatus status, Email email),
     Result code(FormzStatus status, Code code),
-    Result error(Exception error),
+    Result error(dynamic error),
     Result done(),
     @required Result orElse(),
   });
@@ -165,7 +165,7 @@ class _$LoginStateEmail implements LoginStateEmail {
   Result when<Result extends Object>({
     @required Result email(FormzStatus status, Email email),
     @required Result code(FormzStatus status, Code code),
-    @required Result error(Exception error),
+    @required Result error(dynamic error),
     @required Result done(),
   }) {
     assert(email != null);
@@ -180,7 +180,7 @@ class _$LoginStateEmail implements LoginStateEmail {
   Result maybeWhen<Result extends Object>({
     Result email(FormzStatus status, Email email),
     Result code(FormzStatus status, Code code),
-    Result error(Exception error),
+    Result error(dynamic error),
     Result done(),
     @required Result orElse(),
   }) {
@@ -303,7 +303,7 @@ class _$LoginStateCode implements LoginStateCode {
   Result when<Result extends Object>({
     @required Result email(FormzStatus status, Email email),
     @required Result code(FormzStatus status, Code code),
-    @required Result error(Exception error),
+    @required Result error(dynamic error),
     @required Result done(),
   }) {
     assert(email != null);
@@ -318,7 +318,7 @@ class _$LoginStateCode implements LoginStateCode {
   Result maybeWhen<Result extends Object>({
     Result email(FormzStatus status, Email email),
     Result code(FormzStatus status, Code code),
-    Result error(Exception error),
+    Result error(dynamic error),
     Result done(),
     @required Result orElse(),
   }) {
@@ -374,7 +374,7 @@ abstract class $LoginStateErrorCopyWith<$Res> {
   factory $LoginStateErrorCopyWith(
           LoginStateError value, $Res Function(LoginStateError) then) =
       _$LoginStateErrorCopyWithImpl<$Res>;
-  $Res call({Exception error});
+  $Res call({dynamic error});
 }
 
 class _$LoginStateErrorCopyWithImpl<$Res> extends _$LoginStateCopyWithImpl<$Res>
@@ -391,7 +391,7 @@ class _$LoginStateErrorCopyWithImpl<$Res> extends _$LoginStateCopyWithImpl<$Res>
     Object error = freezed,
   }) {
     return _then(LoginStateError(
-      error == freezed ? _value.error : error as Exception,
+      error == freezed ? _value.error : error as dynamic,
     ));
   }
 }
@@ -400,7 +400,7 @@ class _$LoginStateError implements LoginStateError {
   const _$LoginStateError(this.error) : assert(error != null);
 
   @override
-  final Exception error;
+  final dynamic error;
 
   @override
   String toString() {
@@ -428,7 +428,7 @@ class _$LoginStateError implements LoginStateError {
   Result when<Result extends Object>({
     @required Result email(FormzStatus status, Email email),
     @required Result code(FormzStatus status, Code code),
-    @required Result error(Exception error),
+    @required Result error(dynamic error),
     @required Result done(),
   }) {
     assert(email != null);
@@ -443,7 +443,7 @@ class _$LoginStateError implements LoginStateError {
   Result maybeWhen<Result extends Object>({
     Result email(FormzStatus status, Email email),
     Result code(FormzStatus status, Code code),
-    Result error(Exception error),
+    Result error(dynamic error),
     Result done(),
     @required Result orElse(),
   }) {
@@ -487,9 +487,9 @@ class _$LoginStateError implements LoginStateError {
 }
 
 abstract class LoginStateError implements LoginState {
-  const factory LoginStateError(Exception error) = _$LoginStateError;
+  const factory LoginStateError(dynamic error) = _$LoginStateError;
 
-  Exception get error;
+  dynamic get error;
   $LoginStateErrorCopyWith<LoginStateError> get copyWith;
 }
 
@@ -530,7 +530,7 @@ class _$LoginStateDone implements LoginStateDone {
   Result when<Result extends Object>({
     @required Result email(FormzStatus status, Email email),
     @required Result code(FormzStatus status, Code code),
-    @required Result error(Exception error),
+    @required Result error(dynamic error),
     @required Result done(),
   }) {
     assert(email != null);
@@ -545,7 +545,7 @@ class _$LoginStateDone implements LoginStateDone {
   Result maybeWhen<Result extends Object>({
     Result email(FormzStatus status, Email email),
     Result code(FormzStatus status, Code code),
-    Result error(Exception error),
+    Result error(dynamic error),
     Result done(),
     @required Result orElse(),
   }) {

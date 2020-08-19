@@ -1,11 +1,14 @@
+import 'dart:async';
+
 import 'package:api_repository/api_repository.dart';
 import 'package:auth_repository/auth_repository.dart';
 import 'package:connection_repository/connection_repository.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:device_repository/device_repository.dart';
+import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groupshare/auth/auth.dart';
+import 'package:groupshare/auth/auth_bloc.dart';
 import 'package:groupshare/login/login.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -18,62 +21,77 @@ import 'share/list/list.dart';
 const IS_LIVE = false;
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  setDefaultRegistry(types);
+  FlutterError.onError = (FlutterErrorDetails details) {
+    if (details.exception is UserException) {
+      print("flutter error: ${details.exception.message}");
+    } else {
+      FlutterError.presentError(details);
+    }
+  };
 
-  await Hive.initFlutter();
-  Hive.registerAdapter(ItemAdapter<Share>(0, types));
-  Hive.registerAdapter(ItemAdapter<User>(1, types));
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    setDefaultRegistry(types);
 
-  //await setupLocator(IS_LIVE);
+    await Hive.initFlutter();
+    Hive.registerAdapter(ItemAdapter<Share>(0, types));
+    Hive.registerAdapter(ItemAdapter<User>(1, types));
 
-  final connection = Connection();
-  final api = Api(
-    connection,
-    prefix: IS_LIVE ? LIVE_PREFIX : LOCAL_PREFIX,
-  );
-  final device = await Device.initialise();
-  final auth = Auth(
-    api,
-    await Hive.openBox('auth'),
-    device,
-  );
-  final data = Data(
-    Store<Share>(
-      Share(),
-      await Hive.openBox('shares'),
-      Adapter<Share>(api.send, api.online),
-      types,
-    ),
-    Store<User>(
-      User(),
-      await Hive.openBox('users'),
-      Adapter<User>(api.send, api.online),
-      types,
-    ),
-    auth,
-  );
+    final connection = Connection();
+    final api = Api(
+      connection,
+      prefix: IS_LIVE ? LIVE_PREFIX : LOCAL_PREFIX,
+    );
+    final device = await Device.initialise();
+    final auth = Auth(
+      api,
+      await Hive.openBox('auth'),
+      device,
+    );
+    final data = Data(
+      Store<Share>(
+        Share(),
+        await Hive.openBox('shares'),
+        Adapter<Share>(api.send, api.online),
+        types,
+      ),
+      Store<User>(
+        User(),
+        await Hive.openBox('users'),
+        Adapter<User>(api.send, api.online),
+        types,
+      ),
+      auth,
+    );
 
-  await api.init();
-  await data.init();
-
-  runApp(App(
-    api: api,
-    connection: connection,
-    device: device,
-    auth: auth,
-    data: data,
-  ));
-
-//  FlutterError.onError = (FlutterErrorDetails details) {
-//    if (details.exception is UserException) {
-//      print("error: ${details.exception.message}");
-//    } else {
-//      FlutterError.presentError(details);
-//    }
-//  };
-
-  //runApp(MyApp());
+    runZoned<Future<void>>(
+      () async {
+        await api.init();
+        await auth.init();
+        await data.init();
+        runApp(App(
+          api: api,
+          connection: connection,
+          device: device,
+          auth: auth,
+          data: data,
+        ));
+      },
+      onError: (dynamic error, StackTrace stackTrace) {
+        if (error is UserException) {
+          print("dart error: ${error.message}");
+        } else {
+          throw error;
+        }
+      },
+    );
+  } catch (ex) {
+    if (ex is UserException) {
+      print("caught error: ${ex.message}");
+    } else {
+      throw ex;
+    }
+  }
 }
 
 class App extends StatelessWidget {
@@ -111,24 +129,6 @@ class App extends StatelessWidget {
       ),
     );
   }
-
-//  @override
-//  Widget build(BuildContext context) {
-//    return MaterialApp(
-//      title: 'Flutter Demo',
-//      theme: ThemeData(
-//        primarySwatch: Colors.orange,
-//        visualDensity: VisualDensity.adaptivePlatformDensity,
-//      ),
-//      darkTheme: ThemeData(
-//        primarySwatch: Colors.orange,
-//        brightness: Brightness.dark,
-//        visualDensity: VisualDensity.adaptivePlatformDensity,
-//      ),
-//      initialRoute: '/home',
-//      onGenerateRoute: Router.generateRoute,
-//    );
-//  }
 }
 
 class AppView extends StatefulWidget {
@@ -142,7 +142,17 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Groupshare',
       navigatorKey: _navigatorKey,
+      theme: ThemeData(
+        primarySwatch: Colors.orange,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      darkTheme: ThemeData(
+        primarySwatch: Colors.orange,
+        brightness: Brightness.dark,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
       builder: (context, child) {
         return BlocListener<AuthCubit, AuthState>(
           listener: (context, state) {
