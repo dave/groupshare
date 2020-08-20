@@ -4,13 +4,15 @@ import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/appbar/appbar.dart';
+import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/add/add.dart';
 import 'package:groupshare/share/list/list.dart';
-import 'package:groupshare/ui/handle.dart';
 
 class ShareListPage extends StatelessWidget {
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => ShareListPage());
+    return MaterialPageRoute<void>(
+      builder: (_) => ShareListPage(),
+    );
   }
 
   @override
@@ -65,9 +67,7 @@ class ShareListPageContent extends StatelessWidget {
                   children: [
                     Center(
                       child: Text(
-                        "We can't display this page "
-                        "because you don't have an "
-                        "internet connection.",
+                        "We can't display this page because you don't have an internet connection.",
                       ),
                     )
                   ],

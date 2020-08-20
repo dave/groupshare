@@ -3,7 +3,7 @@ import 'package:data_repository/data_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'share_list_bloc.freezed.dart';
+part 'list_bloc.freezed.dart';
 
 @freezed
 abstract class ShareListState with _$ShareListState {

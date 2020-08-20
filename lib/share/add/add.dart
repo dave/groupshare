@@ -1,3 +1,3 @@
-export 'bloc/share_add_bloc.dart';
-export 'models/models.dart';
-export 'view/view.dart';
+export 'add_bloc.dart';
+export 'add_models.dart';
+export 'add_view.dart';

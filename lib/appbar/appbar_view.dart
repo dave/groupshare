@@ -1,8 +1,8 @@
 import 'package:api_repository/api_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groupshare/appbar/bloc/appbar_bloc.dart';
-import 'package:groupshare/auth/auth_bloc.dart';
+import 'package:groupshare/appbar/appbar_bloc.dart';
+import 'package:groupshare/auth/auth.dart';
 import 'package:groupshare/login/login.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {

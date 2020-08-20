@@ -6,7 +6,7 @@ import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:groupshare/share/add/add.dart';
 
-part 'share_add_bloc.freezed.dart';
+part 'add_bloc.freezed.dart';
 
 @freezed
 abstract class ShareAddState with _$ShareAddState {

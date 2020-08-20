@@ -1,2 +1,2 @@
-export 'bloc/share_list_bloc.dart';
-export 'view/view.dart';
+export 'list_bloc.dart';
+export 'list_view.dart';
