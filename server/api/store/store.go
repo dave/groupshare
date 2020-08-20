@@ -10,9 +10,9 @@ import (
 	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api"
-	datapb "github.com/dave/groupshare/server/pb/data"
-	"github.com/dave/groupshare/server/pb/groupshare/data"
-	"github.com/dave/groupshare/server/pb/groupshare/messages"
+	"github.com/dave/groupshare/server/pb/data"
+	"github.com/dave/groupshare/server/pb/messages"
+	"github.com/dave/groupshare/server/pb/wrappers"
 	"github.com/dave/protod/delta"
 	"github.com/dave/protod/perr"
 	"github.com/dave/protod/pmsg"
@@ -71,7 +71,7 @@ func EditRequest(ctx context.Context, server *pserver.Server, user *api.User, re
 	if req.DocumentType == SHARE_DOCUMENT_TYPE.Type() {
 		// TODO: this isn't ideal...
 		for _, op := range req.Op.Flatten() {
-			if op.Affects(datapb.Op().Share().Name()) {
+			if op.Affects(data.Op().Share().Name()) {
 				refresh = true
 				break
 			}
@@ -138,7 +138,7 @@ func ShareListRequest(ctx context.Context, server *pserver.Server, user *api.Use
 
 	var items []*messages.Share_List_Response_Item
 	for _, doc := range docs {
-		snap := &data.ShareSnapshot{}
+		snap := &wrappers.ShareSnapshot{}
 		if err := doc.DataTo(snap); err != nil {
 			return err
 		}
@@ -185,29 +185,29 @@ func TriggerRefreshTask(ctx context.Context, server *pserver.Server, message pro
 }
 
 var USER_DOCUMENT_TYPE = &pserver.DocumentType{
-	Document: &datapb.User{},
+	Document: &data.User{},
 }
 
 var SHARE_DOCUMENT_TYPE = &pserver.DocumentType{
-	Document: &datapb.Share{},
-	Snapshot: &data.ShareSnapshot{},
-	State:    &data.State{},
+	Document: &data.Share{},
+	Snapshot: &wrappers.ShareSnapshot{},
+	State:    &wrappers.State{},
 	PackSnapshot: func(ctx context.Context, s *pserver.Snapshot, old proto.Message, document proto.Message) (proto.Message, error) {
 		var userId string
 		if old != nil {
 			// When refreshing a snapshot, this is done as a task, so we don't have a user... so copy from the old value.
-			userId = old.(*data.ShareSnapshot).User
+			userId = old.(*wrappers.ShareSnapshot).User
 		} else {
 			userId = ctx.Value(UserContextKey).(*api.User).Id
 		}
-		return &data.ShareSnapshot{
+		return &wrappers.ShareSnapshot{
 			Value: s,
 			User:  userId,
-			Name:  document.(*datapb.Share).Name,
+			Name:  document.(*data.Share).Name,
 		}, nil
 	},
 	UnpackSnapshot: func(snap proto.Message) (*pserver.Snapshot, error) {
-		return snap.(*data.ShareSnapshot).Value, nil
+		return snap.(*wrappers.ShareSnapshot).Value, nil
 	},
 	PackState:       statePacker,
 	UnpackState:     stateUnpacker,
@@ -251,28 +251,28 @@ func snapshotPacker(ctx context.Context, s *pserver.Snapshot, old proto.Message,
 	var userId string
 	if old != nil {
 		// When refreshing a snapshot, this is done as a task, so we don't have a user... so copy from the old value.
-		userId = old.(*data.Snapshot).User
+		userId = old.(*wrappers.Snapshot).User
 	} else {
 		userId = ctx.Value(UserContextKey).(*api.User).Id
 	}
-	return &data.ShareSnapshot{
+	return &wrappers.ShareSnapshot{
 		Value: s,
 		User:  userId,
-		Name:  document.(*datapb.Share).Name,
+		Name:  document.(*data.Share).Name,
 	}, nil
 }
 
 func snapshotUnpacker(snap proto.Message) (*pserver.Snapshot, error) {
-	return snap.(*data.Snapshot).Value, nil
+	return snap.(*wrappers.Snapshot).Value, nil
 }
 
 func statePacker(ctx context.Context, s *pserver.State) (proto.Message, error) {
 	user := ctx.Value(UserContextKey).(*api.User)
-	return &data.State{Value: s, User: user.Id}, nil
+	return &wrappers.State{Value: s, User: user.Id}, nil
 }
 
 func stateUnpacker(state proto.Message) (*pserver.State, error) {
-	return state.(*data.State).Value, nil
+	return state.(*wrappers.State).Value, nil
 }
 
 const stateQueryField = "Value.State"

@@ -1,9 +1,9 @@
 syntax = "proto3";
-package data;
+package wrappers;
 
 import "pserver/pserver.proto";
 
-option go_package = "github.com/dave/groupshare/server/pb/groupshare/data;data";
+option go_package = "github.com/dave/groupshare/server/pb/wrappers;wrappers";
 
 message Snapshot {
   pserver.Snapshot value = 1; // the snapshot

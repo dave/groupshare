@@ -16,7 +16,7 @@ import (
 	"github.com/dave/groupshare/server/api/store"
 	apipb "github.com/dave/groupshare/server/pb/api"
 	authpb "github.com/dave/groupshare/server/pb/auth"
-	"github.com/dave/groupshare/server/pb/groupshare/messages"
+	"github.com/dave/groupshare/server/pb/messages"
 	"github.com/dave/protod/perr"
 	"github.com/dave/protod/pmsg"
 	"github.com/dave/protod/pserver"
