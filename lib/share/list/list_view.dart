@@ -8,38 +8,38 @@ import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/add/add.dart';
 import 'package:groupshare/share/list/list.dart';
 
-class ShareListPage extends StatelessWidget {
+class ListPage extends StatelessWidget {
   static Route route() {
     return MaterialPageRoute<void>(
-      builder: (_) => ShareListPage(),
+      builder: (_) => ListPage(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ShareListCubit(
+      create: (context) => ListCubit(
         RepositoryProvider.of<Data>(context),
         RepositoryProvider.of<Api>(context),
       )..initialise(),
-      child: ShareListPageContent(),
+      child: ListPageContent(),
     );
   }
 }
 
-class ShareListPageContent extends StatelessWidget {
+class ListPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ShareListCubit, ShareListState>(
+    return BlocConsumer<ListCubit, ListState>(
       listener: (context, state) {
-        if (state is ShareListStateError) {
+        if (state is ListStateError) {
           handle(
             context,
             state.error,
             [
               Button(
                 "Retry",
-                () => context.bloc<ShareListCubit>().initialise(),
+                () => context.bloc<ListCubit>().initialise(),
               ),
             ],
           );
@@ -51,14 +51,14 @@ class ShareListPageContent extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () {
-              Navigator.of(context).push(ShareAddPage.route());
+              Navigator.of(context).push(AddPage.route());
             },
           ),
           body: Padding(
             padding: const EdgeInsets.all(12),
             child: RefreshIndicator(
               onRefresh: () async {
-                context.bloc<ShareListCubit>().initialise();
+                context.bloc<ListCubit>().initialise();
               },
               child: state.when(
                 offline: () => Column(

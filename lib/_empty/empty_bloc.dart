@@ -19,6 +19,7 @@ abstract class EmptyState with _$EmptyState {
 
   const factory EmptyState.error(
     dynamic error,
+    EmptyState retryState,
   ) = EmptyStateError;
 
   const factory EmptyState.done() = EmptyStateDone;
@@ -46,7 +47,11 @@ class EmptyCubit extends Cubit<EmptyState> {
       // ...
       emit(EmptyState.done());
     } catch (ex) {
-      emit(EmptyState.error(ex));
+      emit(EmptyState.error(ex, stateForm));
     }
+  }
+
+  void retry(EmptyState retryState) {
+    emit(retryState);
   }
 }

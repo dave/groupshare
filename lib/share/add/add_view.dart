@@ -7,9 +7,9 @@ import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/add/add.dart';
 import 'package:groupshare/share/list/list.dart';
 
-class ShareAddPage extends StatelessWidget {
+class AddPage extends StatelessWidget {
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => ShareAddPage());
+    return MaterialPageRoute<void>(builder: (_) => AddPage());
   }
 
   @override
@@ -19,33 +19,33 @@ class ShareAddPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: BlocProvider(
-          create: (context) => ShareAddCubit(
+          create: (context) => AddCubit(
             RepositoryProvider.of<Data>(context),
           ),
-          child: ShareAddForm(),
+          child: AddForm(),
         ),
       ),
     );
   }
 }
 
-class ShareAddForm extends StatelessWidget {
+class AddForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ShareAddCubit, ShareAddState>(
+    return BlocConsumer<AddCubit, AddState>(
       listener: (context, state) {
         state.maybeWhen(
           error: (ex, retryState) {
             handle(context, ex, [
               Button(
                 "Retry",
-                () => context.bloc<ShareAddCubit>().retry(retryState),
+                () => context.bloc<AddCubit>().retry(retryState),
               )
             ]);
           },
           done: () {
             Navigator.of(context).pushAndRemoveUntil(
-              ShareListPage.route(),
+              ListPage.route(),
               (route) => false,
             );
           },
@@ -79,10 +79,10 @@ final _nameInputKey = GlobalKey();
 class _NameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ShareAddCubit, ShareAddState>(
+    return BlocBuilder<AddCubit, AddState>(
       buildWhen: (previous, current) {
-        if (current is ShareAddStateForm) {
-          if (previous is ShareAddStateForm) {
+        if (current is AddStateForm) {
+          if (previous is AddStateForm) {
             return previous.name != current.name;
           }
           return true;
@@ -90,14 +90,14 @@ class _NameInput extends StatelessWidget {
         return false;
       },
       builder: (context, state) {
-        if (state is ShareAddStateForm) {
+        if (state is AddStateForm) {
           return state.status.isSubmissionInProgress
               ? CircularProgressIndicator()
               : TextFormField(
                   key: _nameInputKey,
                   initialValue: state.name.value,
                   onChanged: (email) {
-                    context.bloc<ShareAddCubit>().nameChanged(email);
+                    context.bloc<AddCubit>().nameChanged(email);
                   },
                   decoration: InputDecoration(
                     labelText: 'name',
@@ -117,10 +117,10 @@ final _addButtonKey = GlobalKey();
 class _AddButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ShareAddCubit, ShareAddState>(
+    return BlocBuilder<AddCubit, AddState>(
       buildWhen: (previous, current) {
-        if (current is ShareAddStateForm) {
-          if (previous is ShareAddStateForm) {
+        if (current is AddStateForm) {
+          if (previous is AddStateForm) {
             return previous.status != current.status;
           }
           return true;
@@ -128,7 +128,7 @@ class _AddButton extends StatelessWidget {
         return false;
       },
       builder: (context, state) {
-        if (state is ShareAddStateForm) {
+        if (state is AddStateForm) {
           return state.status.isSubmissionInProgress
               ? const CircularProgressIndicator()
               : RaisedButton(
@@ -136,7 +136,7 @@ class _AddButton extends StatelessWidget {
                   child: const Text('Add'),
                   onPressed: () {
                     if (state.status.isValidated) {
-                      context.bloc<ShareAddCubit>().add();
+                      context.bloc<AddCubit>().add();
                     }
                   },
                 );

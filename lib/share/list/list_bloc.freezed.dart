@@ -9,38 +9,38 @@ part of 'list_bloc.dart';
 
 T _$identity<T>(T value) => value;
 
-class _$ShareListStateTearOff {
-  const _$ShareListStateTearOff();
+class _$ListStateTearOff {
+  const _$ListStateTearOff();
 
 // ignore: unused_element
-  ShareListStateOffline offline() {
-    return const ShareListStateOffline();
+  ListStateOffline offline() {
+    return const ListStateOffline();
   }
 
 // ignore: unused_element
-  ShareListStateLoading loading() {
-    return const ShareListStateLoading();
+  ListStateLoading loading() {
+    return const ListStateLoading();
   }
 
 // ignore: unused_element
-  ShareListStateList list({List<User_AvailableShare> shares}) {
-    return ShareListStateList(
+  ListStateList list({List<User_AvailableShare> shares}) {
+    return ListStateList(
       shares: shares,
     );
   }
 
 // ignore: unused_element
-  ShareListStateError error(dynamic error) {
-    return ShareListStateError(
+  ListStateError error(dynamic error) {
+    return ListStateError(
       error,
     );
   }
 }
 
 // ignore: unused_element
-const $ShareListState = _$ShareListStateTearOff();
+const $ListState = _$ListStateTearOff();
 
-mixin _$ShareListState {
+mixin _$ListState {
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result offline(),
@@ -58,64 +58,61 @@ mixin _$ShareListState {
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result offline(ShareListStateOffline value),
-    @required Result loading(ShareListStateLoading value),
-    @required Result list(ShareListStateList value),
-    @required Result error(ShareListStateError value),
+    @required Result offline(ListStateOffline value),
+    @required Result loading(ListStateLoading value),
+    @required Result list(ListStateList value),
+    @required Result error(ListStateError value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result offline(ShareListStateOffline value),
-    Result loading(ShareListStateLoading value),
-    Result list(ShareListStateList value),
-    Result error(ShareListStateError value),
+    Result offline(ListStateOffline value),
+    Result loading(ListStateLoading value),
+    Result list(ListStateList value),
+    Result error(ListStateError value),
     @required Result orElse(),
   });
 }
 
-abstract class $ShareListStateCopyWith<$Res> {
-  factory $ShareListStateCopyWith(
-          ShareListState value, $Res Function(ShareListState) then) =
-      _$ShareListStateCopyWithImpl<$Res>;
+abstract class $ListStateCopyWith<$Res> {
+  factory $ListStateCopyWith(ListState value, $Res Function(ListState) then) =
+      _$ListStateCopyWithImpl<$Res>;
 }
 
-class _$ShareListStateCopyWithImpl<$Res>
-    implements $ShareListStateCopyWith<$Res> {
-  _$ShareListStateCopyWithImpl(this._value, this._then);
+class _$ListStateCopyWithImpl<$Res> implements $ListStateCopyWith<$Res> {
+  _$ListStateCopyWithImpl(this._value, this._then);
 
-  final ShareListState _value;
+  final ListState _value;
   // ignore: unused_field
-  final $Res Function(ShareListState) _then;
+  final $Res Function(ListState) _then;
 }
 
-abstract class $ShareListStateOfflineCopyWith<$Res> {
-  factory $ShareListStateOfflineCopyWith(ShareListStateOffline value,
-          $Res Function(ShareListStateOffline) then) =
-      _$ShareListStateOfflineCopyWithImpl<$Res>;
+abstract class $ListStateOfflineCopyWith<$Res> {
+  factory $ListStateOfflineCopyWith(
+          ListStateOffline value, $Res Function(ListStateOffline) then) =
+      _$ListStateOfflineCopyWithImpl<$Res>;
 }
 
-class _$ShareListStateOfflineCopyWithImpl<$Res>
-    extends _$ShareListStateCopyWithImpl<$Res>
-    implements $ShareListStateOfflineCopyWith<$Res> {
-  _$ShareListStateOfflineCopyWithImpl(
-      ShareListStateOffline _value, $Res Function(ShareListStateOffline) _then)
-      : super(_value, (v) => _then(v as ShareListStateOffline));
+class _$ListStateOfflineCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
+    implements $ListStateOfflineCopyWith<$Res> {
+  _$ListStateOfflineCopyWithImpl(
+      ListStateOffline _value, $Res Function(ListStateOffline) _then)
+      : super(_value, (v) => _then(v as ListStateOffline));
 
   @override
-  ShareListStateOffline get _value => super._value as ShareListStateOffline;
+  ListStateOffline get _value => super._value as ListStateOffline;
 }
 
-class _$ShareListStateOffline implements ShareListStateOffline {
-  const _$ShareListStateOffline();
+class _$ListStateOffline implements ListStateOffline {
+  const _$ListStateOffline();
 
   @override
   String toString() {
-    return 'ShareListState.offline()';
+    return 'ListState.offline()';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is ShareListStateOffline);
+    return identical(this, other) || (other is ListStateOffline);
   }
 
   @override
@@ -155,10 +152,10 @@ class _$ShareListStateOffline implements ShareListStateOffline {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result offline(ShareListStateOffline value),
-    @required Result loading(ShareListStateLoading value),
-    @required Result list(ShareListStateList value),
-    @required Result error(ShareListStateError value),
+    @required Result offline(ListStateOffline value),
+    @required Result loading(ListStateLoading value),
+    @required Result list(ListStateList value),
+    @required Result error(ListStateError value),
   }) {
     assert(offline != null);
     assert(loading != null);
@@ -170,10 +167,10 @@ class _$ShareListStateOffline implements ShareListStateOffline {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result offline(ShareListStateOffline value),
-    Result loading(ShareListStateLoading value),
-    Result list(ShareListStateList value),
-    Result error(ShareListStateError value),
+    Result offline(ListStateOffline value),
+    Result loading(ListStateLoading value),
+    Result list(ListStateList value),
+    Result error(ListStateError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -184,38 +181,37 @@ class _$ShareListStateOffline implements ShareListStateOffline {
   }
 }
 
-abstract class ShareListStateOffline implements ShareListState {
-  const factory ShareListStateOffline() = _$ShareListStateOffline;
+abstract class ListStateOffline implements ListState {
+  const factory ListStateOffline() = _$ListStateOffline;
 }
 
-abstract class $ShareListStateLoadingCopyWith<$Res> {
-  factory $ShareListStateLoadingCopyWith(ShareListStateLoading value,
-          $Res Function(ShareListStateLoading) then) =
-      _$ShareListStateLoadingCopyWithImpl<$Res>;
+abstract class $ListStateLoadingCopyWith<$Res> {
+  factory $ListStateLoadingCopyWith(
+          ListStateLoading value, $Res Function(ListStateLoading) then) =
+      _$ListStateLoadingCopyWithImpl<$Res>;
 }
 
-class _$ShareListStateLoadingCopyWithImpl<$Res>
-    extends _$ShareListStateCopyWithImpl<$Res>
-    implements $ShareListStateLoadingCopyWith<$Res> {
-  _$ShareListStateLoadingCopyWithImpl(
-      ShareListStateLoading _value, $Res Function(ShareListStateLoading) _then)
-      : super(_value, (v) => _then(v as ShareListStateLoading));
+class _$ListStateLoadingCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
+    implements $ListStateLoadingCopyWith<$Res> {
+  _$ListStateLoadingCopyWithImpl(
+      ListStateLoading _value, $Res Function(ListStateLoading) _then)
+      : super(_value, (v) => _then(v as ListStateLoading));
 
   @override
-  ShareListStateLoading get _value => super._value as ShareListStateLoading;
+  ListStateLoading get _value => super._value as ListStateLoading;
 }
 
-class _$ShareListStateLoading implements ShareListStateLoading {
-  const _$ShareListStateLoading();
+class _$ListStateLoading implements ListStateLoading {
+  const _$ListStateLoading();
 
   @override
   String toString() {
-    return 'ShareListState.loading()';
+    return 'ListState.loading()';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is ShareListStateLoading);
+    return identical(this, other) || (other is ListStateLoading);
   }
 
   @override
@@ -255,10 +251,10 @@ class _$ShareListStateLoading implements ShareListStateLoading {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result offline(ShareListStateOffline value),
-    @required Result loading(ShareListStateLoading value),
-    @required Result list(ShareListStateList value),
-    @required Result error(ShareListStateError value),
+    @required Result offline(ListStateOffline value),
+    @required Result loading(ListStateLoading value),
+    @required Result list(ListStateList value),
+    @required Result error(ListStateError value),
   }) {
     assert(offline != null);
     assert(loading != null);
@@ -270,10 +266,10 @@ class _$ShareListStateLoading implements ShareListStateLoading {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result offline(ShareListStateOffline value),
-    Result loading(ShareListStateLoading value),
-    Result list(ShareListStateList value),
-    Result error(ShareListStateError value),
+    Result offline(ListStateOffline value),
+    Result loading(ListStateLoading value),
+    Result list(ListStateList value),
+    Result error(ListStateError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -284,32 +280,31 @@ class _$ShareListStateLoading implements ShareListStateLoading {
   }
 }
 
-abstract class ShareListStateLoading implements ShareListState {
-  const factory ShareListStateLoading() = _$ShareListStateLoading;
+abstract class ListStateLoading implements ListState {
+  const factory ListStateLoading() = _$ListStateLoading;
 }
 
-abstract class $ShareListStateListCopyWith<$Res> {
-  factory $ShareListStateListCopyWith(
-          ShareListStateList value, $Res Function(ShareListStateList) then) =
-      _$ShareListStateListCopyWithImpl<$Res>;
+abstract class $ListStateListCopyWith<$Res> {
+  factory $ListStateListCopyWith(
+          ListStateList value, $Res Function(ListStateList) then) =
+      _$ListStateListCopyWithImpl<$Res>;
   $Res call({List<User_AvailableShare> shares});
 }
 
-class _$ShareListStateListCopyWithImpl<$Res>
-    extends _$ShareListStateCopyWithImpl<$Res>
-    implements $ShareListStateListCopyWith<$Res> {
-  _$ShareListStateListCopyWithImpl(
-      ShareListStateList _value, $Res Function(ShareListStateList) _then)
-      : super(_value, (v) => _then(v as ShareListStateList));
+class _$ListStateListCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
+    implements $ListStateListCopyWith<$Res> {
+  _$ListStateListCopyWithImpl(
+      ListStateList _value, $Res Function(ListStateList) _then)
+      : super(_value, (v) => _then(v as ListStateList));
 
   @override
-  ShareListStateList get _value => super._value as ShareListStateList;
+  ListStateList get _value => super._value as ListStateList;
 
   @override
   $Res call({
     Object shares = freezed,
   }) {
-    return _then(ShareListStateList(
+    return _then(ListStateList(
       shares: shares == freezed
           ? _value.shares
           : shares as List<User_AvailableShare>,
@@ -317,21 +312,21 @@ class _$ShareListStateListCopyWithImpl<$Res>
   }
 }
 
-class _$ShareListStateList implements ShareListStateList {
-  const _$ShareListStateList({this.shares});
+class _$ListStateList implements ListStateList {
+  const _$ListStateList({this.shares});
 
   @override
   final List<User_AvailableShare> shares;
 
   @override
   String toString() {
-    return 'ShareListState.list(shares: $shares)';
+    return 'ListState.list(shares: $shares)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is ShareListStateList &&
+        (other is ListStateList &&
             (identical(other.shares, shares) ||
                 const DeepCollectionEquality().equals(other.shares, shares)));
   }
@@ -341,8 +336,8 @@ class _$ShareListStateList implements ShareListStateList {
       runtimeType.hashCode ^ const DeepCollectionEquality().hash(shares);
 
   @override
-  $ShareListStateListCopyWith<ShareListStateList> get copyWith =>
-      _$ShareListStateListCopyWithImpl<ShareListStateList>(this, _$identity);
+  $ListStateListCopyWith<ListStateList> get copyWith =>
+      _$ListStateListCopyWithImpl<ListStateList>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -378,10 +373,10 @@ class _$ShareListStateList implements ShareListStateList {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result offline(ShareListStateOffline value),
-    @required Result loading(ShareListStateLoading value),
-    @required Result list(ShareListStateList value),
-    @required Result error(ShareListStateError value),
+    @required Result offline(ListStateOffline value),
+    @required Result loading(ListStateLoading value),
+    @required Result list(ListStateList value),
+    @required Result error(ListStateError value),
   }) {
     assert(offline != null);
     assert(loading != null);
@@ -393,10 +388,10 @@ class _$ShareListStateList implements ShareListStateList {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result offline(ShareListStateOffline value),
-    Result loading(ShareListStateLoading value),
-    Result list(ShareListStateList value),
-    Result error(ShareListStateError value),
+    Result offline(ListStateOffline value),
+    Result loading(ListStateLoading value),
+    Result list(ListStateList value),
+    Result error(ListStateError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -407,56 +402,55 @@ class _$ShareListStateList implements ShareListStateList {
   }
 }
 
-abstract class ShareListStateList implements ShareListState {
-  const factory ShareListStateList({List<User_AvailableShare> shares}) =
-      _$ShareListStateList;
+abstract class ListStateList implements ListState {
+  const factory ListStateList({List<User_AvailableShare> shares}) =
+      _$ListStateList;
 
   List<User_AvailableShare> get shares;
-  $ShareListStateListCopyWith<ShareListStateList> get copyWith;
+  $ListStateListCopyWith<ListStateList> get copyWith;
 }
 
-abstract class $ShareListStateErrorCopyWith<$Res> {
-  factory $ShareListStateErrorCopyWith(
-          ShareListStateError value, $Res Function(ShareListStateError) then) =
-      _$ShareListStateErrorCopyWithImpl<$Res>;
+abstract class $ListStateErrorCopyWith<$Res> {
+  factory $ListStateErrorCopyWith(
+          ListStateError value, $Res Function(ListStateError) then) =
+      _$ListStateErrorCopyWithImpl<$Res>;
   $Res call({dynamic error});
 }
 
-class _$ShareListStateErrorCopyWithImpl<$Res>
-    extends _$ShareListStateCopyWithImpl<$Res>
-    implements $ShareListStateErrorCopyWith<$Res> {
-  _$ShareListStateErrorCopyWithImpl(
-      ShareListStateError _value, $Res Function(ShareListStateError) _then)
-      : super(_value, (v) => _then(v as ShareListStateError));
+class _$ListStateErrorCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
+    implements $ListStateErrorCopyWith<$Res> {
+  _$ListStateErrorCopyWithImpl(
+      ListStateError _value, $Res Function(ListStateError) _then)
+      : super(_value, (v) => _then(v as ListStateError));
 
   @override
-  ShareListStateError get _value => super._value as ShareListStateError;
+  ListStateError get _value => super._value as ListStateError;
 
   @override
   $Res call({
     Object error = freezed,
   }) {
-    return _then(ShareListStateError(
+    return _then(ListStateError(
       error == freezed ? _value.error : error as dynamic,
     ));
   }
 }
 
-class _$ShareListStateError implements ShareListStateError {
-  const _$ShareListStateError(this.error) : assert(error != null);
+class _$ListStateError implements ListStateError {
+  const _$ListStateError(this.error) : assert(error != null);
 
   @override
   final dynamic error;
 
   @override
   String toString() {
-    return 'ShareListState.error(error: $error)';
+    return 'ListState.error(error: $error)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is ShareListStateError &&
+        (other is ListStateError &&
             (identical(other.error, error) ||
                 const DeepCollectionEquality().equals(other.error, error)));
   }
@@ -466,8 +460,8 @@ class _$ShareListStateError implements ShareListStateError {
       runtimeType.hashCode ^ const DeepCollectionEquality().hash(error);
 
   @override
-  $ShareListStateErrorCopyWith<ShareListStateError> get copyWith =>
-      _$ShareListStateErrorCopyWithImpl<ShareListStateError>(this, _$identity);
+  $ListStateErrorCopyWith<ListStateError> get copyWith =>
+      _$ListStateErrorCopyWithImpl<ListStateError>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -503,10 +497,10 @@ class _$ShareListStateError implements ShareListStateError {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result offline(ShareListStateOffline value),
-    @required Result loading(ShareListStateLoading value),
-    @required Result list(ShareListStateList value),
-    @required Result error(ShareListStateError value),
+    @required Result offline(ListStateOffline value),
+    @required Result loading(ListStateLoading value),
+    @required Result list(ListStateList value),
+    @required Result error(ListStateError value),
   }) {
     assert(offline != null);
     assert(loading != null);
@@ -518,10 +512,10 @@ class _$ShareListStateError implements ShareListStateError {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result offline(ShareListStateOffline value),
-    Result loading(ShareListStateLoading value),
-    Result list(ShareListStateList value),
-    Result error(ShareListStateError value),
+    Result offline(ListStateOffline value),
+    Result loading(ListStateLoading value),
+    Result list(ListStateList value),
+    Result error(ListStateError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -532,9 +526,9 @@ class _$ShareListStateError implements ShareListStateError {
   }
 }
 
-abstract class ShareListStateError implements ShareListState {
-  const factory ShareListStateError(dynamic error) = _$ShareListStateError;
+abstract class ListStateError implements ListState {
+  const factory ListStateError(dynamic error) = _$ListStateError;
 
   dynamic get error;
-  $ShareListStateErrorCopyWith<ShareListStateError> get copyWith;
+  $ListStateErrorCopyWith<ListStateError> get copyWith;
 }

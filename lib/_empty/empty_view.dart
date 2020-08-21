@@ -34,8 +34,13 @@ class EmptyForm extends StatelessWidget {
     return BlocConsumer<EmptyCubit, EmptyState>(
       listener: (context, state) {
         state.maybeWhen(
-          error: (ex) {
-            handle(context, ex);
+          error: (ex, retryState) {
+            handle(context, ex, [
+              Button(
+                "retry",
+                () => context.bloc<EmptyCubit>().retry(retryState),
+              )
+            ]);
           },
           done: () {
             // ...

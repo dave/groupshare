@@ -9,41 +9,41 @@ import 'package:groupshare/share/add/add.dart';
 part 'add_bloc.freezed.dart';
 
 @freezed
-abstract class ShareAddState with _$ShareAddState {
-  const factory ShareAddState.form({
+abstract class AddState with _$AddState {
+  const factory AddState.form({
     @Default(FormzStatus.pure) FormzStatus status,
     @Default(const Name.pure()) Name name,
-  }) = ShareAddStateForm;
+  }) = AddStateForm;
 
-  const factory ShareAddState.error(
+  const factory AddState.error(
     dynamic error,
-    ShareAddState retryState,
-  ) = ShareAddStateError;
+    AddState retryState,
+  ) = AddStateError;
 
-  const factory ShareAddState.done() = ShareAddStateDone;
+  const factory AddState.done() = AddStateDone;
 }
 
-class ShareAddCubit extends Cubit<ShareAddState> {
+class AddCubit extends Cubit<AddState> {
   final Data _data;
 
-  ShareAddCubit(Data data)
+  AddCubit(Data data)
       : _data = data,
-        super(ShareAddState.form());
+        super(AddState.form());
 
   void nameChanged(String name) {
     final nameValue = Name.dirty(name);
-    emit(ShareAddState.form(
+    emit(AddState.form(
       name: nameValue,
       status: Formz.validate([nameValue]),
     ));
   }
 
-  void retry(ShareAddState s) {
-    emit(s);
+  void retry(AddState retryState) {
+    emit(retryState);
   }
 
   Future<void> add() async {
-    final stateForm = state as ShareAddStateForm;
+    final stateForm = state as AddStateForm;
     try {
       emit(stateForm.copyWith(status: FormzStatus.submissionInProgress));
       final share = Share()..name = stateForm.name.value;
@@ -58,9 +58,9 @@ class ShareAddCubit extends Cubit<ShareAddState> {
                 ..new_3 = true,
             ),
       );
-      emit(ShareAddState.done());
+      emit(AddState.done());
     } catch (ex) {
-      emit(ShareAddState.error(ex, stateForm));
+      emit(AddState.error(ex, stateForm));
     }
   }
 }

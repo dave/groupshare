@@ -159,7 +159,7 @@ class _AppViewState extends State<AppView> {
               state.when(
                 empty: () => LoginPage.route(),
                 auth: () => LoginPage.route(),
-                done: () => ShareListPage.route(),
+                done: () => ListPage.route(),
               ),
               (route) => false,
             );

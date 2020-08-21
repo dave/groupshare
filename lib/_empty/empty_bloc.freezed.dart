@@ -27,9 +27,10 @@ class _$EmptyStateTearOff {
   }
 
 // ignore: unused_element
-  EmptyStateError error(dynamic error) {
+  EmptyStateError error(dynamic error, EmptyState retryState) {
     return EmptyStateError(
       error,
+      retryState,
     );
   }
 
@@ -47,14 +48,14 @@ mixin _$EmptyState {
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result form(FormzStatus status, Foo foo),
-    @required Result error(dynamic error),
+    @required Result error(dynamic error, EmptyState retryState),
     @required Result done(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result form(FormzStatus status, Foo foo),
-    Result error(dynamic error),
+    Result error(dynamic error, EmptyState retryState),
     Result done(),
     @required Result orElse(),
   });
@@ -127,7 +128,7 @@ class _$EmptyStateInitial implements EmptyStateInitial {
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result form(FormzStatus status, Foo foo),
-    @required Result error(dynamic error),
+    @required Result error(dynamic error, EmptyState retryState),
     @required Result done(),
   }) {
     assert(initial != null);
@@ -142,7 +143,7 @@ class _$EmptyStateInitial implements EmptyStateInitial {
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result form(FormzStatus status, Foo foo),
-    Result error(dynamic error),
+    Result error(dynamic error, EmptyState retryState),
     Result done(),
     @required Result orElse(),
   }) {
@@ -260,7 +261,7 @@ class _$EmptyStateForm implements EmptyStateForm {
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result form(FormzStatus status, Foo foo),
-    @required Result error(dynamic error),
+    @required Result error(dynamic error, EmptyState retryState),
     @required Result done(),
   }) {
     assert(initial != null);
@@ -275,7 +276,7 @@ class _$EmptyStateForm implements EmptyStateForm {
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result form(FormzStatus status, Foo foo),
-    Result error(dynamic error),
+    Result error(dynamic error, EmptyState retryState),
     Result done(),
     @required Result orElse(),
   }) {
@@ -331,7 +332,7 @@ abstract class $EmptyStateErrorCopyWith<$Res> {
   factory $EmptyStateErrorCopyWith(
           EmptyStateError value, $Res Function(EmptyStateError) then) =
       _$EmptyStateErrorCopyWithImpl<$Res>;
-  $Res call({dynamic error});
+  $Res call({dynamic error, EmptyState retryState});
 }
 
 class _$EmptyStateErrorCopyWithImpl<$Res> extends _$EmptyStateCopyWithImpl<$Res>
@@ -346,22 +347,28 @@ class _$EmptyStateErrorCopyWithImpl<$Res> extends _$EmptyStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object error = freezed,
+    Object retryState = freezed,
   }) {
     return _then(EmptyStateError(
       error == freezed ? _value.error : error as dynamic,
+      retryState == freezed ? _value.retryState : retryState as EmptyState,
     ));
   }
 }
 
 class _$EmptyStateError implements EmptyStateError {
-  const _$EmptyStateError(this.error) : assert(error != null);
+  const _$EmptyStateError(this.error, this.retryState)
+      : assert(error != null),
+        assert(retryState != null);
 
   @override
   final dynamic error;
+  @override
+  final EmptyState retryState;
 
   @override
   String toString() {
-    return 'EmptyState.error(error: $error)';
+    return 'EmptyState.error(error: $error, retryState: $retryState)';
   }
 
   @override
@@ -369,12 +376,17 @@ class _$EmptyStateError implements EmptyStateError {
     return identical(this, other) ||
         (other is EmptyStateError &&
             (identical(other.error, error) ||
-                const DeepCollectionEquality().equals(other.error, error)));
+                const DeepCollectionEquality().equals(other.error, error)) &&
+            (identical(other.retryState, retryState) ||
+                const DeepCollectionEquality()
+                    .equals(other.retryState, retryState)));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(error);
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(error) ^
+      const DeepCollectionEquality().hash(retryState);
 
   @override
   $EmptyStateErrorCopyWith<EmptyStateError> get copyWith =>
@@ -385,14 +397,14 @@ class _$EmptyStateError implements EmptyStateError {
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result form(FormzStatus status, Foo foo),
-    @required Result error(dynamic error),
+    @required Result error(dynamic error, EmptyState retryState),
     @required Result done(),
   }) {
     assert(initial != null);
     assert(form != null);
     assert(error != null);
     assert(done != null);
-    return error(this.error);
+    return error(this.error, retryState);
   }
 
   @override
@@ -400,13 +412,13 @@ class _$EmptyStateError implements EmptyStateError {
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result form(FormzStatus status, Foo foo),
-    Result error(dynamic error),
+    Result error(dynamic error, EmptyState retryState),
     Result done(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (error != null) {
-      return error(this.error);
+      return error(this.error, retryState);
     }
     return orElse();
   }
@@ -444,9 +456,11 @@ class _$EmptyStateError implements EmptyStateError {
 }
 
 abstract class EmptyStateError implements EmptyState {
-  const factory EmptyStateError(dynamic error) = _$EmptyStateError;
+  const factory EmptyStateError(dynamic error, EmptyState retryState) =
+      _$EmptyStateError;
 
   dynamic get error;
+  EmptyState get retryState;
   $EmptyStateErrorCopyWith<EmptyStateError> get copyWith;
 }
 
@@ -487,7 +501,7 @@ class _$EmptyStateDone implements EmptyStateDone {
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result form(FormzStatus status, Foo foo),
-    @required Result error(dynamic error),
+    @required Result error(dynamic error, EmptyState retryState),
     @required Result done(),
   }) {
     assert(initial != null);
@@ -502,7 +516,7 @@ class _$EmptyStateDone implements EmptyStateDone {
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result form(FormzStatus status, Foo foo),
-    Result error(dynamic error),
+    Result error(dynamic error, EmptyState retryState),
     Result done(),
     @required Result orElse(),
   }) {

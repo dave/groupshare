@@ -6,25 +6,25 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'list_bloc.freezed.dart';
 
 @freezed
-abstract class ShareListState with _$ShareListState {
-  const factory ShareListState.offline() = ShareListStateOffline;
-  const factory ShareListState.loading() = ShareListStateLoading;
-  const factory ShareListState.list({
+abstract class ListState with _$ListState {
+  const factory ListState.offline() = ListStateOffline;
+  const factory ListState.loading() = ListStateLoading;
+  const factory ListState.list({
     List<User_AvailableShare> shares,
-  }) = ShareListStateList;
-  const factory ShareListState.error(
+  }) = ListStateList;
+  const factory ListState.error(
     dynamic error,
-  ) = ShareListStateError;
+  ) = ListStateError;
 }
 
-class ShareListCubit extends Cubit<ShareListState> {
+class ListCubit extends Cubit<ListState> {
   final Data _data;
   final Api _api;
 
-  ShareListCubit(Data data, Api api)
+  ListCubit(Data data, Api api)
       : _data = data,
         _api = api,
-        super(ShareListState.loading());
+        super(ListState.loading());
 
   Future<void> initialise() async {
     // TODO: remove when https://github.com/felangel/bloc/issues/1641 is resolved.
@@ -35,11 +35,11 @@ class ShareListCubit extends Cubit<ShareListState> {
     final user = _data.user;
 
     if (user == null) {
-      emit(ShareListState.offline());
+      emit(ListState.offline());
       return;
     }
 
-    emit(ShareListState.list(shares: user.value.shares));
+    emit(ListState.list(shares: user.value.shares));
 
     if (!_api.online()) {
       return;
@@ -47,7 +47,7 @@ class ShareListCubit extends Cubit<ShareListState> {
 
     await user.send();
 
-    emit(ShareListState.list(shares: user.value.shares));
+    emit(ListState.list(shares: user.value.shares));
 
 //    response.items.forEach((Share_List_Response_Item item) {
 //      final i = shares.indexWhere((s) => s.id == item.id);
