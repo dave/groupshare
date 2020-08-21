@@ -35,8 +35,13 @@ class ShareAddForm extends StatelessWidget {
     return BlocConsumer<ShareAddCubit, ShareAddState>(
       listener: (context, state) {
         state.maybeWhen(
-          error: (ex) {
-            handle(context, ex);
+          error: (ex, retryState) {
+            handle(context, ex, [
+              Button(
+                "Retry",
+                () => context.bloc<ShareAddCubit>().retry(retryState),
+              )
+            ]);
           },
           done: () {
             Navigator.of(context).pushAndRemoveUntil(
@@ -69,6 +74,8 @@ class ShareAddForm extends StatelessWidget {
   }
 }
 
+final _nameInputKey = GlobalKey();
+
 class _NameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -84,16 +91,19 @@ class _NameInput extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is ShareAddStateForm) {
-          return TextField(
-            key: const Key('share_add_name_input'),
-            onChanged: (email) {
-              context.bloc<ShareAddCubit>().nameChanged(email);
-            },
-            decoration: InputDecoration(
-              labelText: 'name',
-              errorText: state.name.invalid ? 'invalid name' : null,
-            ),
-          );
+          return state.status.isSubmissionInProgress
+              ? CircularProgressIndicator()
+              : TextFormField(
+                  key: _nameInputKey,
+                  initialValue: state.name.value,
+                  onChanged: (email) {
+                    context.bloc<ShareAddCubit>().nameChanged(email);
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'name',
+                    errorText: state.name.invalid ? 'invalid name' : null,
+                  ),
+                );
         } else {
           return null;
         }
@@ -101,6 +111,8 @@ class _NameInput extends StatelessWidget {
     );
   }
 }
+
+final _addButtonKey = GlobalKey();
 
 class _AddButton extends StatelessWidget {
   @override
@@ -120,7 +132,7 @@ class _AddButton extends StatelessWidget {
           return state.status.isSubmissionInProgress
               ? const CircularProgressIndicator()
               : RaisedButton(
-                  key: const Key('share_add_add_button'),
+                  key: _addButtonKey,
                   child: const Text('Add'),
                   onPressed: () {
                     if (state.status.isValidated) {

@@ -37,8 +37,13 @@ class LoginForm extends StatelessWidget {
     return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) {
         state.maybeWhen(
-          error: (ex) {
-            handle(context, ex);
+          error: (ex, retryState) {
+            handle(context, ex, [
+              Button(
+                "Retry",
+                () => context.bloc<LoginCubit>().retry(retryState),
+              ),
+            ]);
           },
           done: () {
             Navigator.of(context).pushAndRemoveUntil(
@@ -78,6 +83,8 @@ class LoginForm extends StatelessWidget {
   }
 }
 
+final _emailInputKey = GlobalKey();
+
 class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -93,8 +100,9 @@ class _EmailInput extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is LoginStateEmail) {
-          return TextField(
-            key: const Key('login_email_input'),
+          return TextFormField(
+            key: _emailInputKey,
+            initialValue: state.email.value,
             onChanged: (email) {
               context.bloc<LoginCubit>().emailChanged(email);
             },
@@ -111,6 +119,8 @@ class _EmailInput extends StatelessWidget {
   }
 }
 
+final _codeInputKey = GlobalKey();
+
 class _CodeInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -126,8 +136,9 @@ class _CodeInput extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is LoginStateCode) {
-          return TextField(
-            key: const Key('login_code_input'),
+          return TextFormField(
+            key: _codeInputKey,
+            initialValue: state.code.value,
             onChanged: (code) {
               context.bloc<LoginCubit>().codeChanged(code);
             },
@@ -143,6 +154,8 @@ class _CodeInput extends StatelessWidget {
     );
   }
 }
+
+final _emailButtonKey = GlobalKey();
 
 class _EmailButton extends StatelessWidget {
   @override
@@ -162,7 +175,7 @@ class _EmailButton extends StatelessWidget {
           return state.status.isSubmissionInProgress
               ? const CircularProgressIndicator()
               : RaisedButton(
-                  key: const Key('login_email_button'),
+                  key: _emailButtonKey,
                   child: const Text('Login email'),
                   onPressed: () {
                     if (state.status.isValidated) {
@@ -177,6 +190,8 @@ class _EmailButton extends StatelessWidget {
     );
   }
 }
+
+final _codeButtonKey = GlobalKey();
 
 class _CodeButton extends StatelessWidget {
   @override
@@ -196,7 +211,7 @@ class _CodeButton extends StatelessWidget {
           return state.status.isSubmissionInProgress
               ? const CircularProgressIndicator()
               : RaisedButton(
-                  key: const Key('login_code_button'),
+                  key: _codeButtonKey,
                   child: const Text('Login code'),
                   onPressed: () {
                     if (state.status.isValidated) {

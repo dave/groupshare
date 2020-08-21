@@ -6,7 +6,7 @@ import 'package:groupshare/auth/auth.dart';
 Future<void> handle(
   BuildContext context,
   dynamic ex, [
-  List<Button> buttons,
+  List<Button> buttons = const [],
 ]) async {
   if (ex == null) {
     return;
@@ -21,7 +21,7 @@ Future<void> handle(
 
   await showDialog(
     context: context,
-    barrierDismissible: false, // user must tap button!
+    barrierDismissible: false,
     builder: (BuildContext context) {
       return BlocBuilder<AuthCubit, AuthState>(
         builder: (context, state) {
@@ -35,14 +35,14 @@ Future<void> handle(
               ),
             ),
             actions: <Widget>[
-              if (buttons == null || buttons.length == 0)
+              if (buttons.length == 0)
                 FlatButton(
                   child: Text("OK"),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
-              for (var b in buttons ?? [])
+              for (var b in buttons)
                 FlatButton(
                   child: Text(b.message),
                   onPressed: () {
@@ -72,23 +72,3 @@ class Button {
   final Function() press;
   Button(this.message, [this.press]);
 }
-
-//Future<void> handle(
-//  BuildContext context,
-//  dynamic ex, [
-//  List<Button> buttons,
-//]) async {
-//  if (ex is UserException) {
-//    Scaffold.of(context)
-//      ..hideCurrentSnackBar()
-//      ..showSnackBar(
-//        SnackBar(content: Text(ex.message)),
-//      );
-//  } else {
-//    Scaffold.of(context)
-//      ..hideCurrentSnackBar()
-//      ..showSnackBar(
-//        SnackBar(content: Text(ex.toString())),
-//      );
-//  }
-//}

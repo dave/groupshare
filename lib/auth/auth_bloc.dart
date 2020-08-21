@@ -20,11 +20,9 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit(Auth auth)
       : _auth = auth,
         super(AuthState.empty()) {
-    if (_statusSubscription == null) {
-      _statusSubscription = _auth.statusChange.listen(
-        (Status value) => change(value),
-      );
-    }
+    _statusSubscription = _auth.statusChange.listen(
+      (Status value) => change(value),
+    );
   }
 
   @override

@@ -18,31 +18,37 @@ class Api {
   final int _retries;
   final Connection _conn;
   final Random _rand;
-  bool _online;
-  StreamSubscription<bool> _connChangeSubscription;
+  bool _online = true;
 
   bool online() => _online;
 
-  Api(Connection conn, {String prefix = LOCAL_PREFIX, int retries = 20})
+  Api({Connection conn, String prefix = LOCAL_PREFIX, int retries = 20})
       : _conn = conn,
         _retries = retries,
         _prefix = prefix,
         _rand = Random();
 
   Future<void> init() async {
-    // start watching connection state
-    if (_connChangeSubscription == null) {
-      _connChangeSubscription = _conn.changed.listen((bool connected) {
+    // start watching connection state if Connection is supplied
+    if (_conn != null) {
+      _conn.changed.listen((bool connected) {
         _connected(connected);
       });
+      _connected(await _conn.check());
     }
-    _connected(await _conn.check());
   }
 
-  // tokens is a list of messages that are added to all api requests. Used by
+  // Tokens is a list of messages that are added to all api requests. Used by
   // the auth package to add the auth token.
-  // TODO: improve this!
-  Map<dynamic, GeneratedMessage> tokens = {};
+  Map<dynamic, GeneratedMessage> _tokens = {};
+
+  setToken(dynamic key, GeneratedMessage token) {
+    _tokens[key] = token;
+  }
+
+  removeToken(dynamic key) {
+    _tokens.remove(key);
+  }
 
   Future<R> send<R extends GeneratedMessage, Q extends GeneratedMessage>(
     R response,
@@ -53,7 +59,7 @@ class Api {
       _connecting(indicatorId);
 
       var requestBundle = Bundle();
-      tokens.forEach((_, t) {
+      _tokens.forEach((_, t) {
         requestBundle.set(t);
       });
       requestBundle.set(request);

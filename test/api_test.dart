@@ -1,29 +1,18 @@
+import 'package:api_repository/api_repository.dart';
+import 'package:auth_repository/auth_repository.dart';
+import 'package:data_repository/data_repository.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:groupshare/locator.dart';
-import 'package:groupshare/pb/groupshare/data/data.op.dart';
-import 'package:groupshare/pb/groupshare/data/share.pb.dart';
-import 'package:groupshare/pb/groupshare/messages/auth.pb.dart';
-import 'package:groupshare/services/api.dart';
-import 'package:groupshare/services/auth.dart';
 import 'package:protod/delta/delta.dart';
 import 'package:protod/pstore/pstore.pb.dart';
 
 void main() {
-  setUp(() async {
-    locator.registerSingleton<Auth>(AuthMock());
-    locator.registerSingleton<Api>(Api(prefix: LOCAL_PREFIX));
-  });
   test('api test', () async {
-    final api = locator<Api>();
-    final auth = locator<Auth>();
+    final api = Api();
 
     final token = await getToken(api, "a@b.c");
 
-    var authMock = auth as AuthMock;
-    authMock
-      ..t = token
-      ..s = Status.Done;
+    api.setToken("auth_token", token);
 
     final id = api.randomUnique();
     final type = Share().info_.qualifiedMessageName;
@@ -115,9 +104,9 @@ Future<Token> getToken(Api api, String email) async {
       ..device = _device
       ..email = email,
   );
-  final authResp = await api.send(
-    Auth_Response(),
-    Auth_Request()
+  final codeResp = await api.send(
+    Code_Response(),
+    Code_Request()
       ..email = email
       ..device = _device
       ..time = loginResp.time
@@ -125,7 +114,7 @@ Future<Token> getToken(Api api, String email) async {
       ..test = true, // accept incorrect code (testing only)
   );
   return Token()
-    ..id = authResp.id
-    ..hash = authResp.hash
+    ..id = codeResp.id
+    ..hash = codeResp.hash
     ..device = _device;
 }

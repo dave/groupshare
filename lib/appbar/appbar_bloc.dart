@@ -22,11 +22,9 @@ class AppBarCubit extends Cubit<AppBarState> {
   AppBarCubit(Api api)
       : _api = api,
         super(AppBarState.saved()) {
-    if (_stateSubscription == null) {
-      _stateSubscription = _api.statusChange.listen(
-        (ConnectionStatus value) => change(value),
-      );
-    }
+    _stateSubscription = _api.statusChange.listen(
+      (ConnectionStatus value) => change(value),
+    );
   }
 
   @override

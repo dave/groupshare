@@ -75,14 +75,7 @@ class ShareListPageContent extends StatelessWidget {
                 loading: () => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Center(child: CircularProgressIndicator()),
-                    RaisedButton(
-                      child: Text("retry"),
-                      onPressed: () =>
-                          context.bloc<ShareListCubit>().initialise(),
-                    )
-                  ],
+                  children: [Center(child: CircularProgressIndicator())],
                 ),
                 list: (shares) => ListView.builder(
                   itemCount: shares.length,

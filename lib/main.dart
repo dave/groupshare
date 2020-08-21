@@ -38,7 +38,7 @@ void main() async {
 
     final connection = Connection();
     final api = Api(
-      connection,
+      conn: connection,
       prefix: IS_LIVE ? LIVE_PREFIX : LOCAL_PREFIX,
     );
     final device = await Device.initialise();

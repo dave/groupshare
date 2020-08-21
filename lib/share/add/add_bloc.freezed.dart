@@ -22,9 +22,10 @@ class _$ShareAddStateTearOff {
   }
 
 // ignore: unused_element
-  ShareAddStateError error(dynamic error) {
+  ShareAddStateError error(dynamic error, ShareAddState retryState) {
     return ShareAddStateError(
       error,
+      retryState,
     );
   }
 
@@ -41,13 +42,13 @@ mixin _$ShareAddState {
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result form(FormzStatus status, Name name),
-    @required Result error(dynamic error),
+    @required Result error(dynamic error, ShareAddState retryState),
     @required Result done(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result form(FormzStatus status, Name name),
-    Result error(dynamic error),
+    Result error(dynamic error, ShareAddState retryState),
     Result done(),
     @required Result orElse(),
   });
@@ -152,7 +153,7 @@ class _$ShareAddStateForm implements ShareAddStateForm {
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result form(FormzStatus status, Name name),
-    @required Result error(dynamic error),
+    @required Result error(dynamic error, ShareAddState retryState),
     @required Result done(),
   }) {
     assert(form != null);
@@ -165,7 +166,7 @@ class _$ShareAddStateForm implements ShareAddStateForm {
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result form(FormzStatus status, Name name),
-    Result error(dynamic error),
+    Result error(dynamic error, ShareAddState retryState),
     Result done(),
     @required Result orElse(),
   }) {
@@ -218,7 +219,7 @@ abstract class $ShareAddStateErrorCopyWith<$Res> {
   factory $ShareAddStateErrorCopyWith(
           ShareAddStateError value, $Res Function(ShareAddStateError) then) =
       _$ShareAddStateErrorCopyWithImpl<$Res>;
-  $Res call({dynamic error});
+  $Res call({dynamic error, ShareAddState retryState});
 }
 
 class _$ShareAddStateErrorCopyWithImpl<$Res>
@@ -234,22 +235,28 @@ class _$ShareAddStateErrorCopyWithImpl<$Res>
   @override
   $Res call({
     Object error = freezed,
+    Object retryState = freezed,
   }) {
     return _then(ShareAddStateError(
       error == freezed ? _value.error : error as dynamic,
+      retryState == freezed ? _value.retryState : retryState as ShareAddState,
     ));
   }
 }
 
 class _$ShareAddStateError implements ShareAddStateError {
-  const _$ShareAddStateError(this.error) : assert(error != null);
+  const _$ShareAddStateError(this.error, this.retryState)
+      : assert(error != null),
+        assert(retryState != null);
 
   @override
   final dynamic error;
+  @override
+  final ShareAddState retryState;
 
   @override
   String toString() {
-    return 'ShareAddState.error(error: $error)';
+    return 'ShareAddState.error(error: $error, retryState: $retryState)';
   }
 
   @override
@@ -257,12 +264,17 @@ class _$ShareAddStateError implements ShareAddStateError {
     return identical(this, other) ||
         (other is ShareAddStateError &&
             (identical(other.error, error) ||
-                const DeepCollectionEquality().equals(other.error, error)));
+                const DeepCollectionEquality().equals(other.error, error)) &&
+            (identical(other.retryState, retryState) ||
+                const DeepCollectionEquality()
+                    .equals(other.retryState, retryState)));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(error);
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(error) ^
+      const DeepCollectionEquality().hash(retryState);
 
   @override
   $ShareAddStateErrorCopyWith<ShareAddStateError> get copyWith =>
@@ -272,26 +284,26 @@ class _$ShareAddStateError implements ShareAddStateError {
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result form(FormzStatus status, Name name),
-    @required Result error(dynamic error),
+    @required Result error(dynamic error, ShareAddState retryState),
     @required Result done(),
   }) {
     assert(form != null);
     assert(error != null);
     assert(done != null);
-    return error(this.error);
+    return error(this.error, retryState);
   }
 
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result form(FormzStatus status, Name name),
-    Result error(dynamic error),
+    Result error(dynamic error, ShareAddState retryState),
     Result done(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (error != null) {
-      return error(this.error);
+      return error(this.error, retryState);
     }
     return orElse();
   }
@@ -326,9 +338,11 @@ class _$ShareAddStateError implements ShareAddStateError {
 }
 
 abstract class ShareAddStateError implements ShareAddState {
-  const factory ShareAddStateError(dynamic error) = _$ShareAddStateError;
+  const factory ShareAddStateError(dynamic error, ShareAddState retryState) =
+      _$ShareAddStateError;
 
   dynamic get error;
+  ShareAddState get retryState;
   $ShareAddStateErrorCopyWith<ShareAddStateError> get copyWith;
 }
 
@@ -369,7 +383,7 @@ class _$ShareAddStateDone implements ShareAddStateDone {
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result form(FormzStatus status, Name name),
-    @required Result error(dynamic error),
+    @required Result error(dynamic error, ShareAddState retryState),
     @required Result done(),
   }) {
     assert(form != null);
@@ -382,7 +396,7 @@ class _$ShareAddStateDone implements ShareAddStateDone {
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result form(FormzStatus status, Name name),
-    Result error(dynamic error),
+    Result error(dynamic error, ShareAddState retryState),
     Result done(),
     @required Result orElse(),
   }) {

@@ -69,6 +69,8 @@ class EmptyForm extends StatelessWidget {
   }
 }
 
+final _fooInputKey = GlobalKey();
+
 class _FooInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -84,8 +86,9 @@ class _FooInput extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is EmptyStateForm) {
-          return TextField(
-            key: const Key('empty_foo_input'),
+          return TextFormField(
+            key: _fooInputKey,
+            initialValue: state.foo.value,
             onChanged: (value) {
               context.bloc<EmptyCubit>().fooChanged(value);
             },
@@ -101,6 +104,8 @@ class _FooInput extends StatelessWidget {
     );
   }
 }
+
+final _submitButtonKey = GlobalKey();
 
 class _SubmitButton extends StatelessWidget {
   @override
@@ -120,7 +125,7 @@ class _SubmitButton extends StatelessWidget {
           return state.status.isSubmissionInProgress
               ? const CircularProgressIndicator()
               : RaisedButton(
-                  key: const Key('empty_submit_button'),
+                  key: _submitButtonKey,
                   child: const Text('Submit'),
                   onPressed: () {
                     if (state.status.isValidated) {

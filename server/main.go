@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"testing"
+	"time"
 
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api"
@@ -171,6 +172,13 @@ func ProcessMessage(ctx context.Context, server *pserver.Server, token *authpb.T
 const DEBUG = true
 
 func ProcessBundle(ctx context.Context, server *pserver.Server, request, response *pmsg.Bundle) (err error) {
+
+	// TODO: remove this
+	time.Sleep(time.Second)
+	//if rand.Float64() > 0.5 {
+	//
+	//	return pserver.ServerBusy
+	//}
 
 	if appengine.IsAppEngine() {
 		// when running in app engine, catch panics and convert to errors

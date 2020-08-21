@@ -17,6 +17,7 @@ abstract class ShareAddState with _$ShareAddState {
 
   const factory ShareAddState.error(
     dynamic error,
+    ShareAddState retryState,
   ) = ShareAddStateError;
 
   const factory ShareAddState.done() = ShareAddStateDone;
@@ -37,31 +38,29 @@ class ShareAddCubit extends Cubit<ShareAddState> {
     ));
   }
 
+  void retry(ShareAddState s) {
+    emit(s);
+  }
+
   Future<void> add() async {
-    state.maybeWhen(
-      form: (status, name) {
-        try {
-          final share = Share()..name = name.value;
-          final id = _data.shares.randomUnique();
-          _data.shares.add(id, share);
-          _data.user.op(
-            Op().User().Shares().Insert(
-                  0,
-                  User_AvailableShare()
-                    ..id = id
-                    ..name = name.value
-                    ..new_3 = true,
-                ),
-          );
-          emit(ShareAddState.done());
-          return true;
-        } catch (ex) {
-          emit(ShareAddState.error(ex));
-        }
-      },
-      orElse: () {
-        return true;
-      },
-    );
+    final stateForm = state as ShareAddStateForm;
+    try {
+      emit(stateForm.copyWith(status: FormzStatus.submissionInProgress));
+      final share = Share()..name = stateForm.name.value;
+      final id = _data.shares.randomUnique();
+      _data.shares.add(id, share);
+      _data.user.op(
+        Op().User().Shares().Insert(
+              0,
+              User_AvailableShare()
+                ..id = id
+                ..name = stateForm.name.value
+                ..new_3 = true,
+            ),
+      );
+      emit(ShareAddState.done());
+    } catch (ex) {
+      emit(ShareAddState.error(ex, stateForm));
+    }
   }
 }

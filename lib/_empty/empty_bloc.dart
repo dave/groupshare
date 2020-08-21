@@ -40,16 +40,13 @@ class EmptyCubit extends Cubit<EmptyState> {
   }
 
   Future<void> submit() async {
-    state.maybeWhen(
-      form: (status, foo) {
-        try {
-          // ...
-          emit(EmptyState.done());
-        } catch (ex) {
-          emit(EmptyState.error(ex));
-        }
-      },
-      orElse: () => true, // orElse can't return null
-    );
+    final stateForm = state as EmptyStateForm;
+    try {
+      emit(stateForm.copyWith(status: FormzStatus.submissionInProgress));
+      // ...
+      emit(EmptyState.done());
+    } catch (ex) {
+      emit(EmptyState.error(ex));
+    }
   }
 }

@@ -23,6 +23,7 @@ abstract class LoginState with _$LoginState {
 
   const factory LoginState.error(
     dynamic error,
+    LoginState retry,
   ) = LoginStateError;
 
   const factory LoginState.done() = LoginStateDone;
@@ -37,11 +38,9 @@ class LoginCubit extends Cubit<LoginState> {
       : _auth = auth,
         _data = data,
         super(LoginState.email()) {
-    if (_statusSubscription == null) {
-      _statusSubscription = _auth.statusChange.listen(
-        (Status value) => change(value),
-      );
-    }
+    _statusSubscription = _auth.statusChange.listen(
+      (Status value) => change(value),
+    );
   }
 
   @override
@@ -64,6 +63,10 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
+  void retry(LoginState retryState) {
+    emit(retryState);
+  }
+
   void emailChanged(String email) {
     final emailValue = Email.dirty(email);
     emit(LoginState.email(
@@ -73,10 +76,12 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> sendLogin() async {
+    final stateEmail = state as LoginStateEmail;
     try {
-      await _auth.login((state as LoginStateEmail).email.value);
+      emit(stateEmail.copyWith(status: FormzStatus.submissionInProgress));
+      await _auth.login(stateEmail.email.value);
     } catch (ex) {
-      emit(LoginState.error(ex));
+      emit(LoginState.error(ex, stateEmail));
     }
   }
 
@@ -89,11 +94,13 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> sendCode() async {
+    final stateCode = state as LoginStateCode;
     try {
-      await _auth.code((state as LoginStateCode).code.value);
+      emit(stateCode.copyWith(status: FormzStatus.submissionInProgress));
+      await _auth.code(stateCode.code.value);
       await _data.initUser();
     } catch (ex) {
-      emit(LoginState.error(ex));
+      emit(LoginState.error(ex, stateCode));
     }
   }
 }

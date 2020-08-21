@@ -21,12 +21,12 @@ class Auth {
 
   Future<void> init() async {
     if (status == Status.Done) {
-      _api.tokens[_apiTokenKey] = token;
+      _api.setToken(_apiTokenKey, token);
     }
   }
 
   Future<void> logoff() async {
-    _api.tokens.remove(_apiTokenKey);
+    _api.removeToken(_apiTokenKey);
     await _box.clear();
   }
 
@@ -74,7 +74,7 @@ class Auth {
       _key.Id.toString(): resp.id,
       _key.Hash.toString(): resp.hash,
     });
-    _api.tokens[_apiTokenKey] = token;
+    _api.setToken(_apiTokenKey, token);
     _controller.add(Status.Done);
   }
 
