@@ -52,7 +52,7 @@ class ListPageContent extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () {
-              Navigator.of(context).push(AddPage.route());
+              Navigator.of(context).pushReplacement(AddPage.route());
             },
           ),
           body: Padding(

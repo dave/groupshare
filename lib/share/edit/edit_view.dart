@@ -96,8 +96,6 @@ class EditForm extends StatelessWidget {
   }
 }
 
-final _nameInputKey = GlobalKey();
-
 class _NameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -114,7 +112,7 @@ class _NameInput extends StatelessWidget {
       builder: (context, state) {
         if (state is EditStateForm) {
           return TextFormField(
-            key: _nameInputKey,
+            key: Keys.name,
             initialValue: state.name.value,
             onChanged: (value) {
               context.bloc<EditCubit>().nameChanged(value);
@@ -131,8 +129,6 @@ class _NameInput extends StatelessWidget {
     );
   }
 }
-
-final _submitButtonKey = GlobalKey();
 
 class _SubmitButton extends StatelessWidget {
   @override
@@ -152,7 +148,7 @@ class _SubmitButton extends StatelessWidget {
           return state.status.isSubmissionInProgress
               ? const CircularProgressIndicator()
               : RaisedButton(
-                  key: _submitButtonKey,
+                  key: Keys.submit,
                   child: const Text('Submit'),
                   onPressed: () {
                     if (state.status.isValidated) {
@@ -166,4 +162,11 @@ class _SubmitButton extends StatelessWidget {
       },
     );
   }
+}
+
+class Keys {
+  static final name = UniqueKey();
+  static final submit = UniqueKey();
+//  static final name = Key("editName");
+//  static final submit = Key("editSubmit");
 }

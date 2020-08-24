@@ -83,8 +83,6 @@ class LoginForm extends StatelessWidget {
   }
 }
 
-final _emailInputKey = GlobalKey();
-
 class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -101,7 +99,7 @@ class _EmailInput extends StatelessWidget {
       builder: (context, state) {
         if (state is LoginStateEmail) {
           return TextFormField(
-            key: _emailInputKey,
+            key: Keys.email,
             initialValue: state.email.value,
             onChanged: (email) {
               context.bloc<LoginCubit>().emailChanged(email);
@@ -119,8 +117,6 @@ class _EmailInput extends StatelessWidget {
   }
 }
 
-final _codeInputKey = GlobalKey();
-
 class _CodeInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -137,7 +133,7 @@ class _CodeInput extends StatelessWidget {
       builder: (context, state) {
         if (state is LoginStateCode) {
           return TextFormField(
-            key: _codeInputKey,
+            key: Keys.code,
             initialValue: state.code.value,
             onChanged: (code) {
               context.bloc<LoginCubit>().codeChanged(code);
@@ -154,8 +150,6 @@ class _CodeInput extends StatelessWidget {
     );
   }
 }
-
-final _emailButtonKey = GlobalKey();
 
 class _EmailButton extends StatelessWidget {
   @override
@@ -175,7 +169,7 @@ class _EmailButton extends StatelessWidget {
           return state.status.isSubmissionInProgress
               ? const CircularProgressIndicator()
               : RaisedButton(
-                  key: _emailButtonKey,
+                  key: Keys.emailSubmit,
                   child: const Text('Login email'),
                   onPressed: () {
                     if (state.status.isValidated) {
@@ -190,8 +184,6 @@ class _EmailButton extends StatelessWidget {
     );
   }
 }
-
-final _codeButtonKey = GlobalKey();
 
 class _CodeButton extends StatelessWidget {
   @override
@@ -211,7 +203,7 @@ class _CodeButton extends StatelessWidget {
           return state.status.isSubmissionInProgress
               ? const CircularProgressIndicator()
               : RaisedButton(
-                  key: _codeButtonKey,
+                  key: Keys.codeSubmit,
                   child: const Text('Login code'),
                   onPressed: () {
                     if (state.status.isValidated) {
@@ -225,4 +217,15 @@ class _CodeButton extends StatelessWidget {
       },
     );
   }
+}
+
+class Keys {
+  static final email = UniqueKey();
+  static final code = UniqueKey();
+  static final emailSubmit = UniqueKey();
+  static final codeSubmit = UniqueKey();
+//  static final email = Key("loginEmail");
+//  static final code = Key("loginCode");
+//  static final emailSubmit = Key("loginEmailSubmit");
+//  static final codeSubmit = Key("loginCodeSubmit");
 }

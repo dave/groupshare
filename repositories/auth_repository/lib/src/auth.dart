@@ -12,7 +12,7 @@ class Auth {
   final Api _api;
   final Device _device;
   final Box<String> _box;
-  final _apiTokenKey = GlobalKey();
+  final _apiTokenKey = UniqueKey();
 
   Auth(Api api, Box<String> box, Device device)
       : this._api = api,
