@@ -145,6 +145,4 @@ class _SubmitButton extends StatelessWidget {
 class Keys {
   static final foo = UniqueKey();
   static final submit = UniqueKey();
-//  static final foo = Key("emptyFoo");
-//  static final submit = Key("emptySubmit");
 }

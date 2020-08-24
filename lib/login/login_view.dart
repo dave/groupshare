@@ -224,8 +224,4 @@ class Keys {
   static final code = UniqueKey();
   static final emailSubmit = UniqueKey();
   static final codeSubmit = UniqueKey();
-//  static final email = Key("loginEmail");
-//  static final code = Key("loginCode");
-//  static final emailSubmit = Key("loginEmailSubmit");
-//  static final codeSubmit = Key("loginCodeSubmit");
 }
