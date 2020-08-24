@@ -405,9 +405,6 @@ func (b User_AvailableShare_type) Id() delta.String_scalar {
 func (b User_AvailableShare_type) Name() delta.String_scalar {
 	return delta.NewString_scalar(delta.CopyAndAppendField(b.location, "name", 2))
 }
-func (b User_AvailableShare_type) New() delta.Bool_scalar {
-	return delta.NewBool_scalar(delta.CopyAndAppendField(b.location, "new", 3))
-}
 func (b User_AvailableShare_type) Delete() *delta.Op {
 	return delta.Delete(b.location)
 }

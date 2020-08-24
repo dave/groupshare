@@ -47,7 +47,7 @@ class LoginForm extends StatelessWidget {
           },
           done: () {
             Navigator.of(context).pushAndRemoveUntil(
-              ShareListPage.route(),
+              ListPage.route(),
               (route) => false,
             );
           },

@@ -1,5 +1,6 @@
 
 CONFIG=groupshare
+PROJECT=groupshare
 
 deploy:
 	make gcloud
@@ -17,3 +18,7 @@ logs:
 
 store:
 	gcloud beta emulators firestore start --host-port=127.0.0.1:8081
+
+clear: export FIRESTORE_EMULATOR_HOST =
+clear:
+	firebase firestore:delete --all-collections --project ${PROJECT}

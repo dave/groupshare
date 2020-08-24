@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/add/add.dart';
+import 'package:groupshare/share/edit/edit.dart';
 import 'package:groupshare/share/list/list.dart';
 
 class ListPage extends StatelessWidget {
@@ -80,7 +81,12 @@ class ListPageContent extends StatelessWidget {
                 list: (shares) => ListView.builder(
                   itemCount: shares.length,
                   itemBuilder: (context, index) {
-                    return ListTile(title: Text(shares[index].name));
+                    return ListTile(
+                      title: Text(shares[index].name),
+                      onTap: () => Navigator.of(context).push(
+                        EditPage.route(shares[index].id),
+                      ),
+                    );
                   },
                 ),
                 error: (ex) {

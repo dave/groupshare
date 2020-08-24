@@ -13,7 +13,6 @@ class User_AvailableShare extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('User.AvailableShare', package: const $pb.PackageName('data'), createEmptyInstance: create)
     ..aOS(1, 'id')
     ..aOS(2, 'name')
-    ..aOB(3, 'new')
     ..hasRequiredFields = false
   ;
 
@@ -49,15 +48,6 @@ class User_AvailableShare extends $pb.GeneratedMessage {
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
   void clearName() => clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.bool get new_3 => $_getBF(2);
-  @$pb.TagNumber(3)
-  set new_3($core.bool v) { $_setBool(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasNew_3() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearNew_3() => clearField(3);
 }
 
 class User extends $pb.GeneratedMessage {

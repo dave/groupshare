@@ -14,9 +14,9 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api"
-	"github.com/dave/groupshare/server/api/store"
-	"github.com/dave/groupshare/server/pb/groupshare/data"
-	"github.com/dave/groupshare/server/pb/groupshare/messages"
+	"github.com/dave/groupshare/server/auth"
+	"github.com/dave/groupshare/server/data"
+	"github.com/dave/groupshare/server/messages"
 	"github.com/dave/protod/delta"
 	"github.com/dave/protod/perr"
 	"github.com/dave/protod/pmsg"
@@ -183,22 +183,22 @@ func resetDatabase(t *testing.T) {
 	}
 }
 
-func getToken(ctx context.Context, t *testing.T, c *Client, email string) *messages.Token {
+func getToken(ctx context.Context, t *testing.T, c *Client, email string) *auth.Token {
 	device := "a"
 	authTime := time.Now().Unix()
-	code, err := api.GenerateCode(device, email, authTime)
+	code, err := auth.GenerateCode(device, email, authTime)
 	if err != nil {
 		t.Fatal(err)
 	}
-	authRequest := &messages.Auth_Request{
+	authRequest := &auth.Code_Request{
 		Device: device,
 		Email:  email,
 		Time:   fmt.Sprintf("%d", authTime),
 		Code:   code,
 	}
-	authResponse := &messages.Auth_Response{}
+	authResponse := &auth.Code_Response{}
 	c.MustRequest(ctx, t, nil, authRequest).MustGet(authResponse)
-	return &messages.Token{
+	return &auth.Token{
 		Id:     authResponse.Id,
 		Device: device,
 		Hash:   authResponse.Hash,
@@ -261,7 +261,7 @@ func NewClient(ctx context.Context, t *testing.T, targetType TargetType) *Client
 		config := pserver.Config{
 			Project: TESTING_PROJECT_ID,
 		}
-		c.local = pserver.New(fc, config, store.SHARE_DOCUMENT_TYPE)
+		c.local = pserver.New(fc, config, data.SHARE_DOCUMENT_TYPE)
 	case LocalHttpServer:
 		resetDatabase(t)
 		c.prefix = LOCAL_PREFIX
@@ -271,13 +271,13 @@ func NewClient(ctx context.Context, t *testing.T, targetType TargetType) *Client
 	return c
 }
 
-func (c *Client) MustRequest(ctx context.Context, t *testing.T, token *messages.Token, request proto.Message) *pmsg.Bundle {
+func (c *Client) MustRequest(ctx context.Context, t *testing.T, token *auth.Token, request proto.Message) *pmsg.Bundle {
 	t.Helper()
 	response, err := c.Request(ctx, token, request)
 	if err != nil {
 		t.Fatal(err)
 	}
-	e := &messages.Error{}
+	e := &api.Error{}
 	found, err := response.Get(e)
 	if err != nil {
 		t.Fatal(err)
@@ -288,7 +288,7 @@ func (c *Client) MustRequest(ctx context.Context, t *testing.T, token *messages.
 	return response
 }
 
-func (c *Client) Request(ctx context.Context, token *messages.Token, request proto.Message) (*pmsg.Bundle, error) {
+func (c *Client) Request(ctx context.Context, token *auth.Token, request proto.Message) (*pmsg.Bundle, error) {
 	switch c.target {
 	case LocalInProcess:
 		return c.localRequest(ctx, token, request)
@@ -298,13 +298,13 @@ func (c *Client) Request(ctx context.Context, token *messages.Token, request pro
 	panic("")
 }
 
-func (c *Client) localRequest(ctx context.Context, token *messages.Token, request proto.Message) (response *pmsg.Bundle, err error) {
+func (c *Client) localRequest(ctx context.Context, token *auth.Token, request proto.Message) (response *pmsg.Bundle, err error) {
 	return ProcessMessage(ctx, c.local, token, request)
 }
 
 const REQUEST_RETRIES = 20
 
-func (c *Client) httpRequest(ctx context.Context, token *messages.Token, request proto.Message) (response *pmsg.Bundle, err error) {
+func (c *Client) httpRequest(ctx context.Context, token *auth.Token, request proto.Message) (response *pmsg.Bundle, err error) {
 	for i := 0; i < REQUEST_RETRIES; i++ {
 		if i > 0 {
 			delay := 500 + rand.Intn(500*(1<<i))

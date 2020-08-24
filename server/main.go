@@ -13,11 +13,9 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api"
-	"github.com/dave/groupshare/server/api/auth"
-	"github.com/dave/groupshare/server/api/store"
-	apipb "github.com/dave/groupshare/server/pb/api"
-	authpb "github.com/dave/groupshare/server/pb/auth"
-	"github.com/dave/groupshare/server/pb/messages"
+	"github.com/dave/groupshare/server/auth"
+	"github.com/dave/groupshare/server/data"
+	"github.com/dave/groupshare/server/messages"
 	"github.com/dave/protod/perr"
 	"github.com/dave/protod/pmsg"
 	"github.com/dave/protod/pserver"
@@ -58,7 +56,7 @@ func main() {
 		Location: location,
 		Queue:    queue,
 	}
-	server := pserver.New(fc, config, store.SHARE_DOCUMENT_TYPE, store.USER_DOCUMENT_TYPE)
+	server := pserver.New(fc, config, data.SHARE_DOCUMENT_TYPE, data.USER_DOCUMENT_TYPE)
 	defer func() { _ = server.Close() }()
 
 	http.HandleFunc("/", indexHandler(server))
@@ -126,9 +124,9 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 			return
 		}
 
-		if err != nil && !response.Has(&apipb.Error{}) {
+		if err != nil && !response.Has(&api.Error{}) {
 			// if we got an error, but no error was added to the response, add a generic server error
-			api.Error(response, "Server error")
+			api.Err(response, "Server error")
 		}
 
 		if err != nil {
@@ -148,7 +146,7 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 	}
 }
 
-func TestProcessMessage(ctx context.Context, t *testing.T, server *pserver.Server, token *authpb.Token, message proto.Message) *pmsg.Bundle {
+func TestProcessMessage(ctx context.Context, t *testing.T, server *pserver.Server, token *auth.Token, message proto.Message) *pmsg.Bundle {
 	response, err := ProcessMessage(ctx, server, token, message)
 	if err != nil {
 		t.Fatal(err)
@@ -156,7 +154,7 @@ func TestProcessMessage(ctx context.Context, t *testing.T, server *pserver.Serve
 	return response
 }
 
-func ProcessMessage(ctx context.Context, server *pserver.Server, token *authpb.Token, message proto.Message) (*pmsg.Bundle, error) {
+func ProcessMessage(ctx context.Context, server *pserver.Server, token *auth.Token, message proto.Message) (*pmsg.Bundle, error) {
 	request := pmsg.New()
 	if token != nil {
 		request.MustSet(token)
@@ -205,16 +203,16 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 
 	// handle requests that don't need auth token
 	switch {
-	case request.Has(&authpb.Login_Request{}):
+	case request.Has(&auth.Login_Request{}):
 		return auth.LoginRequest(ctx, request, response)
-	case request.Has(&authpb.Code_Request{}):
+	case request.Has(&auth.Code_Request{}):
 		return auth.CodeRequest(ctx, server, request, response)
 	case request.Has(&pstore.Payload_Refresh_Request{}):
-		return store.RefreshRequest(ctx, server, request, response)
+		return data.RefreshRequest(ctx, server, request, response)
 	}
 
-	var user *api.User
-	token := &authpb.Token{}
+	var user *auth.User
+	token := &auth.Token{}
 	found, err := request.Get(token)
 	if err != nil {
 		api.AuthError(response, "Invalid login token")
@@ -224,15 +222,15 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 		api.AuthError(response, "Login token missing")
 		return errors.New("request missing auth token")
 	}
-	if _, user, err = api.GetUserVerify(ctx, server, nil, token); err != nil {
+	if _, user, err = auth.GetUserVerify(ctx, server, nil, token); err != nil {
 		api.AuthError(response, "Login token error")
 		return perr.Wrap(err, "verifying token")
 	}
 
-	ctx = context.WithValue(ctx, store.UserContextKey, user)
+	ctx = context.WithValue(ctx, data.UserContextKey, user)
 
 	switch {
-	case request.Has(&authpb.Validate_Request{}):
+	case request.Has(&auth.Validate_Request{}):
 		// validate request just sends back no error if user validated OK
 		return nil
 	}
@@ -242,15 +240,15 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 	//case request.Has(&pstore.Payload_Add_Request{}):
 	//	return store.AddRequest(ctx, server, user, request, response)
 	case request.Has(&pstore.Payload_Get_Request{}):
-		return store.GetRequest(ctx, server, user, request, response)
+		return data.GetRequest(ctx, server, user, request, response)
 	case request.Has(&pstore.Payload_Edit_Request{}):
-		return store.EditRequest(ctx, server, user, request, response)
+		return data.EditRequest(ctx, server, user, request, response)
 	}
 
 	// other requests
 	switch {
 	case request.Has(&messages.Share_List_Request{}):
-		return store.ShareListRequest(ctx, server, user, request, response)
+		return data.ShareListRequest(ctx, server, user, request, response)
 	}
 
 	return pserver.PathNotFound

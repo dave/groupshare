@@ -1,7 +1,7 @@
 syntax = "proto3";
 package data;
 
-option go_package = "github.com/dave/groupshare/server/pb/groupshare/data;data";
+option go_package = "github.com/dave/groupshare/server/data;data";
 
 // [proto:data]
 message User {
@@ -9,6 +9,5 @@ message User {
   message AvailableShare {
     string id = 1;
     string name = 2;
-    bool new = 3; // the new item may not be stored yet when the first list response is processed. We set this flag to prevent it being removed, and reset the flag the first time the item is returned by a list request.
   }
 }

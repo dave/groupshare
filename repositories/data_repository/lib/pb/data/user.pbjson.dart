@@ -18,7 +18,6 @@ const User_AvailableShare$json = const {
   '2': const [
     const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
     const {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
-    const {'1': 'new', '3': 3, '4': 1, '5': 8, '10': 'new'},
   ],
 };
 

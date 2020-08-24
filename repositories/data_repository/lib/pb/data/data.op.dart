@@ -336,9 +336,6 @@ class User_AvailableShare_type extends delta.Location {
   delta.String_scalar Name() {
     return delta.String_scalar(delta.copyAndAppendField(location, "name", 2));
   }
-  delta.Bool_scalar New() {
-    return delta.Bool_scalar(delta.copyAndAppendField(location, "new", 3));
-  }
   delta.Op Delete() {
     return delta.delete(location);
   }

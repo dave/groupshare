@@ -54,8 +54,7 @@ class AddCubit extends Cubit<AddState> {
               0,
               User_AvailableShare()
                 ..id = id
-                ..name = stateForm.name.value
-                ..new_3 = true,
+                ..name = stateForm.name.value,
             ),
       );
       emit(AddState.done());
