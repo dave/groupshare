@@ -2,13 +2,13 @@ import 'package:data_repository/data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:groupshare/_empty/empty.dart';
+import 'package:groupshare/_foo/foo.dart';
 import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/handle.dart';
 
-class EmptyPage extends StatelessWidget {
+class FooPage extends StatelessWidget {
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => EmptyPage());
+    return MaterialPageRoute<void>(builder: (_) => FooPage());
   }
 
   @override
@@ -18,20 +18,20 @@ class EmptyPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: BlocProvider(
-          create: (context) => EmptyCubit(
+          create: (context) => FooCubit(
             RepositoryProvider.of<Data>(context),
           ),
-          child: EmptyForm(),
+          child: FooForm(),
         ),
       ),
     );
   }
 }
 
-class EmptyForm extends StatelessWidget {
+class FooForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<EmptyCubit, EmptyState>(
+    return BlocConsumer<FooCubit, FooState>(
       listener: (context, state) {
         state.map(
           initial: (state) => true,
@@ -40,7 +40,7 @@ class EmptyForm extends StatelessWidget {
             handle(context, state.error, [
               Button(
                 "retry",
-                () => context.bloc<EmptyCubit>().retry(state.retryState),
+                () => context.bloc<FooCubit>().retry(state.retryState),
               )
             ]);
           },
@@ -63,7 +63,7 @@ class EmptyForm extends StatelessWidget {
               initial: (state) => [],
               form: (state) {
                 return [
-                  _FooInput(),
+                  _NameInput(),
                   const Padding(padding: EdgeInsets.all(12)),
                   _SubmitButton(),
                 ];
@@ -78,30 +78,30 @@ class EmptyForm extends StatelessWidget {
   }
 }
 
-class _FooInput extends StatelessWidget {
+class _NameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EmptyCubit, EmptyState>(
+    return BlocBuilder<FooCubit, FooState>(
       buildWhen: (previous, current) {
-        if (current is EmptyStateForm) {
-          if (previous is EmptyStateForm) {
-            return previous.foo != current.foo;
+        if (current is FooStateForm) {
+          if (previous is FooStateForm) {
+            return previous.name != current.name;
           }
           return true;
         }
         return false;
       },
       builder: (context, state) {
-        if (state is EmptyStateForm) {
+        if (state is FooStateForm) {
           return TextFormField(
-            key: Keys.foo,
-            initialValue: state.foo.value,
+            key: Keys.name,
+            initialValue: state.name.value,
             onChanged: (value) {
-              context.bloc<EmptyCubit>().fooChanged(value);
+              context.bloc<FooCubit>().nameChanged(value);
             },
             decoration: InputDecoration(
-              labelText: 'foo',
-              errorText: state.foo.invalid ? 'invalid foo' : null,
+              labelText: 'name',
+              errorText: state.name.invalid ? 'invalid name' : null,
             ),
           );
         } else {
@@ -115,10 +115,10 @@ class _FooInput extends StatelessWidget {
 class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EmptyCubit, EmptyState>(
+    return BlocBuilder<FooCubit, FooState>(
       buildWhen: (previous, current) {
-        if (current is EmptyStateForm) {
-          if (previous is EmptyStateForm) {
+        if (current is FooStateForm) {
+          if (previous is FooStateForm) {
             return previous.status != current.status;
           }
           return true;
@@ -126,7 +126,7 @@ class _SubmitButton extends StatelessWidget {
         return false;
       },
       builder: (context, state) {
-        if (state is EmptyStateForm) {
+        if (state is FooStateForm) {
           return state.status.isSubmissionInProgress
               ? const CircularProgressIndicator()
               : RaisedButton(
@@ -134,7 +134,7 @@ class _SubmitButton extends StatelessWidget {
                   child: const Text('Submit'),
                   onPressed: () {
                     if (state.status.isValidated) {
-                      context.bloc<EmptyCubit>().submit();
+                      context.bloc<FooCubit>().submit();
                     }
                   },
                 );
@@ -147,6 +147,6 @@ class _SubmitButton extends StatelessWidget {
 }
 
 class Keys {
-  static final foo = UniqueKey();
+  static final name = UniqueKey();
   static final submit = UniqueKey();
 }
