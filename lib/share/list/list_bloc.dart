@@ -2,6 +2,9 @@ import 'package:api_repository/api_repository.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:groupshare/pb/messages/share.pb.dart';
+import 'package:protod/delta/delta.dart';
+import 'package:protod/delta/delta.pb.dart' as delta;
 
 part 'list_bloc.freezed.dart';
 
@@ -10,11 +13,16 @@ abstract class ListState with _$ListState {
   const factory ListState.offline() = ListStateOffline;
   const factory ListState.loading() = ListStateLoading;
   const factory ListState.list({
-    List<User_AvailableShare> shares,
+    List<AvailableShare> shares,
   }) = ListStateList;
   const factory ListState.error(
     dynamic error,
   ) = ListStateError;
+}
+
+@freezed
+abstract class AvailableShare with _$AvailableShare {
+  const factory AvailableShare(String id, String name) = _AvailableShare;
 }
 
 class ListCubit extends Cubit<ListState> {
@@ -39,7 +47,7 @@ class ListCubit extends Cubit<ListState> {
       return;
     }
 
-    emit(ListState.list(shares: user.value.shares));
+    emit(ListState.list(shares: stateShares(user.value.shares)));
 
     if (!_api.online()) {
       return;
@@ -47,35 +55,33 @@ class ListCubit extends Cubit<ListState> {
 
     await user.send();
 
-    emit(ListState.list(shares: user.value.shares));
+    emit(ListState.list(shares: stateShares(user.value.shares)));
 
-//    response.items.forEach((Share_List_Response_Item item) {
-//      final i = shares.indexWhere((s) => s.id == item.id);
-//      if (i == -1) {
-//        // There is an item in the server response that isn't in the user
-//        // cache. Add to the cache.
-//        data.user.op(Op().User().Shares().Insert(
-//              shares.length,
-//              User_AvailableShare()
-//                ..id = item.id
-//                ..name = item.name,
-//            ));
-//      } else {
-//        // shares found in the list response have their new flag reset
-//        if (shares[i].new_3) {
-//          data.user.op(Op().User().Shares().Index(i).New().Set(false));
-//        }
-//      }
-//    });
-//    for (var i = shares.length - 1; i >= 0; i--) {
-//      // We have to iterate through in reverse when deleting items so as not to
-//      // shift the index when items are deleted
-//      final item = shares[i];
-//      if (!item.new_3 && !response.items.any((s) => s.id == item.id)) {
-//        // There is an item in the user cache that isn't in the server
-//        // response. Delete from the cache, but only if new flag is not set.
-//        data.user.op(Op().User().Shares().Index(i).Delete());
-//      }
-//    }
+    final response = await _api.send(
+      Share_List_Response(),
+      Share_List_Request(),
+    );
+
+    var ops = <delta.Op>[];
+    response.items.forEach((Share_List_Response_Item item) {
+      final userDataIndex = user.value.shares.indexWhere(
+        (s) => s.id == item.id,
+      );
+      if (userDataIndex > -1) {
+        if (user.value.shares[userDataIndex].name != item.name) {
+          ops.add(
+            Op().User().Shares().Index(userDataIndex).Name().Set(item.name),
+          );
+        }
+      }
+    });
+    if (ops.length > 0) {
+      _data.user.op(compound(ops));
+      emit(ListState.list(shares: stateShares(user.value.shares)));
+    }
+  }
+
+  List<AvailableShare> stateShares(List<User_AvailableShare> shares) {
+    return shares.map((e) => AvailableShare(e.id, e.name)).toList();
   }
 }

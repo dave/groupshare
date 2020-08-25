@@ -96,11 +96,28 @@ class EditCubit extends Cubit<EditState> {
   Future<void> submit() async {
     final stateForm = state as EditStateForm;
     try {
+      if (stateForm.initialName == stateForm.name.value) {
+        return;
+      }
       emit(stateForm.copyWith(status: FormzStatus.submissionInProgress));
 
       _share.op(
         Op().Share().Name().Edit(stateForm.initialName, stateForm.name.value),
       );
+
+      final userDataIndex = _data.user.value.shares.indexWhere(
+        (s) => s.id == stateForm.id,
+      );
+      if (userDataIndex > -1) {
+        _data.user.op(
+          Op()
+              .User()
+              .Shares()
+              .Index(userDataIndex)
+              .Name()
+              .Set(stateForm.name.value),
+        );
+      }
 
       emit(EditState.done(state.id));
     } catch (ex) {
