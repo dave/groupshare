@@ -59,7 +59,7 @@ class ListPageContent extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             child: RefreshIndicator(
               onRefresh: () async {
-                context.bloc<ListCubit>().initialise();
+                await context.bloc<ListCubit>().initialise();
               },
               child: state.map(
                 offline: (state) => Column(

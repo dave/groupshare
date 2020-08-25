@@ -97,6 +97,7 @@ class EditCubit extends Cubit<EditState> {
     final stateForm = state as EditStateForm;
     try {
       if (stateForm.initialName == stateForm.name.value) {
+        emit(EditState.done(state.id));
         return;
       }
       emit(stateForm.copyWith(status: FormzStatus.submissionInProgress));
