@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/appbar/appbar_bloc.dart';
 import 'package:groupshare/auth/auth.dart';
 import 'package:groupshare/login/login.dart';
+import 'package:groupshare/ui/spinner.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String _title;
@@ -35,12 +36,12 @@ class AppBarWidgetContent extends StatelessWidget {
         BlocBuilder<AppBarCubit, AppBarState>(
           builder: (context, state) {
             return PopupMenuButton(
-              icon: Icon(state.when(
-                saved: () => Icons.cloud_queue, // cloud_done
-                connecting: () => Icons.sync, // history
-                waiting: () => Icons.sync_problem, // Icons.cached
-                offline: () => Icons.cloud_off,
-              )),
+              icon: state.when(
+                saved: () => Icon(Icons.cloud_queue), // cloud_done
+                connecting: () => Spinner(icon: Icons.sync), // history
+                waiting: () => Icon(Icons.sync_problem), // Icons.cached
+                offline: () => Icon(Icons.cloud_off),
+              ),
               itemBuilder: (context) => [
                 PopupMenuItem(
                   child: ListTile(

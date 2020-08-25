@@ -10,14 +10,23 @@ part 'list_bloc.freezed.dart';
 
 @freezed
 abstract class ListState with _$ListState {
-  const factory ListState.offline() = ListStateOffline;
-  const factory ListState.loading() = ListStateLoading;
-  const factory ListState.list({
-    List<AvailableShare> shares,
-  }) = ListStateList;
-  const factory ListState.error(
-    dynamic error,
-  ) = ListStateError;
+  const factory ListState(PageState page, [SharesState shares]) = _ListState;
+}
+
+@freezed
+abstract class PageState with _$PageState {
+  const factory PageState.offline() = PageStateOffline;
+  const factory PageState.loading() = PageStateLoading;
+  const factory PageState.list() = PageStateList;
+  const factory PageState.error(dynamic error) = PageStateError;
+}
+
+@freezed
+abstract class SharesState with _$SharesState {
+  const factory SharesState({
+    @required List<AvailableShare> items,
+    @Default({}) Map<String, bool> refreshing,
+  }) = _SharesState;
 }
 
 @freezed
@@ -32,7 +41,41 @@ class ListCubit extends Cubit<ListState> {
   ListCubit(Data data, Api api)
       : _data = data,
         _api = api,
-        super(ListState.loading());
+        super(ListState(PageState.loading(), SharesState(items: [])));
+
+  Future<void> refresh(String id) async {
+    emit(
+      state.copyWith(
+        page: PageState.list(),
+        shares: state.shares.copyWith(
+          refreshing: {}..addAll(state.shares.refreshing)..addAll({id: true}),
+        ),
+      ),
+    );
+
+    await _data.initUser();
+
+    final user = _data.user;
+
+    final response = _data.shares.get(id);
+    if (response.future != null) {
+      // item has an uncommitted change... once that is complete, item will be refreshed.
+      await response.future;
+    } else {
+      // item didn't have any uncommitted changes, so we trigger a refresh:
+      await response.item.send();
+    }
+
+    emit(
+      state.copyWith(
+        page: PageState.list(),
+        shares: state.shares.copyWith(
+          items: stateItems(user.value.shares),
+          refreshing: {}..addAll(state.shares.refreshing)..addAll({id: false}),
+        ),
+      ),
+    );
+  }
 
   Future<void> initialise() async {
     // TODO: remove when https://github.com/felangel/bloc/issues/1641 is resolved.
@@ -43,11 +86,16 @@ class ListCubit extends Cubit<ListState> {
     final user = _data.user;
 
     if (user == null) {
-      emit(ListState.offline());
+      emit(state.copyWith(page: PageState.offline()));
       return;
     }
 
-    emit(ListState.list(shares: stateShares(user.value.shares)));
+    emit(
+      state.copyWith(
+        page: PageState.list(),
+        shares: state.shares.copyWith(items: stateItems(user.value.shares)),
+      ),
+    );
 
     if (!_api.online()) {
       return;
@@ -55,7 +103,12 @@ class ListCubit extends Cubit<ListState> {
 
     await user.send();
 
-    emit(ListState.list(shares: stateShares(user.value.shares)));
+    emit(
+      state.copyWith(
+        page: PageState.list(),
+        shares: state.shares.copyWith(items: stateItems(user.value.shares)),
+      ),
+    );
 
     final response = await _api.send(
       Share_List_Response(),
@@ -77,11 +130,16 @@ class ListCubit extends Cubit<ListState> {
     });
     if (ops.length > 0) {
       _data.user.op(compound(ops));
-      emit(ListState.list(shares: stateShares(user.value.shares)));
+      emit(
+        state.copyWith(
+          page: PageState.list(),
+          shares: state.shares.copyWith(items: stateItems(user.value.shares)),
+        ),
+      );
     }
   }
 
-  List<AvailableShare> stateShares(List<User_AvailableShare> shares) {
+  List<AvailableShare> stateItems(List<User_AvailableShare> shares) {
     return shares.map((e) => AvailableShare(e.id, e.name)).toList();
   }
 }

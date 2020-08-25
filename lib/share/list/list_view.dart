@@ -8,6 +8,7 @@ import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/add/add.dart';
 import 'package:groupshare/share/edit/edit.dart';
 import 'package:groupshare/share/list/list.dart';
+import 'package:groupshare/ui/spinner.dart';
 
 class ListPage extends StatelessWidget {
   static Route route() {
@@ -33,18 +34,18 @@ class ListPageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<ListCubit, ListState>(
       listener: (context, state) {
-        if (state is ListStateError) {
-          handle(
-            context,
-            state.error,
-            [
-              Button(
-                "Retry",
-                () => context.bloc<ListCubit>().initialise(),
-              ),
-            ],
-          );
-        }
+        state.page.map(
+          offline: (state) => true,
+          loading: (state) => true,
+          list: (state) => true,
+          error: (state) {
+            handle(
+              context,
+              state.error,
+              [Button("Retry", () => context.bloc<ListCubit>().initialise())],
+            );
+          },
+        );
       },
       builder: (context, state) {
         return Scaffold(
@@ -61,8 +62,8 @@ class ListPageContent extends StatelessWidget {
               onRefresh: () async {
                 await context.bloc<ListCubit>().initialise();
               },
-              child: state.map(
-                offline: (state) => Column(
+              child: state.page.when(
+                offline: () => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -73,27 +74,42 @@ class ListPageContent extends StatelessWidget {
                     )
                   ],
                 ),
-                loading: (state) => Column(
+                loading: () => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [Center(child: CircularProgressIndicator())],
                 ),
-                list: (state) => ListView.builder(
-                  itemCount: state.shares.length,
+                list: () => ListView.builder(
+                  itemCount: state.shares.items.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(state.shares[index].name),
+                      title: Text(state.shares.items[index].name),
+                      trailing: state.shares
+                                  .refreshing[state.shares.items[index].id] ==
+                              true
+                          ? IconButton(
+                              icon: Spinner(icon: Icons.sync),
+                              onPressed: () {},
+                            )
+                          : IconButton(
+                              icon: Icon(Icons.sync),
+                              onPressed: () {
+                                context.bloc<ListCubit>().refresh(
+                                      state.shares.items[index].id,
+                                    );
+                              },
+                            ),
                       onTap: () => Navigator.of(context).push(
-                        EditPage.route(state.shares[index].id),
+                        EditPage.route(state.shares.items[index].id),
                       ),
                     );
                   },
                 ),
-                error: (state) {
-                  if (state.error is UserException) {
-                    return Text("error, ${state.error.message}");
+                error: (error) {
+                  if (error is UserException) {
+                    return Text("error, ${error.message}");
                   } else {
-                    return Text("error, ${state.error}");
+                    return Text("error, $error");
                   }
                 },
               ),

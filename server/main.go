@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"testing"
@@ -171,7 +172,11 @@ const DEBUG = true
 
 func ProcessBundle(ctx context.Context, server *pserver.Server, request, response *pmsg.Bundle) (err error) {
 
-	time.Sleep(time.Second)
+	time.Sleep(time.Millisecond * 500)
+	if rand.Float64() > 0.5 {
+		return pserver.ServerBusy
+	}
+	time.Sleep(time.Millisecond * 500)
 
 	if appengine.IsAppEngine() {
 		// when running in app engine, catch panics and convert to errors
