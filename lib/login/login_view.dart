@@ -36,22 +36,23 @@ class LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) {
-        state.maybeWhen(
-          error: (ex, retryState) {
-            handle(context, ex, [
+        state.map(
+          email: (state) => true,
+          code: (state) => true,
+          error: (state) {
+            handle(context, state.error, [
               Button(
                 "Retry",
-                () => context.bloc<LoginCubit>().retry(retryState),
+                () => context.bloc<LoginCubit>().retry(state.retry),
               ),
             ]);
           },
-          done: () {
+          done: (state) {
             Navigator.of(context).pushAndRemoveUntil(
               ListPage.route(),
               (route) => false,
             );
           },
-          orElse: () {},
         );
       },
       builder: (context, state) {
@@ -59,22 +60,23 @@ class LoginForm extends StatelessWidget {
           alignment: const Alignment(0, -1 / 3),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: state.maybeWhen(
-              email: (status, email) {
+            children: state.map(
+              email: (state) {
                 return [
                   _EmailInput(),
                   const Padding(padding: EdgeInsets.all(12)),
                   _EmailButton(),
                 ];
               },
-              code: (status, email) {
+              code: (state) {
                 return [
                   _CodeInput(),
                   const Padding(padding: EdgeInsets.all(12)),
                   _CodeButton(),
                 ];
               },
-              orElse: () => [],
+              error: (state) => [],
+              done: (state) => [],
             ),
           ),
         );

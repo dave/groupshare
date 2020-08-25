@@ -42,12 +42,16 @@ class EditForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<EditCubit, EditState>(
       listener: (context, state) {
-        state.maybeWhen(
-          error: (id, ex, retryState) {
-            handle(context, ex, [
+        state.map(
+          initial: (state) => true,
+          offline: (state) => true,
+          loading: (state) => true,
+          form: (state) => true,
+          error: (state) {
+            handle(context, state.error, [
               Button(
                 "Retry",
-                () => context.bloc<EditCubit>().retry(retryState),
+                () => context.bloc<EditCubit>().retry(state.retryState),
               )
             ]);
           },
@@ -57,7 +61,6 @@ class EditForm extends StatelessWidget {
               (route) => false,
             );
           },
-          orElse: () => true,
         );
       },
       builder: (context, state) {

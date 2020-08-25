@@ -61,8 +61,8 @@ class ListPageContent extends StatelessWidget {
               onRefresh: () async {
                 context.bloc<ListCubit>().initialise();
               },
-              child: state.when(
-                offline: () => Column(
+              child: state.map(
+                offline: (state) => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -73,27 +73,27 @@ class ListPageContent extends StatelessWidget {
                     )
                   ],
                 ),
-                loading: () => Column(
+                loading: (state) => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [Center(child: CircularProgressIndicator())],
                 ),
-                list: (shares) => ListView.builder(
-                  itemCount: shares.length,
+                list: (state) => ListView.builder(
+                  itemCount: state.shares.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(shares[index].name),
+                      title: Text(state.shares[index].name),
                       onTap: () => Navigator.of(context).push(
-                        EditPage.route(shares[index].id),
+                        EditPage.route(state.shares[index].id),
                       ),
                     );
                   },
                 ),
-                error: (ex) {
-                  if (ex is UserException) {
-                    return Text("error, ${ex.message}");
+                error: (state) {
+                  if (state.error is UserException) {
+                    return Text("error, ${state.error.message}");
                   } else {
-                    return Text("error, $ex");
+                    return Text("error, ${state.error}");
                   }
                 },
               ),

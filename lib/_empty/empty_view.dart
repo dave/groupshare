@@ -33,23 +33,25 @@ class EmptyForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<EmptyCubit, EmptyState>(
       listener: (context, state) {
-        state.maybeWhen(
-          error: (ex, retryState) {
-            handle(context, ex, [
+        state.map(
+          initial: (state) => true,
+          form: (state) => true,
+          error: (state) {
+            handle(context, state.error, [
               Button(
                 "retry",
-                () => context.bloc<EmptyCubit>().retry(retryState),
+                () => context.bloc<EmptyCubit>().retry(state.retryState),
               )
             ]);
           },
-          done: () {
-            // ...
-            //Navigator.of(context).pushAndRemoveUntil(
-            //  ???.route(),
-            //  (route) => false,
-            //);
-          },
-          orElse: () => true,
+          done: (state) => true,
+          //{
+          // ...
+          //Navigator.of(context).pushAndRemoveUntil(
+          //  ???.route(),
+          //  (route) => false,
+          //);
+          //},
         );
       },
       builder: (context, state) {
@@ -57,15 +59,17 @@ class EmptyForm extends StatelessWidget {
           alignment: const Alignment(0, -1 / 3),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: state.maybeWhen(
-              form: (status, name) {
+            children: state.map(
+              initial: (state) => [],
+              form: (state) {
                 return [
                   _FooInput(),
                   const Padding(padding: EdgeInsets.all(12)),
                   _SubmitButton(),
                 ];
               },
-              orElse: () => [],
+              error: (state) => [],
+              done: (state) => [],
             ),
           ),
         );

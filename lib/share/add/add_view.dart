@@ -34,22 +34,22 @@ class AddForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<AddCubit, AddState>(
       listener: (context, state) {
-        state.maybeWhen(
-          error: (ex, retryState) {
-            handle(context, ex, [
+        state.map(
+          form: (state) => true,
+          error: (state) {
+            handle(context, state.error, [
               Button(
                 "Retry",
-                () => context.bloc<AddCubit>().retry(retryState),
+                () => context.bloc<AddCubit>().retry(state.retryState),
               )
             ]);
           },
-          done: () {
+          done: (state) {
             Navigator.of(context).pushAndRemoveUntil(
               ListPage.route(),
               (route) => false,
             );
           },
-          orElse: () => true,
         );
       },
       builder: (context, state) {
@@ -57,15 +57,16 @@ class AddForm extends StatelessWidget {
           alignment: const Alignment(0, -1 / 3),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: state.maybeWhen(
-              form: (status, name) {
+            children: state.map(
+              form: (state) {
                 return [
                   _NameInput(),
                   const Padding(padding: EdgeInsets.all(12)),
                   _AddButton(),
                 ];
               },
-              orElse: () => [],
+              error: (state) => [],
+              done: (state) => [],
             ),
           ),
         );
