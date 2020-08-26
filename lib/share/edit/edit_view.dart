@@ -5,7 +5,9 @@ import 'package:formz/formz.dart';
 import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/edit/edit.dart';
-import 'package:groupshare/share/list/list.dart';
+import 'package:groupshare/share/view/view.dart';
+
+//import 'package:formz/formz.dart';
 
 class EditPage extends StatelessWidget {
   static Route route(String id) {
@@ -56,9 +58,8 @@ class EditForm extends StatelessWidget {
             ]);
           },
           done: (id) {
-            Navigator.of(context).pushAndRemoveUntil(
-              ListPage.route(),
-              (route) => false,
+            Navigator.of(context).popUntil(
+              ModalRoute.withName(ViewPage.routeName),
             );
           },
         );
@@ -115,6 +116,7 @@ class _NameInput extends StatelessWidget {
       builder: (context, state) {
         if (state is EditStateForm) {
           return TextFormField(
+            autofocus: true,
             key: Keys.name,
             initialValue: state.name.value,
             onChanged: (value) {

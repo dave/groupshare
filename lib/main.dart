@@ -17,7 +17,7 @@ import 'package:protod/delta/delta.dart';
 import 'package:protod/pserver/pserver.dart';
 import 'package:protod/pstore/pstore.dart';
 
-const IS_LIVE = false;
+const IS_LIVE = true;
 
 void main() async {
   FlutterError.onError = (FlutterErrorDetails details) {

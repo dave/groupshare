@@ -46,6 +46,7 @@ dependencies:
   flutter_bloc: ^6.0.1
   freezed_annotation:
   formz:
+  refreshable_reorderable_list: ^0.0.1
   api_repository:
     path: repositories/api_repository
   auth_repository:

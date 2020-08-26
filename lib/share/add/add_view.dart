@@ -93,6 +93,7 @@ class _NameInput extends StatelessWidget {
           return state.status.isSubmissionInProgress
               ? CircularProgressIndicator()
               : TextFormField(
+                  autofocus: true,
                   key: Keys.name,
                   initialValue: state.name.value,
                   onChanged: (email) {

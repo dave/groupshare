@@ -77,6 +77,22 @@ class ListCubit extends Cubit<ListState> {
     );
   }
 
+  Future<void> reorder(oldIndex, newIndex) async {
+    await _data.initUser();
+
+    final user = _data.user;
+
+    user.op(
+      Op().User().Shares().Move(oldIndex, newIndex),
+    );
+
+    emit(
+      state.copyWith(
+        shares: state.shares.copyWith(items: stateItems(user.value.shares)),
+      ),
+    );
+  }
+
   Future<void> initialise() async {
     // TODO: remove when https://github.com/felangel/bloc/issues/1641 is resolved.
     await Future.delayed(Duration(milliseconds: 1));

@@ -94,6 +94,7 @@ class _NameInput extends StatelessWidget {
       builder: (context, state) {
         if (state is FooStateForm) {
           return TextFormField(
+            autofocus: true,
             key: Keys.name,
             initialValue: state.name.value,
             onChanged: (value) {

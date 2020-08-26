@@ -48,6 +48,7 @@ class EditCubit extends Cubit<EditState> {
     final resp = _data.shares.get(state.id);
 
     if (resp.future != null) {
+      // TODO: is this a loop?
       resp.future.then((value) => init());
     }
 

@@ -6,9 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/add/add.dart';
-import 'package:groupshare/share/edit/edit.dart';
 import 'package:groupshare/share/list/list.dart';
+import 'package:groupshare/share/view/view.dart';
+import 'package:groupshare/ui/refresher.dart';
 import 'package:groupshare/ui/spinner.dart';
+import 'package:refreshable_reorderable_list/refreshable_reorderable_list.dart';
 
 class ListPage extends StatelessWidget {
   static Route route() {
@@ -52,67 +54,78 @@ class ListPageContent extends StatelessWidget {
           appBar: AppBarWidget('Shares'),
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
-            onPressed: () {
-              Navigator.of(context).pushReplacement(AddPage.route());
+            onPressed: () async {
+              await Navigator.of(context).push(AddPage.route());
+              context.bloc<ListCubit>().initialise();
             },
           ),
           body: Padding(
             padding: const EdgeInsets.all(12),
-            child: RefreshIndicator(
-              onRefresh: () async {
-                await context.bloc<ListCubit>().initialise();
-              },
-              child: state.page.when(
-                offline: () => Column(
+            child: state.page.when(
+              offline: () => Refresher(
+                onRefresh: () async {
+                  await context.bloc<ListCubit>().initialise();
+                },
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Center(
                       child: Text(
-                        "We can't display this page because you don't have an internet connection.",
+                        "Offline.",
                       ),
                     )
                   ],
                 ),
-                loading: () => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [Center(child: CircularProgressIndicator())],
-                ),
-                list: () => ListView.builder(
-                  itemCount: state.shares.items.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(state.shares.items[index].name),
-                      trailing: state.shares
-                                  .refreshing[state.shares.items[index].id] ==
-                              true
-                          ? IconButton(
-                              icon: Spinner(icon: Icons.sync),
-                              onPressed: () {},
-                            )
-                          : IconButton(
-                              icon: Icon(Icons.sync),
-                              onPressed: () {
-                                context.bloc<ListCubit>().refresh(
-                                      state.shares.items[index].id,
-                                    );
-                              },
-                            ),
-                      onTap: () => Navigator.of(context).push(
-                        EditPage.route(state.shares.items[index].id),
-                      ),
-                    );
-                  },
-                ),
-                error: (error) {
-                  if (error is UserException) {
-                    return Text("error, ${error.message}");
-                  } else {
-                    return Text("error, $error");
-                  }
-                },
               ),
+              loading: () => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [Center(child: CircularProgressIndicator())],
+              ),
+              list: () => RefreshIndicator(
+                onRefresh: () async {
+                  await context.bloc<ListCubit>().initialise();
+                },
+                child: RefreshableReorderableListView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  onReorder: (oldIndex, newIndex) {
+                    context.bloc<ListCubit>().reorder(oldIndex, newIndex);
+                  },
+                  children: state.shares.items
+                      .map(
+                        (item) => ListTile(
+                          key: ValueKey(item.id),
+                          title: Text(item.name),
+                          trailing: state.shares.refreshing[item.id] == true
+                              ? IconButton(
+                                  icon: Spinner(icon: Icons.sync),
+                                  onPressed: () {},
+                                )
+                              : IconButton(
+                                  icon: Icon(Icons.sync),
+                                  onPressed: () {
+                                    context.bloc<ListCubit>().refresh(item.id);
+                                  },
+                                ),
+                          onTap: () async {
+                            await Navigator.of(context).push(
+                              ViewPage.route(item.id),
+                            );
+                            context.bloc<ListCubit>().initialise();
+                          },
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+              error: (error) {
+                if (error is UserException) {
+                  return Text("error, ${error.message}");
+                } else {
+                  return Text("error, $error");
+                }
+              },
             ),
           ),
         );

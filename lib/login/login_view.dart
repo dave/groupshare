@@ -101,6 +101,7 @@ class _EmailInput extends StatelessWidget {
       builder: (context, state) {
         if (state is LoginStateEmail) {
           return TextFormField(
+            autofocus: true,
             key: Keys.email,
             initialValue: state.email.value,
             onChanged: (email) {
@@ -135,6 +136,7 @@ class _CodeInput extends StatelessWidget {
       builder: (context, state) {
         if (state is LoginStateCode) {
           return TextFormField(
+            autofocus: true,
             key: Keys.code,
             initialValue: state.code.value,
             onChanged: (code) {
