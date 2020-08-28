@@ -61,7 +61,10 @@ class ViewForm extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.edit),
             onPressed: () async {
-              await Navigator.of(context).push(EditPage.route(state.id));
+              await Navigator.of(context).push(EditPage.route(
+                state.id,
+                ViewPage.routeName,
+              ));
               context.bloc<ViewCubit>().initialise();
             },
           ),

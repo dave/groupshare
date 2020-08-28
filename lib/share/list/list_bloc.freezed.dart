@@ -13,10 +13,11 @@ class _$ListStateTearOff {
   const _$ListStateTearOff();
 
 // ignore: unused_element
-  _ListState call(PageState page, [SharesState shares]) {
+  _ListState call(PageState page, SharesState shares, bool connected) {
     return _ListState(
       page,
       shares,
+      connected,
     );
   }
 }
@@ -27,6 +28,7 @@ const $ListState = _$ListStateTearOff();
 mixin _$ListState {
   PageState get page;
   SharesState get shares;
+  bool get connected;
 
   $ListStateCopyWith<ListState> get copyWith;
 }
@@ -34,7 +36,7 @@ mixin _$ListState {
 abstract class $ListStateCopyWith<$Res> {
   factory $ListStateCopyWith(ListState value, $Res Function(ListState) then) =
       _$ListStateCopyWithImpl<$Res>;
-  $Res call({PageState page, SharesState shares});
+  $Res call({PageState page, SharesState shares, bool connected});
 
   $PageStateCopyWith<$Res> get page;
   $SharesStateCopyWith<$Res> get shares;
@@ -51,10 +53,12 @@ class _$ListStateCopyWithImpl<$Res> implements $ListStateCopyWith<$Res> {
   $Res call({
     Object page = freezed,
     Object shares = freezed,
+    Object connected = freezed,
   }) {
     return _then(_value.copyWith(
       page: page == freezed ? _value.page : page as PageState,
       shares: shares == freezed ? _value.shares : shares as SharesState,
+      connected: connected == freezed ? _value.connected : connected as bool,
     ));
   }
 
@@ -84,7 +88,7 @@ abstract class _$ListStateCopyWith<$Res> implements $ListStateCopyWith<$Res> {
           _ListState value, $Res Function(_ListState) then) =
       __$ListStateCopyWithImpl<$Res>;
   @override
-  $Res call({PageState page, SharesState shares});
+  $Res call({PageState page, SharesState shares, bool connected});
 
   @override
   $PageStateCopyWith<$Res> get page;
@@ -104,25 +108,32 @@ class __$ListStateCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
   $Res call({
     Object page = freezed,
     Object shares = freezed,
+    Object connected = freezed,
   }) {
     return _then(_ListState(
       page == freezed ? _value.page : page as PageState,
       shares == freezed ? _value.shares : shares as SharesState,
+      connected == freezed ? _value.connected : connected as bool,
     ));
   }
 }
 
 class _$_ListState implements _ListState {
-  const _$_ListState(this.page, [this.shares]) : assert(page != null);
+  const _$_ListState(this.page, this.shares, this.connected)
+      : assert(page != null),
+        assert(shares != null),
+        assert(connected != null);
 
   @override
   final PageState page;
   @override
   final SharesState shares;
+  @override
+  final bool connected;
 
   @override
   String toString() {
-    return 'ListState(page: $page, shares: $shares)';
+    return 'ListState(page: $page, shares: $shares, connected: $connected)';
   }
 
   @override
@@ -132,14 +143,18 @@ class _$_ListState implements _ListState {
             (identical(other.page, page) ||
                 const DeepCollectionEquality().equals(other.page, page)) &&
             (identical(other.shares, shares) ||
-                const DeepCollectionEquality().equals(other.shares, shares)));
+                const DeepCollectionEquality().equals(other.shares, shares)) &&
+            (identical(other.connected, connected) ||
+                const DeepCollectionEquality()
+                    .equals(other.connected, connected)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(page) ^
-      const DeepCollectionEquality().hash(shares);
+      const DeepCollectionEquality().hash(shares) ^
+      const DeepCollectionEquality().hash(connected);
 
   @override
   _$ListStateCopyWith<_ListState> get copyWith =>
@@ -147,12 +162,15 @@ class _$_ListState implements _ListState {
 }
 
 abstract class _ListState implements ListState {
-  const factory _ListState(PageState page, [SharesState shares]) = _$_ListState;
+  const factory _ListState(PageState page, SharesState shares, bool connected) =
+      _$_ListState;
 
   @override
   PageState get page;
   @override
   SharesState get shares;
+  @override
+  bool get connected;
   @override
   _$ListStateCopyWith<_ListState> get copyWith;
 }

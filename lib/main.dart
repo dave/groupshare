@@ -121,6 +121,7 @@ class App extends StatelessWidget {
         RepositoryProvider<Api>.value(value: api),
         RepositoryProvider<Auth>.value(value: auth),
         RepositoryProvider<Data>.value(value: data),
+        RepositoryProvider<Connection>.value(value: connection),
       ],
       child: BlocProvider(
         create: (_) => AuthCubit(auth),

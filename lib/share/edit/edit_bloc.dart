@@ -11,38 +11,36 @@ part 'edit_bloc.freezed.dart';
 
 @freezed
 abstract class EditState with _$EditState {
-  const factory EditState.initial(
+  const factory EditState(
     String id,
-  ) = EditStateInitial;
+    String popRoute,
+    PageState page,
+  ) = _EditState;
+}
 
-  const factory EditState.offline(
-    String id,
-  ) = EditStateOffline;
-
-  const factory EditState.loading(
-    String id,
-  ) = EditStateLoading;
-
-  const factory EditState.form({
-    @required String id,
+@freezed
+abstract class PageState with _$PageState {
+  const factory PageState.initial() = PageStateInitial;
+  const factory PageState.offline() = PageStateOffline;
+  const factory PageState.loading() = PageStateLoading;
+  const factory PageState.form({
     @Default(FormzStatus.pure) FormzStatus status,
     @Default("") String initialName,
     @Default(const Name.pure()) Name name,
-  }) = EditStateForm;
-
-  const factory EditState.error(
-    String id,
+  }) = PageStateForm;
+  const factory PageState.error(
     dynamic error,
-    EditState retryState,
-  ) = EditStateError;
-
-  const factory EditState.done(
-    String id,
-  ) = EditStateDone;
+    PageState retryState,
+  ) = PageStateError;
+  const factory PageState.done() = PageStateDone;
 }
 
 class EditCubit extends Cubit<EditState> {
   final Data _data;
+
+  EditCubit(String id, String pop, Data data)
+      : _data = data,
+        super(EditState(id, pop, PageState.initial()));
 
   Item<Share> get _share {
     final resp = _data.shares.get(state.id);
@@ -59,16 +57,12 @@ class EditCubit extends Cubit<EditState> {
     // item is null
     if (resp.future == null) {
       // TODO: automatically trigger init() when we come back online?
-      emit(EditState.offline(state.id));
+      emit(state.copyWith(page: PageState.offline()));
     } else {
-      emit(EditState.loading(state.id));
+      emit(state.copyWith(page: PageState.loading()));
     }
     return null;
   }
-
-  EditCubit(String id, Data data)
-      : _data = data,
-        super(EditState.initial(id));
 
   void init() {
     final share = _share;
@@ -77,38 +71,51 @@ class EditCubit extends Cubit<EditState> {
       return;
     }
     final nameValue = Name.dirty(share.value.name);
-    emit(EditState.form(
-      id: state.id,
-      initialName: share.value.name,
-      name: nameValue,
-      status: Formz.validate([nameValue]),
-    ));
+    emit(
+      state.copyWith(
+        page: PageState.form(
+          initialName: share.value.name,
+          name: nameValue,
+          status: Formz.validate([nameValue]),
+        ),
+      ),
+    );
   }
 
   void nameChanged(String name) {
-    final stateForm = state as EditStateForm;
+    final pageForm = state.page as PageStateForm;
     final nameValue = Name.dirty(name);
-    emit(stateForm.copyWith(
-      name: nameValue,
-      status: Formz.validate([nameValue]),
-    ));
+    emit(
+      state.copyWith(
+        page: pageForm.copyWith(
+          name: nameValue,
+          status: Formz.validate([nameValue]),
+        ),
+      ),
+    );
   }
 
   Future<void> submit() async {
-    final stateForm = state as EditStateForm;
+    final pageForm = state.page as PageStateForm;
     try {
-      if (stateForm.initialName == stateForm.name.value) {
-        emit(EditState.done(state.id));
+      if (pageForm.initialName == pageForm.name.value) {
+        emit(state.copyWith(page: PageState.done()));
         return;
       }
-      emit(stateForm.copyWith(status: FormzStatus.submissionInProgress));
+      emit(
+        state.copyWith(
+          page: pageForm.copyWith(
+            status: FormzStatus.submissionInProgress,
+          ),
+        ),
+      );
 
       _share.op(
-        Op().Share().Name().Edit(stateForm.initialName, stateForm.name.value),
+        Op().Share().Name().Edit(pageForm.initialName, pageForm.name.value),
       );
 
       final userDataIndex = _data.user.value.shares.indexWhere(
-        (s) => s.id == stateForm.id,
+        (s) => s.id == state.id,
       );
       if (userDataIndex > -1) {
         _data.user.op(
@@ -117,17 +124,25 @@ class EditCubit extends Cubit<EditState> {
               .Shares()
               .Index(userDataIndex)
               .Name()
-              .Set(stateForm.name.value),
+              .Set(pageForm.name.value),
         );
       }
 
-      emit(EditState.done(state.id));
+      emit(
+        state.copyWith(
+          page: PageState.done(),
+        ),
+      );
     } catch (ex) {
-      emit(EditState.error(state.id, ex, stateForm));
+      emit(
+        state.copyWith(
+          page: PageState.error(ex, pageForm),
+        ),
+      );
     }
   }
 
-  void retry(EditState retryState) {
-    emit(retryState);
+  void retry(PageState retryState) {
+    emit(state.copyWith(page: retryState));
   }
 }

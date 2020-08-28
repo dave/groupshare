@@ -5,20 +5,27 @@ import 'package:formz/formz.dart';
 import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/edit/edit.dart';
-import 'package:groupshare/share/view/view.dart';
 
 //import 'package:formz/formz.dart';
 
 class EditPage extends StatelessWidget {
-  static Route route(String id) {
-    return MaterialPageRoute<void>(builder: (_) => EditPage(id: id));
+  static Route route(String id, String popRoute) {
+    return MaterialPageRoute<void>(
+      builder: (_) => EditPage(
+        id: id,
+        popRoute: popRoute,
+      ),
+    );
   }
 
   final String _id;
+  final String _popRoute;
   EditPage({
     Key key,
     @required String id,
+    @required String popRoute,
   })  : _id = id,
+        _popRoute = popRoute,
         super(key: key);
 
   @override
@@ -30,6 +37,7 @@ class EditPage extends StatelessWidget {
         child: BlocProvider(
           create: (context) => EditCubit(
             _id,
+            _popRoute,
             RepositoryProvider.of<Data>(context),
           )..init(),
           child: EditForm(),
@@ -44,22 +52,22 @@ class EditForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<EditCubit, EditState>(
       listener: (context, state) {
-        state.map(
-          initial: (state) => true,
-          offline: (state) => true,
-          loading: (state) => true,
-          form: (state) => true,
-          error: (state) {
-            handle(context, state.error, [
+        state.page.map(
+          initial: (page) => true,
+          offline: (page) => true,
+          loading: (page) => true,
+          form: (page) => true,
+          error: (page) {
+            handle(context, page.error, [
               Button(
                 "Retry",
-                () => context.bloc<EditCubit>().retry(state.retryState),
+                () => context.bloc<EditCubit>().retry(page.retryState),
               )
             ]);
           },
-          done: (id) {
+          done: (page) {
             Navigator.of(context).popUntil(
-              ModalRoute.withName(ViewPage.routeName),
+              ModalRoute.withName(state.popRoute),
             );
           },
         );
@@ -69,7 +77,7 @@ class EditForm extends StatelessWidget {
           alignment: const Alignment(0, -1 / 3),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: state.map(
+            children: state.page.map(
               initial: (_) => [],
               offline: (_) => [
                 Center(
@@ -105,26 +113,29 @@ class _NameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<EditCubit, EditState>(
       buildWhen: (previous, current) {
-        if (current is EditStateForm) {
-          if (previous is EditStateForm) {
-            return previous.name != current.name;
+        final currentPage = current.page;
+        final previousPage = previous.page;
+        if (currentPage is PageStateForm) {
+          if (previousPage is PageStateForm) {
+            return previousPage.name != currentPage.name;
           }
           return true;
         }
         return false;
       },
       builder: (context, state) {
-        if (state is EditStateForm) {
+        final page = state.page;
+        if (page is PageStateForm) {
           return TextFormField(
             autofocus: true,
             key: Keys.name,
-            initialValue: state.name.value,
+            initialValue: page.name.value,
             onChanged: (value) {
               context.bloc<EditCubit>().nameChanged(value);
             },
             decoration: InputDecoration(
               labelText: 'name',
-              errorText: state.name.invalid ? 'invalid name' : null,
+              errorText: page.name.invalid ? 'invalid name' : null,
             ),
           );
         } else {
@@ -140,23 +151,26 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<EditCubit, EditState>(
       buildWhen: (previous, current) {
-        if (current is EditStateForm) {
-          if (previous is EditStateForm) {
-            return previous.status != current.status;
+        final currentPage = current.page;
+        final previousPage = previous.page;
+        if (currentPage is PageStateForm) {
+          if (previousPage is PageStateForm) {
+            return previousPage.status != currentPage.status;
           }
           return true;
         }
         return false;
       },
       builder: (context, state) {
-        if (state is EditStateForm) {
-          return state.status.isSubmissionInProgress
+        final page = state.page;
+        if (page is PageStateForm) {
+          return page.status.isSubmissionInProgress
               ? const CircularProgressIndicator()
               : RaisedButton(
                   key: Keys.submit,
                   child: const Text('Submit'),
                   onPressed: () {
-                    if (state.status.isValidated) {
+                    if (page.status.isValidated) {
                       context.bloc<EditCubit>().submit();
                     }
                   },

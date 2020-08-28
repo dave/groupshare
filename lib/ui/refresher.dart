@@ -14,7 +14,6 @@ class Refresher extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        print(constraints.maxHeight);
         return RefreshIndicator(
           onRefresh: onRefresh,
           child: SingleChildScrollView(

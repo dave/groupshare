@@ -98,7 +98,6 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       emit(stateCode.copyWith(status: FormzStatus.submissionInProgress));
       await _auth.code(stateCode.code.value);
-      await _data.initUser();
     } catch (ex) {
       emit(LoginState.error(ex, stateCode));
     }

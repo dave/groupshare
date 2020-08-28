@@ -24,9 +24,9 @@ class Data {
     await Future.wait(futures);
 
     // must wait until _users is initialised before initUser:
-    _auth.statusChange.listen((status) async {
+    _auth.onStatusChange = (status) async {
       await initUser();
-    });
+    };
     await initUser();
   }
 

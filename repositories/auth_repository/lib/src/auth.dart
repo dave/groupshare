@@ -13,6 +13,7 @@ class Auth {
   final Device _device;
   final Box<String> _box;
   final _apiTokenKey = UniqueKey();
+  Function(Status) onStatusChange;
 
   Auth(Api api, Box<String> box, Device device)
       : this._api = api,
@@ -28,6 +29,14 @@ class Auth {
   Future<void> logoff() async {
     _api.removeToken(_apiTokenKey);
     await _box.clear();
+    await change(Status.Empty);
+  }
+
+  Future<void> change(Status s) async {
+    _controller.add(s);
+    if (onStatusChange != null) {
+      await onStatusChange(s);
+    }
   }
 
   String get email => _box.get(_key.Email.toString());
@@ -57,7 +66,7 @@ class Auth {
       _key.Time.toString(): resp.time,
       _key.Hash.toString(): null,
     });
-    _controller.add(Status.Auth);
+    await change(Status.Auth);
   }
 
   Future<void> code(String code) async {
@@ -75,7 +84,7 @@ class Auth {
       _key.Hash.toString(): resp.hash,
     });
     _api.setToken(_apiTokenKey, token);
-    _controller.add(Status.Done);
+    await change(Status.Done);
   }
 
   final _controller = StreamController<Status>.broadcast();
