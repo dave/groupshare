@@ -50,12 +50,12 @@ class AddCubit extends Cubit<AddState> {
       final id = _data.shares.randomUnique();
       _data.shares.add(id, share);
       _data.user.op(
-        Op().User().Shares().Insert(
-              0,
-              User_AvailableShare()
-                ..id = id
-                ..name = stateForm.name.value,
-            ),
+        op.user.shares.insert(
+          0,
+          User_AvailableShare()
+            ..id = id
+            ..name = stateForm.name.value,
+        ),
       );
       emit(AddState.done());
     } catch (ex) {

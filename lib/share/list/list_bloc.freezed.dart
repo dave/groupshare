@@ -809,10 +809,11 @@ class _$AvailableShareTearOff {
   const _$AvailableShareTearOff();
 
 // ignore: unused_element
-  _AvailableShare call(String id, String name) {
+  _AvailableShare call(String id, String name, bool local) {
     return _AvailableShare(
       id,
       name,
+      local,
     );
   }
 }
@@ -823,6 +824,7 @@ const $AvailableShare = _$AvailableShareTearOff();
 mixin _$AvailableShare {
   String get id;
   String get name;
+  bool get local;
 
   $AvailableShareCopyWith<AvailableShare> get copyWith;
 }
@@ -831,7 +833,7 @@ abstract class $AvailableShareCopyWith<$Res> {
   factory $AvailableShareCopyWith(
           AvailableShare value, $Res Function(AvailableShare) then) =
       _$AvailableShareCopyWithImpl<$Res>;
-  $Res call({String id, String name});
+  $Res call({String id, String name, bool local});
 }
 
 class _$AvailableShareCopyWithImpl<$Res>
@@ -846,10 +848,12 @@ class _$AvailableShareCopyWithImpl<$Res>
   $Res call({
     Object id = freezed,
     Object name = freezed,
+    Object local = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed ? _value.id : id as String,
       name: name == freezed ? _value.name : name as String,
+      local: local == freezed ? _value.local : local as bool,
     ));
   }
 }
@@ -860,7 +864,7 @@ abstract class _$AvailableShareCopyWith<$Res>
           _AvailableShare value, $Res Function(_AvailableShare) then) =
       __$AvailableShareCopyWithImpl<$Res>;
   @override
-  $Res call({String id, String name});
+  $Res call({String id, String name, bool local});
 }
 
 class __$AvailableShareCopyWithImpl<$Res>
@@ -877,27 +881,32 @@ class __$AvailableShareCopyWithImpl<$Res>
   $Res call({
     Object id = freezed,
     Object name = freezed,
+    Object local = freezed,
   }) {
     return _then(_AvailableShare(
       id == freezed ? _value.id : id as String,
       name == freezed ? _value.name : name as String,
+      local == freezed ? _value.local : local as bool,
     ));
   }
 }
 
 class _$_AvailableShare implements _AvailableShare {
-  const _$_AvailableShare(this.id, this.name)
+  const _$_AvailableShare(this.id, this.name, this.local)
       : assert(id != null),
-        assert(name != null);
+        assert(name != null),
+        assert(local != null);
 
   @override
   final String id;
   @override
   final String name;
+  @override
+  final bool local;
 
   @override
   String toString() {
-    return 'AvailableShare(id: $id, name: $name)';
+    return 'AvailableShare(id: $id, name: $name, local: $local)';
   }
 
   @override
@@ -907,14 +916,17 @@ class _$_AvailableShare implements _AvailableShare {
             (identical(other.id, id) ||
                 const DeepCollectionEquality().equals(other.id, id)) &&
             (identical(other.name, name) ||
-                const DeepCollectionEquality().equals(other.name, name)));
+                const DeepCollectionEquality().equals(other.name, name)) &&
+            (identical(other.local, local) ||
+                const DeepCollectionEquality().equals(other.local, local)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(id) ^
-      const DeepCollectionEquality().hash(name);
+      const DeepCollectionEquality().hash(name) ^
+      const DeepCollectionEquality().hash(local);
 
   @override
   _$AvailableShareCopyWith<_AvailableShare> get copyWith =>
@@ -922,12 +934,15 @@ class _$_AvailableShare implements _AvailableShare {
 }
 
 abstract class _AvailableShare implements AvailableShare {
-  const factory _AvailableShare(String id, String name) = _$_AvailableShare;
+  const factory _AvailableShare(String id, String name, bool local) =
+      _$_AvailableShare;
 
   @override
   String get id;
   @override
   String get name;
+  @override
+  bool get local;
   @override
   _$AvailableShareCopyWith<_AvailableShare> get copyWith;
 }

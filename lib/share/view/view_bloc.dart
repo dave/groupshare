@@ -63,16 +63,9 @@ class ViewCubit extends Cubit<ViewState> {
   }
 
   Future<void> refresh() async {
-    final response = _data.shares.get(state.id);
-    if (response.future != null) {
-      // item has an uncommitted change... once that is complete, item will be refreshed.
-      await response.future;
-    } else {
-      // item didn't have any uncommitted changes, so we trigger a refresh:
-      await response.item.send();
-    }
-
-    emit(ViewState.done(state.id, response.item.value.name));
+    await _data.user.refresh();
+    final item = await _data.shares.refresh(state.id);
+    emit(ViewState.done(state.id, item.value.name));
   }
 
   void retry(ViewState retryState) {

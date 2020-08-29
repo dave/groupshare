@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:api_repository/api_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive/hive.dart';
 
 part 'appbar_bloc.freezed.dart';
 
@@ -31,6 +33,11 @@ class AppBarCubit extends Cubit<AppBarState> {
   Future<void> close() {
     _stateSubscription?.cancel();
     return super.close();
+  }
+
+  Future<void> clear() async {
+    await Hive.deleteFromDisk();
+    exit(0);
   }
 
   void change(ConnectionStatus state) {

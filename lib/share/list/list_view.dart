@@ -93,8 +93,7 @@ class ListPageContent extends StatelessWidget {
               ),
               list: () => RefreshIndicator(
                 onRefresh: () async {
-                  //await context.bloc<ListCubit>().refreshList();
-                  await context.bloc<ListCubit>().initList();
+                  await context.bloc<ListCubit>().refreshList();
                 },
                 child: RefreshableReorderableListView(
                   physics: AlwaysScrollableScrollPhysics(),
@@ -120,26 +119,52 @@ class ListPageContent extends StatelessWidget {
                             context.bloc<ListCubit>().initList();
                           },
                           trailing: state.shares.refreshing[item.id] == true
-                              ? Spinner(icon: Icons.sync)
+                              ? IconButton(
+                                  icon: Spinner(icon: Icons.sync),
+                                  onPressed: () {},
+                                )
+//                              : !item.local
+//                                  ? IconButton(
+//                                      icon: Icon(Icons.file_download),
+//                                      onPressed: () {
+//                                        context
+//                                            .bloc<ListCubit>()
+//                                            .initItem(item.id);
+//                                      },
+//                                    )
                               : null,
                         ),
                         secondaryActions: <Widget>[
-                          IconSlideAction(
-                            //caption: 'Delete',
-                            color: Colors.transparent,
-                            foregroundColor: iconColor,
-                            icon: Icons.delete,
-                            onTap: () => true,
-                          ),
-                          IconSlideAction(
-                            //caption: 'Refresh',
-                            color: Colors.transparent,
-                            icon: Icons.sync,
-                            foregroundColor: iconColor,
-                            onTap: () {
-                              context.bloc<ListCubit>().refreshItem(item.id);
-                            },
-                          ),
+                          if (item.local)
+                            IconSlideAction(
+                              //caption: 'Delete',
+                              color: Colors.transparent,
+                              foregroundColor: iconColor,
+                              icon: Icons.delete,
+                              onTap: () {
+                                context.bloc<ListCubit>().deleteItem(item.id);
+                              },
+                            ),
+                          if (item.local)
+                            IconSlideAction(
+                              //caption: 'Refresh',
+                              color: Colors.transparent,
+                              icon: Icons.sync,
+                              foregroundColor: iconColor,
+                              onTap: () {
+                                context.bloc<ListCubit>().refreshItem(item.id);
+                              },
+                            ),
+                          if (!item.local)
+                            IconSlideAction(
+                              //caption: 'Download',
+                              color: Colors.transparent,
+                              icon: Icons.file_download,
+                              foregroundColor: iconColor,
+                              onTap: () {
+                                context.bloc<ListCubit>().initItem(item.id);
+                              },
+                            ),
                           IconSlideAction(
                             //caption: 'Edit',
                             color: Colors.transparent,

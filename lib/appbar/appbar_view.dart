@@ -76,6 +76,19 @@ class AppBarWidgetContent extends StatelessWidget {
                       },
                     ),
                   ),
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: Icon(Icons.delete_forever),
+                    title: Text('Clear app storage'),
+                    onTap: () async {
+                      await context.bloc<AppBarCubit>().clear();
+                      Navigator.of(context).pushAndRemoveUntil(
+                        LoginPage.route(),
+                        (route) => false,
+                      );
+                    },
+                  ),
+                ),
 //                  PopupMenuItem(
 //                    child: ListTile(
 //                      leading: Icon(Icons.help_outline),

@@ -33,7 +33,11 @@ abstract class SharesState with _$SharesState {
 
 @freezed
 abstract class AvailableShare with _$AvailableShare {
-  const factory AvailableShare(String id, String name) = _AvailableShare;
+  const factory AvailableShare(
+    String id,
+    String name,
+    bool local,
+  ) = _AvailableShare;
 }
 
 class ListCubit extends Cubit<ListState> {
@@ -61,6 +65,23 @@ class ListCubit extends Cubit<ListState> {
     }
   }
 
+  Future<void> deleteItem(String id) async {
+    final i = _data.user.value.shares.indexWhere((s) => s.id == id);
+    if (i == -1) {
+      return;
+    }
+    _data.shares.deleteLocal(id);
+    // TODO: delete from user, delete share?
+    //_data.user.op(Op().User().Shares().Index(i).Delete());
+    emit(
+      state.copyWith(
+        shares: state.shares.copyWith(
+          items: stateItems(_data.user.value.shares),
+        ),
+      ),
+    );
+  }
+
   Future<void> refreshItem(String id) async {
     emit(
       state.copyWith(
@@ -71,20 +92,12 @@ class ListCubit extends Cubit<ListState> {
       ),
     );
 
-    final response = _data.shares.get(id);
-    if (response.future != null) {
-      // item has an uncommitted change... once that is complete, item will be refreshed.
-      await response.future;
-    } else {
-      // item didn't have any uncommitted changes, so we trigger a refresh:
-      await response.item.send();
-    }
-
-    final name = response.item.value.name;
+    final item = await _data.shares.refresh(id);
+    final name = item.value.name;
     final shares = _data.user.value.shares;
     final index = shares.indexWhere((s) => s.id == id);
     if (index > -1 && shares[index].name != name) {
-      _data.user.op(Op().User().Shares().Index(index).Name().Set(name));
+      _data.user.op(op.user.shares.index(index).name.set(name));
     }
 
     emit(
@@ -100,7 +113,7 @@ class ListCubit extends Cubit<ListState> {
 
   Future<void> reorder(oldIndex, newIndex) async {
     _data.user.op(
-      Op().User().Shares().Move(oldIndex, newIndex),
+      op.user.shares.move(oldIndex, newIndex),
     );
 
     emit(
@@ -112,7 +125,47 @@ class ListCubit extends Cubit<ListState> {
     );
   }
 
-  Future<void> refreshList() async {}
+  Future<void> refreshList() async {
+    await _data.user.send();
+
+    List<Future> futures = [];
+    _data.user.value.shares.forEach((userShare) {
+      if (_data.shares.has(userShare.id)) {
+        futures.add(refreshItem(userShare.id));
+      }
+    });
+    await Future.wait(futures);
+
+    emit(
+      state.copyWith(
+        shares: state.shares.copyWith(
+          items: stateItems(_data.user.value.shares),
+        ),
+      ),
+    );
+  }
+
+  Future<void> initItem(String id) async {
+    if (!_api.online()) {
+      return;
+    }
+    emit(
+      state.copyWith(
+        shares: state.shares.copyWith(
+          refreshing: {}..addAll(state.shares.refreshing)..addAll({id: true}),
+        ),
+      ),
+    );
+    await _data.shares.refresh(id);
+    emit(
+      state.copyWith(
+        shares: state.shares.copyWith(
+          items: stateItems(_data.user.value.shares),
+          refreshing: {}..addAll(state.shares.refreshing)..addAll({id: false}),
+        ),
+      ),
+    );
+  }
 
   Future<void> initList() async {
     // TODO: remove when https://github.com/felangel/bloc/issues/1641 is resolved.
@@ -172,6 +225,12 @@ class ListCubit extends Cubit<ListState> {
   }
 
   List<AvailableShare> stateItems(List<User_AvailableShare> shares) {
-    return shares.map((e) => AvailableShare(e.id, e.name)).toList();
+    return shares
+        .map((e) => AvailableShare(
+              e.id,
+              e.name,
+              _data.shares.has(e.id),
+            ))
+        .toList();
   }
 }

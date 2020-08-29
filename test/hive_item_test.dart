@@ -45,14 +45,14 @@ void main() {
       ..state = Int64(2)
       ..requestId = 'a'
       ..buffer = [
-        Op().Share().Name().Set("b"),
+        op.share.name.set("b"),
         null,
-        Op().Share().Name().Edit("b", "c"),
+        op.share.name.edit("b", "c"),
       ]
       ..overflow = [
-        Op().Share().Name().Set("d"),
+        op.share.name.set("d"),
         null,
-        Op().Share().Name().Edit("d", "e"),
+        op.share.name.edit("d", "e"),
       ];
     await items.put(key, item);
 
@@ -71,12 +71,12 @@ void main() {
     expect(item1.value, Share()..name = "a");
     expect(item1.state, Int64(2));
     expect(item1.requestId, 'a');
-    expect(item1.buffer[0], Op().Share().Name().Set("b"));
+    expect(item1.buffer[0], op.share.name.set("b"));
     expect(item1.buffer[1], null);
-    expect(item1.buffer[2], Op().Share().Name().Edit("b", "c"));
-    expect(item1.overflow[0], Op().Share().Name().Set("d"));
+    expect(item1.buffer[2], op.share.name.edit("b", "c"));
+    expect(item1.overflow[0], op.share.name.set("d"));
     expect(item1.overflow[1], null);
-    expect(item1.overflow[2], Op().Share().Name().Edit("d", "e"));
+    expect(item1.overflow[2], op.share.name.edit("d", "e"));
   });
   tearDown(() async {
     await Hive.deleteBoxFromDisk(BOX_NAME);

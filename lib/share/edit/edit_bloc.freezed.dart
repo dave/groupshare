@@ -37,6 +37,8 @@ abstract class $EditStateCopyWith<$Res> {
   factory $EditStateCopyWith(EditState value, $Res Function(EditState) then) =
       _$EditStateCopyWithImpl<$Res>;
   $Res call({String id, String popRoute, PageState page});
+
+  $PageStateCopyWith<$Res> get page;
 }
 
 class _$EditStateCopyWithImpl<$Res> implements $EditStateCopyWith<$Res> {
@@ -58,6 +60,16 @@ class _$EditStateCopyWithImpl<$Res> implements $EditStateCopyWith<$Res> {
       page: page == freezed ? _value.page : page as PageState,
     ));
   }
+
+  @override
+  $PageStateCopyWith<$Res> get page {
+    if (_value.page == null) {
+      return null;
+    }
+    return $PageStateCopyWith<$Res>(_value.page, (value) {
+      return _then(_value.copyWith(page: value));
+    });
+  }
 }
 
 abstract class _$EditStateCopyWith<$Res> implements $EditStateCopyWith<$Res> {
@@ -66,6 +78,9 @@ abstract class _$EditStateCopyWith<$Res> implements $EditStateCopyWith<$Res> {
       __$EditStateCopyWithImpl<$Res>;
   @override
   $Res call({String id, String popRoute, PageState page});
+
+  @override
+  $PageStateCopyWith<$Res> get page;
 }
 
 class __$EditStateCopyWithImpl<$Res> extends _$EditStateCopyWithImpl<$Res>

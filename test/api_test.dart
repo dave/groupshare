@@ -30,7 +30,7 @@ void main() {
     );
     session1state = session1addResponse1.state;
 
-    final session1opSetName = Op().Share().Name().Set("b");
+    final session1opSetName = op.share.name.set("b");
     apply(session1opSetName, session1share);
     expect(session1share.name, "b");
     final session1editResponse1 = await api.send(
@@ -59,7 +59,7 @@ void main() {
     expect(session2share.name, "b");
     expect(session2state, Int64(2));
 
-    final session2opEditNameAppendC = Op().Share().Name().Edit("b", "bc");
+    final session2opEditNameAppendC = op.share.name.edit("b", "bc");
     apply(session2opEditNameAppendC, session2share);
     expect(session2share.name, "bc");
     final session2editResponse1 = await api.send(
@@ -77,7 +77,7 @@ void main() {
     expect(session2state, Int64(3));
 
     // session1 - edits name
-    final session1opEditNameAppendD = Op().Share().Name().Edit("b", "bd");
+    final session1opEditNameAppendD = op.share.name.edit("b", "bd");
     apply(session1opEditNameAppendD, session1share);
     expect(session1share.name, "bd");
     final session1editResponse2 = await api.send(

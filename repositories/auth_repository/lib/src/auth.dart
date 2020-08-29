@@ -33,10 +33,10 @@ class Auth {
   }
 
   Future<void> change(Status s) async {
-    _controller.add(s);
     if (onStatusChange != null) {
       await onStatusChange(s);
     }
+    _controller.add(s);
   }
 
   String get email => _box.get(_key.Email.toString());

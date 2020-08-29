@@ -111,7 +111,7 @@ class EditCubit extends Cubit<EditState> {
       );
 
       _share.op(
-        Op().Share().Name().Edit(pageForm.initialName, pageForm.name.value),
+        op.share.name.edit(pageForm.initialName, pageForm.name.value),
       );
 
       final userDataIndex = _data.user.value.shares.indexWhere(
@@ -119,12 +119,7 @@ class EditCubit extends Cubit<EditState> {
       );
       if (userDataIndex > -1) {
         _data.user.op(
-          Op()
-              .User()
-              .Shares()
-              .Index(userDataIndex)
-              .Name()
-              .Set(pageForm.name.value),
+          op.user.shares.index(userDataIndex).name.set(pageForm.name.value),
         );
       }
 

@@ -18,7 +18,7 @@ class Data {
   }
 
   Future<void> init() async {
-    var futures = <Future>[];
+    List<Future> futures = [];
     futures.add(_shares.init());
     futures.add(_users.init());
     await Future.wait(futures);
