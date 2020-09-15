@@ -2,13 +2,13 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"testing"
+	"time"
 
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/api"
@@ -30,20 +30,24 @@ const LOCATION_ID = "europe-west2"
 const TASKS_QUEUE = "tasks"
 const PREFIX = "https://groupshare.uc.r.appspot.com"
 const LOCAL_PREFIX = "http://localhost:8080"
+const DATABASE_TIMEOUT_LIVE = time.Second * 2
+const DATABASE_TIMEOUT_DEV = time.Second * 4
 
 func main() {
-
 	var prefix, project, location, queue string
+	var timeout time.Duration
 	if appengine.IsAppEngine() {
 		prefix = PREFIX
 		project = PROJECT_ID
 		location = LOCATION_ID
 		queue = TASKS_QUEUE
+		timeout = DATABASE_TIMEOUT_LIVE
 	} else {
 		prefix = LOCAL_PREFIX
 		project = TESTING_PROJECT_ID
 		location = "" // not used when local
 		queue = ""    // not used when local
+		timeout = DATABASE_TIMEOUT_DEV
 	}
 	fc, err := firestore.NewClient(context.Background(), project)
 	if err != nil {
@@ -54,6 +58,7 @@ func main() {
 		Project:  project,
 		Location: location,
 		Queue:    queue,
+		Timeout:  timeout,
 	}
 	server := pserver.New(fc, config, data.SHARE_DOCUMENT_TYPE, data.USER_DOCUMENT_TYPE)
 	defer func() { _ = server.Close() }()
@@ -69,7 +74,7 @@ func main() {
 		}
 		fmt.Println("Serving...")
 		if err := http.ListenAndServe(":"+port, nil); err != nil && err != http.ErrServerClosed {
-			log.Fatal(err)
+			log.Fatal(perr.Stack(err))
 		}
 	}
 }
@@ -82,6 +87,7 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 			if r := recover(); r != nil {
 				switch r := r.(type) {
 				case error:
+					fmt.Println(perr.Stack(r))
 					http.Error(w, r.Error(), 500)
 					return
 				default:
@@ -111,25 +117,43 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 
 		err = ProcessBundle(ctx, server, request, response)
 
-		if pserver.IsBusyError(err) {
-			fmt.Println("error: 503 server busy")
-			http.Error(w, "503 server busy", http.StatusServiceUnavailable)
-			return
+		if err != nil {
+			fmt.Printf("error: \n%s\n", perr.Stack(err))
 		}
 
-		if err == pserver.PathNotFound {
+		if perr.AnyFlag(err, perr.NotFound) {
 			fmt.Println("error: 404 path not found")
 			http.NotFound(w, r)
 			return
 		}
 
-		if err != nil && !response.Has(&api.Error{}) {
-			// if we got an error, but no error was added to the response, add a generic server error
-			api.Err(response, "Server error")
-		}
-
 		if err != nil {
-			fmt.Printf("error: %+v\n", err)
+			e := &api.Error{}
+			if perr.AnyFlag(err, perr.Auth) {
+				e.Auth = true
+			}
+			if perr.AnyFlag(err, perr.Expired) {
+				e.Expired = true
+			}
+			if perr.AnyFlag(err, perr.Busy) || perr.Any(err, pserver.IsBusy) {
+				e.Busy = true
+			}
+			if perr.AnyFlag(err, perr.Retry) || perr.Any(err, pserver.IsRetry) {
+				e.Retry = true
+			}
+			if perr.AnyFlag(err, perr.Stop) || perr.Any(err, pserver.IsStop) {
+				e.Stop = true
+			}
+			e.Message = perr.FirstMessage(err)
+			if e.Message == "" {
+				if perr.AnyFlag(err, pserver.Firestore) {
+					e.Message = "Database error"
+				} else {
+					e.Message = "Server error"
+				}
+			}
+			e.Debug = perr.Stack(err)
+			response.MustSet(e)
 		}
 
 		fmt.Println("response:", mustJson(response))
@@ -161,19 +185,13 @@ func ProcessMessage(ctx context.Context, server *pserver.Server, token *auth.Tok
 	request.MustSet(message)
 	response := pmsg.New()
 	if err := ProcessBundle(ctx, server, request, response); err != nil {
-		return nil, err
+		return nil, perr.Wrap(err).Debug("processing bundle")
 	}
 	return response, nil
 }
 
-const DEBUG = true
-
 func ProcessBundle(ctx context.Context, server *pserver.Server, request, response *pmsg.Bundle) (err error) {
 
-	//time.Sleep(time.Millisecond * 500)
-	//if rand.Float64() > 0.5 {
-	//	return pserver.ServerBusy
-	//}
 	//time.Sleep(time.Millisecond * 500)
 
 	if appengine.IsAppEngine() {
@@ -182,9 +200,9 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 			if r := recover(); r != nil {
 				switch r := r.(type) {
 				case error:
-					err = r
+					err = perr.Wrap(r).Debug("recovered in process bundle")
 				default:
-					err = fmt.Errorf("recovered: %v", r)
+					err = perr.Debugf("recovered: %v", r)
 				}
 			}
 		}()
@@ -213,16 +231,13 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 	token := &auth.Token{}
 	found, err := request.Get(token)
 	if err != nil {
-		api.AuthError(response, "Invalid login token")
-		return perr.Wrap(err, "unpacking token")
+		return perr.Wrap(err).Message("Invalid login token").Debug("unpacking token")
 	}
 	if !found {
-		api.AuthError(response, "Login token missing")
-		return errors.New("request missing auth token")
+		return perr.Flag(perr.Auth).Message("Login token missing").Debug("request missing auth token")
 	}
 	if _, user, err = auth.GetUserVerify(ctx, server, nil, token); err != nil {
-		api.AuthError(response, "Login token error")
-		return perr.Wrap(err, "verifying token")
+		return perr.Wrap(err).Flag(perr.Auth).Message("Login token error").Debug("verifying token")
 	}
 
 	ctx = context.WithValue(ctx, data.UserContextKey, user)
@@ -240,6 +255,12 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 	case request.Has(&pstore.Payload_Get_Request{}):
 		return data.GetRequest(ctx, server, user, request, response)
 	case request.Has(&pstore.Payload_Edit_Request{}):
+		//time.Sleep(time.Millisecond * 500)
+		//if rand.Float64() > 0.25 {
+		//	return perr.Flag(perr.Retry)
+		//}
+		//time.Sleep(time.Millisecond * 500)
+
 		return data.EditRequest(ctx, server, user, request, response)
 	}
 
@@ -249,7 +270,7 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 		return data.ShareListRequest(ctx, server, user, request, response)
 	}
 
-	return pserver.PathNotFound
+	return perr.Flag(perr.NotFound)
 
 }
 

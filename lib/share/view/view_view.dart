@@ -45,12 +45,17 @@ class ViewForm extends StatelessWidget {
           loading: (state) => true,
           offline: (state) => true,
           error: (state) {
-            handle(context, state.error, [
-              Button(
-                "retry",
-                () => context.bloc<ViewCubit>().retry(state.retryState),
-              )
-            ]);
+            handle(
+              context,
+              state.error,
+              state.stack,
+              buttons: [
+                Button(
+                  "retry",
+                  () => context.bloc<ViewCubit>().retry(state.retryState),
+                )
+              ],
+            );
           },
           done: (state) => true,
         );

@@ -1,8 +1,7 @@
-import 'package:api_repository/api_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groupshare/app/app.dart';
 import 'package:groupshare/appbar/appbar_bloc.dart';
-import 'package:groupshare/auth/auth.dart';
 import 'package:groupshare/login/login.dart';
 import 'package:groupshare/ui/spinner.dart';
 
@@ -11,22 +10,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   AppBarWidget(String title) : _title = title;
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AppBarCubit(
-        RepositoryProvider.of<Api>(context),
-      ),
-      child: AppBarWidgetContent(_title),
-    );
-  }
-
-  @override
   Size get preferredSize => AppBar().preferredSize;
-}
-
-class AppBarWidgetContent extends StatelessWidget {
-  final String _title;
-  AppBarWidgetContent(String title) : _title = title;
 
   @override
   Widget build(BuildContext context) {
@@ -35,40 +19,31 @@ class AppBarWidgetContent extends StatelessWidget {
       actions: [
         BlocBuilder<AppBarCubit, AppBarState>(
           builder: (context, state) {
-            return PopupMenuButton(
+            return IconButton(
               icon: state.when(
-                saved: () => Icon(Icons.cloud_queue), // cloud_done
-                connecting: () => Spinner(icon: Icons.sync), // history
-                waiting: () => Icon(Icons.sync_problem), // Icons.cached
+                saved: () => Icon(Icons.cloud_queue),
+                connecting: () => Spinner(icon: Icons.sync),
+                waiting: () => Icon(Icons.timer),
                 offline: () => Icon(Icons.cloud_off),
+                failed: () => Icon(Icons.cloud_off),
               ),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  child: ListTile(
-                    title: Text(state.when(
-                      saved: () => "Saved",
-                      connecting: () => "Saving",
-                      waiting: () => "Retrying",
-                      offline: () => "Offline",
-                    )),
-                  ),
-                ),
-              ],
+              onPressed: () => showConnectionPopup(context),
             );
           },
         ),
-        BlocBuilder<AuthCubit, AuthState>(
+        BlocBuilder<AppCubit, AppState>(
           builder: (context, state) {
             return PopupMenuButton(
               icon: Icon(Icons.settings),
               itemBuilder: (context) => [
-                if (state is AuthStateDone || state is AuthStateAuth)
+                if (state is AppStateDone ||
+                    (state is AppStateLogin && state.auth))
                   PopupMenuItem(
                     child: ListTile(
                       leading: Icon(Icons.group),
                       title: Text('Log off'),
                       onTap: () async {
-                        await context.bloc<AuthCubit>().logoff();
+                        await context.bloc<AppCubit>().logoff();
                         Navigator.of(context).pushAndRemoveUntil(
                           LoginPage.route(),
                           (route) => false,
@@ -89,12 +64,6 @@ class AppBarWidgetContent extends StatelessWidget {
                     },
                   ),
                 ),
-//                  PopupMenuItem(
-//                    child: ListTile(
-//                      leading: Icon(Icons.help_outline),
-//                      title: Text('Help'),
-//                    ),
-//                  )
               ],
             );
           },
@@ -102,4 +71,68 @@ class AppBarWidgetContent extends StatelessWidget {
       ],
     );
   }
+}
+
+Future<void> showConnectionPopup(
+  BuildContext context,
+) async {
+  final appBarCubit = BlocProvider.of<AppBarCubit>(context);
+  await showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return BlocProvider.value(
+        value: appBarCubit,
+        child: BlocBuilder<AppBarCubit, AppBarState>(
+          builder: (context, state) {
+            return AlertDialog(
+              title: Text(state.when(
+                saved: () => "Connection",
+                connecting: () => "Connection",
+                waiting: () => "Connection",
+                offline: () => "Offline",
+                failed: () => "Offline",
+              )),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text(state.when(
+                      saved: () => "Connection OK",
+                      connecting: () => "Connecting...",
+                      waiting: () => "Waiting...",
+                      offline: () => "It looks like the connection is offline.",
+                      failed: () =>
+                          "We got a connection error, so went offline.",
+                    )),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                if (state is AppbarStateOffline || state is AppbarStateFailed)
+                  FlatButton(
+                    child: Text("Reconnect"),
+                    onPressed: () async {
+                      context.bloc<AppBarCubit>().retry();
+                    },
+                  ),
+                FlatButton(
+                  child: Text("OK"),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                if (state is AppbarStateSaved)
+                  FlatButton(
+                    child: Text("Go offline"),
+                    onPressed: () async {
+                      context.bloc<AppBarCubit>().goOffline();
+                    },
+                  ),
+              ],
+            );
+          },
+        ),
+      );
+    },
+  );
 }

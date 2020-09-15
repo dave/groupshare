@@ -1,7 +1,5 @@
 import 'package:api_repository/api_repository.dart';
-import 'package:connection_repository/connection_repository.dart';
 import 'package:data_repository/data_repository.dart';
-import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -11,6 +9,7 @@ import 'package:groupshare/share/add/add.dart';
 import 'package:groupshare/share/edit/edit.dart';
 import 'package:groupshare/share/list/list.dart';
 import 'package:groupshare/share/view/view.dart';
+import 'package:groupshare/task.dart';
 import 'package:groupshare/ui/refresher.dart';
 import 'package:groupshare/ui/spinner.dart';
 import 'package:refreshable_reorderable_list/refreshable_reorderable_list.dart';
@@ -27,13 +26,12 @@ class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ListCubit(
-        RepositoryProvider.of<Data>(context),
-        RepositoryProvider.of<Api>(context),
-        RepositoryProvider.of<Connection>(context),
-      )
-        ..initConn()
-        ..initList(),
+      create: (context) {
+        return ListCubit(
+          RepositoryProvider.of<Data>(context),
+          RepositoryProvider.of<Api>(context),
+        )..init();
+      },
       child: ListPageContent(),
     );
   }
@@ -52,19 +50,23 @@ class ListPageContent extends StatelessWidget {
             handle(
               context,
               state.error,
-              [Button("Retry", () => context.bloc<ListCubit>().initList())],
+              state.stack,
+              buttons: [
+                Button("OK", () => context.bloc<ListCubit>().initList(false)),
+              ],
             );
           },
         );
       },
       builder: (context, state) {
+        final controller = SlidableController();
         return Scaffold(
           appBar: AppBarWidget('Shares'),
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () async {
               await Navigator.of(context).push(AddPage.route());
-              context.bloc<ListCubit>().initList();
+              context.bloc<ListCubit>().initList(false);
             },
           ),
           body: Padding(
@@ -72,7 +74,15 @@ class ListPageContent extends StatelessWidget {
             child: state.page.when(
               offline: () => Refresher(
                 onRefresh: () async {
-                  await context.bloc<ListCubit>().initList();
+                  // When we pull down the refresh on the offline view, we
+                  // refresh the list but not all of the items.
+                  try {
+                    await task(context, () async {
+                      await context.bloc<ListCubit>().initList(true);
+                    });
+                  } catch (ex, stack) {
+                    handle(context, ex, stack);
+                  }
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -89,144 +99,192 @@ class ListPageContent extends StatelessWidget {
               loading: () => Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [Center(child: CircularProgressIndicator())],
+                children: [Center(child: Text("loading"))],
               ),
-              list: () => RefreshIndicator(
-                onRefresh: () async {
-                  await context.bloc<ListCubit>().refreshList();
-                },
-                child: RefreshableReorderableListView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  onReorder: (oldIndex, newIndex) {
-                    context.bloc<ListCubit>().reorder(oldIndex, newIndex);
-                  },
-                  children: state.shares.items.map(
-                    (item) {
-                      final iconColor = _iconColor(
-                        Theme.of(context),
-                        ListTileTheme.of(context),
-                      );
-                      return Slidable(
-                        key: ValueKey(item.id),
-                        actionPane: SlidableDrawerActionPane(),
-                        actionExtentRatio: 0.1,
-                        child: ListTile(
-                          title: Text(item.name),
-                          onTap: () async {
-                            await Navigator.of(context).push(
-                              ViewPage.route(item.id),
-                            );
-                            context.bloc<ListCubit>().initList();
-                          },
-                          trailing: state.shares.refreshing[item.id] == true
-                              ? IconButton(
-                                  icon: Spinner(icon: Icons.sync),
-                                  onPressed: () {},
-                                )
-//                              : !item.local
-//                                  ? IconButton(
-//                                      icon: Icon(Icons.file_download),
-//                                      onPressed: () {
-//                                        context
-//                                            .bloc<ListCubit>()
-//                                            .initItem(item.id);
-//                                      },
-//                                    )
-                              : null,
-                        ),
-                        secondaryActions: <Widget>[
-                          if (item.local)
-                            IconSlideAction(
-                              //caption: 'Delete',
-                              color: Colors.transparent,
-                              foregroundColor: iconColor,
-                              icon: Icons.delete,
-                              onTap: () {
-                                context.bloc<ListCubit>().deleteItem(item.id);
-                              },
+              list: () => state.shares.items.length == 0
+                  ? Refresher(
+                      onRefresh: () async {
+                        // When we pull down the refresh on the empty list, we
+                        // refresh the list but not all of the items.
+                        try {
+                          await task(context, () async {
+                            await context.bloc<ListCubit>().initList(true);
+                          });
+                        } catch (ex, stack) {
+                          handle(context, ex, stack);
+                        }
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Text(
+                              "List empty.",
                             ),
-                          if (item.local)
-                            IconSlideAction(
-                              //caption: 'Refresh',
-                              color: Colors.transparent,
-                              icon: Icons.sync,
-                              foregroundColor: iconColor,
-                              onTap: () {
-                                context.bloc<ListCubit>().refreshItem(item.id);
-                              },
-                            ),
-                          if (!item.local)
-                            IconSlideAction(
-                              //caption: 'Download',
-                              color: Colors.transparent,
-                              icon: Icons.file_download,
-                              foregroundColor: iconColor,
-                              onTap: () {
-                                context.bloc<ListCubit>().initItem(item.id);
-                              },
-                            ),
-                          IconSlideAction(
-                            //caption: 'Edit',
-                            color: Colors.transparent,
-                            icon: Icons.edit,
-                            foregroundColor: iconColor,
-                            onTap: () async {
-                              await Navigator.of(context).push(
-                                EditPage.route(
-                                  item.id,
-                                  ListPage.routeName,
-                                ),
-                              );
-                              context.bloc<ListCubit>().initList();
-                            },
-                          ),
+                          )
                         ],
-                      );
-                    },
-                  ).toList(),
-
-//                  children: state.shares.items
-//                      .map(
-//                        (item) => ListTile(
-//                          key: ValueKey(item.id),
-//                          title: Text(item.name),
-//                          trailing: !state.connected
-//                              ? null
-//                              : state.shares.refreshing[item.id] == true
-//                                  ? IconButton(
-//                                      icon: Spinner(icon: Icons.sync),
-//                                      onPressed: () {},
-//                                    )
-//                                  : IconButton(
-//                                      icon: Icon(Icons.sync),
-//                                      onPressed: () {
-//                                        context
-//                                            .bloc<ListCubit>()
-//                                            .refresh(item.id);
-//                                      },
-//                                    ),
-//                          onTap: () async {
-//                            await Navigator.of(context).push(
-//                              ViewPage.route(item.id),
-//                            );
-//                            context.bloc<ListCubit>().initList();
-//                          },
-//                        ),
-//                      )
-//                      .toList(),
-                ),
-              ),
-              error: (error) {
-                if (error is UserException) {
-                  return Text("error, ${error.message}");
-                } else {
-                  return Text("error, $error");
-                }
-              },
+                      ),
+                    )
+                  : RefreshIndicator(
+                      onRefresh: () async {
+                        // When we pull down the refresh on the list view, we
+                        // initiate a refresh of all the items.
+                        try {
+                          await task(context, () async {
+                            await context.bloc<ListCubit>().refreshAllItems();
+                          });
+                        } catch (ex, stack) {
+                          handle(context, ex, stack);
+                        }
+                      },
+                      child: RefreshableReorderableListView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        onReorder: (oldIndex, newIndex) {
+                          context.bloc<ListCubit>().reorder(oldIndex, newIndex);
+                        },
+                        children: state.shares.items.map(
+                          (item) {
+                            final iconColor = _iconColor(
+                              Theme.of(context),
+                              ListTileTheme.of(context),
+                            );
+                            return Slidable(
+                              controller: controller,
+                              key: ValueKey(item.id),
+                              actionPane: SlidableDrawerActionPane(),
+                              actionExtentRatio: 0.1,
+                              child: SlidableListTile(controller, item, state),
+                              secondaryActions: <Widget>[
+                                if (item.local)
+                                  IconSlideAction(
+                                    //caption: 'Delete',
+                                    color: Colors.transparent,
+                                    foregroundColor: iconColor,
+                                    icon: Icons.delete,
+                                    onTap: () {
+                                      context
+                                          .bloc<ListCubit>()
+                                          .deleteItem(item.id);
+                                    },
+                                  ),
+                                if (item.local)
+                                  IconSlideAction(
+                                    //caption: 'Refresh',
+                                    color: Colors.transparent,
+                                    icon: Icons.sync,
+                                    foregroundColor: iconColor,
+                                    onTap: () async {
+                                      try {
+                                        await task(context, () async {
+                                          await context
+                                              .bloc<ListCubit>()
+                                              .refreshItem(item.id);
+                                        });
+                                      } catch (ex, stack) {
+                                        handle(context, ex, stack);
+                                      }
+                                    },
+                                  ),
+                                if (item.local)
+                                  IconSlideAction(
+                                    //caption: 'Edit',
+                                    color: Colors.transparent,
+                                    icon: Icons.edit,
+                                    foregroundColor: iconColor,
+                                    onTap: () async {
+                                      await Navigator.of(context).push(
+                                        EditPage.route(
+                                          item.id,
+                                          ListPage.routeName,
+                                        ),
+                                      );
+                                      context.bloc<ListCubit>().initList(false);
+                                    },
+                                  ),
+                              ],
+                            );
+                          },
+                        ).toList(),
+                      ),
+                    ),
+              error: (error, stack) => Container(),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class SlidableListTile extends StatelessWidget {
+  final AvailableShare _item;
+  final ListState _state;
+  final SlidableController _controller;
+
+  const SlidableListTile(
+    SlidableController controller,
+    AvailableShare item,
+    ListState state, {
+    Key key,
+  })  : _controller = controller,
+        _item = item,
+        _state = state,
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(_item.name),
+      onTap: () async {
+        await Navigator.of(context).push(
+          ViewPage.route(_item.id),
+        );
+        context.bloc<ListCubit>().initList(false);
+      },
+      trailing: _state.shares.refreshing[_item.id] == true
+          ? IconButton(
+              icon: Spinner(icon: Icons.sync),
+              onPressed: () {},
+            )
+          : _item.local
+              ? IconButton(
+                  icon: Icon(Icons.offline_pin),
+                  onPressed: () {
+                    final thisItemIsOpen = _controller.activeState != null &&
+                        _controller.activeState == Slidable.of(context) &&
+                        _controller.activeState.actionType ==
+                            SlideActionType.secondary;
+
+                    final anotherItemIsOpen = _controller.activeState != null &&
+                        _controller.activeState != Slidable.of(context) &&
+                        _controller.activeState.actionType ==
+                            SlideActionType.secondary;
+
+                    if (anotherItemIsOpen) {
+                      _controller.activeState.close();
+                    }
+                    if (thisItemIsOpen) {
+                      Slidable.of(context).close();
+                    } else {
+                      Slidable.of(context).open(
+                        actionType: SlideActionType.secondary,
+                      );
+                    }
+                  },
+                )
+              : IconButton(
+                  icon: Icon(Icons.file_download),
+                  onPressed: () async {
+                    try {
+                      await task(context, () async {
+                        await context.bloc<ListCubit>().initItem(_item.id);
+                      });
+                    } catch (ex, stack) {
+                      handle(context, ex, stack);
+                    }
+                  },
+                ),
     );
   }
 }

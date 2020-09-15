@@ -5,14 +5,12 @@ import (
 	"crypto/sha1"
 	"encoding/binary"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"math/rand"
 	"strconv"
 	"time"
 
 	"cloud.google.com/go/firestore"
-	"github.com/dave/groupshare/server/api"
 	"github.com/dave/protod/perr"
 	"github.com/dave/protod/pmsg"
 	"github.com/dave/protod/pserver"
@@ -49,7 +47,7 @@ func GenerateCode(device, email string, time int64) (string, error) {
 	}
 	b, err := json.Marshal(d)
 	if err != nil {
-		return "", perr.Wrap(err, "marshaling code")
+		return "", perr.Wrap(err).Debug("marshaling code")
 	}
 	s := sha1.New()
 	s.Write(b)
@@ -77,7 +75,7 @@ func GenerateHash(id, device, salt string) (string, error) {
 	}
 	b, err := json.Marshal(d)
 	if err != nil {
-		return "", perr.Wrap(err, "marshaling token")
+		return "", perr.Wrap(err).Debug("marshaling token")
 	}
 	s := sha1.New()
 	s.Write(b)
@@ -95,11 +93,11 @@ func GetUser(ctx context.Context, server *pserver.Server, tx *firestore.Transact
 		snap, err = tx.Get(ref)
 	}
 	if err != nil {
-		return nil, nil, perr.Wrap(err, "getting user record")
+		return nil, nil, perr.Wrap(err).Debug("getting user record").Flag(pserver.Firestore)
 	}
 	user := &User{}
 	if err := snap.DataTo(user); err != nil {
-		return nil, nil, perr.Wrap(err, "unmarshaling user")
+		return nil, nil, perr.Wrap(err).Debug("unwrapping user")
 	}
 	return ref, user, nil
 }
@@ -107,14 +105,14 @@ func GetUser(ctx context.Context, server *pserver.Server, tx *firestore.Transact
 func GetUserVerify(ctx context.Context, server *pserver.Server, tx *firestore.Transaction, token *Token) (*firestore.DocumentRef, *User, error) {
 	ref, user, err := GetUser(ctx, server, tx, token.Id)
 	if err != nil {
-		return nil, nil, perr.Wrap(err, "getting user")
+		return nil, nil, perr.Wrap(err).Debug("getting user")
 	}
 	hash, err := GenerateHash(token.Id, token.Device, user.Salt)
 	if err != nil {
-		return nil, nil, perr.Wrap(err, "generating token")
+		return nil, nil, perr.Wrap(err).Debug("generating token")
 	}
 	if hash != token.Hash {
-		return nil, nil, errors.New("hash doesn't match")
+		return nil, nil, perr.Debug("hash doesn't match")
 	}
 	return ref, user, nil
 }
@@ -123,16 +121,14 @@ func LoginRequest(ctx context.Context, request, response *pmsg.Bundle) error {
 
 	req := &Login_Request{}
 	if _, err := request.Get(req); err != nil {
-		api.Err(response, "Invalid input")
-		return err
+		return perr.Wrap(err).Debug("getting login request").Message("Invalid request")
 	}
 
 	t := time.Now().Unix()
 
 	code, err := GenerateCode(req.Device, req.Email, t)
 	if err != nil {
-		api.Err(response, "Server error")
-		return err
+		return perr.Wrap(err).Debug("generating code")
 	}
 
 	if appengine.IsAppEngine() {
@@ -143,8 +139,7 @@ func LoginRequest(ctx context.Context, request, response *pmsg.Bundle) error {
 			Body:    fmt.Sprintf("This is your code: %v", code),
 		}
 		if err := mail.Send(ctx, msg); err != nil {
-			api.Err(response, "Server error")
-			return err
+			return perr.Wrap(err).Debug("sending email")
 		}
 	} else {
 		fmt.Println("code", code)
@@ -159,35 +154,31 @@ func CodeRequest(ctx context.Context, server *pserver.Server, request, response 
 
 	req := &Code_Request{}
 	if _, err := request.Get(req); err != nil {
-		api.Err(response, "Invalid input")
-		return err
+		return perr.Wrap(err).Debug("getting code request").Message("Invalid request")
 	}
 
 	timeInt64, err := strconv.ParseInt(req.Time, 10, 64)
 	if err != nil {
-		api.AuthError(response, "Invalid input")
-		return perr.Wrap(err, "parsing time")
+		return perr.Wrap(err).Debug("parsing time").Flag(perr.Auth).Message("Invalid request")
 	}
 	code, err := GenerateCode(req.Device, req.Email, timeInt64)
 	if err != nil {
-		api.AuthError(response, "Invalid input")
-		return perr.Wrap(err, "getting code")
+		return perr.Wrap(err).Debug("generating code").Flag(perr.Auth).Message("Invalid request")
 	}
 	checkCode := true
 	if req.Test {
 		// the client is requesting that we skip the code check. This should only work in dev env.
+		// TODO: put this check back in at some point
 		//if !appengine.IsAppEngine() {
 		//	checkCode = false
 		//}
 		checkCode = false
 	}
 	if checkCode && code != req.Code {
-		api.AuthError(response, "Wrong code")
-		return errors.New("wrong code")
+		return perr.Debug("wrong code").Message("Wrong code").Flag(perr.Auth)
 	}
-	if time.Unix(timeInt64, 0).Add(time.Minute * 30).Before(time.Now()) {
-		api.ExpiredError(response, "Code expired")
-		return errors.New("code expired")
+	if time.Unix(timeInt64, 0).Add(time.Minute * 60).Before(time.Now()) {
+		return perr.Debug("code expired").Message("Code expired").Flag(perr.Auth, perr.Expired)
 	}
 
 	// create or update user?
@@ -197,38 +188,36 @@ func CodeRequest(ctx context.Context, server *pserver.Server, request, response 
 		query := server.Firestore.Collection(USERS_COLLECTION).Where("email", "==", req.Email)
 		users, err := tx.Documents(query).GetAll()
 		if err != nil {
-			return perr.Wrap(err, "selecting from users")
+			return perr.Wrap(err).Debug("selecting from users").Flag(pserver.Firestore)
 		}
 		if len(users) == 1 {
 			userRef = users[0].Ref
 			if err := users[0].DataTo(user); err != nil {
-				return perr.Wrap(err, "unpacking user")
+				return perr.Wrap(err).Debug("unwrapping user")
 			}
 			return nil
 		} else if len(users) > 1 {
 			// TODO: should never happen - log this!
-			return fmt.Errorf("%d users with email address %q", len(users), req.Email)
+			return perr.Debugf("%d users with email address %q", len(users), req.Email)
 		}
 
 		userRef = server.Firestore.Collection(USERS_COLLECTION).NewDoc()
 		user = &User{Id: userRef.ID, Email: req.Email, Salt: randomString(30)}
 
 		if err := tx.Set(userRef, user); err != nil {
-			return perr.Wrap(err, "selecting from users")
+			return perr.Wrap(err).Debug("firestore set").Flag(pserver.Firestore)
 		}
 
 		return nil
 
 	}
 	if err := server.Firestore.RunTransaction(server.FirestoreContext(ctx), f); err != nil {
-		api.Err(response, "Server error")
-		return perr.Wrap(err, "running user transaction")
+		return perr.Wrap(err).Debug("running user transaction").Flag(pserver.Firestore)
 	}
 
 	hash, err := GenerateHash(userRef.ID, req.Device, user.Salt)
 	if err != nil {
-		api.Err(response, "Server error")
-		return perr.Wrap(err, "getting hash")
+		return perr.Wrap(err).Debug("getting hash")
 	}
 
 	response.MustSet(&Code_Response{Id: userRef.ID, Hash: hash})

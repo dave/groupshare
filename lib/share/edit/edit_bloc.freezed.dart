@@ -193,9 +193,10 @@ class _$PageStateTearOff {
   }
 
 // ignore: unused_element
-  PageStateError error(dynamic error, PageState retryState) {
+  PageStateError error(dynamic error, StackTrace stack, PageState retryState) {
     return PageStateError(
       error,
+      stack,
       retryState,
     );
   }
@@ -216,7 +217,8 @@ mixin _$PageState {
     @required Result offline(),
     @required Result loading(),
     @required Result form(FormzStatus status, String initialName, Name name),
-    @required Result error(dynamic error, PageState retryState),
+    @required
+        Result error(dynamic error, StackTrace stack, PageState retryState),
     @required Result done(),
   });
   @optionalTypeArgs
@@ -225,7 +227,7 @@ mixin _$PageState {
     Result offline(),
     Result loading(),
     Result form(FormzStatus status, String initialName, Name name),
-    Result error(dynamic error, PageState retryState),
+    Result error(dynamic error, StackTrace stack, PageState retryState),
     Result done(),
     @required Result orElse(),
   });
@@ -302,7 +304,8 @@ class _$PageStateInitial implements PageStateInitial {
     @required Result offline(),
     @required Result loading(),
     @required Result form(FormzStatus status, String initialName, Name name),
-    @required Result error(dynamic error, PageState retryState),
+    @required
+        Result error(dynamic error, StackTrace stack, PageState retryState),
     @required Result done(),
   }) {
     assert(initial != null);
@@ -321,7 +324,7 @@ class _$PageStateInitial implements PageStateInitial {
     Result offline(),
     Result loading(),
     Result form(FormzStatus status, String initialName, Name name),
-    Result error(dynamic error, PageState retryState),
+    Result error(dynamic error, StackTrace stack, PageState retryState),
     Result done(),
     @required Result orElse(),
   }) {
@@ -413,7 +416,8 @@ class _$PageStateOffline implements PageStateOffline {
     @required Result offline(),
     @required Result loading(),
     @required Result form(FormzStatus status, String initialName, Name name),
-    @required Result error(dynamic error, PageState retryState),
+    @required
+        Result error(dynamic error, StackTrace stack, PageState retryState),
     @required Result done(),
   }) {
     assert(initial != null);
@@ -432,7 +436,7 @@ class _$PageStateOffline implements PageStateOffline {
     Result offline(),
     Result loading(),
     Result form(FormzStatus status, String initialName, Name name),
-    Result error(dynamic error, PageState retryState),
+    Result error(dynamic error, StackTrace stack, PageState retryState),
     Result done(),
     @required Result orElse(),
   }) {
@@ -524,7 +528,8 @@ class _$PageStateLoading implements PageStateLoading {
     @required Result offline(),
     @required Result loading(),
     @required Result form(FormzStatus status, String initialName, Name name),
-    @required Result error(dynamic error, PageState retryState),
+    @required
+        Result error(dynamic error, StackTrace stack, PageState retryState),
     @required Result done(),
   }) {
     assert(initial != null);
@@ -543,7 +548,7 @@ class _$PageStateLoading implements PageStateLoading {
     Result offline(),
     Result loading(),
     Result form(FormzStatus status, String initialName, Name name),
-    Result error(dynamic error, PageState retryState),
+    Result error(dynamic error, StackTrace stack, PageState retryState),
     Result done(),
     @required Result orElse(),
   }) {
@@ -682,7 +687,8 @@ class _$PageStateForm implements PageStateForm {
     @required Result offline(),
     @required Result loading(),
     @required Result form(FormzStatus status, String initialName, Name name),
-    @required Result error(dynamic error, PageState retryState),
+    @required
+        Result error(dynamic error, StackTrace stack, PageState retryState),
     @required Result done(),
   }) {
     assert(initial != null);
@@ -701,7 +707,7 @@ class _$PageStateForm implements PageStateForm {
     Result offline(),
     Result loading(),
     Result form(FormzStatus status, String initialName, Name name),
-    Result error(dynamic error, PageState retryState),
+    Result error(dynamic error, StackTrace stack, PageState retryState),
     Result done(),
     @required Result orElse(),
   }) {
@@ -764,7 +770,7 @@ abstract class $PageStateErrorCopyWith<$Res> {
   factory $PageStateErrorCopyWith(
           PageStateError value, $Res Function(PageStateError) then) =
       _$PageStateErrorCopyWithImpl<$Res>;
-  $Res call({dynamic error, PageState retryState});
+  $Res call({dynamic error, StackTrace stack, PageState retryState});
 }
 
 class _$PageStateErrorCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
@@ -779,28 +785,33 @@ class _$PageStateErrorCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object error = freezed,
+    Object stack = freezed,
     Object retryState = freezed,
   }) {
     return _then(PageStateError(
       error == freezed ? _value.error : error as dynamic,
+      stack == freezed ? _value.stack : stack as StackTrace,
       retryState == freezed ? _value.retryState : retryState as PageState,
     ));
   }
 }
 
 class _$PageStateError implements PageStateError {
-  const _$PageStateError(this.error, this.retryState)
+  const _$PageStateError(this.error, this.stack, this.retryState)
       : assert(error != null),
+        assert(stack != null),
         assert(retryState != null);
 
   @override
   final dynamic error;
   @override
+  final StackTrace stack;
+  @override
   final PageState retryState;
 
   @override
   String toString() {
-    return 'PageState.error(error: $error, retryState: $retryState)';
+    return 'PageState.error(error: $error, stack: $stack, retryState: $retryState)';
   }
 
   @override
@@ -809,6 +820,8 @@ class _$PageStateError implements PageStateError {
         (other is PageStateError &&
             (identical(other.error, error) ||
                 const DeepCollectionEquality().equals(other.error, error)) &&
+            (identical(other.stack, stack) ||
+                const DeepCollectionEquality().equals(other.stack, stack)) &&
             (identical(other.retryState, retryState) ||
                 const DeepCollectionEquality()
                     .equals(other.retryState, retryState)));
@@ -818,6 +831,7 @@ class _$PageStateError implements PageStateError {
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(error) ^
+      const DeepCollectionEquality().hash(stack) ^
       const DeepCollectionEquality().hash(retryState);
 
   @override
@@ -831,7 +845,8 @@ class _$PageStateError implements PageStateError {
     @required Result offline(),
     @required Result loading(),
     @required Result form(FormzStatus status, String initialName, Name name),
-    @required Result error(dynamic error, PageState retryState),
+    @required
+        Result error(dynamic error, StackTrace stack, PageState retryState),
     @required Result done(),
   }) {
     assert(initial != null);
@@ -840,7 +855,7 @@ class _$PageStateError implements PageStateError {
     assert(form != null);
     assert(error != null);
     assert(done != null);
-    return error(this.error, retryState);
+    return error(this.error, stack, retryState);
   }
 
   @override
@@ -850,13 +865,13 @@ class _$PageStateError implements PageStateError {
     Result offline(),
     Result loading(),
     Result form(FormzStatus status, String initialName, Name name),
-    Result error(dynamic error, PageState retryState),
+    Result error(dynamic error, StackTrace stack, PageState retryState),
     Result done(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (error != null) {
-      return error(this.error, retryState);
+      return error(this.error, stack, retryState);
     }
     return orElse();
   }
@@ -900,10 +915,11 @@ class _$PageStateError implements PageStateError {
 }
 
 abstract class PageStateError implements PageState {
-  const factory PageStateError(dynamic error, PageState retryState) =
-      _$PageStateError;
+  const factory PageStateError(
+      dynamic error, StackTrace stack, PageState retryState) = _$PageStateError;
 
   dynamic get error;
+  StackTrace get stack;
   PageState get retryState;
   $PageStateErrorCopyWith<PageStateError> get copyWith;
 }
@@ -947,7 +963,8 @@ class _$PageStateDone implements PageStateDone {
     @required Result offline(),
     @required Result loading(),
     @required Result form(FormzStatus status, String initialName, Name name),
-    @required Result error(dynamic error, PageState retryState),
+    @required
+        Result error(dynamic error, StackTrace stack, PageState retryState),
     @required Result done(),
   }) {
     assert(initial != null);
@@ -966,7 +983,7 @@ class _$PageStateDone implements PageStateDone {
     Result offline(),
     Result loading(),
     Result form(FormzStatus status, String initialName, Name name),
-    Result error(dynamic error, PageState retryState),
+    Result error(dynamic error, StackTrace stack, PageState retryState),
     Result done(),
     @required Result orElse(),
   }) {

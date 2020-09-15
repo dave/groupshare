@@ -2,7 +2,6 @@ package data
 
 import (
 	"context"
-	"errors"
 
 	"cloud.google.com/go/firestore"
 	"github.com/dave/groupshare/server/auth"
@@ -19,11 +18,11 @@ var SHARE_DOCUMENT_TYPE = &pserver.DocumentType{
 		user := ctx.Value(UserContextKey).(*auth.User)
 		ref, user, err := auth.GetUser(ctx, server, tx, user.Id)
 		if err != nil {
-			return perr.Wrap(err, "verifying token")
+			return perr.Wrap(err).Debug("verifying token").Flag(perr.Auth)
 		}
 		user.Shares = append(user.Shares, id)
 		if err := tx.Set(ref, user); err != nil {
-			return perr.Wrap(err, "setting updated user")
+			return perr.Wrap(err).Debug("setting updated user").Flag(pserver.Firestore)
 		}
 		return nil
 	},
@@ -45,7 +44,7 @@ func checkSharePermission(ctx context.Context, documentId string) error {
 		}
 	}
 	if !found {
-		return errors.New("user does not have permission")
+		return perr.Debug("user does not have permission")
 	}
 	return nil
 }

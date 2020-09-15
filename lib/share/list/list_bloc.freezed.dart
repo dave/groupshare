@@ -13,11 +13,10 @@ class _$ListStateTearOff {
   const _$ListStateTearOff();
 
 // ignore: unused_element
-  _ListState call(PageState page, SharesState shares, bool connected) {
+  _ListState call(PageState page, SharesState shares) {
     return _ListState(
       page,
       shares,
-      connected,
     );
   }
 }
@@ -28,7 +27,6 @@ const $ListState = _$ListStateTearOff();
 mixin _$ListState {
   PageState get page;
   SharesState get shares;
-  bool get connected;
 
   $ListStateCopyWith<ListState> get copyWith;
 }
@@ -36,7 +34,7 @@ mixin _$ListState {
 abstract class $ListStateCopyWith<$Res> {
   factory $ListStateCopyWith(ListState value, $Res Function(ListState) then) =
       _$ListStateCopyWithImpl<$Res>;
-  $Res call({PageState page, SharesState shares, bool connected});
+  $Res call({PageState page, SharesState shares});
 
   $PageStateCopyWith<$Res> get page;
   $SharesStateCopyWith<$Res> get shares;
@@ -53,12 +51,10 @@ class _$ListStateCopyWithImpl<$Res> implements $ListStateCopyWith<$Res> {
   $Res call({
     Object page = freezed,
     Object shares = freezed,
-    Object connected = freezed,
   }) {
     return _then(_value.copyWith(
       page: page == freezed ? _value.page : page as PageState,
       shares: shares == freezed ? _value.shares : shares as SharesState,
-      connected: connected == freezed ? _value.connected : connected as bool,
     ));
   }
 
@@ -88,7 +84,7 @@ abstract class _$ListStateCopyWith<$Res> implements $ListStateCopyWith<$Res> {
           _ListState value, $Res Function(_ListState) then) =
       __$ListStateCopyWithImpl<$Res>;
   @override
-  $Res call({PageState page, SharesState shares, bool connected});
+  $Res call({PageState page, SharesState shares});
 
   @override
   $PageStateCopyWith<$Res> get page;
@@ -108,32 +104,27 @@ class __$ListStateCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
   $Res call({
     Object page = freezed,
     Object shares = freezed,
-    Object connected = freezed,
   }) {
     return _then(_ListState(
       page == freezed ? _value.page : page as PageState,
       shares == freezed ? _value.shares : shares as SharesState,
-      connected == freezed ? _value.connected : connected as bool,
     ));
   }
 }
 
 class _$_ListState implements _ListState {
-  const _$_ListState(this.page, this.shares, this.connected)
+  const _$_ListState(this.page, this.shares)
       : assert(page != null),
-        assert(shares != null),
-        assert(connected != null);
+        assert(shares != null);
 
   @override
   final PageState page;
   @override
   final SharesState shares;
-  @override
-  final bool connected;
 
   @override
   String toString() {
-    return 'ListState(page: $page, shares: $shares, connected: $connected)';
+    return 'ListState(page: $page, shares: $shares)';
   }
 
   @override
@@ -143,18 +134,14 @@ class _$_ListState implements _ListState {
             (identical(other.page, page) ||
                 const DeepCollectionEquality().equals(other.page, page)) &&
             (identical(other.shares, shares) ||
-                const DeepCollectionEquality().equals(other.shares, shares)) &&
-            (identical(other.connected, connected) ||
-                const DeepCollectionEquality()
-                    .equals(other.connected, connected)));
+                const DeepCollectionEquality().equals(other.shares, shares)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(page) ^
-      const DeepCollectionEquality().hash(shares) ^
-      const DeepCollectionEquality().hash(connected);
+      const DeepCollectionEquality().hash(shares);
 
   @override
   _$ListStateCopyWith<_ListState> get copyWith =>
@@ -162,15 +149,12 @@ class _$_ListState implements _ListState {
 }
 
 abstract class _ListState implements ListState {
-  const factory _ListState(PageState page, SharesState shares, bool connected) =
-      _$_ListState;
+  const factory _ListState(PageState page, SharesState shares) = _$_ListState;
 
   @override
   PageState get page;
   @override
   SharesState get shares;
-  @override
-  bool get connected;
   @override
   _$ListStateCopyWith<_ListState> get copyWith;
 }
@@ -194,9 +178,10 @@ class _$PageStateTearOff {
   }
 
 // ignore: unused_element
-  PageStateError error(dynamic error) {
+  PageStateError error(dynamic error, StackTrace stack) {
     return PageStateError(
       error,
+      stack,
     );
   }
 }
@@ -210,14 +195,14 @@ mixin _$PageState {
     @required Result offline(),
     @required Result loading(),
     @required Result list(),
-    @required Result error(dynamic error),
+    @required Result error(dynamic error, StackTrace stack),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result offline(),
     Result loading(),
     Result list(),
-    Result error(dynamic error),
+    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -288,7 +273,7 @@ class _$PageStateOffline implements PageStateOffline {
     @required Result offline(),
     @required Result loading(),
     @required Result list(),
-    @required Result error(dynamic error),
+    @required Result error(dynamic error, StackTrace stack),
   }) {
     assert(offline != null);
     assert(loading != null);
@@ -303,7 +288,7 @@ class _$PageStateOffline implements PageStateOffline {
     Result offline(),
     Result loading(),
     Result list(),
-    Result error(dynamic error),
+    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -387,7 +372,7 @@ class _$PageStateLoading implements PageStateLoading {
     @required Result offline(),
     @required Result loading(),
     @required Result list(),
-    @required Result error(dynamic error),
+    @required Result error(dynamic error, StackTrace stack),
   }) {
     assert(offline != null);
     assert(loading != null);
@@ -402,7 +387,7 @@ class _$PageStateLoading implements PageStateLoading {
     Result offline(),
     Result loading(),
     Result list(),
-    Result error(dynamic error),
+    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -486,7 +471,7 @@ class _$PageStateList implements PageStateList {
     @required Result offline(),
     @required Result loading(),
     @required Result list(),
-    @required Result error(dynamic error),
+    @required Result error(dynamic error, StackTrace stack),
   }) {
     assert(offline != null);
     assert(loading != null);
@@ -501,7 +486,7 @@ class _$PageStateList implements PageStateList {
     Result offline(),
     Result loading(),
     Result list(),
-    Result error(dynamic error),
+    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -551,7 +536,7 @@ abstract class $PageStateErrorCopyWith<$Res> {
   factory $PageStateErrorCopyWith(
           PageStateError value, $Res Function(PageStateError) then) =
       _$PageStateErrorCopyWithImpl<$Res>;
-  $Res call({dynamic error});
+  $Res call({dynamic error, StackTrace stack});
 }
 
 class _$PageStateErrorCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
@@ -566,22 +551,28 @@ class _$PageStateErrorCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object error = freezed,
+    Object stack = freezed,
   }) {
     return _then(PageStateError(
       error == freezed ? _value.error : error as dynamic,
+      stack == freezed ? _value.stack : stack as StackTrace,
     ));
   }
 }
 
 class _$PageStateError implements PageStateError {
-  const _$PageStateError(this.error) : assert(error != null);
+  const _$PageStateError(this.error, this.stack)
+      : assert(error != null),
+        assert(stack != null);
 
   @override
   final dynamic error;
+  @override
+  final StackTrace stack;
 
   @override
   String toString() {
-    return 'PageState.error(error: $error)';
+    return 'PageState.error(error: $error, stack: $stack)';
   }
 
   @override
@@ -589,12 +580,16 @@ class _$PageStateError implements PageStateError {
     return identical(this, other) ||
         (other is PageStateError &&
             (identical(other.error, error) ||
-                const DeepCollectionEquality().equals(other.error, error)));
+                const DeepCollectionEquality().equals(other.error, error)) &&
+            (identical(other.stack, stack) ||
+                const DeepCollectionEquality().equals(other.stack, stack)));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(error);
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(error) ^
+      const DeepCollectionEquality().hash(stack);
 
   @override
   $PageStateErrorCopyWith<PageStateError> get copyWith =>
@@ -606,13 +601,13 @@ class _$PageStateError implements PageStateError {
     @required Result offline(),
     @required Result loading(),
     @required Result list(),
-    @required Result error(dynamic error),
+    @required Result error(dynamic error, StackTrace stack),
   }) {
     assert(offline != null);
     assert(loading != null);
     assert(list != null);
     assert(error != null);
-    return error(this.error);
+    return error(this.error, stack);
   }
 
   @override
@@ -621,12 +616,12 @@ class _$PageStateError implements PageStateError {
     Result offline(),
     Result loading(),
     Result list(),
-    Result error(dynamic error),
+    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (error != null) {
-      return error(this.error);
+      return error(this.error, stack);
     }
     return orElse();
   }
@@ -664,9 +659,11 @@ class _$PageStateError implements PageStateError {
 }
 
 abstract class PageStateError implements PageState {
-  const factory PageStateError(dynamic error) = _$PageStateError;
+  const factory PageStateError(dynamic error, StackTrace stack) =
+      _$PageStateError;
 
   dynamic get error;
+  StackTrace get stack;
   $PageStateErrorCopyWith<PageStateError> get copyWith;
 }
 

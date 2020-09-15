@@ -1,29 +1,31 @@
 import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groupshare/auth/auth.dart';
+import 'package:groupshare/app/app.dart';
+import 'package:groupshare/login/login.dart';
 
 Future<void> handle(
   BuildContext context,
-  dynamic ex, [
+  dynamic ex,
+  dynamic stack, {
   List<Button> buttons = const [],
-]) async {
+  bool ok = false,
+}) async {
   if (ex == null) {
     return;
   }
-
-  var message = "Server error";
+  var message = "$ex";
   if (ex is UserException) {
-    message = ex.message;
-  } else if (ex is Error) {
-    throw ex;
+    print("handling $ex ${ex.debug} $stack");
+  } else {
+    print("handling $ex $stack");
   }
 
   await showDialog(
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context) {
-      return BlocBuilder<AuthCubit, AuthState>(
+      return BlocBuilder<AppCubit, AppState>(
         builder: (context, state) {
           return AlertDialog(
             title: Text('Error'),
@@ -35,7 +37,7 @@ Future<void> handle(
               ),
             ),
             actions: <Widget>[
-              if (buttons.length == 0)
+              if (buttons.length == 0 || ok)
                 FlatButton(
                   child: Text("OK"),
                   onPressed: () {
@@ -52,11 +54,16 @@ Future<void> handle(
                     }
                   },
                 ),
-              if (state is AuthStateDone || state is AuthStateAuth)
+              if (state is AppStateDone ||
+                  (state is AppStateLogin && state.auth))
                 FlatButton(
                   child: Text("Log off"),
                   onPressed: () async {
-                    await context.bloc<AuthCubit>().logoff();
+                    await context.bloc<AppCubit>().logoff();
+                    Navigator.of(context).pushAndRemoveUntil(
+                      LoginPage.route(),
+                      (route) => false,
+                    );
                   },
                 ),
             ],

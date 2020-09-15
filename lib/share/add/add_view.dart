@@ -37,12 +37,17 @@ class AddForm extends StatelessWidget {
         state.map(
           form: (state) => true,
           error: (state) {
-            handle(context, state.error, [
-              Button(
-                "Retry",
-                () => context.bloc<AddCubit>().retry(state.retryState),
-              )
-            ]);
+            handle(
+              context,
+              state.error,
+              state.stack,
+              buttons: [
+                Button(
+                  "Retry",
+                  () => context.bloc<AddCubit>().retry(state.retryState),
+                )
+              ],
+            );
           },
           done: (state) {
             Navigator.of(context).pushAndRemoveUntil(

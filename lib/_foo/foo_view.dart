@@ -37,12 +37,17 @@ class FooForm extends StatelessWidget {
           initial: (state) => true,
           form: (state) => true,
           error: (state) {
-            handle(context, state.error, [
-              Button(
-                "retry",
-                () => context.bloc<FooCubit>().retry(state.retryState),
-              )
-            ]);
+            handle(
+              context,
+              state.error,
+              state.stack,
+              buttons: [
+                Button(
+                  "retry",
+                  () => context.bloc<FooCubit>().retry(state.retryState),
+                )
+              ],
+            );
           },
           done: (state) => true,
           //{

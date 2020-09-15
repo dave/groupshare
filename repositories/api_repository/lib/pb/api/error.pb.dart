@@ -9,14 +9,15 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'error.pbenum.dart';
-
-export 'error.pbenum.dart';
-
 class Error extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Error', package: const $pb.PackageName('messages'), createEmptyInstance: create)
-    ..e<Error_Type>(1, 'type', $pb.PbFieldType.OE, defaultOrMaker: Error_Type.ERROR, valueOf: Error_Type.valueOf, enumValues: Error_Type.values)
-    ..aOS(2, 'message')
+    ..aOS(1, 'message')
+    ..aOS(2, 'debug')
+    ..aOB(3, 'busy')
+    ..aOB(4, 'retry')
+    ..aOB(5, 'stop')
+    ..aOB(6, 'auth')
+    ..aOB(7, 'expired')
     ..hasRequiredFields = false
   ;
 
@@ -36,21 +37,66 @@ class Error extends $pb.GeneratedMessage {
   static Error _defaultInstance;
 
   @$pb.TagNumber(1)
-  Error_Type get type => $_getN(0);
+  $core.String get message => $_getSZ(0);
   @$pb.TagNumber(1)
-  set type(Error_Type v) { setField(1, v); }
+  set message($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasType() => $_has(0);
+  $core.bool hasMessage() => $_has(0);
   @$pb.TagNumber(1)
-  void clearType() => clearField(1);
+  void clearMessage() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get message => $_getSZ(1);
+  $core.String get debug => $_getSZ(1);
   @$pb.TagNumber(2)
-  set message($core.String v) { $_setString(1, v); }
+  set debug($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasMessage() => $_has(1);
+  $core.bool hasDebug() => $_has(1);
   @$pb.TagNumber(2)
-  void clearMessage() => clearField(2);
+  void clearDebug() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get busy => $_getBF(2);
+  @$pb.TagNumber(3)
+  set busy($core.bool v) { $_setBool(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasBusy() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBusy() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get retry => $_getBF(3);
+  @$pb.TagNumber(4)
+  set retry($core.bool v) { $_setBool(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasRetry() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRetry() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.bool get stop => $_getBF(4);
+  @$pb.TagNumber(5)
+  set stop($core.bool v) { $_setBool(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasStop() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearStop() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.bool get auth => $_getBF(5);
+  @$pb.TagNumber(6)
+  set auth($core.bool v) { $_setBool(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasAuth() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearAuth() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.bool get expired => $_getBF(6);
+  @$pb.TagNumber(7)
+  set expired($core.bool v) { $_setBool(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasExpired() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearExpired() => clearField(7);
 }
 

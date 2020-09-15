@@ -16,6 +16,7 @@ abstract class ViewState with _$ViewState {
   const factory ViewState.error(
     String id,
     dynamic error,
+    StackTrace stack,
     ViewState retryState,
   ) = ViewStateError;
 

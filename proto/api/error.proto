@@ -4,11 +4,11 @@ package messages;
 option go_package = "github.com/dave/groupshare/server/api;api";
 
 message Error {
-  enum Type {
-    ERROR = 0;
-    AUTH = 1;
-    EXPIRED = 2;
-  }
-  Type type = 1;
-  string message = 2;
+  string message = 1;
+  string debug = 2;
+  bool busy = 3;
+  bool retry = 4;
+  bool stop = 5;
+  bool auth = 6;
+  bool expired = 7;
 }

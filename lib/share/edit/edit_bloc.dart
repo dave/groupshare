@@ -30,6 +30,7 @@ abstract class PageState with _$PageState {
   }) = PageStateForm;
   const factory PageState.error(
     dynamic error,
+    StackTrace stack,
     PageState retryState,
   ) = PageStateError;
   const factory PageState.done() = PageStateDone;
@@ -128,10 +129,10 @@ class EditCubit extends Cubit<EditState> {
           page: PageState.done(),
         ),
       );
-    } catch (ex) {
+    } catch (ex, stack) {
       emit(
         state.copyWith(
-          page: PageState.error(ex, pageForm),
+          page: PageState.error(ex, stack, pageForm),
         ),
       );
     }

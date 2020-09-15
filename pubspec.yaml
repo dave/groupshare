@@ -60,6 +60,8 @@ dependencies:
     path: repositories/exceptions_repository
   data_repository:
     path: repositories/data_repository
+  discovery_repository:
+    path: repositories/discovery_repository
 
 dev_dependencies:
   flutter_test:

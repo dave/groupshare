@@ -6,7 +6,6 @@ class Connection {
   Stream<bool> get changed {
     return _connectivity.onConnectivityChanged.map(
       (ConnectivityResult result) {
-        print(result.toString());
         return result != ConnectivityResult.none;
       },
     );

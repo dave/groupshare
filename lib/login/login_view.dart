@@ -8,6 +8,8 @@ import 'package:groupshare/handle.dart';
 import 'package:groupshare/login/login.dart';
 import 'package:groupshare/share/list/list.dart';
 
+//import 'package:formz/formz.dart';
+
 class LoginPage extends StatelessWidget {
   static Route route() {
     return MaterialPageRoute<void>(builder: (_) => LoginPage());
@@ -40,12 +42,17 @@ class LoginForm extends StatelessWidget {
           email: (state) => true,
           code: (state) => true,
           error: (state) {
-            handle(context, state.error, [
-              Button(
-                "Retry",
-                () => context.bloc<LoginCubit>().retry(state.retry),
-              ),
-            ]);
+            handle(
+              context,
+              state.error,
+              state.stack,
+              buttons: [
+                Button(
+                  "Retry",
+                  () => context.bloc<LoginCubit>().retry(state.retry),
+                ),
+              ],
+            );
           },
           done: (state) {
             Navigator.of(context).pushAndRemoveUntil(

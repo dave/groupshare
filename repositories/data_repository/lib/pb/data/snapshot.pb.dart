@@ -10,7 +10,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../pserver/pserver.pb.dart' as $0;
+import 'package:protod/pserver/pserver.pb.dart' as $0;
 
 class Snapshot extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Snapshot', package: const $pb.PackageName('wrappers'), createEmptyInstance: create)

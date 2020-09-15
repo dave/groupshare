@@ -15,10 +15,7 @@ class Auth {
   final _apiTokenKey = UniqueKey();
   Function(Status) onStatusChange;
 
-  Auth(Api api, Box<String> box, Device device)
-      : this._api = api,
-        this._box = box,
-        this._device = device;
+  Auth(this._api, this._box, this._device);
 
   Future<void> init() async {
     if (status == Status.Done) {
@@ -90,7 +87,7 @@ class Auth {
   final _controller = StreamController<Status>.broadcast();
 
   Stream<Status> get statusChange async* {
-    yield status;
+    //yield status;
     yield* _controller.stream;
   }
 

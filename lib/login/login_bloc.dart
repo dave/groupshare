@@ -23,6 +23,7 @@ abstract class LoginState with _$LoginState {
 
   const factory LoginState.error(
     dynamic error,
+    StackTrace stack,
     LoginState retry,
   ) = LoginStateError;
 
@@ -80,8 +81,8 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       emit(stateEmail.copyWith(status: FormzStatus.submissionInProgress));
       await _auth.login(stateEmail.email.value);
-    } catch (ex) {
-      emit(LoginState.error(ex, stateEmail));
+    } catch (ex, stack) {
+      emit(LoginState.error(ex, stack, stateEmail));
     }
   }
 
@@ -98,8 +99,8 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       emit(stateCode.copyWith(status: FormzStatus.submissionInProgress));
       await _auth.code(stateCode.code.value);
-    } catch (ex) {
-      emit(LoginState.error(ex, stateCode));
+    } catch (ex, stack) {
+      emit(LoginState.error(ex, stack, stateCode));
     }
   }
 }

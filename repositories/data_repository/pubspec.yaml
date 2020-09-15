@@ -10,6 +10,8 @@ dependencies:
     sdk: flutter
   auth_repository:
     path: "../auth_repository"
+  api_repository:
+    path: "../api_repository"
   protod:
     path: "../../../protod"
 

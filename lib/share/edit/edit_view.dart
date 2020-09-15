@@ -58,12 +58,17 @@ class EditForm extends StatelessWidget {
           loading: (page) => true,
           form: (page) => true,
           error: (page) {
-            handle(context, page.error, [
-              Button(
-                "Retry",
-                () => context.bloc<EditCubit>().retry(page.retryState),
-              )
-            ]);
+            handle(
+              context,
+              page.error,
+              page.stack,
+              buttons: [
+                Button(
+                  "Retry",
+                  () => context.bloc<EditCubit>().retry(page.retryState),
+                )
+              ],
+            );
           },
           done: (page) {
             Navigator.of(context).popUntil(

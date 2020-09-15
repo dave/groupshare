@@ -32,9 +32,10 @@ class _$LoginStateTearOff {
   }
 
 // ignore: unused_element
-  LoginStateError error(dynamic error, LoginState retry) {
+  LoginStateError error(dynamic error, StackTrace stack, LoginState retry) {
     return LoginStateError(
       error,
+      stack,
       retry,
     );
   }
@@ -53,14 +54,14 @@ mixin _$LoginState {
   Result when<Result extends Object>({
     @required Result email(FormzStatus status, Email email),
     @required Result code(FormzStatus status, Code code),
-    @required Result error(dynamic error, LoginState retry),
+    @required Result error(dynamic error, StackTrace stack, LoginState retry),
     @required Result done(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result email(FormzStatus status, Email email),
     Result code(FormzStatus status, Code code),
-    Result error(dynamic error, LoginState retry),
+    Result error(dynamic error, StackTrace stack, LoginState retry),
     Result done(),
     @required Result orElse(),
   });
@@ -166,7 +167,7 @@ class _$LoginStateEmail implements LoginStateEmail {
   Result when<Result extends Object>({
     @required Result email(FormzStatus status, Email email),
     @required Result code(FormzStatus status, Code code),
-    @required Result error(dynamic error, LoginState retry),
+    @required Result error(dynamic error, StackTrace stack, LoginState retry),
     @required Result done(),
   }) {
     assert(email != null);
@@ -181,7 +182,7 @@ class _$LoginStateEmail implements LoginStateEmail {
   Result maybeWhen<Result extends Object>({
     Result email(FormzStatus status, Email email),
     Result code(FormzStatus status, Code code),
-    Result error(dynamic error, LoginState retry),
+    Result error(dynamic error, StackTrace stack, LoginState retry),
     Result done(),
     @required Result orElse(),
   }) {
@@ -304,7 +305,7 @@ class _$LoginStateCode implements LoginStateCode {
   Result when<Result extends Object>({
     @required Result email(FormzStatus status, Email email),
     @required Result code(FormzStatus status, Code code),
-    @required Result error(dynamic error, LoginState retry),
+    @required Result error(dynamic error, StackTrace stack, LoginState retry),
     @required Result done(),
   }) {
     assert(email != null);
@@ -319,7 +320,7 @@ class _$LoginStateCode implements LoginStateCode {
   Result maybeWhen<Result extends Object>({
     Result email(FormzStatus status, Email email),
     Result code(FormzStatus status, Code code),
-    Result error(dynamic error, LoginState retry),
+    Result error(dynamic error, StackTrace stack, LoginState retry),
     Result done(),
     @required Result orElse(),
   }) {
@@ -375,7 +376,7 @@ abstract class $LoginStateErrorCopyWith<$Res> {
   factory $LoginStateErrorCopyWith(
           LoginStateError value, $Res Function(LoginStateError) then) =
       _$LoginStateErrorCopyWithImpl<$Res>;
-  $Res call({dynamic error, LoginState retry});
+  $Res call({dynamic error, StackTrace stack, LoginState retry});
 }
 
 class _$LoginStateErrorCopyWithImpl<$Res> extends _$LoginStateCopyWithImpl<$Res>
@@ -390,28 +391,33 @@ class _$LoginStateErrorCopyWithImpl<$Res> extends _$LoginStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object error = freezed,
+    Object stack = freezed,
     Object retry = freezed,
   }) {
     return _then(LoginStateError(
       error == freezed ? _value.error : error as dynamic,
+      stack == freezed ? _value.stack : stack as StackTrace,
       retry == freezed ? _value.retry : retry as LoginState,
     ));
   }
 }
 
 class _$LoginStateError implements LoginStateError {
-  const _$LoginStateError(this.error, this.retry)
+  const _$LoginStateError(this.error, this.stack, this.retry)
       : assert(error != null),
+        assert(stack != null),
         assert(retry != null);
 
   @override
   final dynamic error;
   @override
+  final StackTrace stack;
+  @override
   final LoginState retry;
 
   @override
   String toString() {
-    return 'LoginState.error(error: $error, retry: $retry)';
+    return 'LoginState.error(error: $error, stack: $stack, retry: $retry)';
   }
 
   @override
@@ -420,6 +426,8 @@ class _$LoginStateError implements LoginStateError {
         (other is LoginStateError &&
             (identical(other.error, error) ||
                 const DeepCollectionEquality().equals(other.error, error)) &&
+            (identical(other.stack, stack) ||
+                const DeepCollectionEquality().equals(other.stack, stack)) &&
             (identical(other.retry, retry) ||
                 const DeepCollectionEquality().equals(other.retry, retry)));
   }
@@ -428,6 +436,7 @@ class _$LoginStateError implements LoginStateError {
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(error) ^
+      const DeepCollectionEquality().hash(stack) ^
       const DeepCollectionEquality().hash(retry);
 
   @override
@@ -439,14 +448,14 @@ class _$LoginStateError implements LoginStateError {
   Result when<Result extends Object>({
     @required Result email(FormzStatus status, Email email),
     @required Result code(FormzStatus status, Code code),
-    @required Result error(dynamic error, LoginState retry),
+    @required Result error(dynamic error, StackTrace stack, LoginState retry),
     @required Result done(),
   }) {
     assert(email != null);
     assert(code != null);
     assert(error != null);
     assert(done != null);
-    return error(this.error, retry);
+    return error(this.error, stack, retry);
   }
 
   @override
@@ -454,13 +463,13 @@ class _$LoginStateError implements LoginStateError {
   Result maybeWhen<Result extends Object>({
     Result email(FormzStatus status, Email email),
     Result code(FormzStatus status, Code code),
-    Result error(dynamic error, LoginState retry),
+    Result error(dynamic error, StackTrace stack, LoginState retry),
     Result done(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (error != null) {
-      return error(this.error, retry);
+      return error(this.error, stack, retry);
     }
     return orElse();
   }
@@ -498,10 +507,11 @@ class _$LoginStateError implements LoginStateError {
 }
 
 abstract class LoginStateError implements LoginState {
-  const factory LoginStateError(dynamic error, LoginState retry) =
-      _$LoginStateError;
+  const factory LoginStateError(
+      dynamic error, StackTrace stack, LoginState retry) = _$LoginStateError;
 
   dynamic get error;
+  StackTrace get stack;
   LoginState get retry;
   $LoginStateErrorCopyWith<LoginStateError> get copyWith;
 }
@@ -543,7 +553,7 @@ class _$LoginStateDone implements LoginStateDone {
   Result when<Result extends Object>({
     @required Result email(FormzStatus status, Email email),
     @required Result code(FormzStatus status, Code code),
-    @required Result error(dynamic error, LoginState retry),
+    @required Result error(dynamic error, StackTrace stack, LoginState retry),
     @required Result done(),
   }) {
     assert(email != null);
@@ -558,7 +568,7 @@ class _$LoginStateDone implements LoginStateDone {
   Result maybeWhen<Result extends Object>({
     Result email(FormzStatus status, Email email),
     Result code(FormzStatus status, Code code),
-    Result error(dynamic error, LoginState retry),
+    Result error(dynamic error, StackTrace stack, LoginState retry),
     Result done(),
     @required Result orElse(),
   }) {

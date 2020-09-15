@@ -6,7 +6,6 @@ import (
 
 	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
 	"cloud.google.com/go/firestore"
-	"github.com/dave/groupshare/server/api"
 	"github.com/dave/groupshare/server/auth"
 	"github.com/dave/groupshare/server/messages"
 	"github.com/dave/protod/delta"
@@ -28,20 +27,17 @@ func GetRequest(ctx context.Context, server *pserver.Server, user *auth.User, re
 
 	req := &pstore.Payload_Get_Request{}
 	if _, err := request.Get(req); err != nil {
-		api.Err(response, "Invalid input")
-		return err
+		return perr.Wrap(err).Debug("getting get request").Message("Invalid request")
 	}
 
 	state, document, err := pstore.Get(ctx, server, req.DocumentType, pstore.DocumentId(req.DocumentId), req.Create)
 	if err != nil {
-		api.Err(response, "Server error")
-		return perr.Wrap(err, "pstore get")
+		return perr.Wrap(err).Debug("pstore get")
 	}
 
 	value, err := delta.MarshalAny(document)
 	if err != nil {
-		api.Err(response, "Server error")
-		return perr.Wrap(err, "marshaling document")
+		return perr.Wrap(err).Debug("marshaling document")
 	}
 
 	response.MustSet(&pstore.Payload_Get_Response{State: state, Value: value})
@@ -54,8 +50,7 @@ func EditRequest(ctx context.Context, server *pserver.Server, user *auth.User, r
 
 	req := &pstore.Payload_Edit_Request{}
 	if _, err := request.Get(req); err != nil {
-		api.Err(response, "Invalid input")
-		return err
+		return perr.Wrap(err).Debug("getting edit request").Message("Invalid request")
 	}
 
 	var refresh bool
@@ -71,23 +66,20 @@ func EditRequest(ctx context.Context, server *pserver.Server, user *auth.User, r
 
 	state, op, err := pstore.Edit(ctx, server, req.DocumentType, pstore.DocumentId(req.DocumentId), pstore.StateId(req.StateId), req.State, req.Op)
 	if err != nil {
-		api.Err(response, "Server error")
-		return perr.Wrap(err, "pstore edit")
+		return perr.Wrap(err).Debug("pstore edit")
 	}
 
 	response.MustSet(&pstore.Payload_Edit_Response{State: state, Op: op})
 
 	if refresh {
 		if err := pstore.Refresh(ctx, server, req.DocumentType, pstore.DocumentId(req.DocumentId)); err != nil {
-			api.Err(response, "Server error")
-			return perr.Wrap(err, "pstore refresh")
+			return perr.Wrap(err).Debug("pstore refresh")
 		}
 	} else if state%UPDATE_SNAPSHOT_FREQUENCY == 0 {
 		refreshRequest := pmsg.New()
 		refreshRequest.MustSet(&pstore.Payload_Refresh_Request{DocumentType: req.DocumentType, DocumentId: req.DocumentId})
 		if _, err := TriggerRefreshTask(ctx, server, refreshRequest); err != nil {
-			api.Err(response, "Server error")
-			return perr.Wrap(err, "triggering refresh task")
+			return perr.Wrap(err).Debug("triggering refresh task")
 		}
 	}
 
@@ -98,13 +90,11 @@ func RefreshRequest(ctx context.Context, server *pserver.Server, request, respon
 
 	req := &pstore.Payload_Refresh_Request{}
 	if _, err := request.Get(req); err != nil {
-		api.Err(response, "Invalid input")
-		return err
+		return perr.Wrap(err).Debug("getting refresh request").Message("Invalid request")
 	}
 
 	if err := pstore.Refresh(ctx, server, req.DocumentType, pstore.DocumentId(req.DocumentId)); err != nil {
-		api.Err(response, "Server error")
-		return perr.Wrap(err, "pstore refresh")
+		return perr.Wrap(err).Debug("pstore refresh")
 	}
 
 	return nil
@@ -124,14 +114,14 @@ func ShareListRequest(ctx context.Context, server *pserver.Server, user *auth.Us
 
 	docs, err := server.Firestore.GetAll(ctx, shares)
 	if err != nil {
-		return err
+		return perr.Wrap(err).Debug("firestore get all").Flag(pserver.Firestore)
 	}
 
 	var items []*messages.Share_List_Response_Item
 	for _, doc := range docs {
 		snap := &ShareSnapshot{}
 		if err := doc.DataTo(snap); err != nil {
-			return err
+			return perr.Wrap(err).Debug("unwrapping snapshot")
 		}
 		items = append(items, &messages.Share_List_Response_Item{Id: doc.Ref.ID, Name: snap.Name})
 	}
@@ -144,12 +134,12 @@ func TriggerRefreshTask(ctx context.Context, server *pserver.Server, message pro
 
 	client, err := cloudtasks.NewClient(ctx)
 	if err != nil {
-		return nil, perr.Wrap(err, "getting new cloudtasks client")
+		return nil, perr.Wrap(err).Debug("getting new cloudtasks client").Flag(CloudTasks)
 	}
 
 	body, err := proto.Marshal(message)
 	if err != nil {
-		return nil, perr.Wrap(err, "marshaling refresh message")
+		return nil, perr.Wrap(err).Debug("marshaling refresh message")
 	}
 
 	req := &taskspb.CreateTaskRequest{
@@ -168,9 +158,13 @@ func TriggerRefreshTask(ctx context.Context, server *pserver.Server, message pro
 
 	task, err := client.CreateTask(ctx, req)
 	if err != nil {
-		return nil, perr.Wrap(err, "creating task")
+		return nil, perr.Wrap(err).Debug("creating task").Flag(CloudTasks)
 	}
 
 	return task, nil
 
 }
+
+var (
+	CloudTasks = perr.NewFlag("cloud tasks")
+)

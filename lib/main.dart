@@ -5,12 +5,11 @@ import 'package:auth_repository/auth_repository.dart';
 import 'package:connection_repository/connection_repository.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:device_repository/device_repository.dart';
-import 'package:exceptions_repository/exceptions_repository.dart';
+import 'package:discovery_repository/discovery_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groupshare/auth/auth.dart';
-import 'package:groupshare/login/login.dart';
-import 'package:groupshare/share/list/list.dart';
+import 'package:groupshare/app/app.dart';
+import 'package:groupshare/appbar/appbar.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:protod/delta/delta.dart';
@@ -21,168 +20,77 @@ const IS_LIVE = true;
 
 void main() async {
   FlutterError.onError = (FlutterErrorDetails details) {
-    if (details.exception is UserException) {
-      print("flutter error: ${details.exception.message}");
-    } else {
-      FlutterError.presentError(details);
-    }
+    print("flutter error: ${details.exception} ${details.stack}");
+    FlutterError.presentError(details);
   };
 
   try {
-    WidgetsFlutterBinding.ensureInitialized();
-    setDefaultRegistry(types);
-
-    await Hive.initFlutter();
-    Hive.registerAdapter(ItemAdapter<Share>(0, types));
-    Hive.registerAdapter(ItemAdapter<User>(1, types));
-
-    final connection = Connection();
-    final api = Api(
-      conn: connection,
-      prefix: IS_LIVE ? LIVE_PREFIX : LOCAL_PREFIX,
-    );
-    final device = await Device.initialise();
-    final auth = Auth(
-      api,
-      await Hive.openBox('auth'),
-      device,
-    );
-    final data = Data(
-      Store<Share>(
-        Share(),
-        await Hive.openBox('shares'),
-        Adapter<Share>(api.send, api.online),
-        types,
-      ),
-      Store<User>(
-        User(),
-        await Hive.openBox('users'),
-        Adapter<User>(api.send, api.online),
-        types,
-      ),
-      auth,
-    );
-
     runZoned<Future<void>>(
       () async {
-        await api.init();
-        await auth.init();
-        await data.init();
-        runApp(App(
-          api: api,
-          connection: connection,
-          device: device,
-          auth: auth,
-          data: data,
+        WidgetsFlutterBinding.ensureInitialized();
+        setDefaultRegistry(types);
+
+        await Hive.initFlutter();
+        Hive.registerAdapter(ItemAdapter<Share>(0, types));
+        Hive.registerAdapter(ItemAdapter<User>(1, types));
+
+        final device = Device();
+        final discovery = Discovery(IS_LIVE);
+        final connection = Connection();
+        final api = Api(
+          connection,
+          discovery,
+          IS_LIVE ? 20 : 5, // retries (live: 20, dev: 5)
+          IS_LIVE ? 4 : 8, // timeout (live: 4 sec, dev: 8 sec)
+        );
+        final auth = Auth(api, await Hive.openBox('auth'), device);
+        final data = Data(
+          Store<Share>(Share(), Adapter<Share>(api.send), api.offline, types),
+          Store<User>(User(), Adapter<User>(api.send), api.offline, types),
+          auth,
+          api,
+        );
+
+        runApp(MultiRepositoryProvider(
+          providers: [
+            RepositoryProvider<Device>.value(value: device),
+            RepositoryProvider<Discovery>.value(value: discovery),
+            RepositoryProvider<Connection>.value(value: connection),
+            RepositoryProvider<Api>.value(value: api),
+            RepositoryProvider<Auth>.value(value: auth),
+            RepositoryProvider<Data>.value(value: data),
+          ],
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<AppCubit>(
+                create: (_) => AppCubit(
+                  device,
+                  discovery,
+                  connection,
+                  api,
+                  auth,
+                  data,
+                )..init(),
+              ),
+              BlocProvider<AppBarCubit>(
+                create: (_) => AppBarCubit(
+                  api,
+                  data,
+                ),
+              ),
+            ],
+            child: AppView(),
+          ),
         ));
       },
-      onError: (dynamic error, StackTrace stackTrace) {
-        if (error is UserException) {
-          print("dart error: ${error.message}");
-        } else {
-          throw error;
-        }
+      onError: (ex, stack) {
+        print("dart error: $ex $stack");
+        throw ex;
       },
     );
-  } catch (ex) {
-    if (ex is UserException) {
-      print("caught error: ${ex.message}");
-    } else {
-      throw ex;
-    }
-  }
-}
-
-class App extends StatelessWidget {
-  final Api api;
-  final Connection connection;
-  final Device device;
-  final Auth auth;
-  final Data data;
-
-  const App({
-    Key key,
-    @required this.api,
-    @required this.connection,
-    @required this.device,
-    @required this.auth,
-    @required this.data,
-  })  : assert(api != null),
-        assert(connection != null),
-        assert(device != null),
-        assert(auth != null),
-        assert(data != null),
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider<Api>.value(value: api),
-        RepositoryProvider<Auth>.value(value: auth),
-        RepositoryProvider<Data>.value(value: data),
-        RepositoryProvider<Connection>.value(value: connection),
-      ],
-      child: BlocProvider(
-        create: (_) => AuthCubit(auth),
-        child: AppView(),
-      ),
-    );
-  }
-}
-
-class AppView extends StatefulWidget {
-  @override
-  _AppViewState createState() => _AppViewState();
-}
-
-class _AppViewState extends State<AppView> {
-  final _navigatorKey = GlobalKey<NavigatorState>();
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Groupshare',
-      navigatorKey: _navigatorKey,
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      darkTheme: ThemeData(
-        primarySwatch: Colors.orange,
-        brightness: Brightness.dark,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      builder: (context, child) {
-        return BlocListener<AuthCubit, AuthState>(
-          listener: (context, state) {
-            _navigatorKey.currentState.pushAndRemoveUntil<void>(
-              state.when(
-                empty: () => LoginPage.route(),
-                auth: () => LoginPage.route(),
-                done: () => ListPage.route(),
-              ),
-              (route) => false,
-            );
-          },
-          child: child,
-        );
-      },
-      onGenerateRoute: (_) => SplashPage.route(),
-    );
-  }
-}
-
-class SplashPage extends StatelessWidget {
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => SplashPage());
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
-    );
+  } catch (ex, stack) {
+    print("caught error: $ex $stack");
+    throw ex;
   }
 }
 

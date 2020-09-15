@@ -14,6 +14,8 @@ dependencies:
     path: '../exceptions_repository'
   connection_repository:
     path: '../connection_repository'
+  discovery_repository:
+    path: '../discovery_repository'
   protod:
     path: "../../../protod"
 

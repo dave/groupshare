@@ -31,6 +31,11 @@ class _$AppBarStateTearOff {
   AppbarStateOffline offline() {
     return const AppbarStateOffline();
   }
+
+// ignore: unused_element
+  AppbarStateFailed failed() {
+    return const AppbarStateFailed();
+  }
 }
 
 // ignore: unused_element
@@ -43,6 +48,7 @@ mixin _$AppBarState {
     @required Result connecting(),
     @required Result waiting(),
     @required Result offline(),
+    @required Result failed(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
@@ -50,6 +56,7 @@ mixin _$AppBarState {
     Result connecting(),
     Result waiting(),
     Result offline(),
+    Result failed(),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -58,6 +65,7 @@ mixin _$AppBarState {
     @required Result connecting(AppbarStateConnecting value),
     @required Result waiting(AppbarStateWaiting value),
     @required Result offline(AppbarStateOffline value),
+    @required Result failed(AppbarStateFailed value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
@@ -65,6 +73,7 @@ mixin _$AppBarState {
     Result connecting(AppbarStateConnecting value),
     Result waiting(AppbarStateWaiting value),
     Result offline(AppbarStateOffline value),
+    Result failed(AppbarStateFailed value),
     @required Result orElse(),
   });
 }
@@ -123,11 +132,13 @@ class _$AppbarStateSaved implements AppbarStateSaved {
     @required Result connecting(),
     @required Result waiting(),
     @required Result offline(),
+    @required Result failed(),
   }) {
     assert(saved != null);
     assert(connecting != null);
     assert(waiting != null);
     assert(offline != null);
+    assert(failed != null);
     return saved();
   }
 
@@ -138,6 +149,7 @@ class _$AppbarStateSaved implements AppbarStateSaved {
     Result connecting(),
     Result waiting(),
     Result offline(),
+    Result failed(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -154,11 +166,13 @@ class _$AppbarStateSaved implements AppbarStateSaved {
     @required Result connecting(AppbarStateConnecting value),
     @required Result waiting(AppbarStateWaiting value),
     @required Result offline(AppbarStateOffline value),
+    @required Result failed(AppbarStateFailed value),
   }) {
     assert(saved != null);
     assert(connecting != null);
     assert(waiting != null);
     assert(offline != null);
+    assert(failed != null);
     return saved(this);
   }
 
@@ -169,6 +183,7 @@ class _$AppbarStateSaved implements AppbarStateSaved {
     Result connecting(AppbarStateConnecting value),
     Result waiting(AppbarStateWaiting value),
     Result offline(AppbarStateOffline value),
+    Result failed(AppbarStateFailed value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -223,11 +238,13 @@ class _$AppbarStateConnecting implements AppbarStateConnecting {
     @required Result connecting(),
     @required Result waiting(),
     @required Result offline(),
+    @required Result failed(),
   }) {
     assert(saved != null);
     assert(connecting != null);
     assert(waiting != null);
     assert(offline != null);
+    assert(failed != null);
     return connecting();
   }
 
@@ -238,6 +255,7 @@ class _$AppbarStateConnecting implements AppbarStateConnecting {
     Result connecting(),
     Result waiting(),
     Result offline(),
+    Result failed(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -254,11 +272,13 @@ class _$AppbarStateConnecting implements AppbarStateConnecting {
     @required Result connecting(AppbarStateConnecting value),
     @required Result waiting(AppbarStateWaiting value),
     @required Result offline(AppbarStateOffline value),
+    @required Result failed(AppbarStateFailed value),
   }) {
     assert(saved != null);
     assert(connecting != null);
     assert(waiting != null);
     assert(offline != null);
+    assert(failed != null);
     return connecting(this);
   }
 
@@ -269,6 +289,7 @@ class _$AppbarStateConnecting implements AppbarStateConnecting {
     Result connecting(AppbarStateConnecting value),
     Result waiting(AppbarStateWaiting value),
     Result offline(AppbarStateOffline value),
+    Result failed(AppbarStateFailed value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -323,11 +344,13 @@ class _$AppbarStateWaiting implements AppbarStateWaiting {
     @required Result connecting(),
     @required Result waiting(),
     @required Result offline(),
+    @required Result failed(),
   }) {
     assert(saved != null);
     assert(connecting != null);
     assert(waiting != null);
     assert(offline != null);
+    assert(failed != null);
     return waiting();
   }
 
@@ -338,6 +361,7 @@ class _$AppbarStateWaiting implements AppbarStateWaiting {
     Result connecting(),
     Result waiting(),
     Result offline(),
+    Result failed(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -354,11 +378,13 @@ class _$AppbarStateWaiting implements AppbarStateWaiting {
     @required Result connecting(AppbarStateConnecting value),
     @required Result waiting(AppbarStateWaiting value),
     @required Result offline(AppbarStateOffline value),
+    @required Result failed(AppbarStateFailed value),
   }) {
     assert(saved != null);
     assert(connecting != null);
     assert(waiting != null);
     assert(offline != null);
+    assert(failed != null);
     return waiting(this);
   }
 
@@ -369,6 +395,7 @@ class _$AppbarStateWaiting implements AppbarStateWaiting {
     Result connecting(AppbarStateConnecting value),
     Result waiting(AppbarStateWaiting value),
     Result offline(AppbarStateOffline value),
+    Result failed(AppbarStateFailed value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -423,11 +450,13 @@ class _$AppbarStateOffline implements AppbarStateOffline {
     @required Result connecting(),
     @required Result waiting(),
     @required Result offline(),
+    @required Result failed(),
   }) {
     assert(saved != null);
     assert(connecting != null);
     assert(waiting != null);
     assert(offline != null);
+    assert(failed != null);
     return offline();
   }
 
@@ -438,6 +467,7 @@ class _$AppbarStateOffline implements AppbarStateOffline {
     Result connecting(),
     Result waiting(),
     Result offline(),
+    Result failed(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -454,11 +484,13 @@ class _$AppbarStateOffline implements AppbarStateOffline {
     @required Result connecting(AppbarStateConnecting value),
     @required Result waiting(AppbarStateWaiting value),
     @required Result offline(AppbarStateOffline value),
+    @required Result failed(AppbarStateFailed value),
   }) {
     assert(saved != null);
     assert(connecting != null);
     assert(waiting != null);
     assert(offline != null);
+    assert(failed != null);
     return offline(this);
   }
 
@@ -469,6 +501,7 @@ class _$AppbarStateOffline implements AppbarStateOffline {
     Result connecting(AppbarStateConnecting value),
     Result waiting(AppbarStateWaiting value),
     Result offline(AppbarStateOffline value),
+    Result failed(AppbarStateFailed value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -481,4 +514,110 @@ class _$AppbarStateOffline implements AppbarStateOffline {
 
 abstract class AppbarStateOffline implements AppBarState {
   const factory AppbarStateOffline() = _$AppbarStateOffline;
+}
+
+abstract class $AppbarStateFailedCopyWith<$Res> {
+  factory $AppbarStateFailedCopyWith(
+          AppbarStateFailed value, $Res Function(AppbarStateFailed) then) =
+      _$AppbarStateFailedCopyWithImpl<$Res>;
+}
+
+class _$AppbarStateFailedCopyWithImpl<$Res>
+    extends _$AppBarStateCopyWithImpl<$Res>
+    implements $AppbarStateFailedCopyWith<$Res> {
+  _$AppbarStateFailedCopyWithImpl(
+      AppbarStateFailed _value, $Res Function(AppbarStateFailed) _then)
+      : super(_value, (v) => _then(v as AppbarStateFailed));
+
+  @override
+  AppbarStateFailed get _value => super._value as AppbarStateFailed;
+}
+
+class _$AppbarStateFailed implements AppbarStateFailed {
+  const _$AppbarStateFailed();
+
+  @override
+  String toString() {
+    return 'AppBarState.failed()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is AppbarStateFailed);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result saved(),
+    @required Result connecting(),
+    @required Result waiting(),
+    @required Result offline(),
+    @required Result failed(),
+  }) {
+    assert(saved != null);
+    assert(connecting != null);
+    assert(waiting != null);
+    assert(offline != null);
+    assert(failed != null);
+    return failed();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result saved(),
+    Result connecting(),
+    Result waiting(),
+    Result offline(),
+    Result failed(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (failed != null) {
+      return failed();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result saved(AppbarStateSaved value),
+    @required Result connecting(AppbarStateConnecting value),
+    @required Result waiting(AppbarStateWaiting value),
+    @required Result offline(AppbarStateOffline value),
+    @required Result failed(AppbarStateFailed value),
+  }) {
+    assert(saved != null);
+    assert(connecting != null);
+    assert(waiting != null);
+    assert(offline != null);
+    assert(failed != null);
+    return failed(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result saved(AppbarStateSaved value),
+    Result connecting(AppbarStateConnecting value),
+    Result waiting(AppbarStateWaiting value),
+    Result offline(AppbarStateOffline value),
+    Result failed(AppbarStateFailed value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (failed != null) {
+      return failed(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AppbarStateFailed implements AppBarState {
+  const factory AppbarStateFailed() = _$AppbarStateFailed;
 }

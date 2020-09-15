@@ -1,6 +1,6 @@
 import 'package:api_repository/api_repository.dart';
-import 'package:connection_repository/connection_repository.dart';
 import 'package:data_repository/data_repository.dart';
+import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -11,7 +11,6 @@ abstract class ListState with _$ListState {
   const factory ListState(
     PageState page,
     SharesState shares,
-    bool connected,
   ) = _ListState;
 }
 
@@ -20,7 +19,10 @@ abstract class PageState with _$PageState {
   const factory PageState.offline() = PageStateOffline;
   const factory PageState.loading() = PageStateLoading;
   const factory PageState.list() = PageStateList;
-  const factory PageState.error(dynamic error) = PageStateError;
+  const factory PageState.error(
+    dynamic error,
+    StackTrace stack,
+  ) = PageStateError;
 }
 
 @freezed
@@ -43,34 +45,30 @@ abstract class AvailableShare with _$AvailableShare {
 class ListCubit extends Cubit<ListState> {
   final Data _data;
   final Api _api;
-  final Connection _conn;
 
-  ListCubit(Data data, Api api, Connection conn)
+  ListCubit(Data data, Api api)
       : _data = data,
         _api = api,
-        _conn = conn,
         super(ListState(
           PageState.loading(),
           SharesState(items: []),
-          true,
         ));
 
-  Future<void> initConn() async {
-    // start watching connection state if Connection is supplied
-    if (_conn != null) {
-      _conn.changed.listen((bool connected) {
-        emit(state.copyWith(connected: connected));
-      });
-      emit(state.copyWith(connected: await _conn.check()));
-    }
+  Future<void> init() async {
+    emit(
+      state.copyWith(
+        page: PageState.loading(),
+      ),
+    );
+    _api.registerBackgroundTask(initList(true), "list init");
   }
 
-  Future<void> deleteItem(String id) async {
+  void deleteItem(String id) {
     final i = _data.user.value.shares.indexWhere((s) => s.id == id);
     if (i == -1) {
       return;
     }
-    _data.shares.deleteLocal(id);
+    _data.shares.delete(id);
     // TODO: delete from user, delete share?
     //_data.user.op(Op().User().Shares().Index(i).Delete());
     emit(
@@ -92,23 +90,29 @@ class ListCubit extends Cubit<ListState> {
       ),
     );
 
-    final item = await _data.shares.refresh(id);
-    final name = item.value.name;
-    final shares = _data.user.value.shares;
-    final index = shares.indexWhere((s) => s.id == id);
-    if (index > -1 && shares[index].name != name) {
-      _data.user.op(op.user.shares.index(index).name.set(name));
-    }
-
-    emit(
-      state.copyWith(
-        page: PageState.list(),
-        shares: state.shares.copyWith(
-          items: stateItems(_data.user.value.shares),
-          refreshing: {}..addAll(state.shares.refreshing)..addAll({id: false}),
+    try {
+      final item = await _data.shares.refresh(id);
+      final name = item.value.name;
+      final shares = _data.user.value.shares;
+      final index = shares.indexWhere((s) => s.id == id);
+      if (index > -1 && shares[index].name != name) {
+        _data.user.op(
+          op.user.shares.index(index).name.set(name),
+        );
+      }
+    } finally {
+      emit(
+        state.copyWith(
+          page: PageState.list(),
+          shares: state.shares.copyWith(
+            items: stateItems(_data.user.value.shares),
+            refreshing: {}
+              ..addAll(state.shares.refreshing)
+              ..addAll({id: false}),
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   Future<void> reorder(oldIndex, newIndex) async {
@@ -125,7 +129,7 @@ class ListCubit extends Cubit<ListState> {
     );
   }
 
-  Future<void> refreshList() async {
+  Future<void> refreshAllItems() async {
     await _data.user.send();
 
     List<Future> futures = [];
@@ -146,9 +150,6 @@ class ListCubit extends Cubit<ListState> {
   }
 
   Future<void> initItem(String id) async {
-    if (!_api.online()) {
-      return;
-    }
     emit(
       state.copyWith(
         shares: state.shares.copyWith(
@@ -156,20 +157,34 @@ class ListCubit extends Cubit<ListState> {
         ),
       ),
     );
-    await _data.shares.refresh(id);
-    emit(
-      state.copyWith(
-        shares: state.shares.copyWith(
-          items: stateItems(_data.user.value.shares),
-          refreshing: {}..addAll(state.shares.refreshing)..addAll({id: false}),
+    try {
+      await _data.shares.refresh(id);
+    } finally {
+      emit(
+        state.copyWith(
+          shares: state.shares.copyWith(
+            items: stateItems(_data.user.value.shares),
+            refreshing: {}
+              ..addAll(state.shares.refreshing)
+              ..addAll({id: false}),
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
-  Future<void> initList() async {
+  Future<void> initList(bool update) async {
     // TODO: remove when https://github.com/felangel/bloc/issues/1641 is resolved.
-    await Future.delayed(Duration(milliseconds: 1));
+    //await Future.delayed(Duration(milliseconds: 1000));
+
+    if (_data.user == null) {
+      emit(
+        state.copyWith(
+          page: PageState.error(UserException("Offline?"), null),
+        ),
+      );
+      return;
+    }
 
     emit(
       state.copyWith(
@@ -180,7 +195,7 @@ class ListCubit extends Cubit<ListState> {
       ),
     );
 
-    if (!_api.online()) {
+    if (!update || _api.offline()) {
       return;
     }
 
@@ -194,35 +209,13 @@ class ListCubit extends Cubit<ListState> {
         ),
       ),
     );
-
-//    final response = await _api.send(
-//      Share_List_Response(),
-//      Share_List_Request(),
-//    );
-//
-//    var ops = <delta.Op>[];
-//    response.items.forEach((Share_List_Response_Item item) {
-//      final userDataIndex = user.value.shares.indexWhere(
-//        (s) => s.id == item.id,
-//      );
-//      if (userDataIndex > -1) {
-//        if (user.value.shares[userDataIndex].name != item.name) {
-//          ops.add(
-//            Op().User().Shares().Index(userDataIndex).Name().Set(item.name),
-//          );
-//        }
-//      }
-//    });
-//    if (ops.length > 0) {
-//      _data.user.op(compound(ops));
-//      emit(
-//        state.copyWith(
-//          page: PageState.list(),
-//          shares: state.shares.copyWith(items: stateItems(user.value.shares)),
-//        ),
-//      );
-//    }
   }
+
+  // @override
+  // void emit(ListState state) {
+  //   print("emit: $state");
+  //   super.emit(state);
+  // }
 
   List<AvailableShare> stateItems(List<User_AvailableShare> shares) {
     return shares

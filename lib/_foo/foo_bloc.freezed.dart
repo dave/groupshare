@@ -27,9 +27,10 @@ class _$FooStateTearOff {
   }
 
 // ignore: unused_element
-  FooStateError error(dynamic error, FooState retryState) {
+  FooStateError error(dynamic error, StackTrace stack, FooState retryState) {
     return FooStateError(
       error,
+      stack,
       retryState,
     );
   }
@@ -48,14 +49,15 @@ mixin _$FooState {
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result form(FormzStatus status, Name name),
-    @required Result error(dynamic error, FooState retryState),
+    @required
+        Result error(dynamic error, StackTrace stack, FooState retryState),
     @required Result done(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result form(FormzStatus status, Name name),
-    Result error(dynamic error, FooState retryState),
+    Result error(dynamic error, StackTrace stack, FooState retryState),
     Result done(),
     @required Result orElse(),
   });
@@ -126,7 +128,8 @@ class _$FooStateInitial implements FooStateInitial {
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result form(FormzStatus status, Name name),
-    @required Result error(dynamic error, FooState retryState),
+    @required
+        Result error(dynamic error, StackTrace stack, FooState retryState),
     @required Result done(),
   }) {
     assert(initial != null);
@@ -141,7 +144,7 @@ class _$FooStateInitial implements FooStateInitial {
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result form(FormzStatus status, Name name),
-    Result error(dynamic error, FooState retryState),
+    Result error(dynamic error, StackTrace stack, FooState retryState),
     Result done(),
     @required Result orElse(),
   }) {
@@ -259,7 +262,8 @@ class _$FooStateForm implements FooStateForm {
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result form(FormzStatus status, Name name),
-    @required Result error(dynamic error, FooState retryState),
+    @required
+        Result error(dynamic error, StackTrace stack, FooState retryState),
     @required Result done(),
   }) {
     assert(initial != null);
@@ -274,7 +278,7 @@ class _$FooStateForm implements FooStateForm {
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result form(FormzStatus status, Name name),
-    Result error(dynamic error, FooState retryState),
+    Result error(dynamic error, StackTrace stack, FooState retryState),
     Result done(),
     @required Result orElse(),
   }) {
@@ -329,7 +333,7 @@ abstract class $FooStateErrorCopyWith<$Res> {
   factory $FooStateErrorCopyWith(
           FooStateError value, $Res Function(FooStateError) then) =
       _$FooStateErrorCopyWithImpl<$Res>;
-  $Res call({dynamic error, FooState retryState});
+  $Res call({dynamic error, StackTrace stack, FooState retryState});
 }
 
 class _$FooStateErrorCopyWithImpl<$Res> extends _$FooStateCopyWithImpl<$Res>
@@ -344,28 +348,33 @@ class _$FooStateErrorCopyWithImpl<$Res> extends _$FooStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object error = freezed,
+    Object stack = freezed,
     Object retryState = freezed,
   }) {
     return _then(FooStateError(
       error == freezed ? _value.error : error as dynamic,
+      stack == freezed ? _value.stack : stack as StackTrace,
       retryState == freezed ? _value.retryState : retryState as FooState,
     ));
   }
 }
 
 class _$FooStateError implements FooStateError {
-  const _$FooStateError(this.error, this.retryState)
+  const _$FooStateError(this.error, this.stack, this.retryState)
       : assert(error != null),
+        assert(stack != null),
         assert(retryState != null);
 
   @override
   final dynamic error;
   @override
+  final StackTrace stack;
+  @override
   final FooState retryState;
 
   @override
   String toString() {
-    return 'FooState.error(error: $error, retryState: $retryState)';
+    return 'FooState.error(error: $error, stack: $stack, retryState: $retryState)';
   }
 
   @override
@@ -374,6 +383,8 @@ class _$FooStateError implements FooStateError {
         (other is FooStateError &&
             (identical(other.error, error) ||
                 const DeepCollectionEquality().equals(other.error, error)) &&
+            (identical(other.stack, stack) ||
+                const DeepCollectionEquality().equals(other.stack, stack)) &&
             (identical(other.retryState, retryState) ||
                 const DeepCollectionEquality()
                     .equals(other.retryState, retryState)));
@@ -383,6 +394,7 @@ class _$FooStateError implements FooStateError {
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(error) ^
+      const DeepCollectionEquality().hash(stack) ^
       const DeepCollectionEquality().hash(retryState);
 
   @override
@@ -394,14 +406,15 @@ class _$FooStateError implements FooStateError {
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result form(FormzStatus status, Name name),
-    @required Result error(dynamic error, FooState retryState),
+    @required
+        Result error(dynamic error, StackTrace stack, FooState retryState),
     @required Result done(),
   }) {
     assert(initial != null);
     assert(form != null);
     assert(error != null);
     assert(done != null);
-    return error(this.error, retryState);
+    return error(this.error, stack, retryState);
   }
 
   @override
@@ -409,13 +422,13 @@ class _$FooStateError implements FooStateError {
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result form(FormzStatus status, Name name),
-    Result error(dynamic error, FooState retryState),
+    Result error(dynamic error, StackTrace stack, FooState retryState),
     Result done(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (error != null) {
-      return error(this.error, retryState);
+      return error(this.error, stack, retryState);
     }
     return orElse();
   }
@@ -453,10 +466,11 @@ class _$FooStateError implements FooStateError {
 }
 
 abstract class FooStateError implements FooState {
-  const factory FooStateError(dynamic error, FooState retryState) =
-      _$FooStateError;
+  const factory FooStateError(
+      dynamic error, StackTrace stack, FooState retryState) = _$FooStateError;
 
   dynamic get error;
+  StackTrace get stack;
   FooState get retryState;
   $FooStateErrorCopyWith<FooStateError> get copyWith;
 }
@@ -498,7 +512,8 @@ class _$FooStateDone implements FooStateDone {
   Result when<Result extends Object>({
     @required Result initial(),
     @required Result form(FormzStatus status, Name name),
-    @required Result error(dynamic error, FooState retryState),
+    @required
+        Result error(dynamic error, StackTrace stack, FooState retryState),
     @required Result done(),
   }) {
     assert(initial != null);
@@ -513,7 +528,7 @@ class _$FooStateDone implements FooStateDone {
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result form(FormzStatus status, Name name),
-    Result error(dynamic error, FooState retryState),
+    Result error(dynamic error, StackTrace stack, FooState retryState),
     Result done(),
     @required Result orElse(),
   }) {

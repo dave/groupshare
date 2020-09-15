@@ -8,7 +8,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  connectivity: ">=0.4.9 <2.0.0"
+  #connectivity: ">=0.4.9 <2.0.0"
+  connectivity_macos: ^0.1.0+4
+  connectivity: ^0.4.9+2
 
 dev_dependencies:
   flutter_test:

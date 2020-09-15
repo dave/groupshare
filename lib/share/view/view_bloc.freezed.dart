@@ -34,10 +34,12 @@ class _$ViewStateTearOff {
   }
 
 // ignore: unused_element
-  ViewStateError error(String id, dynamic error, ViewState retryState) {
+  ViewStateError error(
+      String id, dynamic error, StackTrace stack, ViewState retryState) {
     return ViewStateError(
       id,
       error,
+      stack,
       retryState,
     );
   }
@@ -62,7 +64,9 @@ mixin _$ViewState {
     @required Result initial(String id),
     @required Result loading(String id),
     @required Result offline(String id),
-    @required Result error(String id, dynamic error, ViewState retryState),
+    @required
+        Result error(
+            String id, dynamic error, StackTrace stack, ViewState retryState),
     @required Result done(String id, String name),
   });
   @optionalTypeArgs
@@ -70,7 +74,8 @@ mixin _$ViewState {
     Result initial(String id),
     Result loading(String id),
     Result offline(String id),
-    Result error(String id, dynamic error, ViewState retryState),
+    Result error(
+        String id, dynamic error, StackTrace stack, ViewState retryState),
     Result done(String id, String name),
     @required Result orElse(),
   });
@@ -179,7 +184,9 @@ class _$ViewStateInitial implements ViewStateInitial {
     @required Result initial(String id),
     @required Result loading(String id),
     @required Result offline(String id),
-    @required Result error(String id, dynamic error, ViewState retryState),
+    @required
+        Result error(
+            String id, dynamic error, StackTrace stack, ViewState retryState),
     @required Result done(String id, String name),
   }) {
     assert(initial != null);
@@ -196,7 +203,8 @@ class _$ViewStateInitial implements ViewStateInitial {
     Result initial(String id),
     Result loading(String id),
     Result offline(String id),
-    Result error(String id, dynamic error, ViewState retryState),
+    Result error(
+        String id, dynamic error, StackTrace stack, ViewState retryState),
     Result done(String id, String name),
     @required Result orElse(),
   }) {
@@ -312,7 +320,9 @@ class _$ViewStateLoading implements ViewStateLoading {
     @required Result initial(String id),
     @required Result loading(String id),
     @required Result offline(String id),
-    @required Result error(String id, dynamic error, ViewState retryState),
+    @required
+        Result error(
+            String id, dynamic error, StackTrace stack, ViewState retryState),
     @required Result done(String id, String name),
   }) {
     assert(initial != null);
@@ -329,7 +339,8 @@ class _$ViewStateLoading implements ViewStateLoading {
     Result initial(String id),
     Result loading(String id),
     Result offline(String id),
-    Result error(String id, dynamic error, ViewState retryState),
+    Result error(
+        String id, dynamic error, StackTrace stack, ViewState retryState),
     Result done(String id, String name),
     @required Result orElse(),
   }) {
@@ -445,7 +456,9 @@ class _$ViewStateOffline implements ViewStateOffline {
     @required Result initial(String id),
     @required Result loading(String id),
     @required Result offline(String id),
-    @required Result error(String id, dynamic error, ViewState retryState),
+    @required
+        Result error(
+            String id, dynamic error, StackTrace stack, ViewState retryState),
     @required Result done(String id, String name),
   }) {
     assert(initial != null);
@@ -462,7 +475,8 @@ class _$ViewStateOffline implements ViewStateOffline {
     Result initial(String id),
     Result loading(String id),
     Result offline(String id),
-    Result error(String id, dynamic error, ViewState retryState),
+    Result error(
+        String id, dynamic error, StackTrace stack, ViewState retryState),
     Result done(String id, String name),
     @required Result orElse(),
   }) {
@@ -523,7 +537,7 @@ abstract class $ViewStateErrorCopyWith<$Res>
           ViewStateError value, $Res Function(ViewStateError) then) =
       _$ViewStateErrorCopyWithImpl<$Res>;
   @override
-  $Res call({String id, dynamic error, ViewState retryState});
+  $Res call({String id, dynamic error, StackTrace stack, ViewState retryState});
 }
 
 class _$ViewStateErrorCopyWithImpl<$Res> extends _$ViewStateCopyWithImpl<$Res>
@@ -539,20 +553,23 @@ class _$ViewStateErrorCopyWithImpl<$Res> extends _$ViewStateCopyWithImpl<$Res>
   $Res call({
     Object id = freezed,
     Object error = freezed,
+    Object stack = freezed,
     Object retryState = freezed,
   }) {
     return _then(ViewStateError(
       id == freezed ? _value.id : id as String,
       error == freezed ? _value.error : error as dynamic,
+      stack == freezed ? _value.stack : stack as StackTrace,
       retryState == freezed ? _value.retryState : retryState as ViewState,
     ));
   }
 }
 
 class _$ViewStateError implements ViewStateError {
-  const _$ViewStateError(this.id, this.error, this.retryState)
+  const _$ViewStateError(this.id, this.error, this.stack, this.retryState)
       : assert(id != null),
         assert(error != null),
+        assert(stack != null),
         assert(retryState != null);
 
   @override
@@ -560,11 +577,13 @@ class _$ViewStateError implements ViewStateError {
   @override
   final dynamic error;
   @override
+  final StackTrace stack;
+  @override
   final ViewState retryState;
 
   @override
   String toString() {
-    return 'ViewState.error(id: $id, error: $error, retryState: $retryState)';
+    return 'ViewState.error(id: $id, error: $error, stack: $stack, retryState: $retryState)';
   }
 
   @override
@@ -575,6 +594,8 @@ class _$ViewStateError implements ViewStateError {
                 const DeepCollectionEquality().equals(other.id, id)) &&
             (identical(other.error, error) ||
                 const DeepCollectionEquality().equals(other.error, error)) &&
+            (identical(other.stack, stack) ||
+                const DeepCollectionEquality().equals(other.stack, stack)) &&
             (identical(other.retryState, retryState) ||
                 const DeepCollectionEquality()
                     .equals(other.retryState, retryState)));
@@ -585,6 +606,7 @@ class _$ViewStateError implements ViewStateError {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(error) ^
+      const DeepCollectionEquality().hash(stack) ^
       const DeepCollectionEquality().hash(retryState);
 
   @override
@@ -597,7 +619,9 @@ class _$ViewStateError implements ViewStateError {
     @required Result initial(String id),
     @required Result loading(String id),
     @required Result offline(String id),
-    @required Result error(String id, dynamic error, ViewState retryState),
+    @required
+        Result error(
+            String id, dynamic error, StackTrace stack, ViewState retryState),
     @required Result done(String id, String name),
   }) {
     assert(initial != null);
@@ -605,7 +629,7 @@ class _$ViewStateError implements ViewStateError {
     assert(offline != null);
     assert(error != null);
     assert(done != null);
-    return error(id, this.error, retryState);
+    return error(id, this.error, stack, retryState);
   }
 
   @override
@@ -614,13 +638,14 @@ class _$ViewStateError implements ViewStateError {
     Result initial(String id),
     Result loading(String id),
     Result offline(String id),
-    Result error(String id, dynamic error, ViewState retryState),
+    Result error(
+        String id, dynamic error, StackTrace stack, ViewState retryState),
     Result done(String id, String name),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (error != null) {
-      return error(id, this.error, retryState);
+      return error(id, this.error, stack, retryState);
     }
     return orElse();
   }
@@ -661,12 +686,14 @@ class _$ViewStateError implements ViewStateError {
 }
 
 abstract class ViewStateError implements ViewState {
-  const factory ViewStateError(String id, dynamic error, ViewState retryState) =
+  const factory ViewStateError(
+          String id, dynamic error, StackTrace stack, ViewState retryState) =
       _$ViewStateError;
 
   @override
   String get id;
   dynamic get error;
+  StackTrace get stack;
   ViewState get retryState;
   @override
   $ViewStateErrorCopyWith<ViewStateError> get copyWith;
@@ -743,7 +770,9 @@ class _$ViewStateDone implements ViewStateDone {
     @required Result initial(String id),
     @required Result loading(String id),
     @required Result offline(String id),
-    @required Result error(String id, dynamic error, ViewState retryState),
+    @required
+        Result error(
+            String id, dynamic error, StackTrace stack, ViewState retryState),
     @required Result done(String id, String name),
   }) {
     assert(initial != null);
@@ -760,7 +789,8 @@ class _$ViewStateDone implements ViewStateDone {
     Result initial(String id),
     Result loading(String id),
     Result offline(String id),
-    Result error(String id, dynamic error, ViewState retryState),
+    Result error(
+        String id, dynamic error, StackTrace stack, ViewState retryState),
     Result done(String id, String name),
     @required Result orElse(),
   }) {

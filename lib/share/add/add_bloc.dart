@@ -17,6 +17,7 @@ abstract class AddState with _$AddState {
 
   const factory AddState.error(
     dynamic error,
+    StackTrace stack,
     AddState retryState,
   ) = AddStateError;
 
@@ -58,8 +59,8 @@ class AddCubit extends Cubit<AddState> {
         ),
       );
       emit(AddState.done());
-    } catch (ex) {
-      emit(AddState.error(ex, stateForm));
+    } catch (ex, stack) {
+      emit(AddState.error(ex, stack, stateForm));
     }
   }
 }

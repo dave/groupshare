@@ -19,6 +19,7 @@ abstract class FooState with _$FooState {
 
   const factory FooState.error(
     dynamic error,
+    StackTrace stack,
     FooState retryState,
   ) = FooStateError;
 
@@ -46,8 +47,8 @@ class FooCubit extends Cubit<FooState> {
       emit(stateForm.copyWith(status: FormzStatus.submissionInProgress));
       // ...
       emit(FooState.done());
-    } catch (ex) {
-      emit(FooState.error(ex, stateForm));
+    } catch (ex, stack) {
+      emit(FooState.error(ex, stack, stateForm));
     }
   }
 

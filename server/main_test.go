@@ -320,26 +320,26 @@ func (c *Client) httpRequest(ctx context.Context, token *auth.Token, request pro
 		var requestBundleBytes []byte
 		requestBundleBytes, err = proto.Marshal(requestBundle)
 		if err != nil {
-			return nil, perr.Wrap(err, "marshaling request bundle") // <- return error without retry
+			return nil, perr.Wrap(err).Debug("marshaling request bundle") // <- return error without retry
 		}
 		buf := bytes.NewBuffer(requestBundleBytes)
 		var resp *http.Response
 		resp, err = http.Post(path, "application/protobuf", buf)
 		if err != nil {
-			err = perr.Wrap(err, "http post")
+			err = perr.Wrap(err).Debug("http post")
 			continue // <- restart the loop or exit when retry count exceeded
 		}
 		var body []byte
 		body, err = ioutil.ReadAll(resp.Body)
 		if err != nil {
-			err = perr.Wrap(err, "reading body")
+			err = perr.Wrap(err).Debug("reading body")
 			continue // <- restart the loop or exit when retry count exceeded
 		}
 		if resp.StatusCode != 200 {
 			if resp.StatusCode == 404 {
-				err = pserver.PathNotFound
+				err = perr.Flag(perr.NotFound)
 			} else if resp.StatusCode == 503 {
-				err = pserver.ServerBusy
+				err = perr.Flag(perr.Busy)
 			} else {
 				fmt.Printf("status %q: %q\n", resp.Status, string(body))
 				err = fmt.Errorf("status %q: %q", resp.Status, string(body))
@@ -349,7 +349,7 @@ func (c *Client) httpRequest(ctx context.Context, token *auth.Token, request pro
 		response = pmsg.New()
 		err = proto.Unmarshal(body, response)
 		if err != nil {
-			err = perr.Wrap(err, "unmarshaling response bundle")
+			err = perr.Wrap(err).Debug("unmarshaling response bundle")
 			continue // <- restart the loop or exit when retry count exceeded
 		}
 		break // <- finish the loop and continue executing

@@ -3,6 +3,7 @@ package main
 // data objects - these need the protodgen post-processor to generate operation code:
 //go:generate sh -c "protoc --go_out=. --go_opt=paths=source_relative --dart_out=../repositories/data_repository/lib/pb --proto_path=../proto --proto_path=../../protod $(find ../proto/data -iname '*.proto')"
 //go:generate sh -c "go run ../../protod/gen/protodgen/*.go -in=../proto -go-root=. -dart-root=../repositories/data_repository/lib/pb -dart-pkg=data_repository/pb"
+//go:generate sh -c "sed -i '' \"s/import '\\(\\.\\.\\/\\)*pserver\\/pserver\\\\.pb\\\\.dart' as/import 'package:protod\\/pserver\\/pserver\\.pb\\.dart' as/g\" $(find ../repositories/data_repository/lib/pb -iname '*.pb.dart')"
 
 // messages - used for communicating between client and server:
 //go:generate sh -c "protoc --go_out=. --go_opt=paths=source_relative --dart_out=../lib/pb --proto_path=../proto --proto_path=../../protod $(find ../proto/messages -iname '*.proto')"
