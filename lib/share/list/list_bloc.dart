@@ -64,32 +64,21 @@ class ListCubit extends Cubit<ListState> {
   }
 
   void deleteItem(String id) {
-    final i = _data.user.value.shares.indexWhere((s) => s.id == id);
-    if (i == -1) {
-      return;
+    try {
+      final i = _data.user.value.shares.indexWhere((s) => s.id == id);
+      if (i == -1) {
+        return;
+      }
+      _data.shares.delete(id);
+      // TODO: delete from user, delete share?
+      //_data.user.op(Op().User().Shares().Index(i).Delete());
+    } finally {
+      emit(_listPage(items: true));
     }
-    _data.shares.delete(id);
-    // TODO: delete from user, delete share?
-    //_data.user.op(Op().User().Shares().Index(i).Delete());
-    emit(
-      state.copyWith(
-        shares: state.shares.copyWith(
-          items: stateItems(_data.user.value.shares),
-        ),
-      ),
-    );
   }
 
   Future<void> refreshItem(String id) async {
-    emit(
-      state.copyWith(
-        page: PageState.list(),
-        shares: state.shares.copyWith(
-          refreshing: {}..addAll(state.shares.refreshing)..addAll({id: true}),
-        ),
-      ),
-    );
-
+    emit(_listPage(refreshing: {id: true}));
     try {
       final item = await _data.shares.refresh(id);
       final name = item.value.name;
@@ -101,75 +90,40 @@ class ListCubit extends Cubit<ListState> {
         );
       }
     } finally {
-      emit(
-        state.copyWith(
-          page: PageState.list(),
-          shares: state.shares.copyWith(
-            items: stateItems(_data.user.value.shares),
-            refreshing: {}
-              ..addAll(state.shares.refreshing)
-              ..addAll({id: false}),
-          ),
-        ),
-      );
+      emit(_listPage(items: true, refreshing: {id: false}));
     }
   }
 
   Future<void> reorder(oldIndex, newIndex) async {
-    _data.user.op(
-      op.user.shares.move(oldIndex, newIndex),
-    );
-
-    emit(
-      state.copyWith(
-        shares: state.shares.copyWith(
-          items: stateItems(_data.user.value.shares),
-        ),
-      ),
-    );
+    try {
+      _data.user.op(op.user.shares.move(oldIndex, newIndex));
+    } finally {
+      emit(_listPage(items: true));
+    }
   }
 
   Future<void> refreshAllItems() async {
-    await _data.user.send();
-
-    List<Future> futures = [];
-    _data.user.value.shares.forEach((userShare) {
-      if (_data.shares.has(userShare.id)) {
-        futures.add(refreshItem(userShare.id));
-      }
-    });
-    await Future.wait(futures);
-
-    emit(
-      state.copyWith(
-        shares: state.shares.copyWith(
-          items: stateItems(_data.user.value.shares),
-        ),
-      ),
-    );
+    try {
+      await _data.user.refresh();
+      emit(_listPage(items: true));
+      List<Future> futures = [];
+      _data.user.value.shares.forEach((userShare) {
+        if (_data.shares.has(userShare.id)) {
+          futures.add(refreshItem(userShare.id));
+        }
+      });
+      await Future.wait(futures);
+    } finally {
+      emit(_listPage(items: true));
+    }
   }
 
   Future<void> initItem(String id) async {
-    emit(
-      state.copyWith(
-        shares: state.shares.copyWith(
-          refreshing: {}..addAll(state.shares.refreshing)..addAll({id: true}),
-        ),
-      ),
-    );
+    emit(_listPage(refreshing: {id: true}));
     try {
       await _data.shares.refresh(id);
     } finally {
-      emit(
-        state.copyWith(
-          shares: state.shares.copyWith(
-            items: stateItems(_data.user.value.shares),
-            refreshing: {}
-              ..addAll(state.shares.refreshing)
-              ..addAll({id: false}),
-          ),
-        ),
-      );
+      emit(_listPage(items: true, refreshing: {id: false}));
     }
   }
 
@@ -186,29 +140,17 @@ class ListCubit extends Cubit<ListState> {
       return;
     }
 
-    emit(
-      state.copyWith(
-        page: PageState.list(),
-        shares: state.shares.copyWith(
-          items: stateItems(_data.user.value.shares),
-        ),
-      ),
-    );
+    emit(_listPage(items: true));
 
     if (!update || _api.offline()) {
       return;
     }
 
-    await _data.user.send();
-
-    emit(
-      state.copyWith(
-        page: PageState.list(),
-        shares: state.shares.copyWith(
-          items: stateItems(_data.user.value.shares),
-        ),
-      ),
-    );
+    try {
+      await _data.user.send();
+    } finally {
+      emit(_listPage(items: true));
+    }
   }
 
   // @override
@@ -217,13 +159,20 @@ class ListCubit extends Cubit<ListState> {
   //   super.emit(state);
   // }
 
-  List<AvailableShare> stateItems(List<User_AvailableShare> shares) {
-    return shares
-        .map((e) => AvailableShare(
-              e.id,
-              e.name,
-              _data.shares.has(e.id),
-            ))
-        .toList();
+  ListState _listPage({
+    bool items = false,
+    Map<String, bool> refreshing = const {},
+  }) {
+    var p = state.shares.copyWith();
+    if (items) {
+      p = p.copyWith(
+          items: _data.user.value.shares
+              .map((e) => AvailableShare(e.id, e.name, _data.shares.has(e.id)))
+              .toList());
+    }
+    if (refreshing.length > 0) {
+      p = p.copyWith(refreshing: {}..addAll(p.refreshing)..addAll(refreshing));
+    }
+    return state.copyWith(page: PageState.list(), shares: p);
   }
 }
