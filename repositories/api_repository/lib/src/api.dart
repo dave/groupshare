@@ -33,7 +33,11 @@ class Api {
     // start watching connection state if Connection is supplied
     if (_conn != null) {
       _conn.changed.listen((bool connected) {
-        _setOffline(!connected);
+        if (connected) {
+          _setSuccess();
+        } else {
+          _setOffline(true);
+        }
       });
       _setOffline(!await _conn.check());
     }
@@ -64,7 +68,6 @@ class Api {
     R response,
     Q request,
   ) async {
-    _clearOfflineFailed();
     final indicatorId = randomUnique();
     try {
       _connecting(indicatorId);
@@ -187,7 +190,11 @@ class Api {
         final suffix = count > 1 ? " after $count attempts" : "";
         final message = err.message + suffix;
         final debug = err.debug ?? "";
-        _setFailed(err.stop);
+        if (err.stop && !_offline) {
+          // only set the failed flag if online... if offline, then this error
+          // is probably because you're offline.
+          _setFailed(true);
+        }
         if (err.auth) {
           throw AuthException(message, debug: debug, expired: err.expired);
         }
@@ -218,9 +225,8 @@ class Api {
     }
   }
 
-  _clearOfflineFailed() {
-    _offline = false;
-    _failed = false;
+  void goOffline() {
+    _setOffline(true);
   }
 
   _setSuccess() {
@@ -257,21 +263,17 @@ class Api {
   ConnectionStatus _previous;
 
   ConnectionStatus get _status {
-    if (_offline) {
-      return ConnectionStatus.Offline;
-    } else if (_failed) {
-      return ConnectionStatus.Failed;
-    } else if (_connections.containsValue(ConnectionStatus.Connecting)) {
+    if (_connections.containsValue(ConnectionStatus.Connecting)) {
       return ConnectionStatus.Connecting;
     } else if (_connections.containsValue(ConnectionStatus.Waiting)) {
       return ConnectionStatus.Waiting;
+    } else if (_offline) {
+      return ConnectionStatus.Offline;
+    } else if (_failed) {
+      return ConnectionStatus.Failed;
     } else {
       return ConnectionStatus.Saved;
     }
-  }
-
-  void goOffline() {
-    _setOffline(true);
   }
 
   final _controller = StreamController<ConnectionStatus>.broadcast();

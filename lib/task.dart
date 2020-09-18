@@ -4,10 +4,12 @@ import 'package:groupshare/appbar/appbar.dart';
 
 Future<T> task<T>(
   BuildContext context,
-  Future<T> Function() f,
-) async {
+  Future<T> Function() f, {
+  bool enabled = true,
+}) async {
   final state = context.bloc<AppBarCubit>().state;
-  if (!(state is AppbarStateOffline || state is AppbarStateFailed)) {
+  if (!enabled ||
+      !(state is AppbarStateOffline || state is AppbarStateFailed)) {
     return await f();
   }
   final attempt = await showDialog<bool>(

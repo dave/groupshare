@@ -9,67 +9,69 @@ part 'view_bloc.freezed.dart';
 
 @freezed
 abstract class ViewState with _$ViewState {
-  const factory ViewState.initial(String id) = ViewStateInitial;
-  const factory ViewState.loading(String id) = ViewStateLoading;
-  const factory ViewState.offline(String id) = ViewStateOffline;
-
-  const factory ViewState.error(
+  const factory ViewState(
     String id,
+    PageState page,
+  ) = _ViewState;
+}
+
+@freezed
+abstract class PageState with _$PageState {
+  const factory PageState.initial() = PageStateInitial;
+  const factory PageState.loading() = PageStateLoading;
+  const factory PageState.offline() = PageStateOffline;
+
+  const factory PageState.error(
     dynamic error,
     StackTrace stack,
-    ViewState retryState,
-  ) = ViewStateError;
+  ) = PageStateError;
 
-  const factory ViewState.done(String id, String name) = ViewStateDone;
+  const factory PageState.done(String name) = PageStateDone;
 }
 
 class ViewCubit extends Cubit<ViewState> {
-  final String _id;
   final Data _data;
 
   ViewCubit(String id, Data data)
-      : _id = id,
-        _data = data,
-        super(ViewState.initial(id));
+      : _data = data,
+        super(ViewState(id, PageState.initial()));
 
-  Item<Share> get _share {
+  void init() {
     final resp = _data.shares.get(state.id);
 
     if (resp.future != null) {
-      // TODO: is this a loop?
-      resp.future.then((value) => initialise());
+      resp.future.then((item) {
+        if (item != null) {
+          initWithShare(item);
+        }
+      }).catchError((ex, stack) {
+        if (resp.item == null) {
+          emit(state.copyWith(page: PageState.error(ex, stack)));
+        }
+      });
     }
 
     if (resp.item != null) {
-      return resp.item;
-    }
-
-    // item is null
-    if (resp.future == null) {
-      // TODO: automatically trigger init() when we come back online?
-      emit(ViewState.offline(state.id));
+      initWithShare(resp.item);
     } else {
-      emit(ViewState.loading(state.id));
+      if (resp.future == null) {
+        // TODO: automatically trigger init() when we come back online?
+        emit(state.copyWith(page: PageState.offline()));
+      } else {
+        emit(state.copyWith(page: PageState.loading()));
+      }
     }
-    return null;
   }
 
-  Future<void> initialise() async {
-    final share = _share;
-    if (share == null) {
-      // _share will emit the correct state.
-      return;
-    }
-    emit(ViewState.done(state.id, share.value.name));
+  initWithShare(Item<Share> item) {
+    emit(state.copyWith(page: PageState.done(item.value.name)));
   }
 
   Future<void> refresh() async {
     await _data.user.refresh();
     final item = await _data.shares.refresh(state.id);
-    emit(ViewState.done(state.id, item.value.name));
-  }
-
-  void retry(ViewState retryState) {
-    emit(retryState);
+    if (item != null) {
+      initWithShare(item);
+    }
   }
 }

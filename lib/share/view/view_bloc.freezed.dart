@@ -13,42 +13,10 @@ class _$ViewStateTearOff {
   const _$ViewStateTearOff();
 
 // ignore: unused_element
-  ViewStateInitial initial(String id) {
-    return ViewStateInitial(
+  _ViewState call(String id, PageState page) {
+    return _ViewState(
       id,
-    );
-  }
-
-// ignore: unused_element
-  ViewStateLoading loading(String id) {
-    return ViewStateLoading(
-      id,
-    );
-  }
-
-// ignore: unused_element
-  ViewStateOffline offline(String id) {
-    return ViewStateOffline(
-      id,
-    );
-  }
-
-// ignore: unused_element
-  ViewStateError error(
-      String id, dynamic error, StackTrace stack, ViewState retryState) {
-    return ViewStateError(
-      id,
-      error,
-      stack,
-      retryState,
-    );
-  }
-
-// ignore: unused_element
-  ViewStateDone done(String id, String name) {
-    return ViewStateDone(
-      id,
-      name,
+      page,
     );
   }
 }
@@ -58,44 +26,7 @@ const $ViewState = _$ViewStateTearOff();
 
 mixin _$ViewState {
   String get id;
-
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result initial(String id),
-    @required Result loading(String id),
-    @required Result offline(String id),
-    @required
-        Result error(
-            String id, dynamic error, StackTrace stack, ViewState retryState),
-    @required Result done(String id, String name),
-  });
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result initial(String id),
-    Result loading(String id),
-    Result offline(String id),
-    Result error(
-        String id, dynamic error, StackTrace stack, ViewState retryState),
-    Result done(String id, String name),
-    @required Result orElse(),
-  });
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result initial(ViewStateInitial value),
-    @required Result loading(ViewStateLoading value),
-    @required Result offline(ViewStateOffline value),
-    @required Result error(ViewStateError value),
-    @required Result done(ViewStateDone value),
-  });
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result initial(ViewStateInitial value),
-    Result loading(ViewStateLoading value),
-    Result offline(ViewStateOffline value),
-    Result error(ViewStateError value),
-    Result done(ViewStateDone value),
-    @required Result orElse(),
-  });
+  PageState get page;
 
   $ViewStateCopyWith<ViewState> get copyWith;
 }
@@ -103,7 +34,9 @@ mixin _$ViewState {
 abstract class $ViewStateCopyWith<$Res> {
   factory $ViewStateCopyWith(ViewState value, $Res Function(ViewState) then) =
       _$ViewStateCopyWithImpl<$Res>;
-  $Res call({String id});
+  $Res call({String id, PageState page});
+
+  $PageStateCopyWith<$Res> get page;
 }
 
 class _$ViewStateCopyWithImpl<$Res> implements $ViewStateCopyWith<$Res> {
@@ -116,101 +49,252 @@ class _$ViewStateCopyWithImpl<$Res> implements $ViewStateCopyWith<$Res> {
   @override
   $Res call({
     Object id = freezed,
+    Object page = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed ? _value.id : id as String,
+      page: page == freezed ? _value.page : page as PageState,
     ));
+  }
+
+  @override
+  $PageStateCopyWith<$Res> get page {
+    if (_value.page == null) {
+      return null;
+    }
+    return $PageStateCopyWith<$Res>(_value.page, (value) {
+      return _then(_value.copyWith(page: value));
+    });
   }
 }
 
-abstract class $ViewStateInitialCopyWith<$Res>
-    implements $ViewStateCopyWith<$Res> {
-  factory $ViewStateInitialCopyWith(
-          ViewStateInitial value, $Res Function(ViewStateInitial) then) =
-      _$ViewStateInitialCopyWithImpl<$Res>;
+abstract class _$ViewStateCopyWith<$Res> implements $ViewStateCopyWith<$Res> {
+  factory _$ViewStateCopyWith(
+          _ViewState value, $Res Function(_ViewState) then) =
+      __$ViewStateCopyWithImpl<$Res>;
   @override
-  $Res call({String id});
+  $Res call({String id, PageState page});
+
+  @override
+  $PageStateCopyWith<$Res> get page;
 }
 
-class _$ViewStateInitialCopyWithImpl<$Res> extends _$ViewStateCopyWithImpl<$Res>
-    implements $ViewStateInitialCopyWith<$Res> {
-  _$ViewStateInitialCopyWithImpl(
-      ViewStateInitial _value, $Res Function(ViewStateInitial) _then)
-      : super(_value, (v) => _then(v as ViewStateInitial));
+class __$ViewStateCopyWithImpl<$Res> extends _$ViewStateCopyWithImpl<$Res>
+    implements _$ViewStateCopyWith<$Res> {
+  __$ViewStateCopyWithImpl(_ViewState _value, $Res Function(_ViewState) _then)
+      : super(_value, (v) => _then(v as _ViewState));
 
   @override
-  ViewStateInitial get _value => super._value as ViewStateInitial;
+  _ViewState get _value => super._value as _ViewState;
 
   @override
   $Res call({
     Object id = freezed,
+    Object page = freezed,
   }) {
-    return _then(ViewStateInitial(
+    return _then(_ViewState(
       id == freezed ? _value.id : id as String,
+      page == freezed ? _value.page : page as PageState,
     ));
   }
 }
 
-class _$ViewStateInitial implements ViewStateInitial {
-  const _$ViewStateInitial(this.id) : assert(id != null);
+class _$_ViewState implements _ViewState {
+  const _$_ViewState(this.id, this.page)
+      : assert(id != null),
+        assert(page != null);
 
   @override
   final String id;
+  @override
+  final PageState page;
 
   @override
   String toString() {
-    return 'ViewState.initial(id: $id)';
+    return 'ViewState(id: $id, page: $page)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is ViewStateInitial &&
+        (other is _ViewState &&
             (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)));
+                const DeepCollectionEquality().equals(other.id, id)) &&
+            (identical(other.page, page) ||
+                const DeepCollectionEquality().equals(other.page, page)));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(id);
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(id) ^
+      const DeepCollectionEquality().hash(page);
 
   @override
-  $ViewStateInitialCopyWith<ViewStateInitial> get copyWith =>
-      _$ViewStateInitialCopyWithImpl<ViewStateInitial>(this, _$identity);
+  _$ViewStateCopyWith<_ViewState> get copyWith =>
+      __$ViewStateCopyWithImpl<_ViewState>(this, _$identity);
+}
+
+abstract class _ViewState implements ViewState {
+  const factory _ViewState(String id, PageState page) = _$_ViewState;
+
+  @override
+  String get id;
+  @override
+  PageState get page;
+  @override
+  _$ViewStateCopyWith<_ViewState> get copyWith;
+}
+
+class _$PageStateTearOff {
+  const _$PageStateTearOff();
+
+// ignore: unused_element
+  PageStateInitial initial() {
+    return const PageStateInitial();
+  }
+
+// ignore: unused_element
+  PageStateLoading loading() {
+    return const PageStateLoading();
+  }
+
+// ignore: unused_element
+  PageStateOffline offline() {
+    return const PageStateOffline();
+  }
+
+// ignore: unused_element
+  PageStateError error(dynamic error, StackTrace stack) {
+    return PageStateError(
+      error,
+      stack,
+    );
+  }
+
+// ignore: unused_element
+  PageStateDone done(String name) {
+    return PageStateDone(
+      name,
+    );
+  }
+}
+
+// ignore: unused_element
+const $PageState = _$PageStateTearOff();
+
+mixin _$PageState {
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result initial(),
+    @required Result loading(),
+    @required Result offline(),
+    @required Result error(dynamic error, StackTrace stack),
+    @required Result done(String name),
+  });
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result initial(),
+    Result loading(),
+    Result offline(),
+    Result error(dynamic error, StackTrace stack),
+    Result done(String name),
+    @required Result orElse(),
+  });
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result initial(PageStateInitial value),
+    @required Result loading(PageStateLoading value),
+    @required Result offline(PageStateOffline value),
+    @required Result error(PageStateError value),
+    @required Result done(PageStateDone value),
+  });
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result initial(PageStateInitial value),
+    Result loading(PageStateLoading value),
+    Result offline(PageStateOffline value),
+    Result error(PageStateError value),
+    Result done(PageStateDone value),
+    @required Result orElse(),
+  });
+}
+
+abstract class $PageStateCopyWith<$Res> {
+  factory $PageStateCopyWith(PageState value, $Res Function(PageState) then) =
+      _$PageStateCopyWithImpl<$Res>;
+}
+
+class _$PageStateCopyWithImpl<$Res> implements $PageStateCopyWith<$Res> {
+  _$PageStateCopyWithImpl(this._value, this._then);
+
+  final PageState _value;
+  // ignore: unused_field
+  final $Res Function(PageState) _then;
+}
+
+abstract class $PageStateInitialCopyWith<$Res> {
+  factory $PageStateInitialCopyWith(
+          PageStateInitial value, $Res Function(PageStateInitial) then) =
+      _$PageStateInitialCopyWithImpl<$Res>;
+}
+
+class _$PageStateInitialCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
+    implements $PageStateInitialCopyWith<$Res> {
+  _$PageStateInitialCopyWithImpl(
+      PageStateInitial _value, $Res Function(PageStateInitial) _then)
+      : super(_value, (v) => _then(v as PageStateInitial));
+
+  @override
+  PageStateInitial get _value => super._value as PageStateInitial;
+}
+
+class _$PageStateInitial implements PageStateInitial {
+  const _$PageStateInitial();
+
+  @override
+  String toString() {
+    return 'PageState.initial()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is PageStateInitial);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result initial(String id),
-    @required Result loading(String id),
-    @required Result offline(String id),
-    @required
-        Result error(
-            String id, dynamic error, StackTrace stack, ViewState retryState),
-    @required Result done(String id, String name),
+    @required Result initial(),
+    @required Result loading(),
+    @required Result offline(),
+    @required Result error(dynamic error, StackTrace stack),
+    @required Result done(String name),
   }) {
     assert(initial != null);
     assert(loading != null);
     assert(offline != null);
     assert(error != null);
     assert(done != null);
-    return initial(id);
+    return initial();
   }
 
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result initial(String id),
-    Result loading(String id),
-    Result offline(String id),
-    Result error(
-        String id, dynamic error, StackTrace stack, ViewState retryState),
-    Result done(String id, String name),
+    Result initial(),
+    Result loading(),
+    Result offline(),
+    Result error(dynamic error, StackTrace stack),
+    Result done(String name),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (initial != null) {
-      return initial(id);
+      return initial();
     }
     return orElse();
   }
@@ -218,11 +302,11 @@ class _$ViewStateInitial implements ViewStateInitial {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result initial(ViewStateInitial value),
-    @required Result loading(ViewStateLoading value),
-    @required Result offline(ViewStateOffline value),
-    @required Result error(ViewStateError value),
-    @required Result done(ViewStateDone value),
+    @required Result initial(PageStateInitial value),
+    @required Result loading(PageStateLoading value),
+    @required Result offline(PageStateOffline value),
+    @required Result error(PageStateError value),
+    @required Result done(PageStateDone value),
   }) {
     assert(initial != null);
     assert(loading != null);
@@ -235,11 +319,11 @@ class _$ViewStateInitial implements ViewStateInitial {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result initial(ViewStateInitial value),
-    Result loading(ViewStateLoading value),
-    Result offline(ViewStateOffline value),
-    Result error(ViewStateError value),
-    Result done(ViewStateDone value),
+    Result initial(PageStateInitial value),
+    Result loading(PageStateLoading value),
+    Result offline(PageStateOffline value),
+    Result error(PageStateError value),
+    Result done(PageStateDone value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -250,103 +334,72 @@ class _$ViewStateInitial implements ViewStateInitial {
   }
 }
 
-abstract class ViewStateInitial implements ViewState {
-  const factory ViewStateInitial(String id) = _$ViewStateInitial;
-
-  @override
-  String get id;
-  @override
-  $ViewStateInitialCopyWith<ViewStateInitial> get copyWith;
+abstract class PageStateInitial implements PageState {
+  const factory PageStateInitial() = _$PageStateInitial;
 }
 
-abstract class $ViewStateLoadingCopyWith<$Res>
-    implements $ViewStateCopyWith<$Res> {
-  factory $ViewStateLoadingCopyWith(
-          ViewStateLoading value, $Res Function(ViewStateLoading) then) =
-      _$ViewStateLoadingCopyWithImpl<$Res>;
-  @override
-  $Res call({String id});
+abstract class $PageStateLoadingCopyWith<$Res> {
+  factory $PageStateLoadingCopyWith(
+          PageStateLoading value, $Res Function(PageStateLoading) then) =
+      _$PageStateLoadingCopyWithImpl<$Res>;
 }
 
-class _$ViewStateLoadingCopyWithImpl<$Res> extends _$ViewStateCopyWithImpl<$Res>
-    implements $ViewStateLoadingCopyWith<$Res> {
-  _$ViewStateLoadingCopyWithImpl(
-      ViewStateLoading _value, $Res Function(ViewStateLoading) _then)
-      : super(_value, (v) => _then(v as ViewStateLoading));
+class _$PageStateLoadingCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
+    implements $PageStateLoadingCopyWith<$Res> {
+  _$PageStateLoadingCopyWithImpl(
+      PageStateLoading _value, $Res Function(PageStateLoading) _then)
+      : super(_value, (v) => _then(v as PageStateLoading));
 
   @override
-  ViewStateLoading get _value => super._value as ViewStateLoading;
-
-  @override
-  $Res call({
-    Object id = freezed,
-  }) {
-    return _then(ViewStateLoading(
-      id == freezed ? _value.id : id as String,
-    ));
-  }
+  PageStateLoading get _value => super._value as PageStateLoading;
 }
 
-class _$ViewStateLoading implements ViewStateLoading {
-  const _$ViewStateLoading(this.id) : assert(id != null);
-
-  @override
-  final String id;
+class _$PageStateLoading implements PageStateLoading {
+  const _$PageStateLoading();
 
   @override
   String toString() {
-    return 'ViewState.loading(id: $id)';
+    return 'PageState.loading()';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is ViewStateLoading &&
-            (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)));
+    return identical(this, other) || (other is PageStateLoading);
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(id);
-
-  @override
-  $ViewStateLoadingCopyWith<ViewStateLoading> get copyWith =>
-      _$ViewStateLoadingCopyWithImpl<ViewStateLoading>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result initial(String id),
-    @required Result loading(String id),
-    @required Result offline(String id),
-    @required
-        Result error(
-            String id, dynamic error, StackTrace stack, ViewState retryState),
-    @required Result done(String id, String name),
+    @required Result initial(),
+    @required Result loading(),
+    @required Result offline(),
+    @required Result error(dynamic error, StackTrace stack),
+    @required Result done(String name),
   }) {
     assert(initial != null);
     assert(loading != null);
     assert(offline != null);
     assert(error != null);
     assert(done != null);
-    return loading(id);
+    return loading();
   }
 
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result initial(String id),
-    Result loading(String id),
-    Result offline(String id),
-    Result error(
-        String id, dynamic error, StackTrace stack, ViewState retryState),
-    Result done(String id, String name),
+    Result initial(),
+    Result loading(),
+    Result offline(),
+    Result error(dynamic error, StackTrace stack),
+    Result done(String name),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (loading != null) {
-      return loading(id);
+      return loading();
     }
     return orElse();
   }
@@ -354,11 +407,11 @@ class _$ViewStateLoading implements ViewStateLoading {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result initial(ViewStateInitial value),
-    @required Result loading(ViewStateLoading value),
-    @required Result offline(ViewStateOffline value),
-    @required Result error(ViewStateError value),
-    @required Result done(ViewStateDone value),
+    @required Result initial(PageStateInitial value),
+    @required Result loading(PageStateLoading value),
+    @required Result offline(PageStateOffline value),
+    @required Result error(PageStateError value),
+    @required Result done(PageStateDone value),
   }) {
     assert(initial != null);
     assert(loading != null);
@@ -371,11 +424,11 @@ class _$ViewStateLoading implements ViewStateLoading {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result initial(ViewStateInitial value),
-    Result loading(ViewStateLoading value),
-    Result offline(ViewStateOffline value),
-    Result error(ViewStateError value),
-    Result done(ViewStateDone value),
+    Result initial(PageStateInitial value),
+    Result loading(PageStateLoading value),
+    Result offline(PageStateOffline value),
+    Result error(PageStateError value),
+    Result done(PageStateDone value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -386,103 +439,72 @@ class _$ViewStateLoading implements ViewStateLoading {
   }
 }
 
-abstract class ViewStateLoading implements ViewState {
-  const factory ViewStateLoading(String id) = _$ViewStateLoading;
-
-  @override
-  String get id;
-  @override
-  $ViewStateLoadingCopyWith<ViewStateLoading> get copyWith;
+abstract class PageStateLoading implements PageState {
+  const factory PageStateLoading() = _$PageStateLoading;
 }
 
-abstract class $ViewStateOfflineCopyWith<$Res>
-    implements $ViewStateCopyWith<$Res> {
-  factory $ViewStateOfflineCopyWith(
-          ViewStateOffline value, $Res Function(ViewStateOffline) then) =
-      _$ViewStateOfflineCopyWithImpl<$Res>;
-  @override
-  $Res call({String id});
+abstract class $PageStateOfflineCopyWith<$Res> {
+  factory $PageStateOfflineCopyWith(
+          PageStateOffline value, $Res Function(PageStateOffline) then) =
+      _$PageStateOfflineCopyWithImpl<$Res>;
 }
 
-class _$ViewStateOfflineCopyWithImpl<$Res> extends _$ViewStateCopyWithImpl<$Res>
-    implements $ViewStateOfflineCopyWith<$Res> {
-  _$ViewStateOfflineCopyWithImpl(
-      ViewStateOffline _value, $Res Function(ViewStateOffline) _then)
-      : super(_value, (v) => _then(v as ViewStateOffline));
+class _$PageStateOfflineCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
+    implements $PageStateOfflineCopyWith<$Res> {
+  _$PageStateOfflineCopyWithImpl(
+      PageStateOffline _value, $Res Function(PageStateOffline) _then)
+      : super(_value, (v) => _then(v as PageStateOffline));
 
   @override
-  ViewStateOffline get _value => super._value as ViewStateOffline;
-
-  @override
-  $Res call({
-    Object id = freezed,
-  }) {
-    return _then(ViewStateOffline(
-      id == freezed ? _value.id : id as String,
-    ));
-  }
+  PageStateOffline get _value => super._value as PageStateOffline;
 }
 
-class _$ViewStateOffline implements ViewStateOffline {
-  const _$ViewStateOffline(this.id) : assert(id != null);
-
-  @override
-  final String id;
+class _$PageStateOffline implements PageStateOffline {
+  const _$PageStateOffline();
 
   @override
   String toString() {
-    return 'ViewState.offline(id: $id)';
+    return 'PageState.offline()';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is ViewStateOffline &&
-            (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)));
+    return identical(this, other) || (other is PageStateOffline);
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(id);
-
-  @override
-  $ViewStateOfflineCopyWith<ViewStateOffline> get copyWith =>
-      _$ViewStateOfflineCopyWithImpl<ViewStateOffline>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result initial(String id),
-    @required Result loading(String id),
-    @required Result offline(String id),
-    @required
-        Result error(
-            String id, dynamic error, StackTrace stack, ViewState retryState),
-    @required Result done(String id, String name),
+    @required Result initial(),
+    @required Result loading(),
+    @required Result offline(),
+    @required Result error(dynamic error, StackTrace stack),
+    @required Result done(String name),
   }) {
     assert(initial != null);
     assert(loading != null);
     assert(offline != null);
     assert(error != null);
     assert(done != null);
-    return offline(id);
+    return offline();
   }
 
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result initial(String id),
-    Result loading(String id),
-    Result offline(String id),
-    Result error(
-        String id, dynamic error, StackTrace stack, ViewState retryState),
-    Result done(String id, String name),
+    Result initial(),
+    Result loading(),
+    Result offline(),
+    Result error(dynamic error, StackTrace stack),
+    Result done(String name),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (offline != null) {
-      return offline(id);
+      return offline();
     }
     return orElse();
   }
@@ -490,11 +512,11 @@ class _$ViewStateOffline implements ViewStateOffline {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result initial(ViewStateInitial value),
-    @required Result loading(ViewStateLoading value),
-    @required Result offline(ViewStateOffline value),
-    @required Result error(ViewStateError value),
-    @required Result done(ViewStateDone value),
+    @required Result initial(PageStateInitial value),
+    @required Result loading(PageStateLoading value),
+    @required Result offline(PageStateOffline value),
+    @required Result error(PageStateError value),
+    @required Result done(PageStateDone value),
   }) {
     assert(initial != null);
     assert(loading != null);
@@ -507,11 +529,11 @@ class _$ViewStateOffline implements ViewStateOffline {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result initial(ViewStateInitial value),
-    Result loading(ViewStateLoading value),
-    Result offline(ViewStateOffline value),
-    Result error(ViewStateError value),
-    Result done(ViewStateDone value),
+    Result initial(PageStateInitial value),
+    Result loading(PageStateLoading value),
+    Result offline(PageStateOffline value),
+    Result error(PageStateError value),
+    Result done(PageStateDone value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -522,130 +544,103 @@ class _$ViewStateOffline implements ViewStateOffline {
   }
 }
 
-abstract class ViewStateOffline implements ViewState {
-  const factory ViewStateOffline(String id) = _$ViewStateOffline;
-
-  @override
-  String get id;
-  @override
-  $ViewStateOfflineCopyWith<ViewStateOffline> get copyWith;
+abstract class PageStateOffline implements PageState {
+  const factory PageStateOffline() = _$PageStateOffline;
 }
 
-abstract class $ViewStateErrorCopyWith<$Res>
-    implements $ViewStateCopyWith<$Res> {
-  factory $ViewStateErrorCopyWith(
-          ViewStateError value, $Res Function(ViewStateError) then) =
-      _$ViewStateErrorCopyWithImpl<$Res>;
-  @override
-  $Res call({String id, dynamic error, StackTrace stack, ViewState retryState});
+abstract class $PageStateErrorCopyWith<$Res> {
+  factory $PageStateErrorCopyWith(
+          PageStateError value, $Res Function(PageStateError) then) =
+      _$PageStateErrorCopyWithImpl<$Res>;
+  $Res call({dynamic error, StackTrace stack});
 }
 
-class _$ViewStateErrorCopyWithImpl<$Res> extends _$ViewStateCopyWithImpl<$Res>
-    implements $ViewStateErrorCopyWith<$Res> {
-  _$ViewStateErrorCopyWithImpl(
-      ViewStateError _value, $Res Function(ViewStateError) _then)
-      : super(_value, (v) => _then(v as ViewStateError));
+class _$PageStateErrorCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
+    implements $PageStateErrorCopyWith<$Res> {
+  _$PageStateErrorCopyWithImpl(
+      PageStateError _value, $Res Function(PageStateError) _then)
+      : super(_value, (v) => _then(v as PageStateError));
 
   @override
-  ViewStateError get _value => super._value as ViewStateError;
+  PageStateError get _value => super._value as PageStateError;
 
   @override
   $Res call({
-    Object id = freezed,
     Object error = freezed,
     Object stack = freezed,
-    Object retryState = freezed,
   }) {
-    return _then(ViewStateError(
-      id == freezed ? _value.id : id as String,
+    return _then(PageStateError(
       error == freezed ? _value.error : error as dynamic,
       stack == freezed ? _value.stack : stack as StackTrace,
-      retryState == freezed ? _value.retryState : retryState as ViewState,
     ));
   }
 }
 
-class _$ViewStateError implements ViewStateError {
-  const _$ViewStateError(this.id, this.error, this.stack, this.retryState)
-      : assert(id != null),
-        assert(error != null),
-        assert(stack != null),
-        assert(retryState != null);
+class _$PageStateError implements PageStateError {
+  const _$PageStateError(this.error, this.stack)
+      : assert(error != null),
+        assert(stack != null);
 
-  @override
-  final String id;
   @override
   final dynamic error;
   @override
   final StackTrace stack;
-  @override
-  final ViewState retryState;
 
   @override
   String toString() {
-    return 'ViewState.error(id: $id, error: $error, stack: $stack, retryState: $retryState)';
+    return 'PageState.error(error: $error, stack: $stack)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is ViewStateError &&
-            (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)) &&
+        (other is PageStateError &&
             (identical(other.error, error) ||
                 const DeepCollectionEquality().equals(other.error, error)) &&
             (identical(other.stack, stack) ||
-                const DeepCollectionEquality().equals(other.stack, stack)) &&
-            (identical(other.retryState, retryState) ||
-                const DeepCollectionEquality()
-                    .equals(other.retryState, retryState)));
+                const DeepCollectionEquality().equals(other.stack, stack)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(error) ^
-      const DeepCollectionEquality().hash(stack) ^
-      const DeepCollectionEquality().hash(retryState);
+      const DeepCollectionEquality().hash(stack);
 
   @override
-  $ViewStateErrorCopyWith<ViewStateError> get copyWith =>
-      _$ViewStateErrorCopyWithImpl<ViewStateError>(this, _$identity);
+  $PageStateErrorCopyWith<PageStateError> get copyWith =>
+      _$PageStateErrorCopyWithImpl<PageStateError>(this, _$identity);
 
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result initial(String id),
-    @required Result loading(String id),
-    @required Result offline(String id),
-    @required
-        Result error(
-            String id, dynamic error, StackTrace stack, ViewState retryState),
-    @required Result done(String id, String name),
+    @required Result initial(),
+    @required Result loading(),
+    @required Result offline(),
+    @required Result error(dynamic error, StackTrace stack),
+    @required Result done(String name),
   }) {
     assert(initial != null);
     assert(loading != null);
     assert(offline != null);
     assert(error != null);
     assert(done != null);
-    return error(id, this.error, stack, retryState);
+    return error(this.error, stack);
   }
 
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result initial(String id),
-    Result loading(String id),
-    Result offline(String id),
-    Result error(
-        String id, dynamic error, StackTrace stack, ViewState retryState),
-    Result done(String id, String name),
+    Result initial(),
+    Result loading(),
+    Result offline(),
+    Result error(dynamic error, StackTrace stack),
+    Result done(String name),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (error != null) {
-      return error(id, this.error, stack, retryState);
+      return error(this.error, stack);
     }
     return orElse();
   }
@@ -653,11 +648,11 @@ class _$ViewStateError implements ViewStateError {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result initial(ViewStateInitial value),
-    @required Result loading(ViewStateLoading value),
-    @required Result offline(ViewStateOffline value),
-    @required Result error(ViewStateError value),
-    @required Result done(ViewStateDone value),
+    @required Result initial(PageStateInitial value),
+    @required Result loading(PageStateLoading value),
+    @required Result offline(PageStateOffline value),
+    @required Result error(PageStateError value),
+    @required Result done(PageStateDone value),
   }) {
     assert(initial != null);
     assert(loading != null);
@@ -670,11 +665,11 @@ class _$ViewStateError implements ViewStateError {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result initial(ViewStateInitial value),
-    Result loading(ViewStateLoading value),
-    Result offline(ViewStateOffline value),
-    Result error(ViewStateError value),
-    Result done(ViewStateDone value),
+    Result initial(PageStateInitial value),
+    Result loading(PageStateLoading value),
+    Result offline(PageStateOffline value),
+    Result error(PageStateError value),
+    Result done(PageStateDone value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -685,118 +680,98 @@ class _$ViewStateError implements ViewStateError {
   }
 }
 
-abstract class ViewStateError implements ViewState {
-  const factory ViewStateError(
-          String id, dynamic error, StackTrace stack, ViewState retryState) =
-      _$ViewStateError;
+abstract class PageStateError implements PageState {
+  const factory PageStateError(dynamic error, StackTrace stack) =
+      _$PageStateError;
 
-  @override
-  String get id;
   dynamic get error;
   StackTrace get stack;
-  ViewState get retryState;
-  @override
-  $ViewStateErrorCopyWith<ViewStateError> get copyWith;
+  $PageStateErrorCopyWith<PageStateError> get copyWith;
 }
 
-abstract class $ViewStateDoneCopyWith<$Res>
-    implements $ViewStateCopyWith<$Res> {
-  factory $ViewStateDoneCopyWith(
-          ViewStateDone value, $Res Function(ViewStateDone) then) =
-      _$ViewStateDoneCopyWithImpl<$Res>;
-  @override
-  $Res call({String id, String name});
+abstract class $PageStateDoneCopyWith<$Res> {
+  factory $PageStateDoneCopyWith(
+          PageStateDone value, $Res Function(PageStateDone) then) =
+      _$PageStateDoneCopyWithImpl<$Res>;
+  $Res call({String name});
 }
 
-class _$ViewStateDoneCopyWithImpl<$Res> extends _$ViewStateCopyWithImpl<$Res>
-    implements $ViewStateDoneCopyWith<$Res> {
-  _$ViewStateDoneCopyWithImpl(
-      ViewStateDone _value, $Res Function(ViewStateDone) _then)
-      : super(_value, (v) => _then(v as ViewStateDone));
+class _$PageStateDoneCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
+    implements $PageStateDoneCopyWith<$Res> {
+  _$PageStateDoneCopyWithImpl(
+      PageStateDone _value, $Res Function(PageStateDone) _then)
+      : super(_value, (v) => _then(v as PageStateDone));
 
   @override
-  ViewStateDone get _value => super._value as ViewStateDone;
+  PageStateDone get _value => super._value as PageStateDone;
 
   @override
   $Res call({
-    Object id = freezed,
     Object name = freezed,
   }) {
-    return _then(ViewStateDone(
-      id == freezed ? _value.id : id as String,
+    return _then(PageStateDone(
       name == freezed ? _value.name : name as String,
     ));
   }
 }
 
-class _$ViewStateDone implements ViewStateDone {
-  const _$ViewStateDone(this.id, this.name)
-      : assert(id != null),
-        assert(name != null);
+class _$PageStateDone implements PageStateDone {
+  const _$PageStateDone(this.name) : assert(name != null);
 
-  @override
-  final String id;
   @override
   final String name;
 
   @override
   String toString() {
-    return 'ViewState.done(id: $id, name: $name)';
+    return 'PageState.done(name: $name)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is ViewStateDone &&
-            (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)) &&
+        (other is PageStateDone &&
             (identical(other.name, name) ||
                 const DeepCollectionEquality().equals(other.name, name)));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(id) ^
-      const DeepCollectionEquality().hash(name);
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(name);
 
   @override
-  $ViewStateDoneCopyWith<ViewStateDone> get copyWith =>
-      _$ViewStateDoneCopyWithImpl<ViewStateDone>(this, _$identity);
+  $PageStateDoneCopyWith<PageStateDone> get copyWith =>
+      _$PageStateDoneCopyWithImpl<PageStateDone>(this, _$identity);
 
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result initial(String id),
-    @required Result loading(String id),
-    @required Result offline(String id),
-    @required
-        Result error(
-            String id, dynamic error, StackTrace stack, ViewState retryState),
-    @required Result done(String id, String name),
+    @required Result initial(),
+    @required Result loading(),
+    @required Result offline(),
+    @required Result error(dynamic error, StackTrace stack),
+    @required Result done(String name),
   }) {
     assert(initial != null);
     assert(loading != null);
     assert(offline != null);
     assert(error != null);
     assert(done != null);
-    return done(id, name);
+    return done(name);
   }
 
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result initial(String id),
-    Result loading(String id),
-    Result offline(String id),
-    Result error(
-        String id, dynamic error, StackTrace stack, ViewState retryState),
-    Result done(String id, String name),
+    Result initial(),
+    Result loading(),
+    Result offline(),
+    Result error(dynamic error, StackTrace stack),
+    Result done(String name),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (done != null) {
-      return done(id, name);
+      return done(name);
     }
     return orElse();
   }
@@ -804,11 +779,11 @@ class _$ViewStateDone implements ViewStateDone {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result initial(ViewStateInitial value),
-    @required Result loading(ViewStateLoading value),
-    @required Result offline(ViewStateOffline value),
-    @required Result error(ViewStateError value),
-    @required Result done(ViewStateDone value),
+    @required Result initial(PageStateInitial value),
+    @required Result loading(PageStateLoading value),
+    @required Result offline(PageStateOffline value),
+    @required Result error(PageStateError value),
+    @required Result done(PageStateDone value),
   }) {
     assert(initial != null);
     assert(loading != null);
@@ -821,11 +796,11 @@ class _$ViewStateDone implements ViewStateDone {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result initial(ViewStateInitial value),
-    Result loading(ViewStateLoading value),
-    Result offline(ViewStateOffline value),
-    Result error(ViewStateError value),
-    Result done(ViewStateDone value),
+    Result initial(PageStateInitial value),
+    Result loading(PageStateLoading value),
+    Result offline(PageStateOffline value),
+    Result error(PageStateError value),
+    Result done(PageStateDone value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -836,12 +811,9 @@ class _$ViewStateDone implements ViewStateDone {
   }
 }
 
-abstract class ViewStateDone implements ViewState {
-  const factory ViewStateDone(String id, String name) = _$ViewStateDone;
+abstract class PageStateDone implements PageState {
+  const factory PageStateDone(String name) = _$PageStateDone;
 
-  @override
-  String get id;
   String get name;
-  @override
-  $ViewStateDoneCopyWith<ViewStateDone> get copyWith;
+  $PageStateDoneCopyWith<PageStateDone> get copyWith;
 }

@@ -6,7 +6,7 @@ import 'package:data_repository/data_repository.dart';
 import 'package:protod/pserver/pserver.dart';
 
 class Data {
-  final Store<Share> _shares;
+  final StoreMeta<Share, String> _shares;
   final Store<User> _users;
   final Auth _auth;
   Item<User> _user;
@@ -14,8 +14,15 @@ class Data {
 
   Data(this._shares, this._users, this._auth, this._api);
 
-  Store<Share> get shares {
+  StoreMeta<Share, String> get shares {
     return _shares;
+  }
+
+  Item<User> get user {
+    if (_auth.status == Status.Done && _user != null && _auth.id == _user.id) {
+      return _user;
+    }
+    return null;
   }
 
   Future<void> init() async {
@@ -26,7 +33,11 @@ class Data {
 
     Future<void> f() async {
       if (_auth.status == Status.Done && user == null) {
-        final resp = _users.get(_auth.id, create: true, refresh: true);
+        final resp = _users.get(
+          _auth.id,
+          create: true,
+          refresh: !_api.offline(), // only refresh if online
+        );
         if (resp.future != null) {
           if (resp.item != null) {
             // if we got an item, and a future, then continue with the local item
@@ -56,12 +67,5 @@ class Data {
 
   Future<void> logoff() async {
     _user = null;
-  }
-
-  Item<User> get user {
-    if (_auth.status == Status.Done && _user != null && _auth.id == _user.id) {
-      return _user;
-    }
-    return null;
   }
 }

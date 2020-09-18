@@ -45,8 +45,19 @@ void main() async {
         );
         final auth = Auth(api, await Hive.openBox('auth'), device);
         final data = Data(
-          Store<Share>(Share(), Adapter<Share>(api.send), api.offline, types),
-          Store<User>(User(), Adapter<User>(api.send), api.offline, types),
+          StoreMeta<Share, String>(
+            Share(),
+            Adapter<Share>(api.send),
+            api.offline,
+            types,
+            (Share value) => value.name,
+          ),
+          Store<User>(
+            User(),
+            Adapter<User>(api.send),
+            api.offline,
+            types,
+          ),
           auth,
           api,
         );

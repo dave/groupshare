@@ -87,13 +87,7 @@ class ListPageContent extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Text(
-                        "Offline.",
-                      ),
-                    )
-                  ],
+                  children: [Center(child: Text("Offline."))],
                 ),
               ),
               loading: () => Column(
@@ -117,13 +111,7 @@ class ListPageContent extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Center(
-                            child: Text(
-                              "List empty.",
-                            ),
-                          )
-                        ],
+                        children: [Center(child: Text("List empty."))],
                       ),
                     )
                   : RefreshIndicator(
@@ -237,8 +225,12 @@ class SlidableListTile extends StatelessWidget {
     return ListTile(
       title: Text(_item.name),
       onTap: () async {
-        await Navigator.of(context).push(
-          ViewPage.route(_item.id),
+        await task(
+          context,
+          () async {
+            await Navigator.of(context).push(ViewPage.route(_item.id));
+          },
+          enabled: !_item.local,
         );
         context.bloc<ListCubit>().initList(false);
       },

@@ -167,7 +167,10 @@ class ListCubit extends Cubit<ListState> {
     if (items) {
       p = p.copyWith(
           items: _data.user.value.shares
-              .map((e) => AvailableShare(e.id, e.name, _data.shares.has(e.id)))
+              .map((e) => AvailableShare(
+                  e.id,
+                  _data.shares.has(e.id) ? _data.shares.meta(e.id) : e.name,
+                  _data.shares.has(e.id)))
               .toList());
     }
     if (refreshing.length > 0) {

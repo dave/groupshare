@@ -44,3 +44,6 @@ app.*.map.json
 !/repositories/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 .test_hive_data/
+
+# Secret key is stored in app.yaml - do not commit to source control
+server/app.yaml

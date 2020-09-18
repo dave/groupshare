@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/edit/edit.dart';
+import 'package:groupshare/share/list/list.dart';
 import 'package:groupshare/share/view/view.dart';
 import 'package:groupshare/ui/refresher.dart';
 
@@ -29,7 +30,7 @@ class ViewPage extends StatelessWidget {
       create: (context) => ViewCubit(
         _id,
         RepositoryProvider.of<Data>(context),
-      )..initialise(),
+      )..init(),
       child: ViewForm(),
     );
   }
@@ -40,7 +41,7 @@ class ViewForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<ViewCubit, ViewState>(
       listener: (context, state) {
-        state.map(
+        state.page.map(
           initial: (state) => true,
           loading: (state) => true,
           offline: (state) => true,
@@ -51,8 +52,14 @@ class ViewForm extends StatelessWidget {
               state.stack,
               buttons: [
                 Button(
-                  "retry",
-                  () => context.bloc<ViewCubit>().retry(state.retryState),
+                  "Home",
+                  () => Navigator.of(context).popUntil(
+                    ModalRoute.withName(ListPage.routeName),
+                  ),
+                ),
+                Button(
+                  "Retry",
+                  () => context.bloc<ViewCubit>().init(),
                 )
               ],
             );
@@ -70,7 +77,7 @@ class ViewForm extends StatelessWidget {
                 state.id,
                 ViewPage.routeName,
               ));
-              context.bloc<ViewCubit>().initialise();
+              context.bloc<ViewCubit>().init();
             },
           ),
           body: Padding(
@@ -81,7 +88,7 @@ class ViewForm extends StatelessWidget {
                 onRefresh: () async {
                   await context.bloc<ViewCubit>().refresh();
                 },
-                child: state.map(
+                child: state.page.map(
                   initial: (state) => null,
                   offline: (_) => Center(
                     child: Text(
