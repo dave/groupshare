@@ -83,6 +83,8 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
+		w.Header().Add("Access-Control-Allow-Origin", "*")
+
 		defer func() {
 			if r := recover(); r != nil {
 				switch r := r.(type) {

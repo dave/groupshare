@@ -73,7 +73,7 @@ class _AppViewState extends State<AppView> {
         builder: (context, state) {
           return state.map(
             loading: (state) => Scaffold(
-              body: Center(child: Text("loading... (2)")),
+              body: Center(child: Text("loading...")),
             ),
             login: (state) => Scaffold(
               body: Center(child: Text("login...")),

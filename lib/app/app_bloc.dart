@@ -61,6 +61,7 @@ class AppCubit extends Cubit<AppState> {
     await _discovery.init();
     await _api.init();
     await _auth.init();
+
     try {
       await _data.init();
     } catch (ex) {

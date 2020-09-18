@@ -135,12 +135,12 @@ class Api {
               return null;
             },
           );
-        } catch (ex) {
+        } catch (ex, stack) {
           // exception: repeat loop (increment by 4 instead of 1)
           i = i + 3;
           err = Error()
             ..message = "Connection error"
-            ..debug = "$ex"
+            ..debug = "$ex $stack"
             ..busy = false
             ..retry = true
             ..stop = true;

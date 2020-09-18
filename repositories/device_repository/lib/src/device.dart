@@ -1,11 +1,16 @@
 import 'package:device_id/device_id.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Device {
   String _id;
   String get id => _id;
 
   Future<void> init() async {
-    _id = await DeviceId.getID;
+    if (kIsWeb) {
+      _id = "foo";
+    } else {
+      _id = await DeviceId.getID;
+    }
   }
 }
 
