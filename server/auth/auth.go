@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
+	"os"
 	"strconv"
 	"time"
 
@@ -28,8 +29,10 @@ type User struct {
 }
 
 func GenerateCode(device, email string, time int64) (string, error) {
-	// TODO: Change this secret and put it somewhere private before launch.
-	const SECRET = "giuqtycuciuxbxziubzxuidsihnsdfjdnndsoimxosjoasuhieuhbck"
+	secret, found := os.LookupEnv("SECRET_KEY")
+	if !found {
+		panic("SECRET_KEY not found")
+	}
 	const VERSION = 4
 	type dataType struct {
 		Version int
@@ -40,7 +43,7 @@ func GenerateCode(device, email string, time int64) (string, error) {
 	}
 	d := dataType{
 		Version: VERSION,
-		Secret:  SECRET,
+		Secret:  secret,
 		Time:    time,
 		Device:  device,
 		Email:   email,
@@ -56,8 +59,10 @@ func GenerateCode(device, email string, time int64) (string, error) {
 }
 
 func GenerateHash(id, device, salt string) (string, error) {
-	// TODO: Change this secret and put it somewhere private before launch.
-	const SECRET = "vhodifusrthklnxcvldsfngufvwiuhfeimbgnhojdcihbsxbih"
+	secret, found := os.LookupEnv("SECRET_KEY")
+	if !found {
+		panic("SECRET_KEY not found")
+	}
 	const VERSION = 4
 	type dataType struct {
 		Version int
@@ -68,7 +73,7 @@ func GenerateHash(id, device, salt string) (string, error) {
 	}
 	d := dataType{
 		Version: VERSION,
-		Secret:  SECRET,
+		Secret:  secret,
 		Device:  device,
 		Id:      id,
 		Salt:    salt,
