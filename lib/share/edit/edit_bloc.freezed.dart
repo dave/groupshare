@@ -13,11 +13,10 @@ class _$EditStateTearOff {
   const _$EditStateTearOff();
 
 // ignore: unused_element
-  _EditState call(String id, String popRoute, PageState page) {
+  _EditState call(PageState page, FormState form) {
     return _EditState(
-      id,
-      popRoute,
       page,
+      form,
     );
   }
 }
@@ -26,9 +25,8 @@ class _$EditStateTearOff {
 const $EditState = _$EditStateTearOff();
 
 mixin _$EditState {
-  String get id;
-  String get popRoute;
   PageState get page;
+  FormState get form;
 
   $EditStateCopyWith<EditState> get copyWith;
 }
@@ -36,9 +34,10 @@ mixin _$EditState {
 abstract class $EditStateCopyWith<$Res> {
   factory $EditStateCopyWith(EditState value, $Res Function(EditState) then) =
       _$EditStateCopyWithImpl<$Res>;
-  $Res call({String id, String popRoute, PageState page});
+  $Res call({PageState page, FormState form});
 
   $PageStateCopyWith<$Res> get page;
+  $FormStateCopyWith<$Res> get form;
 }
 
 class _$EditStateCopyWithImpl<$Res> implements $EditStateCopyWith<$Res> {
@@ -50,14 +49,12 @@ class _$EditStateCopyWithImpl<$Res> implements $EditStateCopyWith<$Res> {
 
   @override
   $Res call({
-    Object id = freezed,
-    Object popRoute = freezed,
     Object page = freezed,
+    Object form = freezed,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed ? _value.id : id as String,
-      popRoute: popRoute == freezed ? _value.popRoute : popRoute as String,
       page: page == freezed ? _value.page : page as PageState,
+      form: form == freezed ? _value.form : form as FormState,
     ));
   }
 
@@ -70,6 +67,16 @@ class _$EditStateCopyWithImpl<$Res> implements $EditStateCopyWith<$Res> {
       return _then(_value.copyWith(page: value));
     });
   }
+
+  @override
+  $FormStateCopyWith<$Res> get form {
+    if (_value.form == null) {
+      return null;
+    }
+    return $FormStateCopyWith<$Res>(_value.form, (value) {
+      return _then(_value.copyWith(form: value));
+    });
+  }
 }
 
 abstract class _$EditStateCopyWith<$Res> implements $EditStateCopyWith<$Res> {
@@ -77,10 +84,12 @@ abstract class _$EditStateCopyWith<$Res> implements $EditStateCopyWith<$Res> {
           _EditState value, $Res Function(_EditState) then) =
       __$EditStateCopyWithImpl<$Res>;
   @override
-  $Res call({String id, String popRoute, PageState page});
+  $Res call({PageState page, FormState form});
 
   @override
   $PageStateCopyWith<$Res> get page;
+  @override
+  $FormStateCopyWith<$Res> get form;
 }
 
 class __$EditStateCopyWithImpl<$Res> extends _$EditStateCopyWithImpl<$Res>
@@ -93,55 +102,46 @@ class __$EditStateCopyWithImpl<$Res> extends _$EditStateCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object id = freezed,
-    Object popRoute = freezed,
     Object page = freezed,
+    Object form = freezed,
   }) {
     return _then(_EditState(
-      id == freezed ? _value.id : id as String,
-      popRoute == freezed ? _value.popRoute : popRoute as String,
       page == freezed ? _value.page : page as PageState,
+      form == freezed ? _value.form : form as FormState,
     ));
   }
 }
 
 class _$_EditState implements _EditState {
-  const _$_EditState(this.id, this.popRoute, this.page)
-      : assert(id != null),
-        assert(popRoute != null),
-        assert(page != null);
+  const _$_EditState(this.page, this.form)
+      : assert(page != null),
+        assert(form != null);
 
   @override
-  final String id;
-  @override
-  final String popRoute;
-  @override
   final PageState page;
+  @override
+  final FormState form;
 
   @override
   String toString() {
-    return 'EditState(id: $id, popRoute: $popRoute, page: $page)';
+    return 'EditState(page: $page, form: $form)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is _EditState &&
-            (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)) &&
-            (identical(other.popRoute, popRoute) ||
-                const DeepCollectionEquality()
-                    .equals(other.popRoute, popRoute)) &&
             (identical(other.page, page) ||
-                const DeepCollectionEquality().equals(other.page, page)));
+                const DeepCollectionEquality().equals(other.page, page)) &&
+            (identical(other.form, form) ||
+                const DeepCollectionEquality().equals(other.form, form)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(id) ^
-      const DeepCollectionEquality().hash(popRoute) ^
-      const DeepCollectionEquality().hash(page);
+      const DeepCollectionEquality().hash(page) ^
+      const DeepCollectionEquality().hash(form);
 
   @override
   _$EditStateCopyWith<_EditState> get copyWith =>
@@ -149,17 +149,163 @@ class _$_EditState implements _EditState {
 }
 
 abstract class _EditState implements EditState {
-  const factory _EditState(String id, String popRoute, PageState page) =
-      _$_EditState;
+  const factory _EditState(PageState page, FormState form) = _$_EditState;
 
-  @override
-  String get id;
-  @override
-  String get popRoute;
   @override
   PageState get page;
   @override
+  FormState get form;
+  @override
   _$EditStateCopyWith<_EditState> get copyWith;
+}
+
+class _$FormStateTearOff {
+  const _$FormStateTearOff();
+
+// ignore: unused_element
+  _FormState call(
+      {FormzStatus status = FormzStatus.pure,
+      String initialName = '',
+      Name name = const Name.pure()}) {
+    return _FormState(
+      status: status,
+      initialName: initialName,
+      name: name,
+    );
+  }
+}
+
+// ignore: unused_element
+const $FormState = _$FormStateTearOff();
+
+mixin _$FormState {
+  FormzStatus get status;
+  String get initialName;
+  Name get name;
+
+  $FormStateCopyWith<FormState> get copyWith;
+}
+
+abstract class $FormStateCopyWith<$Res> {
+  factory $FormStateCopyWith(FormState value, $Res Function(FormState) then) =
+      _$FormStateCopyWithImpl<$Res>;
+  $Res call({FormzStatus status, String initialName, Name name});
+}
+
+class _$FormStateCopyWithImpl<$Res> implements $FormStateCopyWith<$Res> {
+  _$FormStateCopyWithImpl(this._value, this._then);
+
+  final FormState _value;
+  // ignore: unused_field
+  final $Res Function(FormState) _then;
+
+  @override
+  $Res call({
+    Object status = freezed,
+    Object initialName = freezed,
+    Object name = freezed,
+  }) {
+    return _then(_value.copyWith(
+      status: status == freezed ? _value.status : status as FormzStatus,
+      initialName:
+          initialName == freezed ? _value.initialName : initialName as String,
+      name: name == freezed ? _value.name : name as Name,
+    ));
+  }
+}
+
+abstract class _$FormStateCopyWith<$Res> implements $FormStateCopyWith<$Res> {
+  factory _$FormStateCopyWith(
+          _FormState value, $Res Function(_FormState) then) =
+      __$FormStateCopyWithImpl<$Res>;
+  @override
+  $Res call({FormzStatus status, String initialName, Name name});
+}
+
+class __$FormStateCopyWithImpl<$Res> extends _$FormStateCopyWithImpl<$Res>
+    implements _$FormStateCopyWith<$Res> {
+  __$FormStateCopyWithImpl(_FormState _value, $Res Function(_FormState) _then)
+      : super(_value, (v) => _then(v as _FormState));
+
+  @override
+  _FormState get _value => super._value as _FormState;
+
+  @override
+  $Res call({
+    Object status = freezed,
+    Object initialName = freezed,
+    Object name = freezed,
+  }) {
+    return _then(_FormState(
+      status: status == freezed ? _value.status : status as FormzStatus,
+      initialName:
+          initialName == freezed ? _value.initialName : initialName as String,
+      name: name == freezed ? _value.name : name as Name,
+    ));
+  }
+}
+
+class _$_FormState implements _FormState {
+  const _$_FormState(
+      {this.status = FormzStatus.pure,
+      this.initialName = '',
+      this.name = const Name.pure()})
+      : assert(status != null),
+        assert(initialName != null),
+        assert(name != null);
+
+  @JsonKey(defaultValue: FormzStatus.pure)
+  @override
+  final FormzStatus status;
+  @JsonKey(defaultValue: '')
+  @override
+  final String initialName;
+  @JsonKey(defaultValue: const Name.pure())
+  @override
+  final Name name;
+
+  @override
+  String toString() {
+    return 'FormState(status: $status, initialName: $initialName, name: $name)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is _FormState &&
+            (identical(other.status, status) ||
+                const DeepCollectionEquality().equals(other.status, status)) &&
+            (identical(other.initialName, initialName) ||
+                const DeepCollectionEquality()
+                    .equals(other.initialName, initialName)) &&
+            (identical(other.name, name) ||
+                const DeepCollectionEquality().equals(other.name, name)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(status) ^
+      const DeepCollectionEquality().hash(initialName) ^
+      const DeepCollectionEquality().hash(name);
+
+  @override
+  _$FormStateCopyWith<_FormState> get copyWith =>
+      __$FormStateCopyWithImpl<_FormState>(this, _$identity);
+}
+
+abstract class _FormState implements FormState {
+  const factory _FormState(
+      {FormzStatus status, String initialName, Name name}) = _$_FormState;
+
+  @override
+  FormzStatus get status;
+  @override
+  String get initialName;
+  @override
+  Name get name;
+  @override
+  _$FormStateCopyWith<_FormState> get copyWith;
 }
 
 class _$PageStateTearOff {
@@ -181,19 +327,12 @@ class _$PageStateTearOff {
   }
 
 // ignore: unused_element
-  PageStateForm form(
-      {FormzStatus status = FormzStatus.pure,
-      String initialName = '',
-      Name name = const Name.pure()}) {
-    return PageStateForm(
-      status: status,
-      initialName: initialName,
-      name: name,
-    );
+  PageStateForm form() {
+    return const PageStateForm();
   }
 
 // ignore: unused_element
-  PageStateError error(dynamic error, StackTrace stack, PageState retryState) {
+  PageStateError error(dynamic error, StackTrace stack, EditState retryState) {
     return PageStateError(
       error,
       stack,
@@ -202,8 +341,10 @@ class _$PageStateTearOff {
   }
 
 // ignore: unused_element
-  PageStateDone done() {
-    return const PageStateDone();
+  PageStateDone done(String route) {
+    return PageStateDone(
+      route,
+    );
   }
 }
 
@@ -216,19 +357,19 @@ mixin _$PageState {
     @required Result initial(),
     @required Result offline(),
     @required Result loading(),
-    @required Result form(FormzStatus status, String initialName, Name name),
+    @required Result form(),
     @required
-        Result error(dynamic error, StackTrace stack, PageState retryState),
-    @required Result done(),
+        Result error(dynamic error, StackTrace stack, EditState retryState),
+    @required Result done(String route),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result initial(),
     Result offline(),
     Result loading(),
-    Result form(FormzStatus status, String initialName, Name name),
-    Result error(dynamic error, StackTrace stack, PageState retryState),
-    Result done(),
+    Result form(),
+    Result error(dynamic error, StackTrace stack, EditState retryState),
+    Result done(String route),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -303,10 +444,10 @@ class _$PageStateInitial implements PageStateInitial {
     @required Result initial(),
     @required Result offline(),
     @required Result loading(),
-    @required Result form(FormzStatus status, String initialName, Name name),
+    @required Result form(),
     @required
-        Result error(dynamic error, StackTrace stack, PageState retryState),
-    @required Result done(),
+        Result error(dynamic error, StackTrace stack, EditState retryState),
+    @required Result done(String route),
   }) {
     assert(initial != null);
     assert(offline != null);
@@ -323,9 +464,9 @@ class _$PageStateInitial implements PageStateInitial {
     Result initial(),
     Result offline(),
     Result loading(),
-    Result form(FormzStatus status, String initialName, Name name),
-    Result error(dynamic error, StackTrace stack, PageState retryState),
-    Result done(),
+    Result form(),
+    Result error(dynamic error, StackTrace stack, EditState retryState),
+    Result done(String route),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -415,10 +556,10 @@ class _$PageStateOffline implements PageStateOffline {
     @required Result initial(),
     @required Result offline(),
     @required Result loading(),
-    @required Result form(FormzStatus status, String initialName, Name name),
+    @required Result form(),
     @required
-        Result error(dynamic error, StackTrace stack, PageState retryState),
-    @required Result done(),
+        Result error(dynamic error, StackTrace stack, EditState retryState),
+    @required Result done(String route),
   }) {
     assert(initial != null);
     assert(offline != null);
@@ -435,9 +576,9 @@ class _$PageStateOffline implements PageStateOffline {
     Result initial(),
     Result offline(),
     Result loading(),
-    Result form(FormzStatus status, String initialName, Name name),
-    Result error(dynamic error, StackTrace stack, PageState retryState),
-    Result done(),
+    Result form(),
+    Result error(dynamic error, StackTrace stack, EditState retryState),
+    Result done(String route),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -527,10 +668,10 @@ class _$PageStateLoading implements PageStateLoading {
     @required Result initial(),
     @required Result offline(),
     @required Result loading(),
-    @required Result form(FormzStatus status, String initialName, Name name),
+    @required Result form(),
     @required
-        Result error(dynamic error, StackTrace stack, PageState retryState),
-    @required Result done(),
+        Result error(dynamic error, StackTrace stack, EditState retryState),
+    @required Result done(String route),
   }) {
     assert(initial != null);
     assert(offline != null);
@@ -547,9 +688,9 @@ class _$PageStateLoading implements PageStateLoading {
     Result initial(),
     Result offline(),
     Result loading(),
-    Result form(FormzStatus status, String initialName, Name name),
-    Result error(dynamic error, StackTrace stack, PageState retryState),
-    Result done(),
+    Result form(),
+    Result error(dynamic error, StackTrace stack, EditState retryState),
+    Result done(String route),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -605,7 +746,6 @@ abstract class $PageStateFormCopyWith<$Res> {
   factory $PageStateFormCopyWith(
           PageStateForm value, $Res Function(PageStateForm) then) =
       _$PageStateFormCopyWithImpl<$Res>;
-  $Res call({FormzStatus status, String initialName, Name name});
 }
 
 class _$PageStateFormCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
@@ -616,69 +756,23 @@ class _$PageStateFormCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
 
   @override
   PageStateForm get _value => super._value as PageStateForm;
-
-  @override
-  $Res call({
-    Object status = freezed,
-    Object initialName = freezed,
-    Object name = freezed,
-  }) {
-    return _then(PageStateForm(
-      status: status == freezed ? _value.status : status as FormzStatus,
-      initialName:
-          initialName == freezed ? _value.initialName : initialName as String,
-      name: name == freezed ? _value.name : name as Name,
-    ));
-  }
 }
 
 class _$PageStateForm implements PageStateForm {
-  const _$PageStateForm(
-      {this.status = FormzStatus.pure,
-      this.initialName = '',
-      this.name = const Name.pure()})
-      : assert(status != null),
-        assert(initialName != null),
-        assert(name != null);
-
-  @JsonKey(defaultValue: FormzStatus.pure)
-  @override
-  final FormzStatus status;
-  @JsonKey(defaultValue: '')
-  @override
-  final String initialName;
-  @JsonKey(defaultValue: const Name.pure())
-  @override
-  final Name name;
+  const _$PageStateForm();
 
   @override
   String toString() {
-    return 'PageState.form(status: $status, initialName: $initialName, name: $name)';
+    return 'PageState.form()';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is PageStateForm &&
-            (identical(other.status, status) ||
-                const DeepCollectionEquality().equals(other.status, status)) &&
-            (identical(other.initialName, initialName) ||
-                const DeepCollectionEquality()
-                    .equals(other.initialName, initialName)) &&
-            (identical(other.name, name) ||
-                const DeepCollectionEquality().equals(other.name, name)));
+    return identical(this, other) || (other is PageStateForm);
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(status) ^
-      const DeepCollectionEquality().hash(initialName) ^
-      const DeepCollectionEquality().hash(name);
-
-  @override
-  $PageStateFormCopyWith<PageStateForm> get copyWith =>
-      _$PageStateFormCopyWithImpl<PageStateForm>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
@@ -686,10 +780,10 @@ class _$PageStateForm implements PageStateForm {
     @required Result initial(),
     @required Result offline(),
     @required Result loading(),
-    @required Result form(FormzStatus status, String initialName, Name name),
+    @required Result form(),
     @required
-        Result error(dynamic error, StackTrace stack, PageState retryState),
-    @required Result done(),
+        Result error(dynamic error, StackTrace stack, EditState retryState),
+    @required Result done(String route),
   }) {
     assert(initial != null);
     assert(offline != null);
@@ -697,7 +791,7 @@ class _$PageStateForm implements PageStateForm {
     assert(form != null);
     assert(error != null);
     assert(done != null);
-    return form(status, initialName, name);
+    return form();
   }
 
   @override
@@ -706,14 +800,14 @@ class _$PageStateForm implements PageStateForm {
     Result initial(),
     Result offline(),
     Result loading(),
-    Result form(FormzStatus status, String initialName, Name name),
-    Result error(dynamic error, StackTrace stack, PageState retryState),
-    Result done(),
+    Result form(),
+    Result error(dynamic error, StackTrace stack, EditState retryState),
+    Result done(String route),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (form != null) {
-      return form(status, initialName, name);
+      return form();
     }
     return orElse();
   }
@@ -757,20 +851,16 @@ class _$PageStateForm implements PageStateForm {
 }
 
 abstract class PageStateForm implements PageState {
-  const factory PageStateForm(
-      {FormzStatus status, String initialName, Name name}) = _$PageStateForm;
-
-  FormzStatus get status;
-  String get initialName;
-  Name get name;
-  $PageStateFormCopyWith<PageStateForm> get copyWith;
+  const factory PageStateForm() = _$PageStateForm;
 }
 
 abstract class $PageStateErrorCopyWith<$Res> {
   factory $PageStateErrorCopyWith(
           PageStateError value, $Res Function(PageStateError) then) =
       _$PageStateErrorCopyWithImpl<$Res>;
-  $Res call({dynamic error, StackTrace stack, PageState retryState});
+  $Res call({dynamic error, StackTrace stack, EditState retryState});
+
+  $EditStateCopyWith<$Res> get retryState;
 }
 
 class _$PageStateErrorCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
@@ -791,8 +881,18 @@ class _$PageStateErrorCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
     return _then(PageStateError(
       error == freezed ? _value.error : error as dynamic,
       stack == freezed ? _value.stack : stack as StackTrace,
-      retryState == freezed ? _value.retryState : retryState as PageState,
+      retryState == freezed ? _value.retryState : retryState as EditState,
     ));
+  }
+
+  @override
+  $EditStateCopyWith<$Res> get retryState {
+    if (_value.retryState == null) {
+      return null;
+    }
+    return $EditStateCopyWith<$Res>(_value.retryState, (value) {
+      return _then(_value.copyWith(retryState: value));
+    });
   }
 }
 
@@ -807,7 +907,7 @@ class _$PageStateError implements PageStateError {
   @override
   final StackTrace stack;
   @override
-  final PageState retryState;
+  final EditState retryState;
 
   @override
   String toString() {
@@ -844,10 +944,10 @@ class _$PageStateError implements PageStateError {
     @required Result initial(),
     @required Result offline(),
     @required Result loading(),
-    @required Result form(FormzStatus status, String initialName, Name name),
+    @required Result form(),
     @required
-        Result error(dynamic error, StackTrace stack, PageState retryState),
-    @required Result done(),
+        Result error(dynamic error, StackTrace stack, EditState retryState),
+    @required Result done(String route),
   }) {
     assert(initial != null);
     assert(offline != null);
@@ -864,9 +964,9 @@ class _$PageStateError implements PageStateError {
     Result initial(),
     Result offline(),
     Result loading(),
-    Result form(FormzStatus status, String initialName, Name name),
-    Result error(dynamic error, StackTrace stack, PageState retryState),
-    Result done(),
+    Result form(),
+    Result error(dynamic error, StackTrace stack, EditState retryState),
+    Result done(String route),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -916,11 +1016,11 @@ class _$PageStateError implements PageStateError {
 
 abstract class PageStateError implements PageState {
   const factory PageStateError(
-      dynamic error, StackTrace stack, PageState retryState) = _$PageStateError;
+      dynamic error, StackTrace stack, EditState retryState) = _$PageStateError;
 
   dynamic get error;
   StackTrace get stack;
-  PageState get retryState;
+  EditState get retryState;
   $PageStateErrorCopyWith<PageStateError> get copyWith;
 }
 
@@ -928,6 +1028,7 @@ abstract class $PageStateDoneCopyWith<$Res> {
   factory $PageStateDoneCopyWith(
           PageStateDone value, $Res Function(PageStateDone) then) =
       _$PageStateDoneCopyWithImpl<$Res>;
+  $Res call({String route});
 }
 
 class _$PageStateDoneCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
@@ -938,23 +1039,43 @@ class _$PageStateDoneCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
 
   @override
   PageStateDone get _value => super._value as PageStateDone;
+
+  @override
+  $Res call({
+    Object route = freezed,
+  }) {
+    return _then(PageStateDone(
+      route == freezed ? _value.route : route as String,
+    ));
+  }
 }
 
 class _$PageStateDone implements PageStateDone {
-  const _$PageStateDone();
+  const _$PageStateDone(this.route) : assert(route != null);
+
+  @override
+  final String route;
 
   @override
   String toString() {
-    return 'PageState.done()';
+    return 'PageState.done(route: $route)';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is PageStateDone);
+    return identical(this, other) ||
+        (other is PageStateDone &&
+            (identical(other.route, route) ||
+                const DeepCollectionEquality().equals(other.route, route)));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(route);
+
+  @override
+  $PageStateDoneCopyWith<PageStateDone> get copyWith =>
+      _$PageStateDoneCopyWithImpl<PageStateDone>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -962,10 +1083,10 @@ class _$PageStateDone implements PageStateDone {
     @required Result initial(),
     @required Result offline(),
     @required Result loading(),
-    @required Result form(FormzStatus status, String initialName, Name name),
+    @required Result form(),
     @required
-        Result error(dynamic error, StackTrace stack, PageState retryState),
-    @required Result done(),
+        Result error(dynamic error, StackTrace stack, EditState retryState),
+    @required Result done(String route),
   }) {
     assert(initial != null);
     assert(offline != null);
@@ -973,7 +1094,7 @@ class _$PageStateDone implements PageStateDone {
     assert(form != null);
     assert(error != null);
     assert(done != null);
-    return done();
+    return done(route);
   }
 
   @override
@@ -982,14 +1103,14 @@ class _$PageStateDone implements PageStateDone {
     Result initial(),
     Result offline(),
     Result loading(),
-    Result form(FormzStatus status, String initialName, Name name),
-    Result error(dynamic error, StackTrace stack, PageState retryState),
-    Result done(),
+    Result form(),
+    Result error(dynamic error, StackTrace stack, EditState retryState),
+    Result done(String route),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (done != null) {
-      return done();
+      return done(route);
     }
     return orElse();
   }
@@ -1033,5 +1154,8 @@ class _$PageStateDone implements PageStateDone {
 }
 
 abstract class PageStateDone implements PageState {
-  const factory PageStateDone() = _$PageStateDone;
+  const factory PageStateDone(String route) = _$PageStateDone;
+
+  String get route;
+  $PageStateDoneCopyWith<PageStateDone> get copyWith;
 }

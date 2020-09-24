@@ -26,7 +26,7 @@ import (
 
 const PROJECT_ID = "groupshare"
 const TESTING_PROJECT_ID = "groupshare-testing"
-const LOCATION_ID = "europe-west2"
+const LOCATION_ID = "us-central1"
 const TASKS_QUEUE = "tasks"
 const PREFIX = "https://groupshare.uc.r.appspot.com"
 const LOCAL_PREFIX = "http://localhost:8080"
@@ -82,6 +82,8 @@ func main() {
 func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Request) {
 
 	return func(w http.ResponseWriter, r *http.Request) {
+
+		requestTime := time.Now()
 
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 
@@ -158,7 +160,7 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 			response.MustSet(e)
 		}
 
-		fmt.Println("response:", mustJson(response))
+		fmt.Printf("response after %.3f sec: %s\n", time.Now().Sub(requestTime).Seconds(), mustJson(response))
 		responseBytes, err := proto.Marshal(response)
 		if err != nil {
 			http.Error(w, err.Error(), 500)

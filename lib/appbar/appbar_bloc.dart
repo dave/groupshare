@@ -25,7 +25,7 @@ class AppBarCubit extends Cubit<AppBarState> {
   StreamSubscription<ConnectionStatus> _stateSubscription;
 
   AppBarCubit(this._api, this._data) : super(AppBarState.saved()) {
-    _stateSubscription = _api.statusChange.listen(
+    _stateSubscription = _api.statusStream.listen(
       (ConnectionStatus value) => change(value),
     );
   }
@@ -37,7 +37,7 @@ class AppBarCubit extends Cubit<AppBarState> {
   }
 
   void goOffline() {
-    _api.goOffline();
+    _api.forceOffline();
   }
 
   void retry() {

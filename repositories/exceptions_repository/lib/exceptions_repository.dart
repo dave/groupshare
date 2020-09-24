@@ -8,7 +8,7 @@ class UserException implements Exception {
 
   @override
   String toString() {
-    return message;
+    return "UserException: $message\n$debug";
   }
 }
 
@@ -17,4 +17,9 @@ class AuthException extends UserException {
   AuthException(String message, {String debug = "", bool expired = false})
       : this.expired = expired,
         super(message, debug: debug);
+
+  @override
+  String toString() {
+    return "AuthException: ${expired?'[expired]':''} $message\n$debug";
+  }
 }

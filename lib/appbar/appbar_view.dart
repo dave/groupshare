@@ -115,12 +115,6 @@ Future<void> showConnectionPopup(
                       context.bloc<AppBarCubit>().retry();
                     },
                   ),
-                FlatButton(
-                  child: Text("OK"),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                  },
-                ),
                 if (state is AppbarStateSaved)
                   FlatButton(
                     child: Text("Go offline"),
@@ -128,6 +122,12 @@ Future<void> showConnectionPopup(
                       context.bloc<AppBarCubit>().goOffline();
                     },
                   ),
+                FlatButton(
+                  child: Text("OK"),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                  },
+                ),
               ],
             );
           },

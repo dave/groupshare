@@ -25,11 +25,20 @@ class Data {
     return null;
   }
 
+  Future<void> update() async {
+    List<Future> futures = [];
+    futures.add(_users.update());
+    futures.add(_shares.update());
+    await Future.wait(futures);
+  }
+
   Future<void> init() async {
     List<Future> futures = [];
     futures.add(_shares.init());
     futures.add(_users.init());
     await Future.wait(futures);
+
+    _api.backOnlineStream.listen((event) => update());
 
     Future<void> f() async {
       if (_auth.status == Status.Done && user == null) {

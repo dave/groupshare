@@ -3,7 +3,7 @@ import 'package:connectivity/connectivity.dart';
 class Connection {
   final Connectivity _connectivity = Connectivity();
 
-  Stream<bool> get changed {
+  Stream<bool> get stream {
     return _connectivity.onConnectivityChanged.map(
       (ConnectivityResult result) {
         return result != ConnectivityResult.none;

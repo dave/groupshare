@@ -9,23 +9,23 @@ import 'package:groupshare/share/edit/edit.dart';
 //import 'package:formz/formz.dart';
 
 class EditPage extends StatelessWidget {
-  static Route route(String id, String popRoute) {
+  static Route route(String id, String back) {
     return MaterialPageRoute<void>(
       builder: (_) => EditPage(
         id: id,
-        popRoute: popRoute,
+        back: back,
       ),
     );
   }
 
   final String _id;
-  final String _popRoute;
+  final String _back;
   EditPage({
     Key key,
     @required String id,
-    @required String popRoute,
+    @required String back,
   })  : _id = id,
-        _popRoute = popRoute,
+        _back = back,
         super(key: key);
 
   @override
@@ -37,7 +37,7 @@ class EditPage extends StatelessWidget {
         child: BlocProvider(
           create: (context) => EditCubit(
             _id,
-            _popRoute,
+            _back,
             RepositoryProvider.of<Data>(context),
           )..init(),
           child: EditForm(),
@@ -72,7 +72,7 @@ class EditForm extends StatelessWidget {
           },
           done: (page) {
             Navigator.of(context).popUntil(
-              ModalRoute.withName(state.popRoute),
+              ModalRoute.withName(page.route),
             );
           },
         );
@@ -84,18 +84,8 @@ class EditForm extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: state.page.map(
               initial: (_) => [],
-              offline: (_) => [
-                Center(
-                  child: Text(
-                    "Offline.",
-                  ),
-                )
-              ],
-              loading: (_) => [
-                Center(
-                  child: CircularProgressIndicator(),
-                )
-              ],
+              offline: (_) => [Center(child: Text("Offline."))],
+              loading: (_) => [Center(child: CircularProgressIndicator())],
               error: (_) => [],
               done: (_) => [],
               form: (_) {
@@ -118,34 +108,21 @@ class _NameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<EditCubit, EditState>(
       buildWhen: (previous, current) {
-        final currentPage = current.page;
-        final previousPage = previous.page;
-        if (currentPage is PageStateForm) {
-          if (previousPage is PageStateForm) {
-            return previousPage.name != currentPage.name;
-          }
-          return true;
-        }
-        return false;
+        return previous.form.name != current.form.name;
       },
       builder: (context, state) {
-        final page = state.page;
-        if (page is PageStateForm) {
-          return TextFormField(
-            autofocus: true,
-            key: Keys.name,
-            initialValue: page.name.value,
-            onChanged: (value) {
-              context.bloc<EditCubit>().nameChanged(value);
-            },
-            decoration: InputDecoration(
-              labelText: 'name',
-              errorText: page.name.invalid ? 'invalid name' : null,
-            ),
-          );
-        } else {
-          return null;
-        }
+        return TextFormField(
+          autofocus: true,
+          key: Keys.name,
+          initialValue: state.form.name.value,
+          onChanged: (value) {
+            context.bloc<EditCubit>().nameChanged(value);
+          },
+          decoration: InputDecoration(
+            labelText: 'name',
+            errorText: state.form.name.invalid ? 'invalid name' : null,
+          ),
+        );
       },
     );
   }
@@ -156,33 +133,20 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<EditCubit, EditState>(
       buildWhen: (previous, current) {
-        final currentPage = current.page;
-        final previousPage = previous.page;
-        if (currentPage is PageStateForm) {
-          if (previousPage is PageStateForm) {
-            return previousPage.status != currentPage.status;
-          }
-          return true;
-        }
-        return false;
+        return previous.form.status != current.form.status;
       },
       builder: (context, state) {
-        final page = state.page;
-        if (page is PageStateForm) {
-          return page.status.isSubmissionInProgress
-              ? const CircularProgressIndicator()
-              : RaisedButton(
-                  key: Keys.submit,
-                  child: const Text('Submit'),
-                  onPressed: () {
-                    if (page.status.isValidated) {
-                      context.bloc<EditCubit>().submit();
-                    }
-                  },
-                );
-        } else {
-          return null;
-        }
+        return state.form.status.isSubmissionInProgress
+            ? const CircularProgressIndicator()
+            : RaisedButton(
+                key: Keys.submit,
+                child: const Text('Submit'),
+                onPressed: () {
+                  if (state.form.status.isValidated) {
+                    context.bloc<EditCubit>().submit();
+                  }
+                },
+              );
       },
     );
   }

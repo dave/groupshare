@@ -69,14 +69,14 @@ class DeleteForm extends StatelessWidget {
               form: (state) {
                 return [
                   _RadioInput(
-                    DeleteType.cache,
-                    "Offline cache",
-                    "Delete the offline cache files for this document.",
+                    DeleteType.local,
+                    "Local copy",
+                    "Delete the local copy of this document.",
                   ),
                   _RadioInput(
                     DeleteType.favourites,
                     "Favourites",
-                    "Delete this document from my favourites list.",
+                    "Delete this document from the favourites list.",
                   ),
                   _RadioInput(
                     DeleteType.remove,
@@ -85,7 +85,7 @@ class DeleteForm extends StatelessWidget {
                   ),
                   _RadioInput(
                     DeleteType.delete,
-                    "Delete share",
+                    "Delete document",
                     "Delete this document completely. It will be deleted for all other editors.",
                   ),
                   const Padding(padding: EdgeInsets.all(12)),
@@ -103,7 +103,7 @@ class DeleteForm extends StatelessWidget {
 }
 
 enum DeleteType {
-  cache,
+  local,
   favourites,
   remove,
   delete,
@@ -138,8 +138,8 @@ class _RadioInput extends StatelessWidget {
               context.bloc<DeleteCubit>().nameChanged(value);
             },
             decoration: InputDecoration(
-              labelText: 'name',
-              errorText: state.name.invalid ? 'invalid name' : null,
+              labelText: _title,
+              helperText: _description,
             ),
           );
         } else {

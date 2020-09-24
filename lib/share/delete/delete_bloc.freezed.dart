@@ -339,6 +339,8 @@ abstract class $DeleteStateErrorCopyWith<$Res> {
           DeleteStateError value, $Res Function(DeleteStateError) then) =
       _$DeleteStateErrorCopyWithImpl<$Res>;
   $Res call({dynamic error, StackTrace stack, DeleteState retryState});
+
+  $DeleteStateCopyWith<$Res> get retryState;
 }
 
 class _$DeleteStateErrorCopyWithImpl<$Res>
@@ -362,6 +364,16 @@ class _$DeleteStateErrorCopyWithImpl<$Res>
       stack == freezed ? _value.stack : stack as StackTrace,
       retryState == freezed ? _value.retryState : retryState as DeleteState,
     ));
+  }
+
+  @override
+  $DeleteStateCopyWith<$Res> get retryState {
+    if (_value.retryState == null) {
+      return null;
+    }
+    return $DeleteStateCopyWith<$Res>(_value.retryState, (value) {
+      return _then(_value.copyWith(retryState: value));
+    });
   }
 }
 

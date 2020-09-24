@@ -13,10 +13,11 @@ class _$ListStateTearOff {
   const _$ListStateTearOff();
 
 // ignore: unused_element
-  _ListState call(PageState page, SharesState shares) {
+  _ListState call(
+      {@required PageState page, @required List<AvailableShare> items}) {
     return _ListState(
-      page,
-      shares,
+      page: page,
+      items: items,
     );
   }
 }
@@ -26,7 +27,7 @@ const $ListState = _$ListStateTearOff();
 
 mixin _$ListState {
   PageState get page;
-  SharesState get shares;
+  List<AvailableShare> get items;
 
   $ListStateCopyWith<ListState> get copyWith;
 }
@@ -34,10 +35,9 @@ mixin _$ListState {
 abstract class $ListStateCopyWith<$Res> {
   factory $ListStateCopyWith(ListState value, $Res Function(ListState) then) =
       _$ListStateCopyWithImpl<$Res>;
-  $Res call({PageState page, SharesState shares});
+  $Res call({PageState page, List<AvailableShare> items});
 
   $PageStateCopyWith<$Res> get page;
-  $SharesStateCopyWith<$Res> get shares;
 }
 
 class _$ListStateCopyWithImpl<$Res> implements $ListStateCopyWith<$Res> {
@@ -50,11 +50,11 @@ class _$ListStateCopyWithImpl<$Res> implements $ListStateCopyWith<$Res> {
   @override
   $Res call({
     Object page = freezed,
-    Object shares = freezed,
+    Object items = freezed,
   }) {
     return _then(_value.copyWith(
       page: page == freezed ? _value.page : page as PageState,
-      shares: shares == freezed ? _value.shares : shares as SharesState,
+      items: items == freezed ? _value.items : items as List<AvailableShare>,
     ));
   }
 
@@ -67,16 +67,6 @@ class _$ListStateCopyWithImpl<$Res> implements $ListStateCopyWith<$Res> {
       return _then(_value.copyWith(page: value));
     });
   }
-
-  @override
-  $SharesStateCopyWith<$Res> get shares {
-    if (_value.shares == null) {
-      return null;
-    }
-    return $SharesStateCopyWith<$Res>(_value.shares, (value) {
-      return _then(_value.copyWith(shares: value));
-    });
-  }
 }
 
 abstract class _$ListStateCopyWith<$Res> implements $ListStateCopyWith<$Res> {
@@ -84,12 +74,10 @@ abstract class _$ListStateCopyWith<$Res> implements $ListStateCopyWith<$Res> {
           _ListState value, $Res Function(_ListState) then) =
       __$ListStateCopyWithImpl<$Res>;
   @override
-  $Res call({PageState page, SharesState shares});
+  $Res call({PageState page, List<AvailableShare> items});
 
   @override
   $PageStateCopyWith<$Res> get page;
-  @override
-  $SharesStateCopyWith<$Res> get shares;
 }
 
 class __$ListStateCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
@@ -103,28 +91,28 @@ class __$ListStateCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object page = freezed,
-    Object shares = freezed,
+    Object items = freezed,
   }) {
     return _then(_ListState(
-      page == freezed ? _value.page : page as PageState,
-      shares == freezed ? _value.shares : shares as SharesState,
+      page: page == freezed ? _value.page : page as PageState,
+      items: items == freezed ? _value.items : items as List<AvailableShare>,
     ));
   }
 }
 
 class _$_ListState implements _ListState {
-  const _$_ListState(this.page, this.shares)
+  const _$_ListState({@required this.page, @required this.items})
       : assert(page != null),
-        assert(shares != null);
+        assert(items != null);
 
   @override
   final PageState page;
   @override
-  final SharesState shares;
+  final List<AvailableShare> items;
 
   @override
   String toString() {
-    return 'ListState(page: $page, shares: $shares)';
+    return 'ListState(page: $page, items: $items)';
   }
 
   @override
@@ -133,15 +121,15 @@ class _$_ListState implements _ListState {
         (other is _ListState &&
             (identical(other.page, page) ||
                 const DeepCollectionEquality().equals(other.page, page)) &&
-            (identical(other.shares, shares) ||
-                const DeepCollectionEquality().equals(other.shares, shares)));
+            (identical(other.items, items) ||
+                const DeepCollectionEquality().equals(other.items, items)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(page) ^
-      const DeepCollectionEquality().hash(shares);
+      const DeepCollectionEquality().hash(items);
 
   @override
   _$ListStateCopyWith<_ListState> get copyWith =>
@@ -149,12 +137,14 @@ class _$_ListState implements _ListState {
 }
 
 abstract class _ListState implements ListState {
-  const factory _ListState(PageState page, SharesState shares) = _$_ListState;
+  const factory _ListState(
+      {@required PageState page,
+      @required List<AvailableShare> items}) = _$_ListState;
 
   @override
   PageState get page;
   @override
-  SharesState get shares;
+  List<AvailableShare> get items;
   @override
   _$ListStateCopyWith<_ListState> get copyWith;
 }
@@ -178,9 +168,9 @@ class _$PageStateTearOff {
   }
 
 // ignore: unused_element
-  PageStateError error(dynamic error, StackTrace stack) {
+  PageStateError error(dynamic ex, StackTrace stack) {
     return PageStateError(
-      error,
+      ex,
       stack,
     );
   }
@@ -195,14 +185,14 @@ mixin _$PageState {
     @required Result offline(),
     @required Result loading(),
     @required Result list(),
-    @required Result error(dynamic error, StackTrace stack),
+    @required Result error(dynamic ex, StackTrace stack),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result offline(),
     Result loading(),
     Result list(),
-    Result error(dynamic error, StackTrace stack),
+    Result error(dynamic ex, StackTrace stack),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -273,7 +263,7 @@ class _$PageStateOffline implements PageStateOffline {
     @required Result offline(),
     @required Result loading(),
     @required Result list(),
-    @required Result error(dynamic error, StackTrace stack),
+    @required Result error(dynamic ex, StackTrace stack),
   }) {
     assert(offline != null);
     assert(loading != null);
@@ -288,7 +278,7 @@ class _$PageStateOffline implements PageStateOffline {
     Result offline(),
     Result loading(),
     Result list(),
-    Result error(dynamic error, StackTrace stack),
+    Result error(dynamic ex, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -372,7 +362,7 @@ class _$PageStateLoading implements PageStateLoading {
     @required Result offline(),
     @required Result loading(),
     @required Result list(),
-    @required Result error(dynamic error, StackTrace stack),
+    @required Result error(dynamic ex, StackTrace stack),
   }) {
     assert(offline != null);
     assert(loading != null);
@@ -387,7 +377,7 @@ class _$PageStateLoading implements PageStateLoading {
     Result offline(),
     Result loading(),
     Result list(),
-    Result error(dynamic error, StackTrace stack),
+    Result error(dynamic ex, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -471,7 +461,7 @@ class _$PageStateList implements PageStateList {
     @required Result offline(),
     @required Result loading(),
     @required Result list(),
-    @required Result error(dynamic error, StackTrace stack),
+    @required Result error(dynamic ex, StackTrace stack),
   }) {
     assert(offline != null);
     assert(loading != null);
@@ -486,7 +476,7 @@ class _$PageStateList implements PageStateList {
     Result offline(),
     Result loading(),
     Result list(),
-    Result error(dynamic error, StackTrace stack),
+    Result error(dynamic ex, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -536,7 +526,7 @@ abstract class $PageStateErrorCopyWith<$Res> {
   factory $PageStateErrorCopyWith(
           PageStateError value, $Res Function(PageStateError) then) =
       _$PageStateErrorCopyWithImpl<$Res>;
-  $Res call({dynamic error, StackTrace stack});
+  $Res call({dynamic ex, StackTrace stack});
 }
 
 class _$PageStateErrorCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
@@ -550,37 +540,37 @@ class _$PageStateErrorCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object error = freezed,
+    Object ex = freezed,
     Object stack = freezed,
   }) {
     return _then(PageStateError(
-      error == freezed ? _value.error : error as dynamic,
+      ex == freezed ? _value.ex : ex as dynamic,
       stack == freezed ? _value.stack : stack as StackTrace,
     ));
   }
 }
 
 class _$PageStateError implements PageStateError {
-  const _$PageStateError(this.error, this.stack)
-      : assert(error != null),
+  const _$PageStateError(this.ex, this.stack)
+      : assert(ex != null),
         assert(stack != null);
 
   @override
-  final dynamic error;
+  final dynamic ex;
   @override
   final StackTrace stack;
 
   @override
   String toString() {
-    return 'PageState.error(error: $error, stack: $stack)';
+    return 'PageState.error(ex: $ex, stack: $stack)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is PageStateError &&
-            (identical(other.error, error) ||
-                const DeepCollectionEquality().equals(other.error, error)) &&
+            (identical(other.ex, ex) ||
+                const DeepCollectionEquality().equals(other.ex, ex)) &&
             (identical(other.stack, stack) ||
                 const DeepCollectionEquality().equals(other.stack, stack)));
   }
@@ -588,7 +578,7 @@ class _$PageStateError implements PageStateError {
   @override
   int get hashCode =>
       runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(error) ^
+      const DeepCollectionEquality().hash(ex) ^
       const DeepCollectionEquality().hash(stack);
 
   @override
@@ -601,13 +591,13 @@ class _$PageStateError implements PageStateError {
     @required Result offline(),
     @required Result loading(),
     @required Result list(),
-    @required Result error(dynamic error, StackTrace stack),
+    @required Result error(dynamic ex, StackTrace stack),
   }) {
     assert(offline != null);
     assert(loading != null);
     assert(list != null);
     assert(error != null);
-    return error(this.error, stack);
+    return error(ex, stack);
   }
 
   @override
@@ -616,12 +606,12 @@ class _$PageStateError implements PageStateError {
     Result offline(),
     Result loading(),
     Result list(),
-    Result error(dynamic error, StackTrace stack),
+    Result error(dynamic ex, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (error != null) {
-      return error(this.error, stack);
+      return error(ex, stack);
     }
     return orElse();
   }
@@ -659,158 +649,25 @@ class _$PageStateError implements PageStateError {
 }
 
 abstract class PageStateError implements PageState {
-  const factory PageStateError(dynamic error, StackTrace stack) =
-      _$PageStateError;
+  const factory PageStateError(dynamic ex, StackTrace stack) = _$PageStateError;
 
-  dynamic get error;
+  dynamic get ex;
   StackTrace get stack;
   $PageStateErrorCopyWith<PageStateError> get copyWith;
-}
-
-class _$SharesStateTearOff {
-  const _$SharesStateTearOff();
-
-// ignore: unused_element
-  _SharesState call(
-      {@required List<AvailableShare> items,
-      Map<String, bool> refreshing = const {}}) {
-    return _SharesState(
-      items: items,
-      refreshing: refreshing,
-    );
-  }
-}
-
-// ignore: unused_element
-const $SharesState = _$SharesStateTearOff();
-
-mixin _$SharesState {
-  List<AvailableShare> get items;
-  Map<String, bool> get refreshing;
-
-  $SharesStateCopyWith<SharesState> get copyWith;
-}
-
-abstract class $SharesStateCopyWith<$Res> {
-  factory $SharesStateCopyWith(
-          SharesState value, $Res Function(SharesState) then) =
-      _$SharesStateCopyWithImpl<$Res>;
-  $Res call({List<AvailableShare> items, Map<String, bool> refreshing});
-}
-
-class _$SharesStateCopyWithImpl<$Res> implements $SharesStateCopyWith<$Res> {
-  _$SharesStateCopyWithImpl(this._value, this._then);
-
-  final SharesState _value;
-  // ignore: unused_field
-  final $Res Function(SharesState) _then;
-
-  @override
-  $Res call({
-    Object items = freezed,
-    Object refreshing = freezed,
-  }) {
-    return _then(_value.copyWith(
-      items: items == freezed ? _value.items : items as List<AvailableShare>,
-      refreshing: refreshing == freezed
-          ? _value.refreshing
-          : refreshing as Map<String, bool>,
-    ));
-  }
-}
-
-abstract class _$SharesStateCopyWith<$Res>
-    implements $SharesStateCopyWith<$Res> {
-  factory _$SharesStateCopyWith(
-          _SharesState value, $Res Function(_SharesState) then) =
-      __$SharesStateCopyWithImpl<$Res>;
-  @override
-  $Res call({List<AvailableShare> items, Map<String, bool> refreshing});
-}
-
-class __$SharesStateCopyWithImpl<$Res> extends _$SharesStateCopyWithImpl<$Res>
-    implements _$SharesStateCopyWith<$Res> {
-  __$SharesStateCopyWithImpl(
-      _SharesState _value, $Res Function(_SharesState) _then)
-      : super(_value, (v) => _then(v as _SharesState));
-
-  @override
-  _SharesState get _value => super._value as _SharesState;
-
-  @override
-  $Res call({
-    Object items = freezed,
-    Object refreshing = freezed,
-  }) {
-    return _then(_SharesState(
-      items: items == freezed ? _value.items : items as List<AvailableShare>,
-      refreshing: refreshing == freezed
-          ? _value.refreshing
-          : refreshing as Map<String, bool>,
-    ));
-  }
-}
-
-class _$_SharesState implements _SharesState {
-  const _$_SharesState({@required this.items, this.refreshing = const {}})
-      : assert(items != null),
-        assert(refreshing != null);
-
-  @override
-  final List<AvailableShare> items;
-  @JsonKey(defaultValue: const {})
-  @override
-  final Map<String, bool> refreshing;
-
-  @override
-  String toString() {
-    return 'SharesState(items: $items, refreshing: $refreshing)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is _SharesState &&
-            (identical(other.items, items) ||
-                const DeepCollectionEquality().equals(other.items, items)) &&
-            (identical(other.refreshing, refreshing) ||
-                const DeepCollectionEquality()
-                    .equals(other.refreshing, refreshing)));
-  }
-
-  @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(items) ^
-      const DeepCollectionEquality().hash(refreshing);
-
-  @override
-  _$SharesStateCopyWith<_SharesState> get copyWith =>
-      __$SharesStateCopyWithImpl<_SharesState>(this, _$identity);
-}
-
-abstract class _SharesState implements SharesState {
-  const factory _SharesState(
-      {@required List<AvailableShare> items,
-      Map<String, bool> refreshing}) = _$_SharesState;
-
-  @override
-  List<AvailableShare> get items;
-  @override
-  Map<String, bool> get refreshing;
-  @override
-  _$SharesStateCopyWith<_SharesState> get copyWith;
 }
 
 class _$AvailableShareTearOff {
   const _$AvailableShareTearOff();
 
 // ignore: unused_element
-  _AvailableShare call(String id, String name, bool local) {
+  _AvailableShare call(
+      String id, String name, bool local, bool dirty, bool sending) {
     return _AvailableShare(
       id,
       name,
       local,
+      dirty,
+      sending,
     );
   }
 }
@@ -822,6 +679,8 @@ mixin _$AvailableShare {
   String get id;
   String get name;
   bool get local;
+  bool get dirty;
+  bool get sending;
 
   $AvailableShareCopyWith<AvailableShare> get copyWith;
 }
@@ -830,7 +689,7 @@ abstract class $AvailableShareCopyWith<$Res> {
   factory $AvailableShareCopyWith(
           AvailableShare value, $Res Function(AvailableShare) then) =
       _$AvailableShareCopyWithImpl<$Res>;
-  $Res call({String id, String name, bool local});
+  $Res call({String id, String name, bool local, bool dirty, bool sending});
 }
 
 class _$AvailableShareCopyWithImpl<$Res>
@@ -846,11 +705,15 @@ class _$AvailableShareCopyWithImpl<$Res>
     Object id = freezed,
     Object name = freezed,
     Object local = freezed,
+    Object dirty = freezed,
+    Object sending = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed ? _value.id : id as String,
       name: name == freezed ? _value.name : name as String,
       local: local == freezed ? _value.local : local as bool,
+      dirty: dirty == freezed ? _value.dirty : dirty as bool,
+      sending: sending == freezed ? _value.sending : sending as bool,
     ));
   }
 }
@@ -861,7 +724,7 @@ abstract class _$AvailableShareCopyWith<$Res>
           _AvailableShare value, $Res Function(_AvailableShare) then) =
       __$AvailableShareCopyWithImpl<$Res>;
   @override
-  $Res call({String id, String name, bool local});
+  $Res call({String id, String name, bool local, bool dirty, bool sending});
 }
 
 class __$AvailableShareCopyWithImpl<$Res>
@@ -879,20 +742,27 @@ class __$AvailableShareCopyWithImpl<$Res>
     Object id = freezed,
     Object name = freezed,
     Object local = freezed,
+    Object dirty = freezed,
+    Object sending = freezed,
   }) {
     return _then(_AvailableShare(
       id == freezed ? _value.id : id as String,
       name == freezed ? _value.name : name as String,
       local == freezed ? _value.local : local as bool,
+      dirty == freezed ? _value.dirty : dirty as bool,
+      sending == freezed ? _value.sending : sending as bool,
     ));
   }
 }
 
 class _$_AvailableShare implements _AvailableShare {
-  const _$_AvailableShare(this.id, this.name, this.local)
+  const _$_AvailableShare(
+      this.id, this.name, this.local, this.dirty, this.sending)
       : assert(id != null),
         assert(name != null),
-        assert(local != null);
+        assert(local != null),
+        assert(dirty != null),
+        assert(sending != null);
 
   @override
   final String id;
@@ -900,10 +770,14 @@ class _$_AvailableShare implements _AvailableShare {
   final String name;
   @override
   final bool local;
+  @override
+  final bool dirty;
+  @override
+  final bool sending;
 
   @override
   String toString() {
-    return 'AvailableShare(id: $id, name: $name, local: $local)';
+    return 'AvailableShare(id: $id, name: $name, local: $local, dirty: $dirty, sending: $sending)';
   }
 
   @override
@@ -915,7 +789,11 @@ class _$_AvailableShare implements _AvailableShare {
             (identical(other.name, name) ||
                 const DeepCollectionEquality().equals(other.name, name)) &&
             (identical(other.local, local) ||
-                const DeepCollectionEquality().equals(other.local, local)));
+                const DeepCollectionEquality().equals(other.local, local)) &&
+            (identical(other.dirty, dirty) ||
+                const DeepCollectionEquality().equals(other.dirty, dirty)) &&
+            (identical(other.sending, sending) ||
+                const DeepCollectionEquality().equals(other.sending, sending)));
   }
 
   @override
@@ -923,7 +801,9 @@ class _$_AvailableShare implements _AvailableShare {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(name) ^
-      const DeepCollectionEquality().hash(local);
+      const DeepCollectionEquality().hash(local) ^
+      const DeepCollectionEquality().hash(dirty) ^
+      const DeepCollectionEquality().hash(sending);
 
   @override
   _$AvailableShareCopyWith<_AvailableShare> get copyWith =>
@@ -931,7 +811,8 @@ class _$_AvailableShare implements _AvailableShare {
 }
 
 abstract class _AvailableShare implements AvailableShare {
-  const factory _AvailableShare(String id, String name, bool local) =
+  const factory _AvailableShare(
+          String id, String name, bool local, bool dirty, bool sending) =
       _$_AvailableShare;
 
   @override
@@ -940,6 +821,10 @@ abstract class _AvailableShare implements AvailableShare {
   String get name;
   @override
   bool get local;
+  @override
+  bool get dirty;
+  @override
+  bool get sending;
   @override
   _$AvailableShareCopyWith<_AvailableShare> get copyWith;
 }

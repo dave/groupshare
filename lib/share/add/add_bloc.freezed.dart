@@ -219,6 +219,8 @@ abstract class $AddStateErrorCopyWith<$Res> {
           AddStateError value, $Res Function(AddStateError) then) =
       _$AddStateErrorCopyWithImpl<$Res>;
   $Res call({dynamic error, StackTrace stack, AddState retryState});
+
+  $AddStateCopyWith<$Res> get retryState;
 }
 
 class _$AddStateErrorCopyWithImpl<$Res> extends _$AddStateCopyWithImpl<$Res>
@@ -241,6 +243,16 @@ class _$AddStateErrorCopyWithImpl<$Res> extends _$AddStateCopyWithImpl<$Res>
       stack == freezed ? _value.stack : stack as StackTrace,
       retryState == freezed ? _value.retryState : retryState as AddState,
     ));
+  }
+
+  @override
+  $AddStateCopyWith<$Res> get retryState {
+    if (_value.retryState == null) {
+      return null;
+    }
+    return $AddStateCopyWith<$Res>(_value.retryState, (value) {
+      return _then(_value.copyWith(retryState: value));
+    });
   }
 }
 

@@ -40,8 +40,19 @@ void main() async {
         final api = Api(
           connection,
           discovery,
-          IS_LIVE ? 20 : 5, // retries (live: 20, dev: 5)
-          IS_LIVE ? 4 : 8, // timeout (live: 4 sec, dev: 8 sec)
+
+          // Note about retries: this number of retries is only for OT-busy
+          // errors, which are expected in high contention situations and the
+          // client should retry many times until the operation succeeds. For
+          // retryable (but not OT-busy) errors, the count increments by 4 so
+          // the figure of 20 means 4 retries for non-OT-busy errors.
+          retries: IS_LIVE ? 20 : 5, // retries (live: 20, dev: 5)
+
+          // Note about timeouts: when iOS returns from airplane mode, the
+          // first request is about ~5 sec longer than usual, so the timeout is
+          // triggered unless it's set to higher than this.
+          timeout: IS_LIVE ? 8 : 12, // timeout (live: 8 sec, dev: 12 sec)
+
         );
         final auth = Auth(api, await Hive.openBox('auth'), device);
         final data = Data(

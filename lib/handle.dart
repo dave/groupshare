@@ -15,11 +15,7 @@ Future<void> handle(
     return;
   }
   var message = "$ex";
-  if (ex is UserException) {
-    print("handling $ex ${ex.debug} $stack");
-  } else {
-    print("handling $ex $stack");
-  }
+  print("handling $ex\n$stack");
 
   await showDialog(
     context: context,
@@ -77,5 +73,6 @@ Future<void> handle(
 class Button {
   final String message;
   final Function() press;
+
   Button(this.message, [this.press]);
 }

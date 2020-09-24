@@ -16,6 +16,7 @@ import 'package:refreshable_reorderable_list/refreshable_reorderable_list.dart';
 
 class ListPage extends StatelessWidget {
   static const String routeName = 'ShareListPage';
+
   static Route route() {
     return MaterialPageRoute<void>(
       builder: (_) => ListPage(),
@@ -40,7 +41,9 @@ class ListPage extends StatelessWidget {
 class ListPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final global = GlobalKey();
     return BlocConsumer<ListCubit, ListState>(
+      key: global,
       listener: (context, state) {
         state.page.map(
           offline: (state) => true,
@@ -49,7 +52,7 @@ class ListPageContent extends StatelessWidget {
           error: (state) {
             handle(
               context,
-              state.error,
+              state.ex,
               state.stack,
               buttons: [
                 Button("OK", () => context.bloc<ListCubit>().initList(false)),
@@ -76,13 +79,9 @@ class ListPageContent extends StatelessWidget {
                 onRefresh: () async {
                   // When we pull down the refresh on the offline view, we
                   // refresh the list but not all of the items.
-                  try {
-                    await task(context, () async {
-                      await context.bloc<ListCubit>().initList(true);
-                    });
-                  } catch (ex, stack) {
-                    handle(context, ex, stack);
-                  }
+                  await task(context, global, () async {
+                    await context.bloc<ListCubit>().initList(true);
+                  });
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -95,18 +94,14 @@ class ListPageContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [Center(child: Text("loading"))],
               ),
-              list: () => state.shares.items.length == 0
+              list: () => state.items.length == 0
                   ? Refresher(
                       onRefresh: () async {
                         // When we pull down the refresh on the empty list, we
                         // refresh the list but not all of the items.
-                        try {
-                          await task(context, () async {
-                            await context.bloc<ListCubit>().initList(true);
-                          });
-                        } catch (ex, stack) {
-                          handle(context, ex, stack);
-                        }
+                        await task(context, global, () async {
+                          await context.bloc<ListCubit>().initList(true);
+                        });
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -118,20 +113,16 @@ class ListPageContent extends StatelessWidget {
                       onRefresh: () async {
                         // When we pull down the refresh on the list view, we
                         // initiate a refresh of all the items.
-                        try {
-                          await task(context, () async {
-                            await context.bloc<ListCubit>().refreshAllItems();
-                          });
-                        } catch (ex, stack) {
-                          handle(context, ex, stack);
-                        }
+                        await task(context, global, () async {
+                          await context.bloc<ListCubit>().refreshAllItems();
+                        });
                       },
                       child: RefreshableReorderableListView(
                         physics: AlwaysScrollableScrollPhysics(),
                         onReorder: (oldIndex, newIndex) {
                           context.bloc<ListCubit>().reorder(oldIndex, newIndex);
                         },
-                        children: state.shares.items.map(
+                        children: state.items.map(
                           (item) {
                             final iconColor = _iconColor(
                               Theme.of(context),
@@ -142,7 +133,11 @@ class ListPageContent extends StatelessWidget {
                               key: ValueKey(item.id),
                               actionPane: SlidableDrawerActionPane(),
                               actionExtentRatio: 0.1,
-                              child: SlidableListTile(controller, item, state),
+                              child: SlidableListTile(
+                                controller: controller,
+                                item: item,
+                                global: global,
+                              ),
                               secondaryActions: <Widget>[
                                 if (item.local)
                                   IconSlideAction(
@@ -163,15 +158,11 @@ class ListPageContent extends StatelessWidget {
                                     icon: Icons.sync,
                                     foregroundColor: iconColor,
                                     onTap: () async {
-                                      try {
-                                        await task(context, () async {
-                                          await context
-                                              .bloc<ListCubit>()
-                                              .refreshItem(item.id);
-                                        });
-                                      } catch (ex, stack) {
-                                        handle(context, ex, stack);
-                                      }
+                                      await task(context, global, () async {
+                                        await context
+                                            .bloc<ListCubit>()
+                                            .refreshItem(item.id);
+                                      });
                                     },
                                   ),
                                 if (item.local)
@@ -196,7 +187,7 @@ class ListPageContent extends StatelessWidget {
                         ).toList(),
                       ),
                     ),
-              error: (error, stack) => Container(),
+              error: (ex, stack) => Container(),
             ),
           ),
         );
@@ -206,55 +197,51 @@ class ListPageContent extends StatelessWidget {
 }
 
 class SlidableListTile extends StatelessWidget {
-  final AvailableShare _item;
-  final ListState _state;
-  final SlidableController _controller;
+  final AvailableShare item;
+  final SlidableController controller;
+  final GlobalKey global;
 
-  const SlidableListTile(
-    SlidableController controller,
-    AvailableShare item,
-    ListState state, {
+  const SlidableListTile({
     Key key,
-  })  : _controller = controller,
-        _item = item,
-        _state = state,
-        super(key: key);
+    this.controller,
+    this.item,
+    this.global,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(_item.name),
+      title: Text(item.name),
       onTap: () async {
-        await task(
-          context,
-          () async {
-            await Navigator.of(context).push(ViewPage.route(_item.id));
-          },
-          enabled: !_item.local,
-        );
-        context.bloc<ListCubit>().initList(false);
+        final listCubit = context.bloc<ListCubit>();
+        await task(context, global, () async {
+          await Navigator.of(context).push(ViewPage.route(item.id));
+        }, enabled: !item.local);
+        listCubit.initList(false);
       },
-      trailing: _state.shares.refreshing[_item.id] == true
+      trailing: item.sending
           ? IconButton(
               icon: Spinner(icon: Icons.sync),
               onPressed: () {},
             )
-          : _item.local
+          : item.local
               ? IconButton(
-                  icon: Icon(Icons.offline_pin),
+                  icon: Icon(
+                    item.dirty ? Icons.offline_bolt : Icons.offline_pin,
+                  ),
                   onPressed: () {
-                    final thisItemIsOpen = _controller.activeState != null &&
-                        _controller.activeState == Slidable.of(context) &&
-                        _controller.activeState.actionType ==
+                    final thisItemIsOpen = controller.activeState != null &&
+                        controller.activeState == Slidable.of(context) &&
+                        controller.activeState.actionType ==
                             SlideActionType.secondary;
 
-                    final anotherItemIsOpen = _controller.activeState != null &&
-                        _controller.activeState != Slidable.of(context) &&
-                        _controller.activeState.actionType ==
+                    final anotherItemIsOpen = controller.activeState != null &&
+                        controller.activeState != Slidable.of(context) &&
+                        controller.activeState.actionType ==
                             SlideActionType.secondary;
 
                     if (anotherItemIsOpen) {
-                      _controller.activeState.close();
+                      controller.activeState.close();
                     }
                     if (thisItemIsOpen) {
                       Slidable.of(context).close();
@@ -268,13 +255,9 @@ class SlidableListTile extends StatelessWidget {
               : IconButton(
                   icon: Icon(Icons.file_download),
                   onPressed: () async {
-                    try {
-                      await task(context, () async {
-                        await context.bloc<ListCubit>().initItem(_item.id);
-                      });
-                    } catch (ex, stack) {
-                      handle(context, ex, stack);
-                    }
+                    await task(context, global, () async {
+                      await context.bloc<ListCubit>().initItem(item.id);
+                    });
                   },
                 ),
     );

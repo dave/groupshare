@@ -31,7 +31,9 @@ class FooPage extends StatelessWidget {
 class FooForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final global = GlobalKey();
     return BlocConsumer<FooCubit, FooState>(
+      key: global,
       listener: (context, state) {
         state.map(
           initial: (state) => true,

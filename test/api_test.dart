@@ -1,6 +1,8 @@
 import 'package:api_repository/api_repository.dart';
 import 'package:auth_repository/auth_repository.dart';
+import 'package:connection_repository/connection_repository.dart';
 import 'package:data_repository/data_repository.dart';
+import 'package:discovery_repository/discovery_repository.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:protod/delta/delta.dart';
@@ -8,7 +10,9 @@ import 'package:protod/pstore/pstore.pb.dart';
 
 void main() {
   test('api test', () async {
-    final api = Api();
+    final conn = Connection();
+    final disc = Discovery(false);
+    final api = Api(conn, disc, retries: 5, timeout: 8);
 
     final token = await getToken(api, "a@b.c");
 

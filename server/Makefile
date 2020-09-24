@@ -1,6 +1,7 @@
 
 CONFIG=groupshare
 PROJECT=groupshare
+QUEUE=tasks
 
 deploy:
 	make gcloud
@@ -12,6 +13,9 @@ gcloud:
 
 default:
 	cp ../go.mod.default ../go.mod
+
+queue:
+	gcloud tasks queues create ${QUEUE} --configuration ${CONFIG}
 
 logs:
 	gcloud app logs tail -s default --configuration ${CONFIG}

@@ -377,6 +377,8 @@ abstract class $LoginStateErrorCopyWith<$Res> {
           LoginStateError value, $Res Function(LoginStateError) then) =
       _$LoginStateErrorCopyWithImpl<$Res>;
   $Res call({dynamic error, StackTrace stack, LoginState retry});
+
+  $LoginStateCopyWith<$Res> get retry;
 }
 
 class _$LoginStateErrorCopyWithImpl<$Res> extends _$LoginStateCopyWithImpl<$Res>
@@ -399,6 +401,16 @@ class _$LoginStateErrorCopyWithImpl<$Res> extends _$LoginStateCopyWithImpl<$Res>
       stack == freezed ? _value.stack : stack as StackTrace,
       retry == freezed ? _value.retry : retry as LoginState,
     ));
+  }
+
+  @override
+  $LoginStateCopyWith<$Res> get retry {
+    if (_value.retry == null) {
+      return null;
+    }
+    return $LoginStateCopyWith<$Res>(_value.retry, (value) {
+      return _then(_value.copyWith(retry: value));
+    });
   }
 }
 
