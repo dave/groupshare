@@ -9,7 +9,6 @@ Future<T> task<T>(
   Future<T> Function() f, {
   bool enabled = true,
   List<Button> buttons = const [],
-  bool ok = false,
 }) async {
   try {
     final state = context.bloc<AppBarCubit>().state;
@@ -52,6 +51,6 @@ Future<T> task<T>(
     }
     return null;
   } catch (ex, stack) {
-    handle(global.currentContext, ex, stack, buttons: buttons, ok: ok);
+    handle(global.currentContext, ex, stack, buttons: buttons);
   }
 }

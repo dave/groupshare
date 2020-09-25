@@ -35,11 +35,10 @@ class _$AppStateTearOff {
   }
 
 // ignore: unused_element
-  AppStateError error(dynamic error, StackTrace stack, AppState retryState) {
+  AppStateError error(dynamic error, StackTrace stack) {
     return AppStateError(
       error,
       stack,
-      retryState,
     );
   }
 }
@@ -54,8 +53,7 @@ mixin _$AppState {
     @required Result login(bool auth),
     @required Result done(),
     @required Result offline(),
-    @required
-        Result error(dynamic error, StackTrace stack, AppState retryState),
+    @required Result error(dynamic error, StackTrace stack),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
@@ -63,7 +61,7 @@ mixin _$AppState {
     Result login(bool auth),
     Result done(),
     Result offline(),
-    Result error(dynamic error, StackTrace stack, AppState retryState),
+    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -137,8 +135,7 @@ class _$AppStateLoading implements AppStateLoading {
     @required Result login(bool auth),
     @required Result done(),
     @required Result offline(),
-    @required
-        Result error(dynamic error, StackTrace stack, AppState retryState),
+    @required Result error(dynamic error, StackTrace stack),
   }) {
     assert(loading != null);
     assert(login != null);
@@ -155,7 +152,7 @@ class _$AppStateLoading implements AppStateLoading {
     Result login(bool auth),
     Result done(),
     Result offline(),
-    Result error(dynamic error, StackTrace stack, AppState retryState),
+    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -264,8 +261,7 @@ class _$AppStateLogin implements AppStateLogin {
     @required Result login(bool auth),
     @required Result done(),
     @required Result offline(),
-    @required
-        Result error(dynamic error, StackTrace stack, AppState retryState),
+    @required Result error(dynamic error, StackTrace stack),
   }) {
     assert(loading != null);
     assert(login != null);
@@ -282,7 +278,7 @@ class _$AppStateLogin implements AppStateLogin {
     Result login(bool auth),
     Result done(),
     Result offline(),
-    Result error(dynamic error, StackTrace stack, AppState retryState),
+    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -373,8 +369,7 @@ class _$AppStateDone implements AppStateDone {
     @required Result login(bool auth),
     @required Result done(),
     @required Result offline(),
-    @required
-        Result error(dynamic error, StackTrace stack, AppState retryState),
+    @required Result error(dynamic error, StackTrace stack),
   }) {
     assert(loading != null);
     assert(login != null);
@@ -391,7 +386,7 @@ class _$AppStateDone implements AppStateDone {
     Result login(bool auth),
     Result done(),
     Result offline(),
-    Result error(dynamic error, StackTrace stack, AppState retryState),
+    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -479,8 +474,7 @@ class _$AppStateOffline implements AppStateOffline {
     @required Result login(bool auth),
     @required Result done(),
     @required Result offline(),
-    @required
-        Result error(dynamic error, StackTrace stack, AppState retryState),
+    @required Result error(dynamic error, StackTrace stack),
   }) {
     assert(loading != null);
     assert(login != null);
@@ -497,7 +491,7 @@ class _$AppStateOffline implements AppStateOffline {
     Result login(bool auth),
     Result done(),
     Result offline(),
-    Result error(dynamic error, StackTrace stack, AppState retryState),
+    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -550,9 +544,7 @@ abstract class $AppStateErrorCopyWith<$Res> {
   factory $AppStateErrorCopyWith(
           AppStateError value, $Res Function(AppStateError) then) =
       _$AppStateErrorCopyWithImpl<$Res>;
-  $Res call({dynamic error, StackTrace stack, AppState retryState});
-
-  $AppStateCopyWith<$Res> get retryState;
+  $Res call({dynamic error, StackTrace stack});
 }
 
 class _$AppStateErrorCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
@@ -568,42 +560,27 @@ class _$AppStateErrorCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
   $Res call({
     Object error = freezed,
     Object stack = freezed,
-    Object retryState = freezed,
   }) {
     return _then(AppStateError(
       error == freezed ? _value.error : error as dynamic,
       stack == freezed ? _value.stack : stack as StackTrace,
-      retryState == freezed ? _value.retryState : retryState as AppState,
     ));
-  }
-
-  @override
-  $AppStateCopyWith<$Res> get retryState {
-    if (_value.retryState == null) {
-      return null;
-    }
-    return $AppStateCopyWith<$Res>(_value.retryState, (value) {
-      return _then(_value.copyWith(retryState: value));
-    });
   }
 }
 
 class _$AppStateError implements AppStateError {
-  const _$AppStateError(this.error, this.stack, this.retryState)
+  const _$AppStateError(this.error, this.stack)
       : assert(error != null),
-        assert(stack != null),
-        assert(retryState != null);
+        assert(stack != null);
 
   @override
   final dynamic error;
   @override
   final StackTrace stack;
-  @override
-  final AppState retryState;
 
   @override
   String toString() {
-    return 'AppState.error(error: $error, stack: $stack, retryState: $retryState)';
+    return 'AppState.error(error: $error, stack: $stack)';
   }
 
   @override
@@ -613,18 +590,14 @@ class _$AppStateError implements AppStateError {
             (identical(other.error, error) ||
                 const DeepCollectionEquality().equals(other.error, error)) &&
             (identical(other.stack, stack) ||
-                const DeepCollectionEquality().equals(other.stack, stack)) &&
-            (identical(other.retryState, retryState) ||
-                const DeepCollectionEquality()
-                    .equals(other.retryState, retryState)));
+                const DeepCollectionEquality().equals(other.stack, stack)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(error) ^
-      const DeepCollectionEquality().hash(stack) ^
-      const DeepCollectionEquality().hash(retryState);
+      const DeepCollectionEquality().hash(stack);
 
   @override
   $AppStateErrorCopyWith<AppStateError> get copyWith =>
@@ -637,15 +610,14 @@ class _$AppStateError implements AppStateError {
     @required Result login(bool auth),
     @required Result done(),
     @required Result offline(),
-    @required
-        Result error(dynamic error, StackTrace stack, AppState retryState),
+    @required Result error(dynamic error, StackTrace stack),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
     assert(offline != null);
     assert(error != null);
-    return error(this.error, stack, retryState);
+    return error(this.error, stack);
   }
 
   @override
@@ -655,12 +627,12 @@ class _$AppStateError implements AppStateError {
     Result login(bool auth),
     Result done(),
     Result offline(),
-    Result error(dynamic error, StackTrace stack, AppState retryState),
+    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (error != null) {
-      return error(this.error, stack, retryState);
+      return error(this.error, stack);
     }
     return orElse();
   }
@@ -701,11 +673,10 @@ class _$AppStateError implements AppStateError {
 }
 
 abstract class AppStateError implements AppState {
-  const factory AppStateError(
-      dynamic error, StackTrace stack, AppState retryState) = _$AppStateError;
+  const factory AppStateError(dynamic error, StackTrace stack) =
+      _$AppStateError;
 
   dynamic get error;
   StackTrace get stack;
-  AppState get retryState;
   $AppStateErrorCopyWith<AppStateError> get copyWith;
 }

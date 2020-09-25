@@ -18,6 +18,11 @@ class Data {
     return _shares;
   }
 
+  Future<void> reset() async {
+    await _users.reset();
+    await _shares.reset();
+  }
+
   Item<User> get user {
     if (_auth.status == Status.Done && _user != null && _auth.id == _user.id) {
       return _user;

@@ -43,7 +43,7 @@ class DeleteForm extends StatelessWidget {
               state.stack,
               buttons: [
                 Button(
-                  "retry",
+                  "Retry",
                   () => context.bloc<DeleteCubit>().retry(state.retryState),
                 )
               ],

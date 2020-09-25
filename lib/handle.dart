@@ -9,7 +9,6 @@ Future<void> handle(
   dynamic ex,
   dynamic stack, {
   List<Button> buttons = const [],
-  bool ok = false,
 }) async {
   if (ex == null) {
     return;
@@ -33,7 +32,7 @@ Future<void> handle(
               ),
             ),
             actions: <Widget>[
-              if (buttons.length == 0 || ok)
+              if (buttons.length == 0)
                 FlatButton(
                   child: Text("OK"),
                   onPressed: () {

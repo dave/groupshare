@@ -7,7 +7,8 @@ import 'package:groupshare/ui/spinner.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String _title;
-  AppBarWidget(String title) : _title = title;
+
+  AppBarWidget(this._title);
 
   @override
   Size get preferredSize => AppBar().preferredSize;
@@ -27,7 +28,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                 offline: () => Icon(Icons.cloud_off),
                 failed: () => Icon(Icons.cloud_off),
               ),
-              onPressed: () => showConnectionPopup(context),
+              onPressed: () => _showConnectionPopup(context),
             );
           },
         ),
@@ -54,9 +55,9 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                 PopupMenuItem(
                   child: ListTile(
                     leading: Icon(Icons.delete_forever),
-                    title: Text('Clear app storage'),
+                    title: Text('Reset app storage'),
                     onTap: () async {
-                      await context.bloc<AppBarCubit>().clear();
+                      await context.bloc<AppCubit>().reset();
                       Navigator.of(context).pushAndRemoveUntil(
                         LoginPage.route(),
                         (route) => false,
@@ -71,19 +72,13 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       ],
     );
   }
-}
 
-Future<void> showConnectionPopup(
-  BuildContext context,
-) async {
-  final appBarCubit = BlocProvider.of<AppBarCubit>(context);
-  await showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return BlocProvider.value(
-        value: appBarCubit,
-        child: BlocBuilder<AppBarCubit, AppBarState>(
+  Future<void> _showConnectionPopup(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return BlocBuilder<AppBarCubit, AppBarState>(
           builder: (context, state) {
             return AlertDialog(
               title: Text(state.when(
@@ -100,9 +95,8 @@ Future<void> showConnectionPopup(
                       saved: () => "Connection OK",
                       connecting: () => "Connecting...",
                       waiting: () => "Waiting...",
-                      offline: () => "It looks like the connection is offline.",
-                      failed: () =>
-                          "We got a connection error, so went offline.",
+                      offline: () => "The internet connection offline",
+                      failed: () => "We got an error, so went offline",
                     )),
                   ],
                 ),
@@ -131,8 +125,8 @@ Future<void> showConnectionPopup(
               ],
             );
           },
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
+  }
 }

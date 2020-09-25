@@ -46,7 +46,6 @@ class Api {
   Future<void> registerBackgroundTask(Future f, String note) async {
     try {
       await f;
-      _statusSuccess();
     } catch (ex, stack) {
       print("error in task $note: $ex $stack");
     }

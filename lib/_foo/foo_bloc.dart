@@ -10,49 +10,60 @@ part 'foo_bloc.freezed.dart';
 
 @freezed
 abstract class FooState with _$FooState {
-  const factory FooState.initial() = FooStateInitial;
+  const factory FooState({
+    PageState page,
+    FormState form,
+  }) = _FooState;
+}
 
-  const factory FooState.form({
+@freezed
+abstract class FormState with _$FormState {
+  const factory FormState({
     @Default(FormzStatus.pure) FormzStatus status,
     @Default(const Name.pure()) Name name,
-  }) = FooStateForm;
+  }) = _FormState;
+}
 
-  const factory FooState.error(
+@freezed
+abstract class PageState with _$PageState {
+  const factory PageState.initial() = PageStateInitial;
+
+  const factory PageState.form() = PageStateForm;
+
+  const factory PageState.error(
     dynamic error,
     StackTrace stack,
-    FooState retryState,
-  ) = FooStateError;
+    FooState retry,
+  ) = PageStateError;
 
-  const factory FooState.done() = FooStateDone;
+  const factory PageState.done() = PageStateDone;
 }
 
 class FooCubit extends Cubit<FooState> {
   final Data _data;
 
-  FooCubit(Data data)
-      : _data = data,
-        super(FooState.initial());
+  FooCubit(this._data)
+      : super(FooState(page: PageState.initial(), form: FormState()));
 
   void nameChanged(String name) {
     final nameValue = Name.dirty(name);
-    emit(FooState.form(
+    emit(state.copyWith(form: FormState(
       name: nameValue,
       status: Formz.validate([nameValue]),
-    ));
+    )));
   }
 
   Future<void> submit() async {
-    final stateForm = state as FooStateForm;
     try {
-      emit(stateForm.copyWith(status: FormzStatus.submissionInProgress));
+      emit(state.copyWith(form: state.form.copyWith(status: FormzStatus.submissionInProgress)));
       // ...
-      emit(FooState.done());
+      emit(state.copyWith(page: PageState.done()));
     } catch (ex, stack) {
-      emit(FooState.error(ex, stack, stateForm));
+      emit(state.copyWith(page: PageState.error(ex, stack, state)));
     }
   }
 
-  void retry(FooState retryState) {
-    emit(retryState);
+  void retry(FooState retry) {
+    emit(retry);
   }
 }

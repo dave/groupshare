@@ -11,13 +11,14 @@ enum Status { Empty, Auth, Done }
 class Auth {
   final Api _api;
   final Device _device;
-  final Box<String> _box;
+  Box<String> _box;
   final _apiTokenKey = UniqueKey();
   Function(Status) onStatusChange;
 
-  Auth(this._api, this._box, this._device);
+  Auth(this._api, this._device);
 
   Future<void> init() async {
+    this._box = await Hive.openBox('auth');
     if (status == Status.Done) {
       _api.setToken(_apiTokenKey, token);
     }
@@ -34,6 +35,11 @@ class Auth {
       await onStatusChange(s);
     }
     _controller.add(s);
+  }
+
+  Future<void> reset() async {
+    await _box.deleteAll(_box.keys);
+    _controller.add(Status.Empty);
   }
 
   String get email => _box.get(_key.Email.toString());

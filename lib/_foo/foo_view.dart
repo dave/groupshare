@@ -35,9 +35,9 @@ class FooForm extends StatelessWidget {
     return BlocConsumer<FooCubit, FooState>(
       key: global,
       listener: (context, state) {
-        state.map(
-          initial: (state) => true,
-          form: (state) => true,
+        state.page.map(
+          initial: (state) {},
+          form: (state) {},
           error: (state) {
             handle(
               context,
@@ -45,20 +45,13 @@ class FooForm extends StatelessWidget {
               state.stack,
               buttons: [
                 Button(
-                  "retry",
-                  () => context.bloc<FooCubit>().retry(state.retryState),
+                  "Retry",
+                  () => context.bloc<FooCubit>().retry(state.retry),
                 )
               ],
             );
           },
           done: (state) => true,
-          //{
-          // ...
-          //Navigator.of(context).pushAndRemoveUntil(
-          //  ???.route(),
-          //  (route) => false,
-          //);
-          //},
         );
       },
       builder: (context, state) {
@@ -66,7 +59,7 @@ class FooForm extends StatelessWidget {
           alignment: const Alignment(0, -1 / 3),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: state.map(
+            children: state.page.map(
               initial: (state) => [],
               form: (state) {
                 return [
@@ -90,31 +83,21 @@ class _NameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<FooCubit, FooState>(
       buildWhen: (previous, current) {
-        if (current is FooStateForm) {
-          if (previous is FooStateForm) {
-            return previous.name != current.name;
-          }
-          return true;
-        }
-        return false;
+        return previous.form.name != current.form.name;
       },
       builder: (context, state) {
-        if (state is FooStateForm) {
-          return TextFormField(
-            autofocus: true,
-            key: Keys.name,
-            initialValue: state.name.value,
-            onChanged: (value) {
-              context.bloc<FooCubit>().nameChanged(value);
-            },
-            decoration: InputDecoration(
-              labelText: 'name',
-              errorText: state.name.invalid ? 'invalid name' : null,
-            ),
-          );
-        } else {
-          return null;
-        }
+        return TextFormField(
+          autofocus: true,
+          key: Keys.name,
+          initialValue: state.form.name.value,
+          onChanged: (value) {
+            context.bloc<FooCubit>().nameChanged(value);
+          },
+          decoration: InputDecoration(
+            labelText: 'name',
+            errorText: state.form.name.invalid ? 'invalid name' : null,
+          ),
+        );
       },
     );
   }
@@ -125,30 +108,20 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<FooCubit, FooState>(
       buildWhen: (previous, current) {
-        if (current is FooStateForm) {
-          if (previous is FooStateForm) {
-            return previous.status != current.status;
-          }
-          return true;
-        }
-        return false;
+        return previous.form.status != current.form.status;
       },
       builder: (context, state) {
-        if (state is FooStateForm) {
-          return state.status.isSubmissionInProgress
-              ? const CircularProgressIndicator()
-              : RaisedButton(
-                  key: Keys.submit,
-                  child: const Text('Submit'),
-                  onPressed: () {
-                    if (state.status.isValidated) {
-                      context.bloc<FooCubit>().submit();
-                    }
-                  },
-                );
-        } else {
-          return null;
-        }
+        return state.form.status.isSubmissionInProgress
+            ? const CircularProgressIndicator()
+            : RaisedButton(
+                key: Keys.submit,
+                child: const Text('Submit'),
+                onPressed: () {
+                  if (state.form.status.isValidated) {
+                    context.bloc<FooCubit>().submit();
+                  }
+                },
+              );
       },
     );
   }

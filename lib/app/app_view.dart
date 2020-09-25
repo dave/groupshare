@@ -49,7 +49,7 @@ class _AppViewState extends State<AppView> {
                 null,
                 buttons: [
                   Button(
-                    "retry",
+                    "Retry",
                     () => context.bloc<AppCubit>().init(),
                   ),
                 ],
@@ -62,7 +62,7 @@ class _AppViewState extends State<AppView> {
                 state.stack,
                 buttons: [
                   Button(
-                    "retry",
+                    "Retry",
                     () => context.bloc<AppCubit>().init(),
                   ),
                 ],
@@ -71,21 +71,13 @@ class _AppViewState extends State<AppView> {
           );
         },
         builder: (context, state) {
-          return state.map(
-            loading: (state) => Scaffold(
-              body: Center(child: Text("loading...")),
-            ),
-            login: (state) => Scaffold(
-              body: Center(child: Text("login...")),
-            ),
-            done: (state) => Scaffold(
-              body: Center(child: Text("done...")),
-            ),
-            error: (state) => Scaffold(
-              body: Center(child: Text("error...")),
-            ),
-            offline: (state) => Scaffold(
-              body: Center(child: Text("Offline.")),
+          return Scaffold(
+            body: state.map(
+              loading: (state) => Center(child: CircularProgressIndicator()),
+              login: (state) => Container(),
+              done: (state) => Container(),
+              error: (state) => Container(),
+              offline: (state) => Container(),
             ),
           );
         },

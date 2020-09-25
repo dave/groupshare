@@ -54,7 +54,7 @@ void main() async {
           timeout: IS_LIVE ? 8 : 12, // timeout (live: 8 sec, dev: 12 sec)
 
         );
-        final auth = Auth(api, await Hive.openBox('auth'), device);
+        final auth = Auth(api, device);
         final data = Data(
           StoreMeta<Share, String>(
             Share(),
@@ -96,6 +96,7 @@ void main() async {
               ),
               BlocProvider<AppBarCubit>(
                 create: (_) => AppBarCubit(
+                  auth,
                   api,
                   data,
                 ),
