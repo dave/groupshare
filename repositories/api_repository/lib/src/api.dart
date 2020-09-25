@@ -13,28 +13,30 @@ import 'package:protod/pmsg/pmsg.dart';
 const FAST_RETRY_INCREMENT = 3;
 
 class Api {
-  final Connection conn;
-  final Discovery doscovery;
-  final int retries;
-  final int timeout;
+  final Connection _conn;
+  final Discovery _discovery;
+  final int _retries;
+  final int _timeout;
 
   Api(
-    this.conn,
-    this.doscovery, {
-    this.retries,
-    this.timeout,
-  }) : _rand = Random();
+    this._conn,
+    this._discovery, {
+    int retries,
+    int timeout,
+  })  : this._retries = retries,
+        this._timeout = timeout,
+        _rand = Random();
 
   Future<void> init() async {
     // start watching connection state
-    conn.stream.listen((bool connected) {
+    _conn.stream.listen((bool connected) {
       if (connected) {
         _statusSuccess();
       } else {
         _statusOffline(true);
       }
     });
-    final online = await conn.check();
+    final online = await _conn.check();
     _statusOffline(!online);
     if (online) {
       _broadcastBackOnline();
@@ -87,7 +89,7 @@ class Api {
       Bundle bundle;
       Error err;
       DateTime requestTime;
-      for (var i = 0; i < retries; i++) {
+      for (var i = 0; i < _retries; i++) {
         if (i > 0) {
           _statusWaiting(indicatorId);
 
@@ -119,13 +121,13 @@ class Api {
         bool gotTimeout = false;
         requestTime = DateTime.now();
         try {
-          final prefix = doscovery.prefix();
+          final prefix = _discovery.prefix();
 
           httpResponse = await post(
             '$prefix/',
             body: requestBundleBytes,
           ).timeout(
-            Duration(seconds: timeout),
+            Duration(seconds: _timeout),
             onTimeout: () {
               gotTimeout = true;
               return null;

@@ -96,7 +96,6 @@ void main() async {
               ),
               BlocProvider<AppBarCubit>(
                 create: (_) => AppBarCubit(
-                  auth,
                   api,
                   data,
                 ),

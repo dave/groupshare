@@ -14,19 +14,22 @@ part 'appbar_bloc.freezed.dart';
 @freezed
 abstract class AppBarState with _$AppBarState {
   const factory AppBarState.saved() = AppbarStateSaved;
+
   const factory AppBarState.connecting() = AppbarStateConnecting;
+
   const factory AppBarState.waiting() = AppbarStateWaiting;
+
   const factory AppBarState.offline() = AppbarStateOffline;
+
   const factory AppBarState.failed() = AppbarStateFailed;
 }
 
 class AppBarCubit extends Cubit<AppBarState> {
   final Api _api;
   final Data _data;
-  final Auth _auth;
   StreamSubscription<ConnectionStatus> _subscription;
 
-  AppBarCubit(this._auth, this._api, this._data) : super(AppBarState.saved()) {
+  AppBarCubit(this._api, this._data) : super(AppBarState.saved()) {
     _subscription = _api.statusStream.listen(
       (ConnectionStatus value) => emitState(value),
     );
