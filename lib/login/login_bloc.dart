@@ -90,17 +90,17 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void emailChanged(String email) {
-    final emailValue = Email.dirty(email);
+    final value = Email.dirty(email);
     emit(state.copyWith(
       email: EmailFormState(
-        email: emailValue,
-        status: Formz.validate([emailValue]),
+        email: value,
+        status: Formz.validate([value]),
       ),
     ));
   }
 
   Future<void> sendLogin() async {
-    final retry = state;
+    final retryState = state;
     try {
       emit(state.copyWith(
         email: state.email.copyWith(
@@ -109,22 +109,22 @@ class LoginCubit extends Cubit<LoginState> {
       ));
       await _auth.login(state.email.email.value);
     } catch (ex, stack) {
-      emit(state.copyWith(page: PageState.error(ex, stack, retry)));
+      emit(state.copyWith(page: PageState.error(ex, stack, retryState)));
     }
   }
 
   void codeChanged(String code) {
-    final codeValue = Code.dirty(code);
+    final value = Code.dirty(code);
     emit(state.copyWith(
       code: CodeFormState(
-        code: codeValue,
-        status: Formz.validate([codeValue]),
+        code: value,
+        status: Formz.validate([value]),
       ),
     ));
   }
 
   Future<void> sendCode() async {
-    final retry = state;
+    final retryState = state;
     try {
       emit(state.copyWith(
         code: state.code.copyWith(
@@ -133,7 +133,7 @@ class LoginCubit extends Cubit<LoginState> {
       ));
       await _auth.code(state.code.code.value);
     } catch (ex, stack) {
-      emit(state.copyWith(page: PageState.error(ex, stack, retry)));
+      emit(state.copyWith(page: PageState.error(ex, stack, retryState)));
     }
   }
 }

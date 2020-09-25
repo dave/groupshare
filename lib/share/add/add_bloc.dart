@@ -10,18 +10,31 @@ part 'add_bloc.freezed.dart';
 
 @freezed
 abstract class AddState with _$AddState {
-  const factory AddState.form({
-    @Default(FormzStatus.pure) FormzStatus status,
-    @Default(const Name.pure()) Name name,
-  }) = AddStateForm;
+  const factory AddState(
+    PageState page,
+    FormState form,
+  ) = _AddState;
+}
 
-  const factory AddState.error(
+@freezed
+abstract class PageState with _$PageState {
+  const factory PageState.form() = PageStateForm;
+
+  const factory PageState.error(
     dynamic error,
     StackTrace stack,
     AddState retryState,
-  ) = AddStateError;
+  ) = PageStateError;
 
-  const factory AddState.done() = AddStateDone;
+  const factory PageState.done() = PageStateDone;
+}
+
+@freezed
+abstract class FormState with _$FormState {
+  const factory FormState({
+    @Default(FormzStatus.pure) FormzStatus status,
+    @Default(const Name.pure()) Name name,
+  }) = _FormState;
 }
 
 class AddCubit extends Cubit<AddState> {
