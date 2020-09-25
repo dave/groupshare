@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:data_repository/data_repository.dart';
+import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -30,17 +31,20 @@ abstract class FormState with _$FormState {
 abstract class PageState with _$PageState {
   const factory PageState.initial() = PageStateInitial;
 
-  const factory PageState.offline() = PageStateOffline;
-
   const factory PageState.loading() = PageStateLoading;
 
   const factory PageState.form() = PageStateForm;
 
-  const factory PageState.error(
+  const factory PageState.formError(
     dynamic error,
     StackTrace stack,
-    EditState retryState,
-  ) = PageStateError;
+    EditState retry,
+  ) = PageStateFormError;
+
+  const factory PageState.pageError(
+    dynamic error,
+    StackTrace stack,
+  ) = PageStatePageError;
 
   const factory PageState.done(String route) = PageStateDone;
 }
@@ -58,11 +62,16 @@ class EditCubit extends Cubit<EditState> {
           ),
         );
 
-  void init() async {
+  Future<void> init() async {
     emit(state.copyWith(page: PageState.loading()));
     final share = await data.shares.item(id);
     if (share == null) {
-      emit(state.copyWith(page: PageState.offline()));
+      emit(state.copyWith(
+        page: PageState.pageError(
+          UserException("Can't find document"),
+          StackTrace.current,
+        ),
+      ));
       return;
     }
     final nameValue = Name.dirty(share.value.name);
@@ -91,6 +100,7 @@ class EditCubit extends Cubit<EditState> {
   }
 
   Future<void> submit() async {
+    final retryState = state;
     try {
       if (state.form.initialName == state.form.name.value) {
         emit(state.copyWith(page: PageState.done(back)));
@@ -128,7 +138,7 @@ class EditCubit extends Cubit<EditState> {
     } catch (ex, stack) {
       emit(
         state.copyWith(
-          page: PageState.error(ex, stack, state),
+          page: PageState.formError(ex, stack, retryState),
         ),
       );
     }

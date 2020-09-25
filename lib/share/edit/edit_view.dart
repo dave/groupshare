@@ -5,6 +5,7 @@ import 'package:formz/formz.dart';
 import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/edit/edit.dart';
+import 'package:groupshare/share/list/list.dart';
 
 //import 'package:formz/formz.dart';
 
@@ -20,6 +21,7 @@ class EditPage extends StatelessWidget {
 
   final String _id;
   final String _back;
+
   EditPage({
     Key key,
     @required String id,
@@ -54,10 +56,28 @@ class EditForm extends StatelessWidget {
       listener: (context, state) {
         state.page.map(
           initial: (page) => true,
-          offline: (page) => true,
           loading: (page) => true,
           form: (page) => true,
-          error: (page) {
+          pageError: (page) {
+            handle(
+              context,
+              page.error,
+              page.stack,
+              buttons: [
+                Button(
+                  "Home",
+                  () => Navigator.of(context).popUntil(
+                    ModalRoute.withName(ListPage.routeName),
+                  ),
+                ),
+                Button(
+                  "Retry",
+                  () => context.bloc<EditCubit>().init(),
+                ),
+              ],
+            );
+          },
+          formError: (page) {
             handle(
               context,
               page.error,
@@ -65,8 +85,8 @@ class EditForm extends StatelessWidget {
               buttons: [
                 Button(
                   "Retry",
-                  () => context.bloc<EditCubit>().retry(page.retryState),
-                )
+                  () => context.bloc<EditCubit>().retry(page.retry),
+                ),
               ],
             );
           },
@@ -84,9 +104,9 @@ class EditForm extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: state.page.map(
               initial: (_) => [],
-              offline: (_) => [Center(child: Text("Offline."))],
               loading: (_) => [Center(child: CircularProgressIndicator())],
-              error: (_) => [],
+              pageError: (_) => [],
+              formError: (_) => [],
               done: (_) => [],
               form: (_) {
                 return [
