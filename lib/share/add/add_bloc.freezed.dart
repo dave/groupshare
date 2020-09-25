@@ -13,26 +13,11 @@ class _$AddStateTearOff {
   const _$AddStateTearOff();
 
 // ignore: unused_element
-  AddStateForm form(
-      {FormzStatus status = FormzStatus.pure, Name name = const Name.pure()}) {
-    return AddStateForm(
-      status: status,
-      name: name,
+  _AddState call(PageState page, FormState form) {
+    return _AddState(
+      page,
+      form,
     );
-  }
-
-// ignore: unused_element
-  AddStateError error(dynamic error, StackTrace stack, AddState retryState) {
-    return AddStateError(
-      error,
-      stack,
-      retryState,
-    );
-  }
-
-// ignore: unused_element
-  AddStateDone done() {
-    return const AddStateDone();
   }
 }
 
@@ -40,38 +25,19 @@ class _$AddStateTearOff {
 const $AddState = _$AddStateTearOff();
 
 mixin _$AddState {
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result form(FormzStatus status, Name name),
-    @required
-        Result error(dynamic error, StackTrace stack, AddState retryState),
-    @required Result done(),
-  });
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result form(FormzStatus status, Name name),
-    Result error(dynamic error, StackTrace stack, AddState retryState),
-    Result done(),
-    @required Result orElse(),
-  });
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result form(AddStateForm value),
-    @required Result error(AddStateError value),
-    @required Result done(AddStateDone value),
-  });
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result form(AddStateForm value),
-    Result error(AddStateError value),
-    Result done(AddStateDone value),
-    @required Result orElse(),
-  });
+  PageState get page;
+  FormState get form;
+
+  $AddStateCopyWith<AddState> get copyWith;
 }
 
 abstract class $AddStateCopyWith<$Res> {
   factory $AddStateCopyWith(AddState value, $Res Function(AddState) then) =
       _$AddStateCopyWithImpl<$Res>;
+  $Res call({PageState page, FormState form});
+
+  $PageStateCopyWith<$Res> get page;
+  $FormStateCopyWith<$Res> get form;
 }
 
 class _$AddStateCopyWithImpl<$Res> implements $AddStateCopyWith<$Res> {
@@ -80,78 +46,223 @@ class _$AddStateCopyWithImpl<$Res> implements $AddStateCopyWith<$Res> {
   final AddState _value;
   // ignore: unused_field
   final $Res Function(AddState) _then;
-}
-
-abstract class $AddStateFormCopyWith<$Res> {
-  factory $AddStateFormCopyWith(
-          AddStateForm value, $Res Function(AddStateForm) then) =
-      _$AddStateFormCopyWithImpl<$Res>;
-  $Res call({FormzStatus status, Name name});
-}
-
-class _$AddStateFormCopyWithImpl<$Res> extends _$AddStateCopyWithImpl<$Res>
-    implements $AddStateFormCopyWith<$Res> {
-  _$AddStateFormCopyWithImpl(
-      AddStateForm _value, $Res Function(AddStateForm) _then)
-      : super(_value, (v) => _then(v as AddStateForm));
-
-  @override
-  AddStateForm get _value => super._value as AddStateForm;
 
   @override
   $Res call({
-    Object status = freezed,
-    Object name = freezed,
+    Object page = freezed,
+    Object form = freezed,
   }) {
-    return _then(AddStateForm(
-      status: status == freezed ? _value.status : status as FormzStatus,
-      name: name == freezed ? _value.name : name as Name,
+    return _then(_value.copyWith(
+      page: page == freezed ? _value.page : page as PageState,
+      form: form == freezed ? _value.form : form as FormState,
+    ));
+  }
+
+  @override
+  $PageStateCopyWith<$Res> get page {
+    if (_value.page == null) {
+      return null;
+    }
+    return $PageStateCopyWith<$Res>(_value.page, (value) {
+      return _then(_value.copyWith(page: value));
+    });
+  }
+
+  @override
+  $FormStateCopyWith<$Res> get form {
+    if (_value.form == null) {
+      return null;
+    }
+    return $FormStateCopyWith<$Res>(_value.form, (value) {
+      return _then(_value.copyWith(form: value));
+    });
+  }
+}
+
+abstract class _$AddStateCopyWith<$Res> implements $AddStateCopyWith<$Res> {
+  factory _$AddStateCopyWith(_AddState value, $Res Function(_AddState) then) =
+      __$AddStateCopyWithImpl<$Res>;
+  @override
+  $Res call({PageState page, FormState form});
+
+  @override
+  $PageStateCopyWith<$Res> get page;
+  @override
+  $FormStateCopyWith<$Res> get form;
+}
+
+class __$AddStateCopyWithImpl<$Res> extends _$AddStateCopyWithImpl<$Res>
+    implements _$AddStateCopyWith<$Res> {
+  __$AddStateCopyWithImpl(_AddState _value, $Res Function(_AddState) _then)
+      : super(_value, (v) => _then(v as _AddState));
+
+  @override
+  _AddState get _value => super._value as _AddState;
+
+  @override
+  $Res call({
+    Object page = freezed,
+    Object form = freezed,
+  }) {
+    return _then(_AddState(
+      page == freezed ? _value.page : page as PageState,
+      form == freezed ? _value.form : form as FormState,
     ));
   }
 }
 
-class _$AddStateForm implements AddStateForm {
-  const _$AddStateForm(
-      {this.status = FormzStatus.pure, this.name = const Name.pure()})
-      : assert(status != null),
-        assert(name != null);
+class _$_AddState implements _AddState {
+  const _$_AddState(this.page, this.form)
+      : assert(page != null),
+        assert(form != null);
 
-  @JsonKey(defaultValue: FormzStatus.pure)
   @override
-  final FormzStatus status;
-  @JsonKey(defaultValue: const Name.pure())
+  final PageState page;
   @override
-  final Name name;
+  final FormState form;
 
   @override
   String toString() {
-    return 'AddState.form(status: $status, name: $name)';
+    return 'AddState(page: $page, form: $form)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is AddStateForm &&
-            (identical(other.status, status) ||
-                const DeepCollectionEquality().equals(other.status, status)) &&
-            (identical(other.name, name) ||
-                const DeepCollectionEquality().equals(other.name, name)));
+        (other is _AddState &&
+            (identical(other.page, page) ||
+                const DeepCollectionEquality().equals(other.page, page)) &&
+            (identical(other.form, form) ||
+                const DeepCollectionEquality().equals(other.form, form)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(status) ^
-      const DeepCollectionEquality().hash(name);
+      const DeepCollectionEquality().hash(page) ^
+      const DeepCollectionEquality().hash(form);
 
   @override
-  $AddStateFormCopyWith<AddStateForm> get copyWith =>
-      _$AddStateFormCopyWithImpl<AddStateForm>(this, _$identity);
+  _$AddStateCopyWith<_AddState> get copyWith =>
+      __$AddStateCopyWithImpl<_AddState>(this, _$identity);
+}
+
+abstract class _AddState implements AddState {
+  const factory _AddState(PageState page, FormState form) = _$_AddState;
+
+  @override
+  PageState get page;
+  @override
+  FormState get form;
+  @override
+  _$AddStateCopyWith<_AddState> get copyWith;
+}
+
+class _$PageStateTearOff {
+  const _$PageStateTearOff();
+
+// ignore: unused_element
+  PageStateForm form() {
+    return const PageStateForm();
+  }
+
+// ignore: unused_element
+  PageStateError error(dynamic error, StackTrace stack, AddState retryState) {
+    return PageStateError(
+      error,
+      stack,
+      retryState,
+    );
+  }
+
+// ignore: unused_element
+  PageStateDone done() {
+    return const PageStateDone();
+  }
+}
+
+// ignore: unused_element
+const $PageState = _$PageStateTearOff();
+
+mixin _$PageState {
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result form(),
+    @required
+        Result error(dynamic error, StackTrace stack, AddState retryState),
+    @required Result done(),
+  });
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result form(),
+    Result error(dynamic error, StackTrace stack, AddState retryState),
+    Result done(),
+    @required Result orElse(),
+  });
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result form(PageStateForm value),
+    @required Result error(PageStateError value),
+    @required Result done(PageStateDone value),
+  });
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result form(PageStateForm value),
+    Result error(PageStateError value),
+    Result done(PageStateDone value),
+    @required Result orElse(),
+  });
+}
+
+abstract class $PageStateCopyWith<$Res> {
+  factory $PageStateCopyWith(PageState value, $Res Function(PageState) then) =
+      _$PageStateCopyWithImpl<$Res>;
+}
+
+class _$PageStateCopyWithImpl<$Res> implements $PageStateCopyWith<$Res> {
+  _$PageStateCopyWithImpl(this._value, this._then);
+
+  final PageState _value;
+  // ignore: unused_field
+  final $Res Function(PageState) _then;
+}
+
+abstract class $PageStateFormCopyWith<$Res> {
+  factory $PageStateFormCopyWith(
+          PageStateForm value, $Res Function(PageStateForm) then) =
+      _$PageStateFormCopyWithImpl<$Res>;
+}
+
+class _$PageStateFormCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
+    implements $PageStateFormCopyWith<$Res> {
+  _$PageStateFormCopyWithImpl(
+      PageStateForm _value, $Res Function(PageStateForm) _then)
+      : super(_value, (v) => _then(v as PageStateForm));
+
+  @override
+  PageStateForm get _value => super._value as PageStateForm;
+}
+
+class _$PageStateForm implements PageStateForm {
+  const _$PageStateForm();
+
+  @override
+  String toString() {
+    return 'PageState.form()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is PageStateForm);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result form(FormzStatus status, Name name),
+    @required Result form(),
     @required
         Result error(dynamic error, StackTrace stack, AddState retryState),
     @required Result done(),
@@ -159,20 +270,20 @@ class _$AddStateForm implements AddStateForm {
     assert(form != null);
     assert(error != null);
     assert(done != null);
-    return form(status, name);
+    return form();
   }
 
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result form(FormzStatus status, Name name),
+    Result form(),
     Result error(dynamic error, StackTrace stack, AddState retryState),
     Result done(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (form != null) {
-      return form(status, name);
+      return form();
     }
     return orElse();
   }
@@ -180,9 +291,9 @@ class _$AddStateForm implements AddStateForm {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result form(AddStateForm value),
-    @required Result error(AddStateError value),
-    @required Result done(AddStateDone value),
+    @required Result form(PageStateForm value),
+    @required Result error(PageStateError value),
+    @required Result done(PageStateDone value),
   }) {
     assert(form != null);
     assert(error != null);
@@ -193,9 +304,9 @@ class _$AddStateForm implements AddStateForm {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result form(AddStateForm value),
-    Result error(AddStateError value),
-    Result done(AddStateDone value),
+    Result form(PageStateForm value),
+    Result error(PageStateError value),
+    Result done(PageStateDone value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -206,31 +317,27 @@ class _$AddStateForm implements AddStateForm {
   }
 }
 
-abstract class AddStateForm implements AddState {
-  const factory AddStateForm({FormzStatus status, Name name}) = _$AddStateForm;
-
-  FormzStatus get status;
-  Name get name;
-  $AddStateFormCopyWith<AddStateForm> get copyWith;
+abstract class PageStateForm implements PageState {
+  const factory PageStateForm() = _$PageStateForm;
 }
 
-abstract class $AddStateErrorCopyWith<$Res> {
-  factory $AddStateErrorCopyWith(
-          AddStateError value, $Res Function(AddStateError) then) =
-      _$AddStateErrorCopyWithImpl<$Res>;
+abstract class $PageStateErrorCopyWith<$Res> {
+  factory $PageStateErrorCopyWith(
+          PageStateError value, $Res Function(PageStateError) then) =
+      _$PageStateErrorCopyWithImpl<$Res>;
   $Res call({dynamic error, StackTrace stack, AddState retryState});
 
   $AddStateCopyWith<$Res> get retryState;
 }
 
-class _$AddStateErrorCopyWithImpl<$Res> extends _$AddStateCopyWithImpl<$Res>
-    implements $AddStateErrorCopyWith<$Res> {
-  _$AddStateErrorCopyWithImpl(
-      AddStateError _value, $Res Function(AddStateError) _then)
-      : super(_value, (v) => _then(v as AddStateError));
+class _$PageStateErrorCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
+    implements $PageStateErrorCopyWith<$Res> {
+  _$PageStateErrorCopyWithImpl(
+      PageStateError _value, $Res Function(PageStateError) _then)
+      : super(_value, (v) => _then(v as PageStateError));
 
   @override
-  AddStateError get _value => super._value as AddStateError;
+  PageStateError get _value => super._value as PageStateError;
 
   @override
   $Res call({
@@ -238,7 +345,7 @@ class _$AddStateErrorCopyWithImpl<$Res> extends _$AddStateCopyWithImpl<$Res>
     Object stack = freezed,
     Object retryState = freezed,
   }) {
-    return _then(AddStateError(
+    return _then(PageStateError(
       error == freezed ? _value.error : error as dynamic,
       stack == freezed ? _value.stack : stack as StackTrace,
       retryState == freezed ? _value.retryState : retryState as AddState,
@@ -256,8 +363,8 @@ class _$AddStateErrorCopyWithImpl<$Res> extends _$AddStateCopyWithImpl<$Res>
   }
 }
 
-class _$AddStateError implements AddStateError {
-  const _$AddStateError(this.error, this.stack, this.retryState)
+class _$PageStateError implements PageStateError {
+  const _$PageStateError(this.error, this.stack, this.retryState)
       : assert(error != null),
         assert(stack != null),
         assert(retryState != null);
@@ -271,13 +378,13 @@ class _$AddStateError implements AddStateError {
 
   @override
   String toString() {
-    return 'AddState.error(error: $error, stack: $stack, retryState: $retryState)';
+    return 'PageState.error(error: $error, stack: $stack, retryState: $retryState)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is AddStateError &&
+        (other is PageStateError &&
             (identical(other.error, error) ||
                 const DeepCollectionEquality().equals(other.error, error)) &&
             (identical(other.stack, stack) ||
@@ -295,13 +402,13 @@ class _$AddStateError implements AddStateError {
       const DeepCollectionEquality().hash(retryState);
 
   @override
-  $AddStateErrorCopyWith<AddStateError> get copyWith =>
-      _$AddStateErrorCopyWithImpl<AddStateError>(this, _$identity);
+  $PageStateErrorCopyWith<PageStateError> get copyWith =>
+      _$PageStateErrorCopyWithImpl<PageStateError>(this, _$identity);
 
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result form(FormzStatus status, Name name),
+    @required Result form(),
     @required
         Result error(dynamic error, StackTrace stack, AddState retryState),
     @required Result done(),
@@ -315,7 +422,7 @@ class _$AddStateError implements AddStateError {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result form(FormzStatus status, Name name),
+    Result form(),
     Result error(dynamic error, StackTrace stack, AddState retryState),
     Result done(),
     @required Result orElse(),
@@ -330,9 +437,9 @@ class _$AddStateError implements AddStateError {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result form(AddStateForm value),
-    @required Result error(AddStateError value),
-    @required Result done(AddStateDone value),
+    @required Result form(PageStateForm value),
+    @required Result error(PageStateError value),
+    @required Result done(PageStateDone value),
   }) {
     assert(form != null);
     assert(error != null);
@@ -343,9 +450,9 @@ class _$AddStateError implements AddStateError {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result form(AddStateForm value),
-    Result error(AddStateError value),
-    Result done(AddStateDone value),
+    Result form(PageStateForm value),
+    Result error(PageStateError value),
+    Result done(PageStateDone value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -356,43 +463,43 @@ class _$AddStateError implements AddStateError {
   }
 }
 
-abstract class AddStateError implements AddState {
-  const factory AddStateError(
-      dynamic error, StackTrace stack, AddState retryState) = _$AddStateError;
+abstract class PageStateError implements PageState {
+  const factory PageStateError(
+      dynamic error, StackTrace stack, AddState retryState) = _$PageStateError;
 
   dynamic get error;
   StackTrace get stack;
   AddState get retryState;
-  $AddStateErrorCopyWith<AddStateError> get copyWith;
+  $PageStateErrorCopyWith<PageStateError> get copyWith;
 }
 
-abstract class $AddStateDoneCopyWith<$Res> {
-  factory $AddStateDoneCopyWith(
-          AddStateDone value, $Res Function(AddStateDone) then) =
-      _$AddStateDoneCopyWithImpl<$Res>;
+abstract class $PageStateDoneCopyWith<$Res> {
+  factory $PageStateDoneCopyWith(
+          PageStateDone value, $Res Function(PageStateDone) then) =
+      _$PageStateDoneCopyWithImpl<$Res>;
 }
 
-class _$AddStateDoneCopyWithImpl<$Res> extends _$AddStateCopyWithImpl<$Res>
-    implements $AddStateDoneCopyWith<$Res> {
-  _$AddStateDoneCopyWithImpl(
-      AddStateDone _value, $Res Function(AddStateDone) _then)
-      : super(_value, (v) => _then(v as AddStateDone));
+class _$PageStateDoneCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
+    implements $PageStateDoneCopyWith<$Res> {
+  _$PageStateDoneCopyWithImpl(
+      PageStateDone _value, $Res Function(PageStateDone) _then)
+      : super(_value, (v) => _then(v as PageStateDone));
 
   @override
-  AddStateDone get _value => super._value as AddStateDone;
+  PageStateDone get _value => super._value as PageStateDone;
 }
 
-class _$AddStateDone implements AddStateDone {
-  const _$AddStateDone();
+class _$PageStateDone implements PageStateDone {
+  const _$PageStateDone();
 
   @override
   String toString() {
-    return 'AddState.done()';
+    return 'PageState.done()';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is AddStateDone);
+    return identical(this, other) || (other is PageStateDone);
   }
 
   @override
@@ -401,7 +508,7 @@ class _$AddStateDone implements AddStateDone {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result form(FormzStatus status, Name name),
+    @required Result form(),
     @required
         Result error(dynamic error, StackTrace stack, AddState retryState),
     @required Result done(),
@@ -415,7 +522,7 @@ class _$AddStateDone implements AddStateDone {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result form(FormzStatus status, Name name),
+    Result form(),
     Result error(dynamic error, StackTrace stack, AddState retryState),
     Result done(),
     @required Result orElse(),
@@ -430,9 +537,9 @@ class _$AddStateDone implements AddStateDone {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result form(AddStateForm value),
-    @required Result error(AddStateError value),
-    @required Result done(AddStateDone value),
+    @required Result form(PageStateForm value),
+    @required Result error(PageStateError value),
+    @required Result done(PageStateDone value),
   }) {
     assert(form != null);
     assert(error != null);
@@ -443,9 +550,9 @@ class _$AddStateDone implements AddStateDone {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result form(AddStateForm value),
-    Result error(AddStateError value),
-    Result done(AddStateDone value),
+    Result form(PageStateForm value),
+    Result error(PageStateError value),
+    Result done(PageStateDone value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -456,6 +563,132 @@ class _$AddStateDone implements AddStateDone {
   }
 }
 
-abstract class AddStateDone implements AddState {
-  const factory AddStateDone() = _$AddStateDone;
+abstract class PageStateDone implements PageState {
+  const factory PageStateDone() = _$PageStateDone;
+}
+
+class _$FormStateTearOff {
+  const _$FormStateTearOff();
+
+// ignore: unused_element
+  _FormState call(
+      {FormzStatus status = FormzStatus.pure, Name name = const Name.pure()}) {
+    return _FormState(
+      status: status,
+      name: name,
+    );
+  }
+}
+
+// ignore: unused_element
+const $FormState = _$FormStateTearOff();
+
+mixin _$FormState {
+  FormzStatus get status;
+  Name get name;
+
+  $FormStateCopyWith<FormState> get copyWith;
+}
+
+abstract class $FormStateCopyWith<$Res> {
+  factory $FormStateCopyWith(FormState value, $Res Function(FormState) then) =
+      _$FormStateCopyWithImpl<$Res>;
+  $Res call({FormzStatus status, Name name});
+}
+
+class _$FormStateCopyWithImpl<$Res> implements $FormStateCopyWith<$Res> {
+  _$FormStateCopyWithImpl(this._value, this._then);
+
+  final FormState _value;
+  // ignore: unused_field
+  final $Res Function(FormState) _then;
+
+  @override
+  $Res call({
+    Object status = freezed,
+    Object name = freezed,
+  }) {
+    return _then(_value.copyWith(
+      status: status == freezed ? _value.status : status as FormzStatus,
+      name: name == freezed ? _value.name : name as Name,
+    ));
+  }
+}
+
+abstract class _$FormStateCopyWith<$Res> implements $FormStateCopyWith<$Res> {
+  factory _$FormStateCopyWith(
+          _FormState value, $Res Function(_FormState) then) =
+      __$FormStateCopyWithImpl<$Res>;
+  @override
+  $Res call({FormzStatus status, Name name});
+}
+
+class __$FormStateCopyWithImpl<$Res> extends _$FormStateCopyWithImpl<$Res>
+    implements _$FormStateCopyWith<$Res> {
+  __$FormStateCopyWithImpl(_FormState _value, $Res Function(_FormState) _then)
+      : super(_value, (v) => _then(v as _FormState));
+
+  @override
+  _FormState get _value => super._value as _FormState;
+
+  @override
+  $Res call({
+    Object status = freezed,
+    Object name = freezed,
+  }) {
+    return _then(_FormState(
+      status: status == freezed ? _value.status : status as FormzStatus,
+      name: name == freezed ? _value.name : name as Name,
+    ));
+  }
+}
+
+class _$_FormState implements _FormState {
+  const _$_FormState(
+      {this.status = FormzStatus.pure, this.name = const Name.pure()})
+      : assert(status != null),
+        assert(name != null);
+
+  @JsonKey(defaultValue: FormzStatus.pure)
+  @override
+  final FormzStatus status;
+  @JsonKey(defaultValue: const Name.pure())
+  @override
+  final Name name;
+
+  @override
+  String toString() {
+    return 'FormState(status: $status, name: $name)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is _FormState &&
+            (identical(other.status, status) ||
+                const DeepCollectionEquality().equals(other.status, status)) &&
+            (identical(other.name, name) ||
+                const DeepCollectionEquality().equals(other.name, name)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(status) ^
+      const DeepCollectionEquality().hash(name);
+
+  @override
+  _$FormStateCopyWith<_FormState> get copyWith =>
+      __$FormStateCopyWithImpl<_FormState>(this, _$identity);
+}
+
+abstract class _FormState implements FormState {
+  const factory _FormState({FormzStatus status, Name name}) = _$_FormState;
+
+  @override
+  FormzStatus get status;
+  @override
+  Name get name;
+  @override
+  _$FormStateCopyWith<_FormState> get copyWith;
 }

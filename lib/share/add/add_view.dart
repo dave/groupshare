@@ -34,7 +34,7 @@ class AddForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<AddCubit, AddState>(
       listener: (context, state) {
-        state.map(
+        state.page.map(
           form: (state) => true,
           error: (state) {
             handle(
@@ -62,7 +62,7 @@ class AddForm extends StatelessWidget {
           alignment: const Alignment(0, -1 / 3),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: state.map(
+            children: state.page.map(
               form: (state) {
                 return [
                   _NameInput(),
@@ -85,33 +85,23 @@ class _NameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AddCubit, AddState>(
       buildWhen: (previous, current) {
-        if (current is AddStateForm) {
-          if (previous is AddStateForm) {
-            return previous.name != current.name;
-          }
-          return true;
-        }
-        return false;
+        return previous.form.name != current.form.name;
       },
       builder: (context, state) {
-        if (state is AddStateForm) {
-          return state.status.isSubmissionInProgress
-              ? CircularProgressIndicator()
-              : TextFormField(
-                  autofocus: true,
-                  key: Keys.name,
-                  initialValue: state.name.value,
-                  onChanged: (email) {
-                    context.bloc<AddCubit>().nameChanged(email);
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'name',
-                    errorText: state.name.invalid ? 'invalid name' : null,
-                  ),
-                );
-        } else {
-          return null;
-        }
+        return state.form.status.isSubmissionInProgress
+            ? CircularProgressIndicator()
+            : TextFormField(
+                autofocus: true,
+                key: Keys.name,
+                initialValue: state.form.name.value,
+                onChanged: (email) {
+                  context.bloc<AddCubit>().nameChanged(email);
+                },
+                decoration: InputDecoration(
+                  labelText: 'name',
+                  errorText: state.form.name.invalid ? 'invalid name' : null,
+                ),
+              );
       },
     );
   }
@@ -122,30 +112,20 @@ class _AddButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AddCubit, AddState>(
       buildWhen: (previous, current) {
-        if (current is AddStateForm) {
-          if (previous is AddStateForm) {
-            return previous.status != current.status;
-          }
-          return true;
-        }
-        return false;
+        return previous.form.status != current.form.status;
       },
       builder: (context, state) {
-        if (state is AddStateForm) {
-          return state.status.isSubmissionInProgress
-              ? const CircularProgressIndicator()
-              : RaisedButton(
-                  key: Keys.submit,
-                  child: const Text('Add'),
-                  onPressed: () {
-                    if (state.status.isValidated) {
-                      context.bloc<AddCubit>().add();
-                    }
-                  },
-                );
-        } else {
-          return null;
-        }
+        return state.form.status.isSubmissionInProgress
+            ? const CircularProgressIndicator()
+            : RaisedButton(
+                key: Keys.submit,
+                child: const Text('Add'),
+                onPressed: () {
+                  if (state.form.status.isValidated) {
+                    context.bloc<AddCubit>().add();
+                  }
+                },
+              );
       },
     );
   }

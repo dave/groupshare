@@ -42,14 +42,15 @@ class AddCubit extends Cubit<AddState> {
 
   AddCubit(Data data)
       : _data = data,
-        super(AddState.form());
+        super(AddState(PageState.form(), FormState()));
 
   void nameChanged(String name) {
     final nameValue = Name.dirty(name);
-    emit(AddState.form(
+    emit(state.copyWith(
+        form: state.form.copyWith(
       name: nameValue,
       status: Formz.validate([nameValue]),
-    ));
+    )));
   }
 
   void retry(AddState retryState) {
@@ -57,23 +58,24 @@ class AddCubit extends Cubit<AddState> {
   }
 
   Future<void> add() async {
-    final stateForm = state as AddStateForm;
+    final retryState = state;
     try {
-      emit(stateForm.copyWith(status: FormzStatus.submissionInProgress));
-      final share = Share()..name = stateForm.name.value;
+      emit(state.copyWith(
+        form: state.form.copyWith(status: FormzStatus.submissionInProgress),
+      ));
       final id = _data.shares.randomUnique();
-      _data.shares.add(id, share);
+      _data.shares.add(id, Share()..name = state.form.name.value);
       _data.user.op(
         op.user.shares.insert(
           0,
           User_AvailableShare()
             ..id = id
-            ..name = stateForm.name.value,
+            ..name = state.form.name.value,
         ),
       );
-      emit(AddState.done());
+      emit(state.copyWith(page: PageState.done()));
     } catch (ex, stack) {
-      emit(AddState.error(ex, stack, stateForm));
+      emit(state.copyWith(page: PageState.error(ex, stack, retryState)));
     }
   }
 }

@@ -92,7 +92,7 @@ class LoginCubit extends Cubit<LoginState> {
   void emailChanged(String email) {
     final value = Email.dirty(email);
     emit(state.copyWith(
-      email: EmailFormState(
+      email: state.email.copyWith(
         email: value,
         status: Formz.validate([value]),
       ),
@@ -116,7 +116,7 @@ class LoginCubit extends Cubit<LoginState> {
   void codeChanged(String code) {
     final value = Code.dirty(code);
     emit(state.copyWith(
-      code: CodeFormState(
+      code: state.code.copyWith(
         code: value,
         status: Formz.validate([value]),
       ),
