@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:auth_repository/auth_repository.dart';
-import 'package:data_repository/data_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -11,96 +10,130 @@ part 'login_bloc.freezed.dart';
 
 @freezed
 abstract class LoginState with _$LoginState {
-  const factory LoginState.email({
-    @Default(FormzStatus.pure) FormzStatus status,
-    @Default(const Email.pure()) Email email,
-  }) = LoginStateEmail;
+  const factory LoginState(
+    PageState page,
+    EmailFormState email,
+    CodeFormState code,
+  ) = _LoginState;
+}
 
-  const factory LoginState.code({
-    @Default(FormzStatus.pure) FormzStatus status,
-    @Default(const Code.pure()) Code code,
-  }) = LoginStateCode;
+@freezed
+abstract class PageState with _$PageState {
+  const factory PageState.email() = PageStateEmail;
 
-  const factory LoginState.error(
+  const factory PageState.code() = PageStateCode;
+
+  const factory PageState.error(
     dynamic error,
     StackTrace stack,
     LoginState retry,
-  ) = LoginStateError;
+  ) = PageStateError;
 
-  const factory LoginState.done() = LoginStateDone;
+  const factory PageState.done() = PageStateDone;
+}
+
+@freezed
+abstract class EmailFormState with _$EmailFormState {
+  const factory EmailFormState({
+    @Default(FormzStatus.pure) FormzStatus status,
+    @Default(const Email.pure()) Email email,
+  }) = _EmailFormState;
+}
+
+@freezed
+abstract class CodeFormState with _$CodeFormState {
+  const factory CodeFormState({
+    @Default(FormzStatus.pure) FormzStatus status,
+    @Default(const Code.pure()) Code code,
+  }) = _CodeFormState;
 }
 
 class LoginCubit extends Cubit<LoginState> {
   Auth _auth;
-  Data _data;
-  StreamSubscription<Status> _statusSubscription;
+  StreamSubscription<Status> _subscription;
 
-  LoginCubit(Auth auth, Data data)
-      : _auth = auth,
-        _data = data,
-        super(LoginState.email()) {
-    _statusSubscription = _auth.statusChange.listen(
+  LoginCubit(this._auth)
+      : super(
+          LoginState(
+            PageState.email(),
+            EmailFormState(),
+            CodeFormState(),
+          ),
+        ) {
+    _subscription = _auth.statusChange.listen(
       (Status value) => change(value),
     );
   }
 
   @override
   Future<void> close() {
-    _statusSubscription?.cancel();
+    _subscription?.cancel();
     return super.close();
   }
 
   change(Status status) {
     switch (status) {
       case Status.Empty:
-        emit(LoginState.email());
+        emit(state.copyWith(page: PageState.email()));
         return;
       case Status.Auth:
-        emit(LoginState.code());
+        emit(state.copyWith(page: PageState.code()));
         return;
       case Status.Done:
-        emit(LoginState.done());
+        emit(state.copyWith(page: PageState.done()));
         return;
     }
   }
 
-  void retry(LoginState retryState) {
-    emit(retryState);
+  void retry(LoginState retry) {
+    emit(retry);
   }
 
   void emailChanged(String email) {
     final emailValue = Email.dirty(email);
-    emit(LoginState.email(
-      email: emailValue,
-      status: Formz.validate([emailValue]),
+    emit(state.copyWith(
+      email: EmailFormState(
+        email: emailValue,
+        status: Formz.validate([emailValue]),
+      ),
     ));
   }
 
   Future<void> sendLogin() async {
-    final stateEmail = state as LoginStateEmail;
+    final retry = state;
     try {
-      emit(stateEmail.copyWith(status: FormzStatus.submissionInProgress));
-      await _auth.login(stateEmail.email.value);
+      emit(state.copyWith(
+        email: state.email.copyWith(
+          status: FormzStatus.submissionInProgress,
+        ),
+      ));
+      await _auth.login(state.email.email.value);
     } catch (ex, stack) {
-      emit(LoginState.error(ex, stack, stateEmail));
+      emit(state.copyWith(page: PageState.error(ex, stack, retry)));
     }
   }
 
   void codeChanged(String code) {
     final codeValue = Code.dirty(code);
-    emit(LoginState.code(
-      code: codeValue,
-      status: Formz.validate([codeValue]),
+    emit(state.copyWith(
+      code: CodeFormState(
+        code: codeValue,
+        status: Formz.validate([codeValue]),
+      ),
     ));
   }
 
   Future<void> sendCode() async {
-    final stateCode = state as LoginStateCode;
+    final retry = state;
     try {
-      emit(stateCode.copyWith(status: FormzStatus.submissionInProgress));
-      await _auth.code(stateCode.code.value);
+      emit(state.copyWith(
+        code: state.code.copyWith(
+          status: FormzStatus.submissionInProgress,
+        ),
+      ));
+      await _auth.code(state.code.code.value);
     } catch (ex, stack) {
-      emit(LoginState.error(ex, stack, stateCode));
+      emit(state.copyWith(page: PageState.error(ex, stack, retry)));
     }
   }
 }

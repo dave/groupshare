@@ -24,7 +24,6 @@ class LoginPage extends StatelessWidget {
         child: BlocProvider(
           create: (context) => LoginCubit(
             RepositoryProvider.of<Auth>(context),
-            RepositoryProvider.of<Data>(context),
           ),
           child: LoginForm(),
         ),
@@ -38,7 +37,7 @@ class LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) {
-        state.map(
+        state.page.map(
           email: (state) => true,
           code: (state) => true,
           error: (state) {
@@ -67,7 +66,7 @@ class LoginForm extends StatelessWidget {
           alignment: const Alignment(0, -1 / 3),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: state.map(
+            children: state.page.map(
               email: (state) {
                 return [
                   _EmailInput(),
@@ -97,31 +96,21 @@ class _EmailInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) {
-        if (current is LoginStateEmail) {
-          if (previous is LoginStateEmail) {
-            return previous.email != current.email;
-          }
-          return true;
-        }
-        return false;
+        return previous.email.email != current.email.email;
       },
       builder: (context, state) {
-        if (state is LoginStateEmail) {
-          return TextFormField(
-            autofocus: true,
-            key: Keys.email,
-            initialValue: state.email.value,
-            onChanged: (email) {
-              context.bloc<LoginCubit>().emailChanged(email);
-            },
-            decoration: InputDecoration(
-              labelText: 'email',
-              errorText: state.email.invalid ? 'invalid email' : null,
-            ),
-          );
-        } else {
-          return null;
-        }
+        return TextFormField(
+          autofocus: true,
+          key: Keys.email,
+          initialValue: state.email.email.value,
+          onChanged: (email) {
+            context.bloc<LoginCubit>().emailChanged(email);
+          },
+          decoration: InputDecoration(
+            labelText: 'email',
+            errorText: state.email.email.invalid ? 'invalid email' : null,
+          ),
+        );
       },
     );
   }
@@ -132,31 +121,21 @@ class _CodeInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) {
-        if (current is LoginStateCode) {
-          if (previous is LoginStateCode) {
-            return previous.code != current.code;
-          }
-          return true;
-        }
-        return false;
+        return previous.code.code != current.code.code;
       },
       builder: (context, state) {
-        if (state is LoginStateCode) {
-          return TextFormField(
-            autofocus: true,
-            key: Keys.code,
-            initialValue: state.code.value,
-            onChanged: (code) {
-              context.bloc<LoginCubit>().codeChanged(code);
-            },
-            decoration: InputDecoration(
-              labelText: 'code',
-              errorText: state.code.invalid ? 'invalid code' : null,
-            ),
-          );
-        } else {
-          return null;
-        }
+        return TextFormField(
+          autofocus: true,
+          key: Keys.code,
+          initialValue: state.code.code.value,
+          onChanged: (code) {
+            context.bloc<LoginCubit>().codeChanged(code);
+          },
+          decoration: InputDecoration(
+            labelText: 'code',
+            errorText: state.code.code.invalid ? 'invalid code' : null,
+          ),
+        );
       },
     );
   }
@@ -167,30 +146,20 @@ class _EmailButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) {
-        if (current is LoginStateEmail) {
-          if (previous is LoginStateEmail) {
-            return previous.status != current.status;
-          }
-          return true;
-        }
-        return false;
+        return previous.email.status != current.email.status;
       },
       builder: (context, state) {
-        if (state is LoginStateEmail) {
-          return state.status.isSubmissionInProgress
-              ? const CircularProgressIndicator()
-              : RaisedButton(
-                  key: Keys.emailSubmit,
-                  child: const Text('Login email'),
-                  onPressed: () {
-                    if (state.status.isValidated) {
-                      context.bloc<LoginCubit>().sendLogin();
-                    }
-                  },
-                );
-        } else {
-          return null;
-        }
+        return state.email.status.isSubmissionInProgress
+            ? const CircularProgressIndicator()
+            : RaisedButton(
+                key: Keys.emailSubmit,
+                child: const Text('Login email'),
+                onPressed: () {
+                  if (state.email.status.isValidated) {
+                    context.bloc<LoginCubit>().sendLogin();
+                  }
+                },
+              );
       },
     );
   }
@@ -201,30 +170,20 @@ class _CodeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) {
-        if (current is LoginStateCode) {
-          if (previous is LoginStateCode) {
-            return previous.status != current.status;
-          }
-          return true;
-        }
-        return false;
+        return previous.code.status != current.code.status;
       },
       builder: (context, state) {
-        if (state is LoginStateCode) {
-          return state.status.isSubmissionInProgress
-              ? const CircularProgressIndicator()
-              : RaisedButton(
-                  key: Keys.codeSubmit,
-                  child: const Text('Login code'),
-                  onPressed: () {
-                    if (state.status.isValidated) {
-                      context.bloc<LoginCubit>().sendCode();
-                    }
-                  },
-                );
-        } else {
-          return null;
-        }
+        return state.code.status.isSubmissionInProgress
+            ? const CircularProgressIndicator()
+            : RaisedButton(
+                key: Keys.codeSubmit,
+                child: const Text('Login code'),
+                onPressed: () {
+                  if (state.code.status.isValidated) {
+                    context.bloc<LoginCubit>().sendCode();
+                  }
+                },
+              );
       },
     );
   }
