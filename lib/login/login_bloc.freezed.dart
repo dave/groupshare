@@ -203,15 +203,6 @@ class _$PageStateTearOff {
   }
 
 // ignore: unused_element
-  PageStateError error(dynamic error, StackTrace stack, LoginState retry) {
-    return PageStateError(
-      error,
-      stack,
-      retry,
-    );
-  }
-
-// ignore: unused_element
   PageStateDone done() {
     return const PageStateDone();
   }
@@ -225,14 +216,12 @@ mixin _$PageState {
   Result when<Result extends Object>({
     @required Result email(),
     @required Result code(),
-    @required Result error(dynamic error, StackTrace stack, LoginState retry),
     @required Result done(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result email(),
     Result code(),
-    Result error(dynamic error, StackTrace stack, LoginState retry),
     Result done(),
     @required Result orElse(),
   });
@@ -240,14 +229,12 @@ mixin _$PageState {
   Result map<Result extends Object>({
     @required Result email(PageStateEmail value),
     @required Result code(PageStateCode value),
-    @required Result error(PageStateError value),
     @required Result done(PageStateDone value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
     Result email(PageStateEmail value),
     Result code(PageStateCode value),
-    Result error(PageStateError value),
     Result done(PageStateDone value),
     @required Result orElse(),
   });
@@ -303,12 +290,10 @@ class _$PageStateEmail implements PageStateEmail {
   Result when<Result extends Object>({
     @required Result email(),
     @required Result code(),
-    @required Result error(dynamic error, StackTrace stack, LoginState retry),
     @required Result done(),
   }) {
     assert(email != null);
     assert(code != null);
-    assert(error != null);
     assert(done != null);
     return email();
   }
@@ -318,7 +303,6 @@ class _$PageStateEmail implements PageStateEmail {
   Result maybeWhen<Result extends Object>({
     Result email(),
     Result code(),
-    Result error(dynamic error, StackTrace stack, LoginState retry),
     Result done(),
     @required Result orElse(),
   }) {
@@ -334,12 +318,10 @@ class _$PageStateEmail implements PageStateEmail {
   Result map<Result extends Object>({
     @required Result email(PageStateEmail value),
     @required Result code(PageStateCode value),
-    @required Result error(PageStateError value),
     @required Result done(PageStateDone value),
   }) {
     assert(email != null);
     assert(code != null);
-    assert(error != null);
     assert(done != null);
     return email(this);
   }
@@ -349,7 +331,6 @@ class _$PageStateEmail implements PageStateEmail {
   Result maybeMap<Result extends Object>({
     Result email(PageStateEmail value),
     Result code(PageStateCode value),
-    Result error(PageStateError value),
     Result done(PageStateDone value),
     @required Result orElse(),
   }) {
@@ -402,12 +383,10 @@ class _$PageStateCode implements PageStateCode {
   Result when<Result extends Object>({
     @required Result email(),
     @required Result code(),
-    @required Result error(dynamic error, StackTrace stack, LoginState retry),
     @required Result done(),
   }) {
     assert(email != null);
     assert(code != null);
-    assert(error != null);
     assert(done != null);
     return code();
   }
@@ -417,7 +396,6 @@ class _$PageStateCode implements PageStateCode {
   Result maybeWhen<Result extends Object>({
     Result email(),
     Result code(),
-    Result error(dynamic error, StackTrace stack, LoginState retry),
     Result done(),
     @required Result orElse(),
   }) {
@@ -433,12 +411,10 @@ class _$PageStateCode implements PageStateCode {
   Result map<Result extends Object>({
     @required Result email(PageStateEmail value),
     @required Result code(PageStateCode value),
-    @required Result error(PageStateError value),
     @required Result done(PageStateDone value),
   }) {
     assert(email != null);
     assert(code != null);
-    assert(error != null);
     assert(done != null);
     return code(this);
   }
@@ -448,7 +424,6 @@ class _$PageStateCode implements PageStateCode {
   Result maybeMap<Result extends Object>({
     Result email(PageStateEmail value),
     Result code(PageStateCode value),
-    Result error(PageStateError value),
     Result done(PageStateDone value),
     @required Result orElse(),
   }) {
@@ -462,162 +437,6 @@ class _$PageStateCode implements PageStateCode {
 
 abstract class PageStateCode implements PageState {
   const factory PageStateCode() = _$PageStateCode;
-}
-
-abstract class $PageStateErrorCopyWith<$Res> {
-  factory $PageStateErrorCopyWith(
-          PageStateError value, $Res Function(PageStateError) then) =
-      _$PageStateErrorCopyWithImpl<$Res>;
-  $Res call({dynamic error, StackTrace stack, LoginState retry});
-
-  $LoginStateCopyWith<$Res> get retry;
-}
-
-class _$PageStateErrorCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
-    implements $PageStateErrorCopyWith<$Res> {
-  _$PageStateErrorCopyWithImpl(
-      PageStateError _value, $Res Function(PageStateError) _then)
-      : super(_value, (v) => _then(v as PageStateError));
-
-  @override
-  PageStateError get _value => super._value as PageStateError;
-
-  @override
-  $Res call({
-    Object error = freezed,
-    Object stack = freezed,
-    Object retry = freezed,
-  }) {
-    return _then(PageStateError(
-      error == freezed ? _value.error : error as dynamic,
-      stack == freezed ? _value.stack : stack as StackTrace,
-      retry == freezed ? _value.retry : retry as LoginState,
-    ));
-  }
-
-  @override
-  $LoginStateCopyWith<$Res> get retry {
-    if (_value.retry == null) {
-      return null;
-    }
-    return $LoginStateCopyWith<$Res>(_value.retry, (value) {
-      return _then(_value.copyWith(retry: value));
-    });
-  }
-}
-
-class _$PageStateError implements PageStateError {
-  const _$PageStateError(this.error, this.stack, this.retry)
-      : assert(error != null),
-        assert(stack != null),
-        assert(retry != null);
-
-  @override
-  final dynamic error;
-  @override
-  final StackTrace stack;
-  @override
-  final LoginState retry;
-
-  @override
-  String toString() {
-    return 'PageState.error(error: $error, stack: $stack, retry: $retry)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is PageStateError &&
-            (identical(other.error, error) ||
-                const DeepCollectionEquality().equals(other.error, error)) &&
-            (identical(other.stack, stack) ||
-                const DeepCollectionEquality().equals(other.stack, stack)) &&
-            (identical(other.retry, retry) ||
-                const DeepCollectionEquality().equals(other.retry, retry)));
-  }
-
-  @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(error) ^
-      const DeepCollectionEquality().hash(stack) ^
-      const DeepCollectionEquality().hash(retry);
-
-  @override
-  $PageStateErrorCopyWith<PageStateError> get copyWith =>
-      _$PageStateErrorCopyWithImpl<PageStateError>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result email(),
-    @required Result code(),
-    @required Result error(dynamic error, StackTrace stack, LoginState retry),
-    @required Result done(),
-  }) {
-    assert(email != null);
-    assert(code != null);
-    assert(error != null);
-    assert(done != null);
-    return error(this.error, stack, retry);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result email(),
-    Result code(),
-    Result error(dynamic error, StackTrace stack, LoginState retry),
-    Result done(),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error(this.error, stack, retry);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result email(PageStateEmail value),
-    @required Result code(PageStateCode value),
-    @required Result error(PageStateError value),
-    @required Result done(PageStateDone value),
-  }) {
-    assert(email != null);
-    assert(code != null);
-    assert(error != null);
-    assert(done != null);
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result email(PageStateEmail value),
-    Result code(PageStateCode value),
-    Result error(PageStateError value),
-    Result done(PageStateDone value),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class PageStateError implements PageState {
-  const factory PageStateError(
-      dynamic error, StackTrace stack, LoginState retry) = _$PageStateError;
-
-  dynamic get error;
-  StackTrace get stack;
-  LoginState get retry;
-  $PageStateErrorCopyWith<PageStateError> get copyWith;
 }
 
 abstract class $PageStateDoneCopyWith<$Res> {
@@ -657,12 +476,10 @@ class _$PageStateDone implements PageStateDone {
   Result when<Result extends Object>({
     @required Result email(),
     @required Result code(),
-    @required Result error(dynamic error, StackTrace stack, LoginState retry),
     @required Result done(),
   }) {
     assert(email != null);
     assert(code != null);
-    assert(error != null);
     assert(done != null);
     return done();
   }
@@ -672,7 +489,6 @@ class _$PageStateDone implements PageStateDone {
   Result maybeWhen<Result extends Object>({
     Result email(),
     Result code(),
-    Result error(dynamic error, StackTrace stack, LoginState retry),
     Result done(),
     @required Result orElse(),
   }) {
@@ -688,12 +504,10 @@ class _$PageStateDone implements PageStateDone {
   Result map<Result extends Object>({
     @required Result email(PageStateEmail value),
     @required Result code(PageStateCode value),
-    @required Result error(PageStateError value),
     @required Result done(PageStateDone value),
   }) {
     assert(email != null);
     assert(code != null);
-    assert(error != null);
     assert(done != null);
     return done(this);
   }
@@ -703,7 +517,6 @@ class _$PageStateDone implements PageStateDone {
   Result maybeMap<Result extends Object>({
     Result email(PageStateEmail value),
     Result code(PageStateCode value),
-    Result error(PageStateError value),
     Result done(PageStateDone value),
     @required Result orElse(),
   }) {

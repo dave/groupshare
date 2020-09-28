@@ -7,6 +7,7 @@ import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/handle.dart';
 import 'package:groupshare/login/login.dart';
 import 'package:groupshare/share/list/list.dart';
+import 'package:groupshare/task.dart';
 
 //import 'package:formz/formz.dart';
 
@@ -17,15 +18,27 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final global = GlobalKey();
     return Scaffold(
+      key: global,
       appBar: AppBarWidget('Login'),
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: BlocProvider(
-          create: (context) => LoginCubit(
-            RepositoryProvider.of<Auth>(context),
-          ),
-          child: LoginForm(),
+          create: (context) {
+            final cubit = LoginCubit(
+              RepositoryProvider.of<Auth>(context),
+            );
+            task(
+              context,
+              null,
+              cubit.init,
+              offlineWarning: false,
+              retry: true,
+            );
+            return cubit;
+          },
+          child: LoginForm(global),
         ),
       ),
     );
@@ -33,6 +46,10 @@ class LoginPage extends StatelessWidget {
 }
 
 class LoginForm extends StatelessWidget {
+  final GlobalKey _global;
+
+  LoginForm(this._global);
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginCubit, LoginState>(
@@ -40,19 +57,6 @@ class LoginForm extends StatelessWidget {
         state.page.map(
           email: (state) => true,
           code: (state) => true,
-          error: (state) {
-            handle(
-              context,
-              state.error,
-              state.stack,
-              buttons: [
-                Button(
-                  "Retry",
-                  () => context.bloc<LoginCubit>().retry(state.retry),
-                ),
-              ],
-            );
-          },
           done: (state) {
             Navigator.of(context).pushAndRemoveUntil(
               ListPage.route(),
@@ -71,17 +75,16 @@ class LoginForm extends StatelessWidget {
                 return [
                   _EmailInput(),
                   const Padding(padding: EdgeInsets.all(12)),
-                  _EmailButton(),
+                  _EmailButton(_global),
                 ];
               },
               code: (state) {
                 return [
                   _CodeInput(),
                   const Padding(padding: EdgeInsets.all(12)),
-                  _CodeButton(),
+                  _CodeButton(_global),
                 ];
               },
-              error: (state) => [],
               done: (state) => [],
             ),
           ),
@@ -142,6 +145,10 @@ class _CodeInput extends StatelessWidget {
 }
 
 class _EmailButton extends StatelessWidget {
+  final GlobalKey _global;
+
+  _EmailButton(this._global);
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
@@ -154,9 +161,13 @@ class _EmailButton extends StatelessWidget {
             : RaisedButton(
                 key: Keys.emailSubmit,
                 child: const Text('Login email'),
-                onPressed: () {
+                onPressed: () async {
                   if (state.email.status.isValidated) {
-                    context.bloc<LoginCubit>().sendLogin();
+                    await task(
+                      context,
+                      _global,
+                      context.bloc<LoginCubit>().sendLogin,
+                    );
                   }
                 },
               );
@@ -166,6 +177,10 @@ class _EmailButton extends StatelessWidget {
 }
 
 class _CodeButton extends StatelessWidget {
+  final GlobalKey _global;
+
+  _CodeButton(this._global);
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
@@ -178,9 +193,13 @@ class _CodeButton extends StatelessWidget {
             : RaisedButton(
                 key: Keys.codeSubmit,
                 child: const Text('Login code'),
-                onPressed: () {
+                onPressed: () async {
                   if (state.code.status.isValidated) {
-                    context.bloc<LoginCubit>().sendCode();
+                    await task(
+                      context,
+                      _global,
+                      context.bloc<LoginCubit>().sendCode,
+                    );
                   }
                 },
               );

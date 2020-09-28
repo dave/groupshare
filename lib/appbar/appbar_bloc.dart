@@ -46,8 +46,8 @@ class AppBarCubit extends Cubit<AppBarState> {
   }
 
   void retry() {
-    _api.registerBackgroundTask(_data.user.refresh(), "user refresh");
-    _api.registerBackgroundTask(_data.shares.update(), "shares update");
+    _data.user.refresh();
+    _data.shares.update();
   }
 
   void emitState(ConnectionStatus state) {

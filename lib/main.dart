@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/app/app.dart';
 import 'package:groupshare/appbar/appbar.dart';
+import 'package:groupshare/task.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:protod/delta/delta.dart';
@@ -52,7 +53,6 @@ void main() async {
           // first request is about ~5 sec longer than usual, so the timeout is
           // triggered unless it's set to higher than this.
           timeout: IS_LIVE ? 8 : 12, // timeout (live: 8 sec, dev: 12 sec)
-
         );
         final auth = Auth(api, device);
         final data = Data(
@@ -85,20 +85,33 @@ void main() async {
           child: MultiBlocProvider(
             providers: [
               BlocProvider<AppCubit>(
-                create: (_) => AppCubit(
-                  device,
-                  discovery,
-                  connection,
-                  api,
-                  auth,
-                  data,
-                )..init(),
+                create: (context) {
+                  final cubit = AppCubit(
+                    device,
+                    discovery,
+                    connection,
+                    api,
+                    auth,
+                    data,
+                  );
+                  task(
+                    context,
+                    null,
+                    cubit.init,
+                    offlineWarning: false,
+                    retry: true,
+                  );
+                  return cubit;
+                },
               ),
               BlocProvider<AppBarCubit>(
-                create: (_) => AppBarCubit(
-                  api,
-                  data,
-                ),
+                create: (context) {
+                  final cubit = AppBarCubit(
+                    api,
+                    data,
+                  );
+                  return cubit;
+                },
               ),
             ],
             child: AppView(),

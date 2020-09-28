@@ -60,7 +60,6 @@ class ListCubit extends Cubit<ListState> {
             event is DataEventSending ||
             event is DataEventSent ||
             event is DataEventDeleted) {
-          print("$event");
           emit(_listPage());
         }
       });
@@ -68,7 +67,6 @@ class ListCubit extends Cubit<ListState> {
     if (_userSubscription == null) {
       _userSubscription = _data.user.stream.listen((DataEvent<User> event) {
         if (event is DataEventApply) {
-          print("$event");
           emit(_listPage());
         }
       });

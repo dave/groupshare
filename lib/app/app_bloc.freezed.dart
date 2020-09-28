@@ -33,14 +33,6 @@ class _$AppStateTearOff {
   AppStateOffline offline() {
     return const AppStateOffline();
   }
-
-// ignore: unused_element
-  AppStateError error(dynamic error, StackTrace stack) {
-    return AppStateError(
-      error,
-      stack,
-    );
-  }
 }
 
 // ignore: unused_element
@@ -53,7 +45,6 @@ mixin _$AppState {
     @required Result login(bool auth),
     @required Result done(),
     @required Result offline(),
-    @required Result error(dynamic error, StackTrace stack),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
@@ -61,7 +52,6 @@ mixin _$AppState {
     Result login(bool auth),
     Result done(),
     Result offline(),
-    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -70,7 +60,6 @@ mixin _$AppState {
     @required Result login(AppStateLogin value),
     @required Result done(AppStateDone value),
     @required Result offline(AppStateOffline value),
-    @required Result error(AppStateError value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
@@ -78,7 +67,6 @@ mixin _$AppState {
     Result login(AppStateLogin value),
     Result done(AppStateDone value),
     Result offline(AppStateOffline value),
-    Result error(AppStateError value),
     @required Result orElse(),
   });
 }
@@ -135,13 +123,11 @@ class _$AppStateLoading implements AppStateLoading {
     @required Result login(bool auth),
     @required Result done(),
     @required Result offline(),
-    @required Result error(dynamic error, StackTrace stack),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
     assert(offline != null);
-    assert(error != null);
     return loading();
   }
 
@@ -152,7 +138,6 @@ class _$AppStateLoading implements AppStateLoading {
     Result login(bool auth),
     Result done(),
     Result offline(),
-    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -169,13 +154,11 @@ class _$AppStateLoading implements AppStateLoading {
     @required Result login(AppStateLogin value),
     @required Result done(AppStateDone value),
     @required Result offline(AppStateOffline value),
-    @required Result error(AppStateError value),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
     assert(offline != null);
-    assert(error != null);
     return loading(this);
   }
 
@@ -186,7 +169,6 @@ class _$AppStateLoading implements AppStateLoading {
     Result login(AppStateLogin value),
     Result done(AppStateDone value),
     Result offline(AppStateOffline value),
-    Result error(AppStateError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -261,13 +243,11 @@ class _$AppStateLogin implements AppStateLogin {
     @required Result login(bool auth),
     @required Result done(),
     @required Result offline(),
-    @required Result error(dynamic error, StackTrace stack),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
     assert(offline != null);
-    assert(error != null);
     return login(auth);
   }
 
@@ -278,7 +258,6 @@ class _$AppStateLogin implements AppStateLogin {
     Result login(bool auth),
     Result done(),
     Result offline(),
-    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -295,13 +274,11 @@ class _$AppStateLogin implements AppStateLogin {
     @required Result login(AppStateLogin value),
     @required Result done(AppStateDone value),
     @required Result offline(AppStateOffline value),
-    @required Result error(AppStateError value),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
     assert(offline != null);
-    assert(error != null);
     return login(this);
   }
 
@@ -312,7 +289,6 @@ class _$AppStateLogin implements AppStateLogin {
     Result login(AppStateLogin value),
     Result done(AppStateDone value),
     Result offline(AppStateOffline value),
-    Result error(AppStateError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -369,13 +345,11 @@ class _$AppStateDone implements AppStateDone {
     @required Result login(bool auth),
     @required Result done(),
     @required Result offline(),
-    @required Result error(dynamic error, StackTrace stack),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
     assert(offline != null);
-    assert(error != null);
     return done();
   }
 
@@ -386,7 +360,6 @@ class _$AppStateDone implements AppStateDone {
     Result login(bool auth),
     Result done(),
     Result offline(),
-    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -403,13 +376,11 @@ class _$AppStateDone implements AppStateDone {
     @required Result login(AppStateLogin value),
     @required Result done(AppStateDone value),
     @required Result offline(AppStateOffline value),
-    @required Result error(AppStateError value),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
     assert(offline != null);
-    assert(error != null);
     return done(this);
   }
 
@@ -420,7 +391,6 @@ class _$AppStateDone implements AppStateDone {
     Result login(AppStateLogin value),
     Result done(AppStateDone value),
     Result offline(AppStateOffline value),
-    Result error(AppStateError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -474,13 +444,11 @@ class _$AppStateOffline implements AppStateOffline {
     @required Result login(bool auth),
     @required Result done(),
     @required Result offline(),
-    @required Result error(dynamic error, StackTrace stack),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
     assert(offline != null);
-    assert(error != null);
     return offline();
   }
 
@@ -491,7 +459,6 @@ class _$AppStateOffline implements AppStateOffline {
     Result login(bool auth),
     Result done(),
     Result offline(),
-    Result error(dynamic error, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -508,13 +475,11 @@ class _$AppStateOffline implements AppStateOffline {
     @required Result login(AppStateLogin value),
     @required Result done(AppStateDone value),
     @required Result offline(AppStateOffline value),
-    @required Result error(AppStateError value),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
     assert(offline != null);
-    assert(error != null);
     return offline(this);
   }
 
@@ -525,7 +490,6 @@ class _$AppStateOffline implements AppStateOffline {
     Result login(AppStateLogin value),
     Result done(AppStateDone value),
     Result offline(AppStateOffline value),
-    Result error(AppStateError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -538,145 +502,4 @@ class _$AppStateOffline implements AppStateOffline {
 
 abstract class AppStateOffline implements AppState {
   const factory AppStateOffline() = _$AppStateOffline;
-}
-
-abstract class $AppStateErrorCopyWith<$Res> {
-  factory $AppStateErrorCopyWith(
-          AppStateError value, $Res Function(AppStateError) then) =
-      _$AppStateErrorCopyWithImpl<$Res>;
-  $Res call({dynamic error, StackTrace stack});
-}
-
-class _$AppStateErrorCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
-    implements $AppStateErrorCopyWith<$Res> {
-  _$AppStateErrorCopyWithImpl(
-      AppStateError _value, $Res Function(AppStateError) _then)
-      : super(_value, (v) => _then(v as AppStateError));
-
-  @override
-  AppStateError get _value => super._value as AppStateError;
-
-  @override
-  $Res call({
-    Object error = freezed,
-    Object stack = freezed,
-  }) {
-    return _then(AppStateError(
-      error == freezed ? _value.error : error as dynamic,
-      stack == freezed ? _value.stack : stack as StackTrace,
-    ));
-  }
-}
-
-class _$AppStateError implements AppStateError {
-  const _$AppStateError(this.error, this.stack)
-      : assert(error != null),
-        assert(stack != null);
-
-  @override
-  final dynamic error;
-  @override
-  final StackTrace stack;
-
-  @override
-  String toString() {
-    return 'AppState.error(error: $error, stack: $stack)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is AppStateError &&
-            (identical(other.error, error) ||
-                const DeepCollectionEquality().equals(other.error, error)) &&
-            (identical(other.stack, stack) ||
-                const DeepCollectionEquality().equals(other.stack, stack)));
-  }
-
-  @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(error) ^
-      const DeepCollectionEquality().hash(stack);
-
-  @override
-  $AppStateErrorCopyWith<AppStateError> get copyWith =>
-      _$AppStateErrorCopyWithImpl<AppStateError>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result loading(),
-    @required Result login(bool auth),
-    @required Result done(),
-    @required Result offline(),
-    @required Result error(dynamic error, StackTrace stack),
-  }) {
-    assert(loading != null);
-    assert(login != null);
-    assert(done != null);
-    assert(offline != null);
-    assert(error != null);
-    return error(this.error, stack);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result loading(),
-    Result login(bool auth),
-    Result done(),
-    Result offline(),
-    Result error(dynamic error, StackTrace stack),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error(this.error, stack);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result loading(AppStateLoading value),
-    @required Result login(AppStateLogin value),
-    @required Result done(AppStateDone value),
-    @required Result offline(AppStateOffline value),
-    @required Result error(AppStateError value),
-  }) {
-    assert(loading != null);
-    assert(login != null);
-    assert(done != null);
-    assert(offline != null);
-    assert(error != null);
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result loading(AppStateLoading value),
-    Result login(AppStateLogin value),
-    Result done(AppStateDone value),
-    Result offline(AppStateOffline value),
-    Result error(AppStateError value),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class AppStateError implements AppState {
-  const factory AppStateError(dynamic error, StackTrace stack) =
-      _$AppStateError;
-
-  dynamic get error;
-  StackTrace get stack;
-  $AppStateErrorCopyWith<AppStateError> get copyWith;
 }

@@ -55,19 +55,6 @@ class _AppViewState extends State<AppView> {
                 ],
               );
             },
-            error: (state) {
-              handle(
-                context,
-                state.error,
-                state.stack,
-                buttons: [
-                  Button(
-                    "Retry",
-                    () => context.bloc<AppCubit>().init(),
-                  ),
-                ],
-              );
-            },
           );
         },
         builder: (context, state) {
@@ -76,7 +63,6 @@ class _AppViewState extends State<AppView> {
               loading: (state) => Center(child: CircularProgressIndicator()),
               login: (state) => Container(),
               done: (state) => Container(),
-              error: (state) => Container(),
               offline: (state) => Container(),
             ),
           );

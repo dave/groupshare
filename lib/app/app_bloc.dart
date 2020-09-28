@@ -14,13 +14,12 @@ part 'app_bloc.freezed.dart';
 @freezed
 abstract class AppState with _$AppState {
   const factory AppState.loading() = AppStateLoading;
+
   const factory AppState.login(bool auth) = AppStateLogin;
+
   const factory AppState.done() = AppStateDone;
+
   const factory AppState.offline() = AppStateOffline;
-  const factory AppState.error(
-    dynamic error,
-    StackTrace stack,
-  ) = AppStateError;
 }
 
 class AppCubit extends Cubit<AppState> {
@@ -60,17 +59,11 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<void> init() async {
-    try {
-      emit(AppState.loading());
-      await _device.init();
-      await _discovery.init();
-      await _api.init();
-      await _auth.init();
-      await _data.init();
-    } catch (ex, stack) {
-      emit(AppState.error(ex, stack));
-      return;
-    }
+    await _device.init();
+    await _discovery.init();
+    await _api.init();
+    await _auth.init();
+    await _data.init();
     authStatusChange();
   }
 

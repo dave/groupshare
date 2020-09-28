@@ -23,12 +23,6 @@ abstract class PageState with _$PageState {
 
   const factory PageState.code() = PageStateCode;
 
-  const factory PageState.error(
-    dynamic error,
-    StackTrace stack,
-    LoginState retry,
-  ) = PageStateError;
-
   const factory PageState.done() = PageStateDone;
 }
 
@@ -53,16 +47,18 @@ class LoginCubit extends Cubit<LoginState> {
   StreamSubscription<Status> _subscription;
 
   LoginCubit(this._auth)
-      : super(
-          LoginState(
-            PageState.email(),
-            EmailFormState(),
-            CodeFormState(),
-          ),
-        ) {
-    _subscription = _auth.statusChange.listen(
-      (Status value) => change(value),
-    );
+      : super(LoginState(
+          PageState.email(),
+          EmailFormState(),
+          CodeFormState(),
+        ));
+
+  Future<void> init() async {
+    if (_subscription == null) {
+      _subscription = _auth.statusChange.listen(
+        (Status value) => change(value),
+      );
+    }
   }
 
   @override
@@ -85,10 +81,6 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  void retry(LoginState retry) {
-    emit(retry);
-  }
-
   void emailChanged(String email) {
     final value = Email.dirty(email);
     emit(state.copyWith(
@@ -100,7 +92,6 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> sendLogin() async {
-    final retryState = state;
     try {
       emit(state.copyWith(
         email: state.email.copyWith(
@@ -108,8 +99,13 @@ class LoginCubit extends Cubit<LoginState> {
         ),
       ));
       await _auth.login(state.email.email.value);
-    } catch (ex, stack) {
-      emit(state.copyWith(page: PageState.error(ex, stack, retryState)));
+    } finally {
+      // reset submissionInProgress status
+      emit(state.copyWith(
+        email: state.email.copyWith(
+          status: Formz.validate([state.email.email]),
+        ),
+      ));
     }
   }
 
@@ -124,7 +120,6 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> sendCode() async {
-    final retryState = state;
     try {
       emit(state.copyWith(
         code: state.code.copyWith(
@@ -132,8 +127,13 @@ class LoginCubit extends Cubit<LoginState> {
         ),
       ));
       await _auth.code(state.code.code.value);
-    } catch (ex, stack) {
-      emit(state.copyWith(page: PageState.error(ex, stack, retryState)));
+    } finally {
+      // reset submissionInProgress status
+      emit(state.copyWith(
+        code: state.code.copyWith(
+          status: Formz.validate([state.code.code]),
+        ),
+      ));
     }
   }
 }
