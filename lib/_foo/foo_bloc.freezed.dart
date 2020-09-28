@@ -286,22 +286,13 @@ class _$PageStateTearOff {
   const _$PageStateTearOff();
 
 // ignore: unused_element
-  PageStateInitial initial() {
-    return const PageStateInitial();
+  PageStateLoading loading() {
+    return const PageStateLoading();
   }
 
 // ignore: unused_element
   PageStateForm form() {
     return const PageStateForm();
-  }
-
-// ignore: unused_element
-  PageStateError error(dynamic error, StackTrace stack, FooState retry) {
-    return PageStateError(
-      error,
-      stack,
-      retry,
-    );
   }
 
 // ignore: unused_element
@@ -316,31 +307,27 @@ const $PageState = _$PageStateTearOff();
 mixin _$PageState {
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result initial(),
+    @required Result loading(),
     @required Result form(),
-    @required Result error(dynamic error, StackTrace stack, FooState retry),
     @required Result done(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result initial(),
+    Result loading(),
     Result form(),
-    Result error(dynamic error, StackTrace stack, FooState retry),
     Result done(),
     @required Result orElse(),
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result initial(PageStateInitial value),
+    @required Result loading(PageStateLoading value),
     @required Result form(PageStateForm value),
-    @required Result error(PageStateError value),
     @required Result done(PageStateDone value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result initial(PageStateInitial value),
+    Result loading(PageStateLoading value),
     Result form(PageStateForm value),
-    Result error(PageStateError value),
     Result done(PageStateDone value),
     @required Result orElse(),
   });
@@ -359,33 +346,33 @@ class _$PageStateCopyWithImpl<$Res> implements $PageStateCopyWith<$Res> {
   final $Res Function(PageState) _then;
 }
 
-abstract class $PageStateInitialCopyWith<$Res> {
-  factory $PageStateInitialCopyWith(
-          PageStateInitial value, $Res Function(PageStateInitial) then) =
-      _$PageStateInitialCopyWithImpl<$Res>;
+abstract class $PageStateLoadingCopyWith<$Res> {
+  factory $PageStateLoadingCopyWith(
+          PageStateLoading value, $Res Function(PageStateLoading) then) =
+      _$PageStateLoadingCopyWithImpl<$Res>;
 }
 
-class _$PageStateInitialCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
-    implements $PageStateInitialCopyWith<$Res> {
-  _$PageStateInitialCopyWithImpl(
-      PageStateInitial _value, $Res Function(PageStateInitial) _then)
-      : super(_value, (v) => _then(v as PageStateInitial));
+class _$PageStateLoadingCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
+    implements $PageStateLoadingCopyWith<$Res> {
+  _$PageStateLoadingCopyWithImpl(
+      PageStateLoading _value, $Res Function(PageStateLoading) _then)
+      : super(_value, (v) => _then(v as PageStateLoading));
 
   @override
-  PageStateInitial get _value => super._value as PageStateInitial;
+  PageStateLoading get _value => super._value as PageStateLoading;
 }
 
-class _$PageStateInitial implements PageStateInitial {
-  const _$PageStateInitial();
+class _$PageStateLoading implements PageStateLoading {
+  const _$PageStateLoading();
 
   @override
   String toString() {
-    return 'PageState.initial()';
+    return 'PageState.loading()';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is PageStateInitial);
+    return identical(this, other) || (other is PageStateLoading);
   }
 
   @override
@@ -394,30 +381,27 @@ class _$PageStateInitial implements PageStateInitial {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result initial(),
+    @required Result loading(),
     @required Result form(),
-    @required Result error(dynamic error, StackTrace stack, FooState retry),
     @required Result done(),
   }) {
-    assert(initial != null);
+    assert(loading != null);
     assert(form != null);
-    assert(error != null);
     assert(done != null);
-    return initial();
+    return loading();
   }
 
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result initial(),
+    Result loading(),
     Result form(),
-    Result error(dynamic error, StackTrace stack, FooState retry),
     Result done(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
-    if (initial != null) {
-      return initial();
+    if (loading != null) {
+      return loading();
     }
     return orElse();
   }
@@ -425,37 +409,34 @@ class _$PageStateInitial implements PageStateInitial {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result initial(PageStateInitial value),
+    @required Result loading(PageStateLoading value),
     @required Result form(PageStateForm value),
-    @required Result error(PageStateError value),
     @required Result done(PageStateDone value),
   }) {
-    assert(initial != null);
+    assert(loading != null);
     assert(form != null);
-    assert(error != null);
     assert(done != null);
-    return initial(this);
+    return loading(this);
   }
 
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result initial(PageStateInitial value),
+    Result loading(PageStateLoading value),
     Result form(PageStateForm value),
-    Result error(PageStateError value),
     Result done(PageStateDone value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
-    if (initial != null) {
-      return initial(this);
+    if (loading != null) {
+      return loading(this);
     }
     return orElse();
   }
 }
 
-abstract class PageStateInitial implements PageState {
-  const factory PageStateInitial() = _$PageStateInitial;
+abstract class PageStateLoading implements PageState {
+  const factory PageStateLoading() = _$PageStateLoading;
 }
 
 abstract class $PageStateFormCopyWith<$Res> {
@@ -493,14 +474,12 @@ class _$PageStateForm implements PageStateForm {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result initial(),
+    @required Result loading(),
     @required Result form(),
-    @required Result error(dynamic error, StackTrace stack, FooState retry),
     @required Result done(),
   }) {
-    assert(initial != null);
+    assert(loading != null);
     assert(form != null);
-    assert(error != null);
     assert(done != null);
     return form();
   }
@@ -508,9 +487,8 @@ class _$PageStateForm implements PageStateForm {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result initial(),
+    Result loading(),
     Result form(),
-    Result error(dynamic error, StackTrace stack, FooState retry),
     Result done(),
     @required Result orElse(),
   }) {
@@ -524,14 +502,12 @@ class _$PageStateForm implements PageStateForm {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result initial(PageStateInitial value),
+    @required Result loading(PageStateLoading value),
     @required Result form(PageStateForm value),
-    @required Result error(PageStateError value),
     @required Result done(PageStateDone value),
   }) {
-    assert(initial != null);
+    assert(loading != null);
     assert(form != null);
-    assert(error != null);
     assert(done != null);
     return form(this);
   }
@@ -539,9 +515,8 @@ class _$PageStateForm implements PageStateForm {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result initial(PageStateInitial value),
+    Result loading(PageStateLoading value),
     Result form(PageStateForm value),
-    Result error(PageStateError value),
     Result done(PageStateDone value),
     @required Result orElse(),
   }) {
@@ -555,162 +530,6 @@ class _$PageStateForm implements PageStateForm {
 
 abstract class PageStateForm implements PageState {
   const factory PageStateForm() = _$PageStateForm;
-}
-
-abstract class $PageStateErrorCopyWith<$Res> {
-  factory $PageStateErrorCopyWith(
-          PageStateError value, $Res Function(PageStateError) then) =
-      _$PageStateErrorCopyWithImpl<$Res>;
-  $Res call({dynamic error, StackTrace stack, FooState retry});
-
-  $FooStateCopyWith<$Res> get retry;
-}
-
-class _$PageStateErrorCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
-    implements $PageStateErrorCopyWith<$Res> {
-  _$PageStateErrorCopyWithImpl(
-      PageStateError _value, $Res Function(PageStateError) _then)
-      : super(_value, (v) => _then(v as PageStateError));
-
-  @override
-  PageStateError get _value => super._value as PageStateError;
-
-  @override
-  $Res call({
-    Object error = freezed,
-    Object stack = freezed,
-    Object retry = freezed,
-  }) {
-    return _then(PageStateError(
-      error == freezed ? _value.error : error as dynamic,
-      stack == freezed ? _value.stack : stack as StackTrace,
-      retry == freezed ? _value.retry : retry as FooState,
-    ));
-  }
-
-  @override
-  $FooStateCopyWith<$Res> get retry {
-    if (_value.retry == null) {
-      return null;
-    }
-    return $FooStateCopyWith<$Res>(_value.retry, (value) {
-      return _then(_value.copyWith(retry: value));
-    });
-  }
-}
-
-class _$PageStateError implements PageStateError {
-  const _$PageStateError(this.error, this.stack, this.retry)
-      : assert(error != null),
-        assert(stack != null),
-        assert(retry != null);
-
-  @override
-  final dynamic error;
-  @override
-  final StackTrace stack;
-  @override
-  final FooState retry;
-
-  @override
-  String toString() {
-    return 'PageState.error(error: $error, stack: $stack, retry: $retry)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is PageStateError &&
-            (identical(other.error, error) ||
-                const DeepCollectionEquality().equals(other.error, error)) &&
-            (identical(other.stack, stack) ||
-                const DeepCollectionEquality().equals(other.stack, stack)) &&
-            (identical(other.retry, retry) ||
-                const DeepCollectionEquality().equals(other.retry, retry)));
-  }
-
-  @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(error) ^
-      const DeepCollectionEquality().hash(stack) ^
-      const DeepCollectionEquality().hash(retry);
-
-  @override
-  $PageStateErrorCopyWith<PageStateError> get copyWith =>
-      _$PageStateErrorCopyWithImpl<PageStateError>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result initial(),
-    @required Result form(),
-    @required Result error(dynamic error, StackTrace stack, FooState retry),
-    @required Result done(),
-  }) {
-    assert(initial != null);
-    assert(form != null);
-    assert(error != null);
-    assert(done != null);
-    return error(this.error, stack, retry);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result initial(),
-    Result form(),
-    Result error(dynamic error, StackTrace stack, FooState retry),
-    Result done(),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error(this.error, stack, retry);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result initial(PageStateInitial value),
-    @required Result form(PageStateForm value),
-    @required Result error(PageStateError value),
-    @required Result done(PageStateDone value),
-  }) {
-    assert(initial != null);
-    assert(form != null);
-    assert(error != null);
-    assert(done != null);
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result initial(PageStateInitial value),
-    Result form(PageStateForm value),
-    Result error(PageStateError value),
-    Result done(PageStateDone value),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class PageStateError implements PageState {
-  const factory PageStateError(
-      dynamic error, StackTrace stack, FooState retry) = _$PageStateError;
-
-  dynamic get error;
-  StackTrace get stack;
-  FooState get retry;
-  $PageStateErrorCopyWith<PageStateError> get copyWith;
 }
 
 abstract class $PageStateDoneCopyWith<$Res> {
@@ -748,14 +567,12 @@ class _$PageStateDone implements PageStateDone {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result initial(),
+    @required Result loading(),
     @required Result form(),
-    @required Result error(dynamic error, StackTrace stack, FooState retry),
     @required Result done(),
   }) {
-    assert(initial != null);
+    assert(loading != null);
     assert(form != null);
-    assert(error != null);
     assert(done != null);
     return done();
   }
@@ -763,9 +580,8 @@ class _$PageStateDone implements PageStateDone {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result initial(),
+    Result loading(),
     Result form(),
-    Result error(dynamic error, StackTrace stack, FooState retry),
     Result done(),
     @required Result orElse(),
   }) {
@@ -779,14 +595,12 @@ class _$PageStateDone implements PageStateDone {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result initial(PageStateInitial value),
+    @required Result loading(PageStateLoading value),
     @required Result form(PageStateForm value),
-    @required Result error(PageStateError value),
     @required Result done(PageStateDone value),
   }) {
-    assert(initial != null);
+    assert(loading != null);
     assert(form != null);
-    assert(error != null);
     assert(done != null);
     return done(this);
   }
@@ -794,9 +608,8 @@ class _$PageStateDone implements PageStateDone {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result initial(PageStateInitial value),
+    Result loading(PageStateLoading value),
     Result form(PageStateForm value),
-    Result error(PageStateError value),
     Result done(PageStateDone value),
     @required Result orElse(),
   }) {

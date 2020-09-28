@@ -5,6 +5,7 @@ import 'package:formz/formz.dart';
 import 'package:groupshare/_foo/foo.dart';
 import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/handle.dart';
+import 'package:groupshare/task.dart';
 
 class FooPage extends StatelessWidget {
   static Route route() {
@@ -13,15 +14,28 @@ class FooPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final global = GlobalKey();
     return Scaffold(
+      key: global,
       appBar: AppBarWidget('Title'),
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: BlocProvider(
-          create: (context) => FooCubit(
-            RepositoryProvider.of<Data>(context),
-          ),
-          child: FooForm(),
+          create: (context) {
+            final cubit = FooCubit(
+              RepositoryProvider.of<Data>(context),
+            );
+            task(
+              context,
+              null,
+              cubit.init,
+              offlineWarning: false,
+              home: true,
+              retry: true,
+            );
+            return cubit;
+          },
+          child: FooForm(global),
         ),
       ),
     );
@@ -29,6 +43,10 @@ class FooPage extends StatelessWidget {
 }
 
 class FooForm extends StatelessWidget {
+  final GlobalKey _global;
+
+  FooForm(this._global);
+
   @override
   Widget build(BuildContext context) {
     final global = GlobalKey();
@@ -36,21 +54,8 @@ class FooForm extends StatelessWidget {
       key: global,
       listener: (context, state) {
         state.page.map(
-          initial: (state) {},
+          loading: (state) {},
           form: (state) {},
-          error: (state) {
-            handle(
-              context,
-              state.error,
-              state.stack,
-              buttons: [
-                Button(
-                  "Retry",
-                  () => context.bloc<FooCubit>().retry(state.retry),
-                )
-              ],
-            );
-          },
           done: (state) => true,
         );
       },
@@ -60,15 +65,14 @@ class FooForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: state.page.map(
-              initial: (state) => [],
+              loading: (state) => [Center(child: CircularProgressIndicator())],
               form: (state) {
                 return [
                   _NameInput(),
                   const Padding(padding: EdgeInsets.all(12)),
-                  _SubmitButton(),
+                  _SubmitButton(_global),
                 ];
               },
-              error: (state) => [],
               done: (state) => [],
             ),
           ),
@@ -104,6 +108,10 @@ class _NameInput extends StatelessWidget {
 }
 
 class _SubmitButton extends StatelessWidget {
+  final GlobalKey _global;
+
+  _SubmitButton(this._global);
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FooCubit, FooState>(
@@ -116,9 +124,14 @@ class _SubmitButton extends StatelessWidget {
             : RaisedButton(
                 key: Keys.submit,
                 child: const Text('Submit'),
-                onPressed: () {
+                onPressed: () async {
                   if (state.form.status.isValidated) {
-                    context.bloc<FooCubit>().submit();
+                    await task(
+                      context,
+                      _global,
+                      context.bloc<FooCubit>().submit,
+                      offlineWarning: false,
+                    );
                   }
                 },
               );
