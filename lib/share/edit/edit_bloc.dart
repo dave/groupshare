@@ -29,22 +29,9 @@ abstract class FormState with _$FormState {
 
 @freezed
 abstract class PageState with _$PageState {
-  const factory PageState.initial() = PageStateInitial;
-
   const factory PageState.loading() = PageStateLoading;
 
   const factory PageState.form() = PageStateForm;
-
-  const factory PageState.formError(
-    dynamic error,
-    StackTrace stack,
-    EditState retry,
-  ) = PageStateFormError;
-
-  const factory PageState.pageError(
-    dynamic error,
-    StackTrace stack,
-  ) = PageStatePageError;
 
   const factory PageState.done(String route) = PageStateDone;
 }
@@ -55,65 +42,46 @@ class EditCubit extends Cubit<EditState> {
   final String _back;
 
   EditCubit(this._id, this._back, this._data)
-      : super(
-          EditState(
-            PageState.initial(),
-            FormState(),
-          ),
-        );
+      : super(EditState(PageState.loading(), FormState()));
 
   Future<void> init() async {
-    try {
-      emit(state.copyWith(page: PageState.loading()));
-      final share = await _data.shares.item(_id);
-      if (share == null) {
-        throw UserException("Can't find document");
-      }
-      final nameValue = Name.dirty(share.value.name);
-      emit(
-        state.copyWith(
-          page: PageState.form(),
-          form: FormState(
-            initialName: share.value.name,
-            name: nameValue,
-            status: Formz.validate([nameValue]),
-          ),
-        ),
-      );
-    } catch (ex, stack) {
-      emit(state.copyWith(
-        page: PageState.pageError(ex, stack),
-      ));
+    final share = await _data.shares.item(_id);
+    if (share == null) {
+      throw UserException("Can't find document");
     }
+    final value = Name.dirty(share.value.name);
+    emit(state.copyWith(
+      page: PageState.form(),
+      form: FormState(
+        initialName: share.value.name,
+        name: value,
+        status: Formz.validate([value]),
+      ),
+    ));
   }
 
   void nameChanged(String name) {
-    final nameValue = Name.dirty(name);
-    emit(
-      state.copyWith(
-        form: state.form.copyWith(
-          name: nameValue,
-          status: Formz.validate([nameValue]),
-        ),
+    final value = Name.dirty(name);
+    emit(state.copyWith(
+      form: state.form.copyWith(
+        name: value,
+        status: Formz.validate([value]),
       ),
-    );
+    ));
   }
 
   Future<void> submit() async {
-    final retryState = state;
     try {
       if (state.form.initialName == state.form.name.value) {
         emit(state.copyWith(page: PageState.done(_back)));
         return;
       }
 
-      emit(
-        state.copyWith(
-          form: state.form.copyWith(
-            status: FormzStatus.submissionInProgress,
-          ),
+      emit(state.copyWith(
+        form: state.form.copyWith(
+          status: FormzStatus.submissionInProgress,
         ),
-      );
+      ));
 
       final share = await _data.shares.item(_id);
 
@@ -135,16 +103,13 @@ class EditCubit extends Cubit<EditState> {
           page: PageState.done(_back),
         ),
       );
-    } catch (ex, stack) {
-      emit(
-        state.copyWith(
-          page: PageState.formError(ex, stack, retryState),
+    } finally {
+      // reset submissionInProgress status
+      emit(state.copyWith(
+        form: state.form.copyWith(
+          status: Formz.validate([state.form.name]),
         ),
-      );
+      ));
     }
-  }
-
-  void retry(EditState retryState) {
-    emit(retryState);
   }
 }

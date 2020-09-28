@@ -6,6 +6,7 @@ import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/add/add.dart';
 import 'package:groupshare/share/list/list.dart';
+import 'package:groupshare/task.dart';
 
 class AddPage extends StatelessWidget {
   static Route route() {
@@ -36,19 +37,6 @@ class AddForm extends StatelessWidget {
       listener: (context, state) {
         state.page.map(
           form: (state) => true,
-          error: (state) {
-            handle(
-              context,
-              state.error,
-              state.stack,
-              buttons: [
-                Button(
-                  "Retry",
-                  () => context.bloc<AddCubit>().retry(state.retryState),
-                )
-              ],
-            );
-          },
           done: (state) {
             Navigator.of(context).popUntil(
               ModalRoute.withName(ListPage.routeName),
@@ -69,7 +57,6 @@ class AddForm extends StatelessWidget {
                   _AddButton(),
                 ];
               },
-              error: (state) => [],
               done: (state) => [],
             ),
           ),
@@ -119,9 +106,14 @@ class _AddButton extends StatelessWidget {
             : RaisedButton(
                 key: Keys.submit,
                 child: const Text('Add'),
-                onPressed: () {
+                onPressed: () async {
                   if (state.form.status.isValidated) {
-                    context.bloc<AddCubit>().add();
+                    await task(
+                      context,
+                      null,
+                      context.bloc<AddCubit>().submit,
+                      offlineWarning: false,
+                    );
                   }
                 },
               );
