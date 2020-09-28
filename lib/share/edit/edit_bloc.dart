@@ -50,11 +50,11 @@ abstract class PageState with _$PageState {
 }
 
 class EditCubit extends Cubit<EditState> {
-  final Data data;
-  final String id;
-  final String back;
+  final Data _data;
+  final String _id;
+  final String _back;
 
-  EditCubit(this.id, this.back, this.data)
+  EditCubit(this._id, this._back, this._data)
       : super(
           EditState(
             PageState.initial(),
@@ -63,28 +63,28 @@ class EditCubit extends Cubit<EditState> {
         );
 
   Future<void> init() async {
-    emit(state.copyWith(page: PageState.loading()));
-    final share = await data.shares.item(id);
-    if (share == null) {
+    try {
+      emit(state.copyWith(page: PageState.loading()));
+      final share = await _data.shares.item(_id);
+      if (share == null) {
+        throw UserException("Can't find document");
+      }
+      final nameValue = Name.dirty(share.value.name);
+      emit(
+        state.copyWith(
+          page: PageState.form(),
+          form: FormState(
+            initialName: share.value.name,
+            name: nameValue,
+            status: Formz.validate([nameValue]),
+          ),
+        ),
+      );
+    } catch (ex, stack) {
       emit(state.copyWith(
-        page: PageState.pageError(
-          UserException("Can't find document"),
-          StackTrace.current,
-        ),
+        page: PageState.pageError(ex, stack),
       ));
-      return;
     }
-    final nameValue = Name.dirty(share.value.name);
-    emit(
-      state.copyWith(
-        page: PageState.form(),
-        form: FormState(
-          initialName: share.value.name,
-          name: nameValue,
-          status: Formz.validate([nameValue]),
-        ),
-      ),
-    );
   }
 
   void nameChanged(String name) {
@@ -103,7 +103,7 @@ class EditCubit extends Cubit<EditState> {
     final retryState = state;
     try {
       if (state.form.initialName == state.form.name.value) {
-        emit(state.copyWith(page: PageState.done(back)));
+        emit(state.copyWith(page: PageState.done(_back)));
         return;
       }
 
@@ -115,24 +115,24 @@ class EditCubit extends Cubit<EditState> {
         ),
       );
 
-      final share = await data.shares.item(id);
+      final share = await _data.shares.item(_id);
 
       share.op(
         op.share.name.edit(state.form.initialName, state.form.name.value),
       );
 
-      final userDataIndex = data.user.value.shares.indexWhere(
-        (s) => s.id == id,
+      final userDataIndex = _data.user.value.shares.indexWhere(
+        (s) => s.id == _id,
       );
       if (userDataIndex > -1) {
-        data.user.op(
+        _data.user.op(
           op.user.shares.index(userDataIndex).name.set(state.form.name.value),
         );
       }
 
       emit(
         state.copyWith(
-          page: PageState.done(back),
+          page: PageState.done(_back),
         ),
       );
     } catch (ex, stack) {

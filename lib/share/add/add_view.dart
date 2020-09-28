@@ -50,9 +50,8 @@ class AddForm extends StatelessWidget {
             );
           },
           done: (state) {
-            Navigator.of(context).pushAndRemoveUntil(
-              ListPage.route(),
-              (route) => false,
+            Navigator.of(context).popUntil(
+              ModalRoute.withName(ListPage.routeName),
             );
           },
         );

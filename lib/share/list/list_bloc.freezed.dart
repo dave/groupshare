@@ -153,11 +153,6 @@ class _$PageStateTearOff {
   const _$PageStateTearOff();
 
 // ignore: unused_element
-  PageStateOffline offline() {
-    return const PageStateOffline();
-  }
-
-// ignore: unused_element
   PageStateLoading loading() {
     return const PageStateLoading();
   }
@@ -165,14 +160,6 @@ class _$PageStateTearOff {
 // ignore: unused_element
   PageStateList list() {
     return const PageStateList();
-  }
-
-// ignore: unused_element
-  PageStateError error(dynamic ex, StackTrace stack) {
-    return PageStateError(
-      ex,
-      stack,
-    );
   }
 }
 
@@ -182,32 +169,24 @@ const $PageState = _$PageStateTearOff();
 mixin _$PageState {
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result offline(),
     @required Result loading(),
     @required Result list(),
-    @required Result error(dynamic ex, StackTrace stack),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result offline(),
     Result loading(),
     Result list(),
-    Result error(dynamic ex, StackTrace stack),
     @required Result orElse(),
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result offline(PageStateOffline value),
     @required Result loading(PageStateLoading value),
     @required Result list(PageStateList value),
-    @required Result error(PageStateError value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result offline(PageStateOffline value),
     Result loading(PageStateLoading value),
     Result list(PageStateList value),
-    Result error(PageStateError value),
     @required Result orElse(),
   });
 }
@@ -223,105 +202,6 @@ class _$PageStateCopyWithImpl<$Res> implements $PageStateCopyWith<$Res> {
   final PageState _value;
   // ignore: unused_field
   final $Res Function(PageState) _then;
-}
-
-abstract class $PageStateOfflineCopyWith<$Res> {
-  factory $PageStateOfflineCopyWith(
-          PageStateOffline value, $Res Function(PageStateOffline) then) =
-      _$PageStateOfflineCopyWithImpl<$Res>;
-}
-
-class _$PageStateOfflineCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
-    implements $PageStateOfflineCopyWith<$Res> {
-  _$PageStateOfflineCopyWithImpl(
-      PageStateOffline _value, $Res Function(PageStateOffline) _then)
-      : super(_value, (v) => _then(v as PageStateOffline));
-
-  @override
-  PageStateOffline get _value => super._value as PageStateOffline;
-}
-
-class _$PageStateOffline implements PageStateOffline {
-  const _$PageStateOffline();
-
-  @override
-  String toString() {
-    return 'PageState.offline()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is PageStateOffline);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result offline(),
-    @required Result loading(),
-    @required Result list(),
-    @required Result error(dynamic ex, StackTrace stack),
-  }) {
-    assert(offline != null);
-    assert(loading != null);
-    assert(list != null);
-    assert(error != null);
-    return offline();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result offline(),
-    Result loading(),
-    Result list(),
-    Result error(dynamic ex, StackTrace stack),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (offline != null) {
-      return offline();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result offline(PageStateOffline value),
-    @required Result loading(PageStateLoading value),
-    @required Result list(PageStateList value),
-    @required Result error(PageStateError value),
-  }) {
-    assert(offline != null);
-    assert(loading != null);
-    assert(list != null);
-    assert(error != null);
-    return offline(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result offline(PageStateOffline value),
-    Result loading(PageStateLoading value),
-    Result list(PageStateList value),
-    Result error(PageStateError value),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (offline != null) {
-      return offline(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class PageStateOffline implements PageState {
-  const factory PageStateOffline() = _$PageStateOffline;
 }
 
 abstract class $PageStateLoadingCopyWith<$Res> {
@@ -359,25 +239,19 @@ class _$PageStateLoading implements PageStateLoading {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result offline(),
     @required Result loading(),
     @required Result list(),
-    @required Result error(dynamic ex, StackTrace stack),
   }) {
-    assert(offline != null);
     assert(loading != null);
     assert(list != null);
-    assert(error != null);
     return loading();
   }
 
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result offline(),
     Result loading(),
     Result list(),
-    Result error(dynamic ex, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -390,25 +264,19 @@ class _$PageStateLoading implements PageStateLoading {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result offline(PageStateOffline value),
     @required Result loading(PageStateLoading value),
     @required Result list(PageStateList value),
-    @required Result error(PageStateError value),
   }) {
-    assert(offline != null);
     assert(loading != null);
     assert(list != null);
-    assert(error != null);
     return loading(this);
   }
 
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result offline(PageStateOffline value),
     Result loading(PageStateLoading value),
     Result list(PageStateList value),
-    Result error(PageStateError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -458,25 +326,19 @@ class _$PageStateList implements PageStateList {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result offline(),
     @required Result loading(),
     @required Result list(),
-    @required Result error(dynamic ex, StackTrace stack),
   }) {
-    assert(offline != null);
     assert(loading != null);
     assert(list != null);
-    assert(error != null);
     return list();
   }
 
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result offline(),
     Result loading(),
     Result list(),
-    Result error(dynamic ex, StackTrace stack),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -489,25 +351,19 @@ class _$PageStateList implements PageStateList {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result offline(PageStateOffline value),
     @required Result loading(PageStateLoading value),
     @required Result list(PageStateList value),
-    @required Result error(PageStateError value),
   }) {
-    assert(offline != null);
     assert(loading != null);
     assert(list != null);
-    assert(error != null);
     return list(this);
   }
 
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result offline(PageStateOffline value),
     Result loading(PageStateLoading value),
     Result list(PageStateList value),
-    Result error(PageStateError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -520,140 +376,6 @@ class _$PageStateList implements PageStateList {
 
 abstract class PageStateList implements PageState {
   const factory PageStateList() = _$PageStateList;
-}
-
-abstract class $PageStateErrorCopyWith<$Res> {
-  factory $PageStateErrorCopyWith(
-          PageStateError value, $Res Function(PageStateError) then) =
-      _$PageStateErrorCopyWithImpl<$Res>;
-  $Res call({dynamic ex, StackTrace stack});
-}
-
-class _$PageStateErrorCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
-    implements $PageStateErrorCopyWith<$Res> {
-  _$PageStateErrorCopyWithImpl(
-      PageStateError _value, $Res Function(PageStateError) _then)
-      : super(_value, (v) => _then(v as PageStateError));
-
-  @override
-  PageStateError get _value => super._value as PageStateError;
-
-  @override
-  $Res call({
-    Object ex = freezed,
-    Object stack = freezed,
-  }) {
-    return _then(PageStateError(
-      ex == freezed ? _value.ex : ex as dynamic,
-      stack == freezed ? _value.stack : stack as StackTrace,
-    ));
-  }
-}
-
-class _$PageStateError implements PageStateError {
-  const _$PageStateError(this.ex, this.stack)
-      : assert(ex != null),
-        assert(stack != null);
-
-  @override
-  final dynamic ex;
-  @override
-  final StackTrace stack;
-
-  @override
-  String toString() {
-    return 'PageState.error(ex: $ex, stack: $stack)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is PageStateError &&
-            (identical(other.ex, ex) ||
-                const DeepCollectionEquality().equals(other.ex, ex)) &&
-            (identical(other.stack, stack) ||
-                const DeepCollectionEquality().equals(other.stack, stack)));
-  }
-
-  @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(ex) ^
-      const DeepCollectionEquality().hash(stack);
-
-  @override
-  $PageStateErrorCopyWith<PageStateError> get copyWith =>
-      _$PageStateErrorCopyWithImpl<PageStateError>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result offline(),
-    @required Result loading(),
-    @required Result list(),
-    @required Result error(dynamic ex, StackTrace stack),
-  }) {
-    assert(offline != null);
-    assert(loading != null);
-    assert(list != null);
-    assert(error != null);
-    return error(ex, stack);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result offline(),
-    Result loading(),
-    Result list(),
-    Result error(dynamic ex, StackTrace stack),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error(ex, stack);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result offline(PageStateOffline value),
-    @required Result loading(PageStateLoading value),
-    @required Result list(PageStateList value),
-    @required Result error(PageStateError value),
-  }) {
-    assert(offline != null);
-    assert(loading != null);
-    assert(list != null);
-    assert(error != null);
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result offline(PageStateOffline value),
-    Result loading(PageStateLoading value),
-    Result list(PageStateList value),
-    Result error(PageStateError value),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class PageStateError implements PageState {
-  const factory PageStateError(dynamic ex, StackTrace stack) = _$PageStateError;
-
-  dynamic get ex;
-  StackTrace get stack;
-  $PageStateErrorCopyWith<PageStateError> get copyWith;
 }
 
 class _$AvailableShareTearOff {

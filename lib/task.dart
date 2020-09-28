@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/appbar/appbar.dart';
@@ -6,17 +8,34 @@ import 'package:groupshare/handle.dart';
 Future<T> task<T>(
   BuildContext context,
   GlobalKey global,
-  Future<T> Function() f, {
-  bool enabled = true,
+  FutureOr<T> Function() f, {
+  bool offlineWarning = true,
   List<Button> buttons = const [],
+  bool ok = false,
+  bool home = false,
+  bool retry = false,
 }) async {
-  try {
-    final state = context.bloc<AppBarCubit>().state;
-    final offline = state is AppbarStateOffline || state is AppbarStateFailed;
-    if (!enabled || !offline) {
+  Future<T> tryf() async {
+    try {
       return await f();
+    } catch (ex, stack) {
+      return await handle(
+        global != null ? global.currentContext : context,
+        ex,
+        stack,
+        buttons: buttons,
+        ok: ok,
+        home: home,
+        retry: retry ? tryf : null,
+      );
     }
-    final attempt = await showDialog<bool>(
+  }
+
+  final state = context.bloc<AppBarCubit>().state;
+  final offline = state is AppbarStateOffline || state is AppbarStateFailed;
+
+  if (offlineWarning && offline) {
+    final tryAnyway = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
@@ -46,11 +65,11 @@ Future<T> task<T>(
         );
       },
     );
-    if (attempt) {
-      return await f();
+    if (tryAnyway) {
+      return await tryf();
     }
-    return null;
-  } catch (ex, stack) {
-    handle(global.currentContext, ex, stack, buttons: buttons);
+  } else {
+    return await tryf();
   }
+  return null;
 }

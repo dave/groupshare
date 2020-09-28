@@ -19,16 +19,9 @@ abstract class ListState with _$ListState {
 
 @freezed
 abstract class PageState with _$PageState {
-  const factory PageState.offline() = PageStateOffline;
-
   const factory PageState.loading() = PageStateLoading;
 
   const factory PageState.list() = PageStateList;
-
-  const factory PageState.error(
-    dynamic ex,
-    StackTrace stack,
-  ) = PageStateError;
 }
 
 @freezed
@@ -56,28 +49,45 @@ class ListCubit extends Cubit<ListState> {
           items: [],
         ));
 
+  Future<void> setup() async {
+    if (_sharesSubscription == null) {
+      _sharesSubscription =
+          _data.shares.stream.listen((DataEvent<Share> event) {
+        if (event is DataEventApply ||
+            event is DataEventGetting ||
+            event is DataEventGetFailed ||
+            event is DataEventGot ||
+            event is DataEventSending ||
+            event is DataEventSent ||
+            event is DataEventDeleted) {
+          print("$event");
+          emit(_listPage());
+        }
+      });
+    }
+    if (_userSubscription == null) {
+      _userSubscription = _data.user.stream.listen((DataEvent<User> event) {
+        if (event is DataEventApply) {
+          print("$event");
+          emit(_listPage());
+        }
+      });
+    }
+    await init();
+  }
+
   Future<void> init() async {
-    emit(
-      state.copyWith(
-        page: PageState.loading(),
-      ),
-    );
-    _sharesSubscription = _data.shares.stream.listen((DataEvent<Share> event) {
-      if (event is DataEventApply ||
-          event is DataEventGetting ||
-          event is DataEventGot ||
-          event is DataEventSending ||
-          event is DataEventSent ||
-          event is DataEventDeleted) {
-        emit(_listPage());
-      }
-    });
-    _userSubscription = _data.user.stream.listen((DataEvent<User> event) {
-      if (event is DataEventApply) {
-        emit(_listPage());
-      }
-    });
-    _api.registerBackgroundTask(initList(true), "list init");
+    if (_data.user == null) {
+      throw UserException("Offline");
+    }
+
+    emit(_listPage());
+
+    if (_api.offline()) {
+      return;
+    }
+
+    await _data.user.send();
   }
 
   @override
@@ -125,31 +135,7 @@ class ListCubit extends Cubit<ListState> {
   }
 
   Future<void> initItem(String id) async {
-    try {
-      await _data.shares.refresh(id);
-    } catch (ex) {
-      emit(_listPage());
-      throw (ex);
-    }
-  }
-
-  Future<void> initList(bool update) async {
-    if (_data.user == null) {
-      emit(
-        state.copyWith(
-          page: PageState.error(UserException("Offline"), StackTrace.current),
-        ),
-      );
-      return;
-    }
-
-    if (!update || _api.offline()) {
-      emit(_listPage());
-      return;
-    }
-
-    emit(_listPage());
-    await _data.user.send();
+    await _data.shares.refresh(id);
   }
 
   // @override

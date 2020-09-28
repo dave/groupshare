@@ -31,11 +31,18 @@ class ViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ViewCubit(
-        RepositoryProvider.of<Data>(context),
-        RepositoryProvider.of<Api>(context),
-        _id,
-      )..init(),
+      create: (context) {
+        final cubit = ViewCubit(_id, RepositoryProvider.of<Data>(context));
+        task(
+          context,
+          null,
+          cubit.setup,
+          offlineWarning: false,
+          home: true,
+          retry: true,
+        );
+        return cubit;
+      },
       child: ViewForm(),
     );
   }
@@ -49,28 +56,7 @@ class ViewForm extends StatelessWidget {
       key: global,
       listener: (context, state) {
         state.map(
-          initial: (state) => true,
           loading: (state) => true,
-          offline: (state) => true,
-          error: (state) {
-            handle(
-              context,
-              state.error,
-              state.stack,
-              buttons: [
-                Button(
-                  "Home",
-                  () => Navigator.of(context).popUntil(
-                    ModalRoute.withName(ListPage.routeName),
-                  ),
-                ),
-                Button(
-                  "Retry",
-                  () => context.bloc<ViewCubit>().initPage(),
-                )
-              ],
-            );
-          },
           done: (state) => true,
         );
       },
@@ -85,7 +71,6 @@ class ViewForm extends StatelessWidget {
                       state.id,
                       ViewPage.routeName,
                     ));
-                    context.bloc<ViewCubit>().initPage();
                   },
                 )
               : null,
@@ -95,21 +80,16 @@ class ViewForm extends StatelessWidget {
               alignment: const Alignment(0, -1 / 3),
               child: Refresher(
                 onRefresh: () async {
-                  await task(context, global, () async {
-                    await context.bloc<ViewCubit>().refresh();
-                  });
+                  await task(
+                    context,
+                    global,
+                    context.bloc<ViewCubit>().refresh,
+                  );
                 },
                 child: state.map(
-                  initial: (state) => null,
-                  offline: (_) => Center(
-                    child: Text(
-                      "Offline.",
-                    ),
-                  ),
                   loading: (_) => Center(
                     child: CircularProgressIndicator(),
                   ),
-                  error: (state) => null,
                   done: (state) => Center(child: Text(state.name)),
                 ),
               ),
