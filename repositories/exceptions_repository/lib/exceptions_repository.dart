@@ -8,7 +8,8 @@ class UserException implements Exception {
 
   @override
   String toString() {
-    return "UserException: $message\n$debug";
+    //return "UserException: $message\n$debug";
+    return "$message";
   }
 }
 
@@ -20,6 +21,7 @@ class AuthException extends UserException {
 
   @override
   String toString() {
-    return "AuthException: ${expired?'[expired]':''} $message\n$debug";
+    //return "AuthException: ${expired?'[expired]':''} $message\n$debug";
+    return "$message";
   }
 }
