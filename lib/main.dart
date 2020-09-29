@@ -36,7 +36,9 @@ void main() async {
         Hive.registerAdapter(ItemAdapter<User>(1, types));
 
         final device = Device();
-        final discovery = Discovery(IS_LIVE);
+        final discovery = Discovery(
+          IS_LIVE,
+        );
         final connection = Connection();
         final api = Api(
           connection,
@@ -54,7 +56,10 @@ void main() async {
           // triggered unless it's set to higher than this.
           timeout: IS_LIVE ? 8 : 12, // timeout (live: 8 sec, dev: 12 sec)
         );
-        final auth = Auth(api, device);
+        final auth = Auth(
+          api,
+          device,
+        );
         final data = Data(
           StoreMeta<Share, String>(
             Share(),

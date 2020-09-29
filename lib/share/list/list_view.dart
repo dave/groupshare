@@ -8,7 +8,7 @@ import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/add/add.dart';
 import 'package:groupshare/share/edit/edit.dart';
 import 'package:groupshare/share/list/list.dart';
-import 'package:groupshare/share/view/view.dart';
+import 'package:groupshare/share/details/details.dart';
 import 'package:groupshare/task.dart';
 import 'package:groupshare/ui/refresher.dart';
 import 'package:groupshare/ui/spinner.dart';
@@ -207,7 +207,7 @@ class SlidableListTile extends StatelessWidget {
         await task(
           context,
           global,
-          () async => await Navigator.of(context).push(ViewPage.route(item.id)),
+          () async => await Navigator.of(context).push(DetailsPage.route(item.id)),
           offlineWarning: !item.local,
         );
       },

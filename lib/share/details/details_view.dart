@@ -6,23 +6,24 @@ import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/edit/edit.dart';
 import 'package:groupshare/share/list/list.dart';
-import 'package:groupshare/share/view/view.dart';
+import 'package:groupshare/share/details/details.dart';
 import 'package:groupshare/task.dart';
 import 'package:groupshare/ui/refresher.dart';
 
-class ViewPage extends StatelessWidget {
-  static const String routeName = 'ShareViewPage';
+
+class DetailsPage extends StatelessWidget {
+  static const String routeName = 'ShareDetailsPage';
 
   static Route route(String id) {
     return MaterialPageRoute<void>(
-      builder: (_) => ViewPage(id: id),
+      builder: (_) => DetailsPage(id: id),
       settings: RouteSettings(name: routeName),
     );
   }
 
   final String _id;
 
-  ViewPage({
+  DetailsPage({
     Key key,
     @required String id,
   })  : _id = id,
@@ -32,7 +33,7 @@ class ViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final cubit = ViewCubit(_id, RepositoryProvider.of<Data>(context));
+        final cubit = DetailsCubit(_id, RepositoryProvider.of<Data>(context));
         task(
           context,
           null,
@@ -43,16 +44,16 @@ class ViewPage extends StatelessWidget {
         );
         return cubit;
       },
-      child: ViewForm(),
+      child: DetailsContent(),
     );
   }
 }
 
-class ViewForm extends StatelessWidget {
+class DetailsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final global = GlobalKey();
-    return BlocConsumer<ViewCubit, ViewState>(
+    return BlocConsumer<DetailsCubit, DetailsState>(
       key: global,
       listener: (context, state) {
         state.map(
@@ -63,13 +64,13 @@ class ViewForm extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBarWidget('Title'),
-          floatingActionButton: state is ViewStateDone
+          floatingActionButton: state is DetailsStateDone
               ? FloatingActionButton(
                   child: Icon(Icons.edit),
                   onPressed: () async {
                     await Navigator.of(context).push(EditPage.route(
                       state.id,
-                      ViewPage.routeName,
+                      DetailsPage.routeName,
                     ));
                   },
                 )
@@ -83,7 +84,7 @@ class ViewForm extends StatelessWidget {
                   await task(
                     context,
                     global,
-                    context.bloc<ViewCubit>().refresh,
+                    context.bloc<DetailsCubit>().refresh,
                   );
                 },
                 child: state.map(

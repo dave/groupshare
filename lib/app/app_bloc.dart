@@ -39,13 +39,7 @@ class AppCubit extends Cubit<AppState> {
     this._api,
     this._auth,
     this._data,
-  ) : super(AppState.loading()) {
-    _subscription = _auth.statusChange.listen(
-      (Status value) {
-        authStatusChange();
-      },
-    );
-  }
+  ) : super(AppState.loading());
 
   Future<void> reset() async {
     await _data.reset();
@@ -59,6 +53,13 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<void> init() async {
+    if (_subscription == null) {
+      _subscription = _auth.statusChange.listen(
+        (Status value) {
+          authStatusChange(); // TODO: what if this throws an exception?!?
+        },
+      );
+    }
     await _device.init();
     await _discovery.init();
     await _api.init();

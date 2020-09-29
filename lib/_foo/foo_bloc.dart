@@ -37,7 +37,10 @@ class FooCubit extends Cubit<FooState> {
   final Data _data;
 
   FooCubit(this._data)
-      : super(FooState(page: PageState.loading(), form: FormState()));
+      : super(FooState(
+          page: PageState.loading(),
+          form: FormState(),
+        ));
 
   Future<void> init() async {
     //...
@@ -46,10 +49,11 @@ class FooCubit extends Cubit<FooState> {
   void nameChanged(String name) {
     final nameValue = Name.dirty(name);
     emit(state.copyWith(
-        form: FormState(
-      name: nameValue,
-      status: Formz.validate([nameValue]),
-    )));
+      form: FormState(
+        name: nameValue,
+        status: Formz.validate([nameValue]),
+      ),
+    ));
   }
 
   Future<void> submit() async {

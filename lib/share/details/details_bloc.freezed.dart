@@ -1,7 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies
 
-part of 'view_bloc.dart';
+part of 'details_bloc.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -9,17 +9,17 @@ part of 'view_bloc.dart';
 
 T _$identity<T>(T value) => value;
 
-class _$ViewStateTearOff {
-  const _$ViewStateTearOff();
+class _$DetailsStateTearOff {
+  const _$DetailsStateTearOff();
 
 // ignore: unused_element
-  ViewStateLoading loading() {
-    return const ViewStateLoading();
+  DetailsStateLoading loading() {
+    return const DetailsStateLoading();
   }
 
 // ignore: unused_element
-  ViewStateDone done(String id, String name) {
-    return ViewStateDone(
+  DetailsStateDone done(String id, String name) {
+    return DetailsStateDone(
       id,
       name,
     );
@@ -27,9 +27,9 @@ class _$ViewStateTearOff {
 }
 
 // ignore: unused_element
-const $ViewState = _$ViewStateTearOff();
+const $DetailsState = _$DetailsStateTearOff();
 
-mixin _$ViewState {
+mixin _$DetailsState {
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result loading(),
@@ -43,57 +43,59 @@ mixin _$ViewState {
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result loading(ViewStateLoading value),
-    @required Result done(ViewStateDone value),
+    @required Result loading(DetailsStateLoading value),
+    @required Result done(DetailsStateDone value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result loading(ViewStateLoading value),
-    Result done(ViewStateDone value),
+    Result loading(DetailsStateLoading value),
+    Result done(DetailsStateDone value),
     @required Result orElse(),
   });
 }
 
-abstract class $ViewStateCopyWith<$Res> {
-  factory $ViewStateCopyWith(ViewState value, $Res Function(ViewState) then) =
-      _$ViewStateCopyWithImpl<$Res>;
+abstract class $DetailsStateCopyWith<$Res> {
+  factory $DetailsStateCopyWith(
+          DetailsState value, $Res Function(DetailsState) then) =
+      _$DetailsStateCopyWithImpl<$Res>;
 }
 
-class _$ViewStateCopyWithImpl<$Res> implements $ViewStateCopyWith<$Res> {
-  _$ViewStateCopyWithImpl(this._value, this._then);
+class _$DetailsStateCopyWithImpl<$Res> implements $DetailsStateCopyWith<$Res> {
+  _$DetailsStateCopyWithImpl(this._value, this._then);
 
-  final ViewState _value;
+  final DetailsState _value;
   // ignore: unused_field
-  final $Res Function(ViewState) _then;
+  final $Res Function(DetailsState) _then;
 }
 
-abstract class $ViewStateLoadingCopyWith<$Res> {
-  factory $ViewStateLoadingCopyWith(
-          ViewStateLoading value, $Res Function(ViewStateLoading) then) =
-      _$ViewStateLoadingCopyWithImpl<$Res>;
+abstract class $DetailsStateLoadingCopyWith<$Res> {
+  factory $DetailsStateLoadingCopyWith(
+          DetailsStateLoading value, $Res Function(DetailsStateLoading) then) =
+      _$DetailsStateLoadingCopyWithImpl<$Res>;
 }
 
-class _$ViewStateLoadingCopyWithImpl<$Res> extends _$ViewStateCopyWithImpl<$Res>
-    implements $ViewStateLoadingCopyWith<$Res> {
-  _$ViewStateLoadingCopyWithImpl(
-      ViewStateLoading _value, $Res Function(ViewStateLoading) _then)
-      : super(_value, (v) => _then(v as ViewStateLoading));
+class _$DetailsStateLoadingCopyWithImpl<$Res>
+    extends _$DetailsStateCopyWithImpl<$Res>
+    implements $DetailsStateLoadingCopyWith<$Res> {
+  _$DetailsStateLoadingCopyWithImpl(
+      DetailsStateLoading _value, $Res Function(DetailsStateLoading) _then)
+      : super(_value, (v) => _then(v as DetailsStateLoading));
 
   @override
-  ViewStateLoading get _value => super._value as ViewStateLoading;
+  DetailsStateLoading get _value => super._value as DetailsStateLoading;
 }
 
-class _$ViewStateLoading implements ViewStateLoading {
-  const _$ViewStateLoading();
+class _$DetailsStateLoading implements DetailsStateLoading {
+  const _$DetailsStateLoading();
 
   @override
   String toString() {
-    return 'ViewState.loading()';
+    return 'DetailsState.loading()';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is ViewStateLoading);
+    return identical(this, other) || (other is DetailsStateLoading);
   }
 
   @override
@@ -127,8 +129,8 @@ class _$ViewStateLoading implements ViewStateLoading {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result loading(ViewStateLoading value),
-    @required Result done(ViewStateDone value),
+    @required Result loading(DetailsStateLoading value),
+    @required Result done(DetailsStateDone value),
   }) {
     assert(loading != null);
     assert(done != null);
@@ -138,8 +140,8 @@ class _$ViewStateLoading implements ViewStateLoading {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result loading(ViewStateLoading value),
-    Result done(ViewStateDone value),
+    Result loading(DetailsStateLoading value),
+    Result done(DetailsStateDone value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -150,40 +152,41 @@ class _$ViewStateLoading implements ViewStateLoading {
   }
 }
 
-abstract class ViewStateLoading implements ViewState {
-  const factory ViewStateLoading() = _$ViewStateLoading;
+abstract class DetailsStateLoading implements DetailsState {
+  const factory DetailsStateLoading() = _$DetailsStateLoading;
 }
 
-abstract class $ViewStateDoneCopyWith<$Res> {
-  factory $ViewStateDoneCopyWith(
-          ViewStateDone value, $Res Function(ViewStateDone) then) =
-      _$ViewStateDoneCopyWithImpl<$Res>;
+abstract class $DetailsStateDoneCopyWith<$Res> {
+  factory $DetailsStateDoneCopyWith(
+          DetailsStateDone value, $Res Function(DetailsStateDone) then) =
+      _$DetailsStateDoneCopyWithImpl<$Res>;
   $Res call({String id, String name});
 }
 
-class _$ViewStateDoneCopyWithImpl<$Res> extends _$ViewStateCopyWithImpl<$Res>
-    implements $ViewStateDoneCopyWith<$Res> {
-  _$ViewStateDoneCopyWithImpl(
-      ViewStateDone _value, $Res Function(ViewStateDone) _then)
-      : super(_value, (v) => _then(v as ViewStateDone));
+class _$DetailsStateDoneCopyWithImpl<$Res>
+    extends _$DetailsStateCopyWithImpl<$Res>
+    implements $DetailsStateDoneCopyWith<$Res> {
+  _$DetailsStateDoneCopyWithImpl(
+      DetailsStateDone _value, $Res Function(DetailsStateDone) _then)
+      : super(_value, (v) => _then(v as DetailsStateDone));
 
   @override
-  ViewStateDone get _value => super._value as ViewStateDone;
+  DetailsStateDone get _value => super._value as DetailsStateDone;
 
   @override
   $Res call({
     Object id = freezed,
     Object name = freezed,
   }) {
-    return _then(ViewStateDone(
+    return _then(DetailsStateDone(
       id == freezed ? _value.id : id as String,
       name == freezed ? _value.name : name as String,
     ));
   }
 }
 
-class _$ViewStateDone implements ViewStateDone {
-  const _$ViewStateDone(this.id, this.name)
+class _$DetailsStateDone implements DetailsStateDone {
+  const _$DetailsStateDone(this.id, this.name)
       : assert(id != null),
         assert(name != null);
 
@@ -194,13 +197,13 @@ class _$ViewStateDone implements ViewStateDone {
 
   @override
   String toString() {
-    return 'ViewState.done(id: $id, name: $name)';
+    return 'DetailsState.done(id: $id, name: $name)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is ViewStateDone &&
+        (other is DetailsStateDone &&
             (identical(other.id, id) ||
                 const DeepCollectionEquality().equals(other.id, id)) &&
             (identical(other.name, name) ||
@@ -214,8 +217,8 @@ class _$ViewStateDone implements ViewStateDone {
       const DeepCollectionEquality().hash(name);
 
   @override
-  $ViewStateDoneCopyWith<ViewStateDone> get copyWith =>
-      _$ViewStateDoneCopyWithImpl<ViewStateDone>(this, _$identity);
+  $DetailsStateDoneCopyWith<DetailsStateDone> get copyWith =>
+      _$DetailsStateDoneCopyWithImpl<DetailsStateDone>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -245,8 +248,8 @@ class _$ViewStateDone implements ViewStateDone {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result loading(ViewStateLoading value),
-    @required Result done(ViewStateDone value),
+    @required Result loading(DetailsStateLoading value),
+    @required Result done(DetailsStateDone value),
   }) {
     assert(loading != null);
     assert(done != null);
@@ -256,8 +259,8 @@ class _$ViewStateDone implements ViewStateDone {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result loading(ViewStateLoading value),
-    Result done(ViewStateDone value),
+    Result loading(DetailsStateLoading value),
+    Result done(DetailsStateDone value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -268,10 +271,10 @@ class _$ViewStateDone implements ViewStateDone {
   }
 }
 
-abstract class ViewStateDone implements ViewState {
-  const factory ViewStateDone(String id, String name) = _$ViewStateDone;
+abstract class DetailsStateDone implements DetailsState {
+  const factory DetailsStateDone(String id, String name) = _$DetailsStateDone;
 
   String get id;
   String get name;
-  $ViewStateDoneCopyWith<ViewStateDone> get copyWith;
+  $DetailsStateDoneCopyWith<DetailsStateDone> get copyWith;
 }

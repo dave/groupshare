@@ -7,21 +7,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:protod/pserver/pserver.dart';
 
-part 'view_bloc.freezed.dart';
+part 'details_bloc.freezed.dart';
 
 @freezed
-abstract class ViewState with _$ViewState {
-  const factory ViewState.loading() = ViewStateLoading;
+abstract class DetailsState with _$DetailsState {
+  const factory DetailsState.loading() = DetailsStateLoading;
 
-  const factory ViewState.done(String id, String name) = ViewStateDone;
+  const factory DetailsState.done(String id, String name) = DetailsStateDone;
 }
 
-class ViewCubit extends Cubit<ViewState> {
+class DetailsCubit extends Cubit<DetailsState> {
   final String _id;
   final Data _data;
   StreamSubscription<DataEvent<Share>> _subscription;
 
-  ViewCubit(this._id, this._data) : super(ViewState.loading());
+  DetailsCubit(this._id, this._data) : super(DetailsState.loading());
 
   Future<void> setup() async {
     if (_subscription == null) {
@@ -45,7 +45,7 @@ class ViewCubit extends Cubit<ViewState> {
   }
 
   Future<void> init() async {
-    emit(ViewState.loading());
+    emit(DetailsState.loading());
     final item = await _data.shares.item(_id);
     if (item == null) {
       throw UserException("Can't find document");
@@ -59,8 +59,8 @@ class ViewCubit extends Cubit<ViewState> {
     return super.close();
   }
 
-  ViewState _shareState(Item<Share> item) {
-    return ViewState.done(item.id, item.value.name);
+  DetailsState _shareState(Item<Share> item) {
+    return DetailsState.done(item.id, item.value.name);
   }
 
   Future<void> refresh() async {
