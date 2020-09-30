@@ -621,3 +621,377 @@ class _$AppbarStateFailed implements AppbarStateFailed {
 abstract class AppbarStateFailed implements AppBarState {
   const factory AppbarStateFailed() = _$AppbarStateFailed;
 }
+
+class _$AppBarEventTearOff {
+  const _$AppBarEventTearOff();
+
+// ignore: unused_element
+  AppBarEventChange change(ConnectionStatus status) {
+    return AppBarEventChange(
+      status,
+    );
+  }
+
+// ignore: unused_element
+  AppBarEventDisconnect disconnect() {
+    return const AppBarEventDisconnect();
+  }
+
+// ignore: unused_element
+  AppBarEventReconnect reconnect() {
+    return const AppBarEventReconnect();
+  }
+}
+
+// ignore: unused_element
+const $AppBarEvent = _$AppBarEventTearOff();
+
+mixin _$AppBarEvent {
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result change(ConnectionStatus status),
+    @required Result disconnect(),
+    @required Result reconnect(),
+  });
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result change(ConnectionStatus status),
+    Result disconnect(),
+    Result reconnect(),
+    @required Result orElse(),
+  });
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result change(AppBarEventChange value),
+    @required Result disconnect(AppBarEventDisconnect value),
+    @required Result reconnect(AppBarEventReconnect value),
+  });
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result change(AppBarEventChange value),
+    Result disconnect(AppBarEventDisconnect value),
+    Result reconnect(AppBarEventReconnect value),
+    @required Result orElse(),
+  });
+}
+
+abstract class $AppBarEventCopyWith<$Res> {
+  factory $AppBarEventCopyWith(
+          AppBarEvent value, $Res Function(AppBarEvent) then) =
+      _$AppBarEventCopyWithImpl<$Res>;
+}
+
+class _$AppBarEventCopyWithImpl<$Res> implements $AppBarEventCopyWith<$Res> {
+  _$AppBarEventCopyWithImpl(this._value, this._then);
+
+  final AppBarEvent _value;
+  // ignore: unused_field
+  final $Res Function(AppBarEvent) _then;
+}
+
+abstract class $AppBarEventChangeCopyWith<$Res> {
+  factory $AppBarEventChangeCopyWith(
+          AppBarEventChange value, $Res Function(AppBarEventChange) then) =
+      _$AppBarEventChangeCopyWithImpl<$Res>;
+  $Res call({ConnectionStatus status});
+}
+
+class _$AppBarEventChangeCopyWithImpl<$Res>
+    extends _$AppBarEventCopyWithImpl<$Res>
+    implements $AppBarEventChangeCopyWith<$Res> {
+  _$AppBarEventChangeCopyWithImpl(
+      AppBarEventChange _value, $Res Function(AppBarEventChange) _then)
+      : super(_value, (v) => _then(v as AppBarEventChange));
+
+  @override
+  AppBarEventChange get _value => super._value as AppBarEventChange;
+
+  @override
+  $Res call({
+    Object status = freezed,
+  }) {
+    return _then(AppBarEventChange(
+      status == freezed ? _value.status : status as ConnectionStatus,
+    ));
+  }
+}
+
+class _$AppBarEventChange implements AppBarEventChange {
+  const _$AppBarEventChange(this.status) : assert(status != null);
+
+  @override
+  final ConnectionStatus status;
+
+  @override
+  String toString() {
+    return 'AppBarEvent.change(status: $status)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is AppBarEventChange &&
+            (identical(other.status, status) ||
+                const DeepCollectionEquality().equals(other.status, status)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(status);
+
+  @override
+  $AppBarEventChangeCopyWith<AppBarEventChange> get copyWith =>
+      _$AppBarEventChangeCopyWithImpl<AppBarEventChange>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result change(ConnectionStatus status),
+    @required Result disconnect(),
+    @required Result reconnect(),
+  }) {
+    assert(change != null);
+    assert(disconnect != null);
+    assert(reconnect != null);
+    return change(status);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result change(ConnectionStatus status),
+    Result disconnect(),
+    Result reconnect(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (change != null) {
+      return change(status);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result change(AppBarEventChange value),
+    @required Result disconnect(AppBarEventDisconnect value),
+    @required Result reconnect(AppBarEventReconnect value),
+  }) {
+    assert(change != null);
+    assert(disconnect != null);
+    assert(reconnect != null);
+    return change(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result change(AppBarEventChange value),
+    Result disconnect(AppBarEventDisconnect value),
+    Result reconnect(AppBarEventReconnect value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (change != null) {
+      return change(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AppBarEventChange implements AppBarEvent {
+  const factory AppBarEventChange(ConnectionStatus status) =
+      _$AppBarEventChange;
+
+  ConnectionStatus get status;
+  $AppBarEventChangeCopyWith<AppBarEventChange> get copyWith;
+}
+
+abstract class $AppBarEventDisconnectCopyWith<$Res> {
+  factory $AppBarEventDisconnectCopyWith(AppBarEventDisconnect value,
+          $Res Function(AppBarEventDisconnect) then) =
+      _$AppBarEventDisconnectCopyWithImpl<$Res>;
+}
+
+class _$AppBarEventDisconnectCopyWithImpl<$Res>
+    extends _$AppBarEventCopyWithImpl<$Res>
+    implements $AppBarEventDisconnectCopyWith<$Res> {
+  _$AppBarEventDisconnectCopyWithImpl(
+      AppBarEventDisconnect _value, $Res Function(AppBarEventDisconnect) _then)
+      : super(_value, (v) => _then(v as AppBarEventDisconnect));
+
+  @override
+  AppBarEventDisconnect get _value => super._value as AppBarEventDisconnect;
+}
+
+class _$AppBarEventDisconnect implements AppBarEventDisconnect {
+  const _$AppBarEventDisconnect();
+
+  @override
+  String toString() {
+    return 'AppBarEvent.disconnect()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is AppBarEventDisconnect);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result change(ConnectionStatus status),
+    @required Result disconnect(),
+    @required Result reconnect(),
+  }) {
+    assert(change != null);
+    assert(disconnect != null);
+    assert(reconnect != null);
+    return disconnect();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result change(ConnectionStatus status),
+    Result disconnect(),
+    Result reconnect(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (disconnect != null) {
+      return disconnect();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result change(AppBarEventChange value),
+    @required Result disconnect(AppBarEventDisconnect value),
+    @required Result reconnect(AppBarEventReconnect value),
+  }) {
+    assert(change != null);
+    assert(disconnect != null);
+    assert(reconnect != null);
+    return disconnect(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result change(AppBarEventChange value),
+    Result disconnect(AppBarEventDisconnect value),
+    Result reconnect(AppBarEventReconnect value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (disconnect != null) {
+      return disconnect(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AppBarEventDisconnect implements AppBarEvent {
+  const factory AppBarEventDisconnect() = _$AppBarEventDisconnect;
+}
+
+abstract class $AppBarEventReconnectCopyWith<$Res> {
+  factory $AppBarEventReconnectCopyWith(AppBarEventReconnect value,
+          $Res Function(AppBarEventReconnect) then) =
+      _$AppBarEventReconnectCopyWithImpl<$Res>;
+}
+
+class _$AppBarEventReconnectCopyWithImpl<$Res>
+    extends _$AppBarEventCopyWithImpl<$Res>
+    implements $AppBarEventReconnectCopyWith<$Res> {
+  _$AppBarEventReconnectCopyWithImpl(
+      AppBarEventReconnect _value, $Res Function(AppBarEventReconnect) _then)
+      : super(_value, (v) => _then(v as AppBarEventReconnect));
+
+  @override
+  AppBarEventReconnect get _value => super._value as AppBarEventReconnect;
+}
+
+class _$AppBarEventReconnect implements AppBarEventReconnect {
+  const _$AppBarEventReconnect();
+
+  @override
+  String toString() {
+    return 'AppBarEvent.reconnect()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is AppBarEventReconnect);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result change(ConnectionStatus status),
+    @required Result disconnect(),
+    @required Result reconnect(),
+  }) {
+    assert(change != null);
+    assert(disconnect != null);
+    assert(reconnect != null);
+    return reconnect();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result change(ConnectionStatus status),
+    Result disconnect(),
+    Result reconnect(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (reconnect != null) {
+      return reconnect();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result change(AppBarEventChange value),
+    @required Result disconnect(AppBarEventDisconnect value),
+    @required Result reconnect(AppBarEventReconnect value),
+  }) {
+    assert(change != null);
+    assert(disconnect != null);
+    assert(reconnect != null);
+    return reconnect(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result change(AppBarEventChange value),
+    Result disconnect(AppBarEventDisconnect value),
+    Result reconnect(AppBarEventReconnect value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (reconnect != null) {
+      return reconnect(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AppBarEventReconnect implements AppBarEvent {
+  const factory AppBarEventReconnect() = _$AppBarEventReconnect;
+}

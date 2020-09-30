@@ -49,7 +49,7 @@ class Api {
     try {
       await f;
     } catch (ex, stack) {
-      print("error in task $note: $ex $stack");
+      print("error in task '$note': $ex\n$stack");
     }
   }
 
@@ -257,7 +257,7 @@ class Api {
     }
   }
 
-  void forceOffline() {
+  void disconnect() {
     _statusOffline(true);
   }
 

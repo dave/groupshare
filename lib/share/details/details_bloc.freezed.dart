@@ -85,6 +85,7 @@ class _$DetailsStateLoadingCopyWithImpl<$Res>
   DetailsStateLoading get _value => super._value as DetailsStateLoading;
 }
 
+@Implements(IncompleteState)
 class _$DetailsStateLoading implements DetailsStateLoading {
   const _$DetailsStateLoading();
 
@@ -152,7 +153,7 @@ class _$DetailsStateLoading implements DetailsStateLoading {
   }
 }
 
-abstract class DetailsStateLoading implements DetailsState {
+abstract class DetailsStateLoading implements DetailsState, IncompleteState {
   const factory DetailsStateLoading() = _$DetailsStateLoading;
 }
 
@@ -277,4 +278,236 @@ abstract class DetailsStateDone implements DetailsState {
   String get id;
   String get name;
   $DetailsStateDoneCopyWith<DetailsStateDone> get copyWith;
+}
+
+class _$DetailsEventTearOff {
+  const _$DetailsEventTearOff();
+
+// ignore: unused_element
+  DetailsEventInit init() {
+    return const DetailsEventInit();
+  }
+
+// ignore: unused_element
+  DetailsEventRefresh refresh() {
+    return const DetailsEventRefresh();
+  }
+}
+
+// ignore: unused_element
+const $DetailsEvent = _$DetailsEventTearOff();
+
+mixin _$DetailsEvent {
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(),
+    @required Result refresh(),
+  });
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(),
+    Result refresh(),
+    @required Result orElse(),
+  });
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(DetailsEventInit value),
+    @required Result refresh(DetailsEventRefresh value),
+  });
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(DetailsEventInit value),
+    Result refresh(DetailsEventRefresh value),
+    @required Result orElse(),
+  });
+}
+
+abstract class $DetailsEventCopyWith<$Res> {
+  factory $DetailsEventCopyWith(
+          DetailsEvent value, $Res Function(DetailsEvent) then) =
+      _$DetailsEventCopyWithImpl<$Res>;
+}
+
+class _$DetailsEventCopyWithImpl<$Res> implements $DetailsEventCopyWith<$Res> {
+  _$DetailsEventCopyWithImpl(this._value, this._then);
+
+  final DetailsEvent _value;
+  // ignore: unused_field
+  final $Res Function(DetailsEvent) _then;
+}
+
+abstract class $DetailsEventInitCopyWith<$Res> {
+  factory $DetailsEventInitCopyWith(
+          DetailsEventInit value, $Res Function(DetailsEventInit) then) =
+      _$DetailsEventInitCopyWithImpl<$Res>;
+}
+
+class _$DetailsEventInitCopyWithImpl<$Res>
+    extends _$DetailsEventCopyWithImpl<$Res>
+    implements $DetailsEventInitCopyWith<$Res> {
+  _$DetailsEventInitCopyWithImpl(
+      DetailsEventInit _value, $Res Function(DetailsEventInit) _then)
+      : super(_value, (v) => _then(v as DetailsEventInit));
+
+  @override
+  DetailsEventInit get _value => super._value as DetailsEventInit;
+}
+
+class _$DetailsEventInit implements DetailsEventInit {
+  const _$DetailsEventInit();
+
+  @override
+  String toString() {
+    return 'DetailsEvent.init()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is DetailsEventInit);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(),
+    @required Result refresh(),
+  }) {
+    assert(init != null);
+    assert(refresh != null);
+    return init();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(),
+    Result refresh(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (init != null) {
+      return init();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(DetailsEventInit value),
+    @required Result refresh(DetailsEventRefresh value),
+  }) {
+    assert(init != null);
+    assert(refresh != null);
+    return init(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(DetailsEventInit value),
+    Result refresh(DetailsEventRefresh value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (init != null) {
+      return init(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DetailsEventInit implements DetailsEvent {
+  const factory DetailsEventInit() = _$DetailsEventInit;
+}
+
+abstract class $DetailsEventRefreshCopyWith<$Res> {
+  factory $DetailsEventRefreshCopyWith(
+          DetailsEventRefresh value, $Res Function(DetailsEventRefresh) then) =
+      _$DetailsEventRefreshCopyWithImpl<$Res>;
+}
+
+class _$DetailsEventRefreshCopyWithImpl<$Res>
+    extends _$DetailsEventCopyWithImpl<$Res>
+    implements $DetailsEventRefreshCopyWith<$Res> {
+  _$DetailsEventRefreshCopyWithImpl(
+      DetailsEventRefresh _value, $Res Function(DetailsEventRefresh) _then)
+      : super(_value, (v) => _then(v as DetailsEventRefresh));
+
+  @override
+  DetailsEventRefresh get _value => super._value as DetailsEventRefresh;
+}
+
+class _$DetailsEventRefresh implements DetailsEventRefresh {
+  const _$DetailsEventRefresh();
+
+  @override
+  String toString() {
+    return 'DetailsEvent.refresh()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is DetailsEventRefresh);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(),
+    @required Result refresh(),
+  }) {
+    assert(init != null);
+    assert(refresh != null);
+    return refresh();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(),
+    Result refresh(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (refresh != null) {
+      return refresh();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(DetailsEventInit value),
+    @required Result refresh(DetailsEventRefresh value),
+  }) {
+    assert(init != null);
+    assert(refresh != null);
+    return refresh(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(DetailsEventInit value),
+    Result refresh(DetailsEventRefresh value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (refresh != null) {
+      return refresh(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DetailsEventRefresh implements DetailsEvent {
+  const factory DetailsEventRefresh() = _$DetailsEventRefresh;
 }

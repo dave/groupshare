@@ -42,98 +42,127 @@ abstract class CodeFormState with _$CodeFormState {
   }) = _CodeFormState;
 }
 
-class LoginCubit extends Cubit<LoginState> {
+@freezed
+abstract class LoginEvent with _$LoginEvent {
+  const factory LoginEvent.changeStatus(Status status) = LoginEventChangeStatus;
+
+  const factory LoginEvent.changeEmail(String value) = LoginEventChangeEmail;
+
+  const factory LoginEvent.changeCode(String value) = LoginEventChangeCode;
+
+  const factory LoginEvent.submitEmail() = LoginEventSubmitEmail;
+
+  const factory LoginEvent.submitCode() = LoginEventSubmitCode;
+
+  const factory LoginEvent.error() = LoginEventError;
+}
+
+class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Auth _auth;
   StreamSubscription<Status> _subscription;
 
-  LoginCubit(this._auth)
+  LoginBloc(this._auth)
       : super(LoginState(
           PageState.email(),
           EmailFormState(),
           CodeFormState(),
-        ));
+        )) {
+    _subscription = _auth.statusChange.listen(
+      (Status value) => add(LoginEvent.changeStatus(value)),
+    );
+  }
 
-  Future<void> init() async {
-    if (_subscription == null) {
-      _subscription = _auth.statusChange.listen(
-        (Status value) => change(value),
-      );
-    }
+  @override
+  Stream<LoginState> mapEventToState(LoginEvent event) async* {
+    yield* event.map(
+      changeStatus: (event) async* {
+        switch (event.status) {
+          case Status.Empty:
+            yield state.copyWith(page: PageState.email());
+            return;
+          case Status.Auth:
+            yield state.copyWith(page: PageState.code());
+            return;
+          case Status.Done:
+            yield state.copyWith(page: PageState.done());
+            return;
+        }
+      },
+      changeEmail: (event) async* {
+        final value = Email.dirty(event.value);
+        yield state.copyWith(
+          email: state.email.copyWith(
+            email: value,
+            status: Formz.validate([value]),
+          ),
+        );
+      },
+      changeCode: (event) async* {
+        final value = Code.dirty(event.value);
+        yield state.copyWith(
+          code: state.code.copyWith(
+            code: value,
+            status: Formz.validate([value]),
+          ),
+        );
+      },
+      submitEmail: (event) async* {
+        //try {
+        yield state.copyWith(
+          email: state.email.copyWith(
+            status: FormzStatus.submissionInProgress,
+          ),
+        );
+        await _auth.login(state.email.email.value);
+        // } finally {
+        //   // reset submissionInProgress status
+        //   emit(state.copyWith(
+        //     email: state.email.copyWith(
+        //       status: Formz.validate([state.email.email]),
+        //     ),
+        //   ));
+        // }
+      },
+      submitCode: (event) async* {
+        //try {
+        yield state.copyWith(
+          code: state.code.copyWith(
+            status: FormzStatus.submissionInProgress,
+          ),
+        );
+        await _auth.code(state.code.code.value);
+        // } finally {
+        //   // reset submissionInProgress status
+        //   emit(state.copyWith(
+        //     code: state.code.copyWith(
+        //       status: Formz.validate([state.code.code]),
+        //     ),
+        //   ));
+        // }
+      },
+      error: (event) async* {
+        // reset submissionInProgress status
+        yield state.copyWith(
+          email: state.email.copyWith(
+            status: Formz.validate([state.email.email]),
+          ),
+          code: state.code.copyWith(
+            status: Formz.validate([state.code.code]),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    add(LoginEvent.error());
+    super.onError(error, stackTrace);
   }
 
   @override
   Future<void> close() {
     _subscription?.cancel();
     return super.close();
-  }
-
-  change(Status status) {
-    switch (status) {
-      case Status.Empty:
-        emit(state.copyWith(page: PageState.email()));
-        return;
-      case Status.Auth:
-        emit(state.copyWith(page: PageState.code()));
-        return;
-      case Status.Done:
-        emit(state.copyWith(page: PageState.done()));
-        return;
-    }
-  }
-
-  void emailChanged(String email) {
-    final value = Email.dirty(email);
-    emit(state.copyWith(
-      email: state.email.copyWith(
-        email: value,
-        status: Formz.validate([value]),
-      ),
-    ));
-  }
-
-  Future<void> sendLogin() async {
-    try {
-      emit(state.copyWith(
-        email: state.email.copyWith(
-          status: FormzStatus.submissionInProgress,
-        ),
-      ));
-      await _auth.login(state.email.email.value);
-    } finally {
-      // reset submissionInProgress status
-      emit(state.copyWith(
-        email: state.email.copyWith(
-          status: Formz.validate([state.email.email]),
-        ),
-      ));
-    }
-  }
-
-  void codeChanged(String code) {
-    final value = Code.dirty(code);
-    emit(state.copyWith(
-      code: state.code.copyWith(
-        code: value,
-        status: Formz.validate([value]),
-      ),
-    ));
-  }
-
-  Future<void> sendCode() async {
-    try {
-      emit(state.copyWith(
-        code: state.code.copyWith(
-          status: FormzStatus.submissionInProgress,
-        ),
-      ));
-      await _auth.code(state.code.code.value);
-    } finally {
-      // reset submissionInProgress status
-      emit(state.copyWith(
-        code: state.code.copyWith(
-          status: Formz.validate([state.code.code]),
-        ),
-      ));
-    }
   }
 }

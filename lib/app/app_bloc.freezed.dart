@@ -28,11 +28,6 @@ class _$AppStateTearOff {
   AppStateDone done() {
     return const AppStateDone();
   }
-
-// ignore: unused_element
-  AppStateOffline offline() {
-    return const AppStateOffline();
-  }
 }
 
 // ignore: unused_element
@@ -44,14 +39,12 @@ mixin _$AppState {
     @required Result loading(),
     @required Result login(bool auth),
     @required Result done(),
-    @required Result offline(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result loading(),
     Result login(bool auth),
     Result done(),
-    Result offline(),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -59,14 +52,12 @@ mixin _$AppState {
     @required Result loading(AppStateLoading value),
     @required Result login(AppStateLogin value),
     @required Result done(AppStateDone value),
-    @required Result offline(AppStateOffline value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
     Result loading(AppStateLoading value),
     Result login(AppStateLogin value),
     Result done(AppStateDone value),
-    Result offline(AppStateOffline value),
     @required Result orElse(),
   });
 }
@@ -100,6 +91,7 @@ class _$AppStateLoadingCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
   AppStateLoading get _value => super._value as AppStateLoading;
 }
 
+@Implements(IncompleteState)
 class _$AppStateLoading implements AppStateLoading {
   const _$AppStateLoading();
 
@@ -122,12 +114,10 @@ class _$AppStateLoading implements AppStateLoading {
     @required Result loading(),
     @required Result login(bool auth),
     @required Result done(),
-    @required Result offline(),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
-    assert(offline != null);
     return loading();
   }
 
@@ -137,7 +127,6 @@ class _$AppStateLoading implements AppStateLoading {
     Result loading(),
     Result login(bool auth),
     Result done(),
-    Result offline(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -153,12 +142,10 @@ class _$AppStateLoading implements AppStateLoading {
     @required Result loading(AppStateLoading value),
     @required Result login(AppStateLogin value),
     @required Result done(AppStateDone value),
-    @required Result offline(AppStateOffline value),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
-    assert(offline != null);
     return loading(this);
   }
 
@@ -168,7 +155,6 @@ class _$AppStateLoading implements AppStateLoading {
     Result loading(AppStateLoading value),
     Result login(AppStateLogin value),
     Result done(AppStateDone value),
-    Result offline(AppStateOffline value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -179,7 +165,7 @@ class _$AppStateLoading implements AppStateLoading {
   }
 }
 
-abstract class AppStateLoading implements AppState {
+abstract class AppStateLoading implements AppState, IncompleteState {
   const factory AppStateLoading() = _$AppStateLoading;
 }
 
@@ -242,12 +228,10 @@ class _$AppStateLogin implements AppStateLogin {
     @required Result loading(),
     @required Result login(bool auth),
     @required Result done(),
-    @required Result offline(),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
-    assert(offline != null);
     return login(auth);
   }
 
@@ -257,7 +241,6 @@ class _$AppStateLogin implements AppStateLogin {
     Result loading(),
     Result login(bool auth),
     Result done(),
-    Result offline(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -273,12 +256,10 @@ class _$AppStateLogin implements AppStateLogin {
     @required Result loading(AppStateLoading value),
     @required Result login(AppStateLogin value),
     @required Result done(AppStateDone value),
-    @required Result offline(AppStateOffline value),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
-    assert(offline != null);
     return login(this);
   }
 
@@ -288,7 +269,6 @@ class _$AppStateLogin implements AppStateLogin {
     Result loading(AppStateLoading value),
     Result login(AppStateLogin value),
     Result done(AppStateDone value),
-    Result offline(AppStateOffline value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -344,12 +324,10 @@ class _$AppStateDone implements AppStateDone {
     @required Result loading(),
     @required Result login(bool auth),
     @required Result done(),
-    @required Result offline(),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
-    assert(offline != null);
     return done();
   }
 
@@ -359,7 +337,6 @@ class _$AppStateDone implements AppStateDone {
     Result loading(),
     Result login(bool auth),
     Result done(),
-    Result offline(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -375,12 +352,10 @@ class _$AppStateDone implements AppStateDone {
     @required Result loading(AppStateLoading value),
     @required Result login(AppStateLogin value),
     @required Result done(AppStateDone value),
-    @required Result offline(AppStateOffline value),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
-    assert(offline != null);
     return done(this);
   }
 
@@ -390,7 +365,6 @@ class _$AppStateDone implements AppStateDone {
     Result loading(AppStateLoading value),
     Result login(AppStateLogin value),
     Result done(AppStateDone value),
-    Result offline(AppStateOffline value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -405,33 +379,97 @@ abstract class AppStateDone implements AppState {
   const factory AppStateDone() = _$AppStateDone;
 }
 
-abstract class $AppStateOfflineCopyWith<$Res> {
-  factory $AppStateOfflineCopyWith(
-          AppStateOffline value, $Res Function(AppStateOffline) then) =
-      _$AppStateOfflineCopyWithImpl<$Res>;
+class _$AppEventTearOff {
+  const _$AppEventTearOff();
+
+// ignore: unused_element
+  AppEventInit init() {
+    return const AppEventInit();
+  }
+
+// ignore: unused_element
+  AppEventReset reset() {
+    return const AppEventReset();
+  }
+
+// ignore: unused_element
+  AppEventLogoff logoff() {
+    return const AppEventLogoff();
+  }
 }
 
-class _$AppStateOfflineCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
-    implements $AppStateOfflineCopyWith<$Res> {
-  _$AppStateOfflineCopyWithImpl(
-      AppStateOffline _value, $Res Function(AppStateOffline) _then)
-      : super(_value, (v) => _then(v as AppStateOffline));
+// ignore: unused_element
+const $AppEvent = _$AppEventTearOff();
+
+mixin _$AppEvent {
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(),
+    @required Result reset(),
+    @required Result logoff(),
+  });
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(),
+    Result reset(),
+    Result logoff(),
+    @required Result orElse(),
+  });
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(AppEventInit value),
+    @required Result reset(AppEventReset value),
+    @required Result logoff(AppEventLogoff value),
+  });
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(AppEventInit value),
+    Result reset(AppEventReset value),
+    Result logoff(AppEventLogoff value),
+    @required Result orElse(),
+  });
+}
+
+abstract class $AppEventCopyWith<$Res> {
+  factory $AppEventCopyWith(AppEvent value, $Res Function(AppEvent) then) =
+      _$AppEventCopyWithImpl<$Res>;
+}
+
+class _$AppEventCopyWithImpl<$Res> implements $AppEventCopyWith<$Res> {
+  _$AppEventCopyWithImpl(this._value, this._then);
+
+  final AppEvent _value;
+  // ignore: unused_field
+  final $Res Function(AppEvent) _then;
+}
+
+abstract class $AppEventInitCopyWith<$Res> {
+  factory $AppEventInitCopyWith(
+          AppEventInit value, $Res Function(AppEventInit) then) =
+      _$AppEventInitCopyWithImpl<$Res>;
+}
+
+class _$AppEventInitCopyWithImpl<$Res> extends _$AppEventCopyWithImpl<$Res>
+    implements $AppEventInitCopyWith<$Res> {
+  _$AppEventInitCopyWithImpl(
+      AppEventInit _value, $Res Function(AppEventInit) _then)
+      : super(_value, (v) => _then(v as AppEventInit));
 
   @override
-  AppStateOffline get _value => super._value as AppStateOffline;
+  AppEventInit get _value => super._value as AppEventInit;
 }
 
-class _$AppStateOffline implements AppStateOffline {
-  const _$AppStateOffline();
+class _$AppEventInit implements AppEventInit {
+  const _$AppEventInit();
 
   @override
   String toString() {
-    return 'AppState.offline()';
+    return 'AppEvent.init()';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is AppStateOffline);
+    return identical(this, other) || (other is AppEventInit);
   }
 
   @override
@@ -440,30 +478,27 @@ class _$AppStateOffline implements AppStateOffline {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result loading(),
-    @required Result login(bool auth),
-    @required Result done(),
-    @required Result offline(),
+    @required Result init(),
+    @required Result reset(),
+    @required Result logoff(),
   }) {
-    assert(loading != null);
-    assert(login != null);
-    assert(done != null);
-    assert(offline != null);
-    return offline();
+    assert(init != null);
+    assert(reset != null);
+    assert(logoff != null);
+    return init();
   }
 
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result loading(),
-    Result login(bool auth),
-    Result done(),
-    Result offline(),
+    Result init(),
+    Result reset(),
+    Result logoff(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
-    if (offline != null) {
-      return offline();
+    if (init != null) {
+      return init();
     }
     return orElse();
   }
@@ -471,35 +506,218 @@ class _$AppStateOffline implements AppStateOffline {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result loading(AppStateLoading value),
-    @required Result login(AppStateLogin value),
-    @required Result done(AppStateDone value),
-    @required Result offline(AppStateOffline value),
+    @required Result init(AppEventInit value),
+    @required Result reset(AppEventReset value),
+    @required Result logoff(AppEventLogoff value),
   }) {
-    assert(loading != null);
-    assert(login != null);
-    assert(done != null);
-    assert(offline != null);
-    return offline(this);
+    assert(init != null);
+    assert(reset != null);
+    assert(logoff != null);
+    return init(this);
   }
 
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result loading(AppStateLoading value),
-    Result login(AppStateLogin value),
-    Result done(AppStateDone value),
-    Result offline(AppStateOffline value),
+    Result init(AppEventInit value),
+    Result reset(AppEventReset value),
+    Result logoff(AppEventLogoff value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
-    if (offline != null) {
-      return offline(this);
+    if (init != null) {
+      return init(this);
     }
     return orElse();
   }
 }
 
-abstract class AppStateOffline implements AppState {
-  const factory AppStateOffline() = _$AppStateOffline;
+abstract class AppEventInit implements AppEvent {
+  const factory AppEventInit() = _$AppEventInit;
+}
+
+abstract class $AppEventResetCopyWith<$Res> {
+  factory $AppEventResetCopyWith(
+          AppEventReset value, $Res Function(AppEventReset) then) =
+      _$AppEventResetCopyWithImpl<$Res>;
+}
+
+class _$AppEventResetCopyWithImpl<$Res> extends _$AppEventCopyWithImpl<$Res>
+    implements $AppEventResetCopyWith<$Res> {
+  _$AppEventResetCopyWithImpl(
+      AppEventReset _value, $Res Function(AppEventReset) _then)
+      : super(_value, (v) => _then(v as AppEventReset));
+
+  @override
+  AppEventReset get _value => super._value as AppEventReset;
+}
+
+class _$AppEventReset implements AppEventReset {
+  const _$AppEventReset();
+
+  @override
+  String toString() {
+    return 'AppEvent.reset()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is AppEventReset);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(),
+    @required Result reset(),
+    @required Result logoff(),
+  }) {
+    assert(init != null);
+    assert(reset != null);
+    assert(logoff != null);
+    return reset();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(),
+    Result reset(),
+    Result logoff(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (reset != null) {
+      return reset();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(AppEventInit value),
+    @required Result reset(AppEventReset value),
+    @required Result logoff(AppEventLogoff value),
+  }) {
+    assert(init != null);
+    assert(reset != null);
+    assert(logoff != null);
+    return reset(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(AppEventInit value),
+    Result reset(AppEventReset value),
+    Result logoff(AppEventLogoff value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (reset != null) {
+      return reset(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AppEventReset implements AppEvent {
+  const factory AppEventReset() = _$AppEventReset;
+}
+
+abstract class $AppEventLogoffCopyWith<$Res> {
+  factory $AppEventLogoffCopyWith(
+          AppEventLogoff value, $Res Function(AppEventLogoff) then) =
+      _$AppEventLogoffCopyWithImpl<$Res>;
+}
+
+class _$AppEventLogoffCopyWithImpl<$Res> extends _$AppEventCopyWithImpl<$Res>
+    implements $AppEventLogoffCopyWith<$Res> {
+  _$AppEventLogoffCopyWithImpl(
+      AppEventLogoff _value, $Res Function(AppEventLogoff) _then)
+      : super(_value, (v) => _then(v as AppEventLogoff));
+
+  @override
+  AppEventLogoff get _value => super._value as AppEventLogoff;
+}
+
+class _$AppEventLogoff implements AppEventLogoff {
+  const _$AppEventLogoff();
+
+  @override
+  String toString() {
+    return 'AppEvent.logoff()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is AppEventLogoff);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(),
+    @required Result reset(),
+    @required Result logoff(),
+  }) {
+    assert(init != null);
+    assert(reset != null);
+    assert(logoff != null);
+    return logoff();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(),
+    Result reset(),
+    Result logoff(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (logoff != null) {
+      return logoff();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(AppEventInit value),
+    @required Result reset(AppEventReset value),
+    @required Result logoff(AppEventLogoff value),
+  }) {
+    assert(init != null);
+    assert(reset != null);
+    assert(logoff != null);
+    return logoff(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(AppEventInit value),
+    Result reset(AppEventReset value),
+    Result logoff(AppEventLogoff value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (logoff != null) {
+      return logoff(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AppEventLogoff implements AppEvent {
+  const factory AppEventLogoff() = _$AppEventLogoff;
 }

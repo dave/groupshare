@@ -25,19 +25,9 @@ class LoginPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: BlocProvider(
-          create: (context) {
-            final cubit = LoginCubit(
-              RepositoryProvider.of<Auth>(context),
-            );
-            task(
-              context,
-              null,
-              cubit.init,
-              offlineWarning: false,
-              retry: true,
-            );
-            return cubit;
-          },
+          create: (context) => LoginBloc(
+            RepositoryProvider.of<Auth>(context),
+          ),
           child: LoginForm(global),
         ),
       ),
@@ -52,7 +42,7 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginCubit, LoginState>(
+    return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
         state.page.map(
           email: (state) => true,
@@ -97,7 +87,7 @@ class LoginForm extends StatelessWidget {
 class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginCubit, LoginState>(
+    return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) {
         return previous.email.email != current.email.email;
       },
@@ -107,7 +97,7 @@ class _EmailInput extends StatelessWidget {
           key: Keys.email,
           initialValue: state.email.email.value,
           onChanged: (email) {
-            context.bloc<LoginCubit>().emailChanged(email);
+            context.bloc<LoginBloc>().add(LoginEvent.changeEmail(email));
           },
           decoration: InputDecoration(
             labelText: 'email',
@@ -122,7 +112,7 @@ class _EmailInput extends StatelessWidget {
 class _CodeInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginCubit, LoginState>(
+    return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) {
         return previous.code.code != current.code.code;
       },
@@ -132,7 +122,7 @@ class _CodeInput extends StatelessWidget {
           key: Keys.code,
           initialValue: state.code.code.value,
           onChanged: (code) {
-            context.bloc<LoginCubit>().codeChanged(code);
+            context.bloc<LoginBloc>().add(LoginEvent.changeCode(code));
           },
           decoration: InputDecoration(
             labelText: 'code',
@@ -151,7 +141,7 @@ class _EmailButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginCubit, LoginState>(
+    return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) {
         return previous.email.status != current.email.status;
       },
@@ -163,11 +153,7 @@ class _EmailButton extends StatelessWidget {
                 child: const Text('Login email'),
                 onPressed: () async {
                   if (state.email.status.isValidated) {
-                    await task(
-                      context,
-                      _global,
-                      context.bloc<LoginCubit>().sendLogin,
-                    );
+                    context.bloc<LoginBloc>().add(LoginEvent.submitEmail());
                   }
                 },
               );
@@ -183,7 +169,7 @@ class _CodeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginCubit, LoginState>(
+    return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) {
         return previous.code.status != current.code.status;
       },
@@ -195,11 +181,7 @@ class _CodeButton extends StatelessWidget {
                 child: const Text('Login code'),
                 onPressed: () async {
                   if (state.code.status.isValidated) {
-                    await task(
-                      context,
-                      _global,
-                      context.bloc<LoginCubit>().sendCode,
-                    );
+                    context.bloc<LoginBloc>().add(LoginEvent.submitCode());
                   }
                 },
               );

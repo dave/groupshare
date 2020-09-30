@@ -6,10 +6,14 @@ import 'package:connection_repository/connection_repository.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:device_repository/device_repository.dart';
 import 'package:discovery_repository/discovery_repository.dart';
+import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/app/app.dart';
 import 'package:groupshare/appbar/appbar.dart';
+import 'package:groupshare/handle.dart';
+import 'package:groupshare/login/login.dart';
+import 'package:groupshare/share/list/list.dart';
 import 'package:groupshare/task.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -18,10 +22,13 @@ import 'package:protod/pserver/pserver.dart';
 import 'package:protod/pstore/pstore.dart';
 
 const IS_LIVE = true;
+const PRINT_ERRORS = false;
 
 void main() async {
   FlutterError.onError = (FlutterErrorDetails details) {
-    print("flutter error: ${details.exception} ${details.stack}");
+    if (PRINT_ERRORS) {
+      print("flutter error: ${details.exception} ${details.stack}");
+    }
     FlutterError.presentError(details);
   };
 
@@ -77,62 +84,130 @@ void main() async {
           auth,
           api,
         );
+        final navigator = GlobalKey<NavigatorState>();
+        Bloc.observer = MyBlocObserver(navigator);
 
-        runApp(MultiRepositoryProvider(
-          providers: [
-            RepositoryProvider<Device>.value(value: device),
-            RepositoryProvider<Discovery>.value(value: discovery),
-            RepositoryProvider<Connection>.value(value: connection),
-            RepositoryProvider<Api>.value(value: api),
-            RepositoryProvider<Auth>.value(value: auth),
-            RepositoryProvider<Data>.value(value: data),
-          ],
-          child: MultiBlocProvider(
+        runApp(
+          MultiRepositoryProvider(
             providers: [
-              BlocProvider<AppCubit>(
-                create: (context) {
-                  final cubit = AppCubit(
+              RepositoryProvider<Device>.value(value: device),
+              RepositoryProvider<Discovery>.value(value: discovery),
+              RepositoryProvider<Connection>.value(value: connection),
+              RepositoryProvider<Api>.value(value: api),
+              RepositoryProvider<Auth>.value(value: auth),
+              RepositoryProvider<Data>.value(value: data),
+            ],
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider<AppBloc>(
+                  create: (context) => AppBloc(
                     device,
                     discovery,
                     connection,
                     api,
                     auth,
                     data,
-                  );
-                  task(
-                    context,
-                    null,
-                    cubit.init,
-                    offlineWarning: false,
-                    retry: true,
-                  );
-                  return cubit;
-                },
-              ),
-              BlocProvider<AppBarCubit>(
-                create: (context) {
-                  final cubit = AppBarCubit(
+                  ),
+                ),
+                BlocProvider<AppBarBloc>(
+                  create: (context) => AppBarBloc(
                     api,
                     data,
-                  );
-                  return cubit;
-                },
+                  ),
+                ),
+              ],
+              child: MaterialApp(
+                navigatorKey: navigator,
+                debugShowCheckedModeBanner: false,
+                title: 'Groupshare',
+                theme: ThemeData(
+                  primarySwatch: Colors.orange,
+                  visualDensity: VisualDensity.adaptivePlatformDensity,
+                ),
+                darkTheme: ThemeData(
+                  primarySwatch: Colors.orange,
+                  brightness: Brightness.dark,
+                  visualDensity: VisualDensity.adaptivePlatformDensity,
+                ),
+                home: AppView(),
               ),
-            ],
-            child: AppView(),
+            ),
           ),
-        ));
+        );
       },
       onError: (ex, stack) {
-        print("dart error: $ex $stack");
+        if (PRINT_ERRORS) {
+          print("dart error: $ex $stack");
+        }
         throw ex;
       },
     );
   } catch (ex, stack) {
-    print("caught error: $ex $stack");
+    if (PRINT_ERRORS) {
+      print("caught error: $ex $stack");
+    }
     throw ex;
   }
 }
+
+class MyBlocObserver extends BlocObserver {
+  final GlobalKey<NavigatorState> _navigator;
+
+  MyBlocObserver(this._navigator);
+
+  @override
+  void onError(Cubit cubit, dynamic ex, StackTrace stack) {
+    Function() retry;
+    if (ex is UserException && cubit is Bloc && ex.retry != null) {
+      retry = () => cubit.add(ex.retry);
+    }
+    if (cubit is AppBloc) {
+      // TODO what are appropriate options for errors in AppCubit?
+      handle(
+        _navigator.currentState.overlay.context,
+        ex,
+        stack,
+        back: _navigator.currentState.canPop()
+            ? _navigator.currentState.pop
+            : null,
+        retry: retry,
+        logoff: true,
+      );
+    } else if (cubit.state is IncompleteState) {
+      // States that implement IncompleteState are for when the UI is
+      // incomplete - e.g. a loading screen. The error popup in this state
+      // should not have an "ok" button to dismiss it, since the UI below is
+      // not complete. If an error is shown in this state, the error dialog
+      // should include a button to go home / log off.
+      // TODO: Detect if the navigator can be popped and include a "back" button instead of "home"?
+      final homeButtonValid = !(cubit is ListCubit || cubit is LoginBloc);
+      handle(
+        _navigator.currentState.overlay.context,
+        ex,
+        stack,
+        back: _navigator.currentState.canPop()
+            ? _navigator.currentState.pop
+            : null,
+        retry: retry,
+        home: homeButtonValid,
+        logoff: !homeButtonValid,
+      );
+    } else {
+      // If the UI is in a complete state, we should be able to just show the
+      // OK button, so the user can retry the action if they want.
+      handle(
+        _navigator.currentState.overlay.context,
+        ex,
+        stack,
+        retry: retry,
+      );
+    }
+
+    super.onError(cubit, ex, stack);
+  }
+}
+
+class IncompleteState {}
 
 //class ProtoAdapter<T extends GeneratedMessage> extends TypeAdapter<T> {
 //  // TODO: ProtoAdapter is unused now... remove it?

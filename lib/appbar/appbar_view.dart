@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/app/app.dart';
 import 'package:groupshare/appbar/appbar_bloc.dart';
 import 'package:groupshare/login/login.dart';
-import 'package:groupshare/task.dart';
 import 'package:groupshare/ui/spinner.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
@@ -16,12 +15,10 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final global = GlobalKey();
     return AppBar(
-      key: global,
       title: Text(_title),
       actions: [
-        BlocBuilder<AppBarCubit, AppBarState>(
+        BlocBuilder<AppBarBloc, AppBarState>(
           builder: (context, state) {
             return IconButton(
               icon: state.when(
@@ -35,7 +32,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
             );
           },
         ),
-        BlocBuilder<AppCubit, AppState>(
+        BlocBuilder<AppBloc, AppState>(
           builder: (context, state) {
             return PopupMenuButton(
               icon: Icon(Icons.settings),
@@ -47,17 +44,10 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                       leading: Icon(Icons.group),
                       title: Text('Log off'),
                       onTap: () async {
-                        await task(
-                          context,
-                          global,
-                          () async {
-                            await context.bloc<AppCubit>().logoff();
-                            Navigator.of(context).pushAndRemoveUntil(
-                              LoginPage.route(),
-                              (route) => false,
-                            );
-                          },
-                          offlineWarning: false,
+                        context.bloc<AppBloc>().add(AppEvent.logoff());
+                        Navigator.of(context).pushAndRemoveUntil(
+                          LoginPage.route(),
+                          (route) => false,
                         );
                       },
                     ),
@@ -67,17 +57,10 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                     leading: Icon(Icons.delete_forever),
                     title: Text('Reset app storage'),
                     onTap: () async {
-                      await task(
-                        context,
-                        global,
-                        () async {
-                          await context.bloc<AppCubit>().reset();
-                          Navigator.of(context).pushAndRemoveUntil(
-                            LoginPage.route(),
-                            (route) => false,
-                          );
-                        },
-                        offlineWarning: false,
+                      context.bloc<AppBloc>().add(AppEvent.reset());
+                      Navigator.of(context).pushAndRemoveUntil(
+                        LoginPage.route(),
+                        (route) => false,
                       );
                     },
                   ),
@@ -95,7 +78,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return BlocBuilder<AppBarCubit, AppBarState>(
+        return BlocBuilder<AppBarBloc, AppBarState>(
           builder: (context, state) {
             return AlertDialog(
               title: Text(state.when(
@@ -123,14 +106,14 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                   FlatButton(
                     child: Text("Reconnect"),
                     onPressed: () async {
-                      context.bloc<AppBarCubit>().retry();
+                      context.bloc<AppBarBloc>().add(AppBarEvent.reconnect());
                     },
                   ),
                 if (state is AppbarStateSaved)
                   FlatButton(
                     child: Text("Go offline"),
                     onPressed: () async {
-                      context.bloc<AppBarCubit>().goOffline();
+                      context.bloc<AppBarBloc>().add(AppBarEvent.disconnect());
                     },
                   ),
                 FlatButton(

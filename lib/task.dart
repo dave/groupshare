@@ -14,6 +14,7 @@ Future<T> task<T>(
   bool ok = false,
   bool home = false,
   bool retry = false,
+  bool logoff = false,
 }) async {
   Future<T> tryf() async {
     try {
@@ -27,6 +28,7 @@ Future<T> task<T>(
         ok: ok,
         home: home,
         retry: retry ? tryf : null,
+        logoff: logoff,
       );
     }
   }
@@ -35,7 +37,7 @@ Future<T> task<T>(
     return await tryf();
   }
 
-  final state = context.bloc<AppBarCubit>().state;
+  final state = context.bloc<AppBarBloc>().state;
   final offline = state is AppbarStateOffline || state is AppbarStateFailed;
 
   if (!offline) {

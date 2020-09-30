@@ -10,7 +10,6 @@ import 'package:groupshare/share/details/details.dart';
 import 'package:groupshare/task.dart';
 import 'package:groupshare/ui/refresher.dart';
 
-
 class DetailsPage extends StatelessWidget {
   static const String routeName = 'ShareDetailsPage';
 
@@ -32,18 +31,10 @@ class DetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) {
-        final cubit = DetailsCubit(_id, RepositoryProvider.of<Data>(context));
-        task(
-          context,
-          null,
-          cubit.setup,
-          offlineWarning: false,
-          home: true,
-          retry: true,
-        );
-        return cubit;
-      },
+      create: (context) => DetailsBloc(
+        _id,
+        RepositoryProvider.of<Data>(context),
+      ),
       child: DetailsContent(),
     );
   }
@@ -53,7 +44,7 @@ class DetailsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final global = GlobalKey();
-    return BlocConsumer<DetailsCubit, DetailsState>(
+    return BlocConsumer<DetailsBloc, DetailsState>(
       key: global,
       listener: (context, state) {
         state.map(
@@ -81,11 +72,7 @@ class DetailsContent extends StatelessWidget {
               alignment: const Alignment(0, -1 / 3),
               child: Refresher(
                 onRefresh: () async {
-                  await task(
-                    context,
-                    global,
-                    context.bloc<DetailsCubit>().refresh,
-                  );
+                  context.bloc<DetailsBloc>().add(DetailsEvent.refresh());
                 },
                 child: state.map(
                   loading: (_) => Center(

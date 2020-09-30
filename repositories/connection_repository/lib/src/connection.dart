@@ -3,6 +3,8 @@ import 'package:connectivity/connectivity.dart';
 class Connection {
   final Connectivity _connectivity = Connectivity();
 
+  Future<void> init() async {}
+
   Stream<bool> get stream {
     return _connectivity.onConnectivityChanged.map(
       (ConnectivityResult result) {

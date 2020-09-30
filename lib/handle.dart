@@ -13,8 +13,10 @@ Future<T> handle<T>(
   dynamic stack, {
   List<Button> buttons = const [],
   bool ok = false,
+  FutureOr<T> Function() back,
   bool home = false,
   FutureOr<T> Function() retry,
+  bool logoff = false,
 }) async {
   if (ex == null) {
     return null;
@@ -27,8 +29,21 @@ Future<T> handle<T>(
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context) {
-      return BlocBuilder<AppCubit, AppState>(
+      return BlocBuilder<AppBloc, AppState>(
         builder: (context, state) {
+          final showBack = back != null;
+          final showHome = home;
+          final showRetry = retry != null;
+          final showLogoff = logoff &&
+              (state is AppStateDone || (state is AppStateLogin && state.auth));
+
+          final showOk = ok ||
+              (buttons.length == 0 &&
+                  !showHome &&
+                  !showRetry &&
+                  !showBack &&
+                  !showLogoff);
+
           return AlertDialog(
             title: Text('Error'),
             content: SingleChildScrollView(
@@ -39,21 +54,29 @@ Future<T> handle<T>(
               ),
             ),
             actions: <Widget>[
-              if (ok || (buttons.length == 0 && !home && retry == null))
+              if (showOk)
                 FlatButton(
                   child: Text("OK"),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
-              if (home)
+              if (showBack)
+                FlatButton(
+                  child: Text("Back"),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await back();
+                  },
+                ),
+              if (showHome)
                 FlatButton(
                   child: Text("Home"),
                   onPressed: () => Navigator.of(context).popUntil(
                     ModalRoute.withName(ListPage.routeName),
                   ),
                 ),
-              if (retry != null)
+              if (showRetry)
                 FlatButton(
                   child: Text("Retry"),
                   onPressed: () async {
@@ -71,18 +94,17 @@ Future<T> handle<T>(
                     }
                   },
                 ),
-              // if (state is AppStateDone ||
-              //     (state is AppStateLogin && state.auth))
-              //   FlatButton(
-              //     child: Text("Log off"),
-              //     onPressed: () async {
-              //       await context.bloc<AppCubit>().logoff();
-              //       Navigator.of(context).pushAndRemoveUntil(
-              //         LoginPage.route(),
-              //         (route) => false,
-              //       );
-              //     },
-              //   ),
+              if (showLogoff)
+                FlatButton(
+                  child: Text("Log off"),
+                  onPressed: () async {
+                    context.bloc<AppBloc>().add(AppEvent.logoff());
+                    Navigator.of(context).pushAndRemoveUntil(
+                      LoginPage.route(),
+                      (route) => false,
+                    );
+                  },
+                ),
             ],
           );
         },

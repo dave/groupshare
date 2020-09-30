@@ -38,6 +38,7 @@ class ListPage extends StatelessWidget {
           cubit.setup,
           offlineWarning: false,
           retry: true,
+          logoff: true,
         );
         return cubit;
       },

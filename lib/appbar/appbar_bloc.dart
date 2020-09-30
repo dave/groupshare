@@ -24,14 +24,55 @@ abstract class AppBarState with _$AppBarState {
   const factory AppBarState.failed() = AppbarStateFailed;
 }
 
-class AppBarCubit extends Cubit<AppBarState> {
+@freezed
+abstract class AppBarEvent with _$AppBarEvent {
+  const factory AppBarEvent.change(ConnectionStatus status) = AppBarEventChange;
+
+  const factory AppBarEvent.disconnect() = AppBarEventDisconnect;
+
+  const factory AppBarEvent.reconnect() = AppBarEventReconnect;
+}
+
+class AppBarBloc extends Bloc<AppBarEvent, AppBarState> {
   final Api _api;
   final Data _data;
   StreamSubscription<ConnectionStatus> _subscription;
 
-  AppBarCubit(this._api, this._data) : super(AppBarState.saved()) {
+  AppBarBloc(this._api, this._data) : super(AppBarState.saved()) {
     _subscription = _api.statusStream.listen(
-      (ConnectionStatus value) => emitState(value),
+      (ConnectionStatus value) => add(AppBarEvent.change(value)),
+    );
+  }
+
+  @override
+  Stream<AppBarState> mapEventToState(AppBarEvent event) async* {
+    yield* event.map(
+      change: (event) async* {
+        switch (event.status) {
+          case ConnectionStatus.Saved:
+            yield AppBarState.saved();
+            return;
+          case ConnectionStatus.Connecting:
+            yield AppBarState.connecting();
+            return;
+          case ConnectionStatus.Waiting:
+            yield AppBarState.waiting();
+            return;
+          case ConnectionStatus.Offline:
+            yield AppBarState.offline();
+            return;
+          case ConnectionStatus.Failed:
+            yield AppBarState.failed();
+            return;
+        }
+      },
+      disconnect: (event) async* {
+        _api.disconnect();
+      },
+      reconnect: (event) async* {
+        _data.user.refresh();
+        _data.shares.update();
+      },
     );
   }
 
@@ -39,34 +80,5 @@ class AppBarCubit extends Cubit<AppBarState> {
   Future<void> close() {
     _subscription?.cancel();
     return super.close();
-  }
-
-  void goOffline() {
-    _api.forceOffline();
-  }
-
-  void retry() {
-    _data.user.refresh();
-    _data.shares.update();
-  }
-
-  void emitState(ConnectionStatus state) {
-    switch (state) {
-      case ConnectionStatus.Saved:
-        emit(AppBarState.saved());
-        return;
-      case ConnectionStatus.Connecting:
-        emit(AppBarState.connecting());
-        return;
-      case ConnectionStatus.Waiting:
-        emit(AppBarState.waiting());
-        return;
-      case ConnectionStatus.Offline:
-        emit(AppBarState.offline());
-        return;
-      case ConnectionStatus.Failed:
-        emit(AppBarState.failed());
-        return;
-    }
   }
 }
