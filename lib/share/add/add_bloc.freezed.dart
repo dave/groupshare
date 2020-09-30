@@ -512,3 +512,372 @@ abstract class _FormState implements FormState {
   @override
   _$FormStateCopyWith<_FormState> get copyWith;
 }
+
+class _$AddEventTearOff {
+  const _$AddEventTearOff();
+
+// ignore: unused_element
+  AddEventChange change(String value) {
+    return AddEventChange(
+      value,
+    );
+  }
+
+// ignore: unused_element
+  AddEventSubmit submit() {
+    return const AddEventSubmit();
+  }
+
+// ignore: unused_element
+  AddEventError error() {
+    return const AddEventError();
+  }
+}
+
+// ignore: unused_element
+const $AddEvent = _$AddEventTearOff();
+
+mixin _$AddEvent {
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result change(String value),
+    @required Result submit(),
+    @required Result error(),
+  });
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result change(String value),
+    Result submit(),
+    Result error(),
+    @required Result orElse(),
+  });
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result change(AddEventChange value),
+    @required Result submit(AddEventSubmit value),
+    @required Result error(AddEventError value),
+  });
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result change(AddEventChange value),
+    Result submit(AddEventSubmit value),
+    Result error(AddEventError value),
+    @required Result orElse(),
+  });
+}
+
+abstract class $AddEventCopyWith<$Res> {
+  factory $AddEventCopyWith(AddEvent value, $Res Function(AddEvent) then) =
+      _$AddEventCopyWithImpl<$Res>;
+}
+
+class _$AddEventCopyWithImpl<$Res> implements $AddEventCopyWith<$Res> {
+  _$AddEventCopyWithImpl(this._value, this._then);
+
+  final AddEvent _value;
+  // ignore: unused_field
+  final $Res Function(AddEvent) _then;
+}
+
+abstract class $AddEventChangeCopyWith<$Res> {
+  factory $AddEventChangeCopyWith(
+          AddEventChange value, $Res Function(AddEventChange) then) =
+      _$AddEventChangeCopyWithImpl<$Res>;
+  $Res call({String value});
+}
+
+class _$AddEventChangeCopyWithImpl<$Res> extends _$AddEventCopyWithImpl<$Res>
+    implements $AddEventChangeCopyWith<$Res> {
+  _$AddEventChangeCopyWithImpl(
+      AddEventChange _value, $Res Function(AddEventChange) _then)
+      : super(_value, (v) => _then(v as AddEventChange));
+
+  @override
+  AddEventChange get _value => super._value as AddEventChange;
+
+  @override
+  $Res call({
+    Object value = freezed,
+  }) {
+    return _then(AddEventChange(
+      value == freezed ? _value.value : value as String,
+    ));
+  }
+}
+
+class _$AddEventChange implements AddEventChange {
+  const _$AddEventChange(this.value) : assert(value != null);
+
+  @override
+  final String value;
+
+  @override
+  String toString() {
+    return 'AddEvent.change(value: $value)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is AddEventChange &&
+            (identical(other.value, value) ||
+                const DeepCollectionEquality().equals(other.value, value)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(value);
+
+  @override
+  $AddEventChangeCopyWith<AddEventChange> get copyWith =>
+      _$AddEventChangeCopyWithImpl<AddEventChange>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result change(String value),
+    @required Result submit(),
+    @required Result error(),
+  }) {
+    assert(change != null);
+    assert(submit != null);
+    assert(error != null);
+    return change(value);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result change(String value),
+    Result submit(),
+    Result error(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (change != null) {
+      return change(value);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result change(AddEventChange value),
+    @required Result submit(AddEventSubmit value),
+    @required Result error(AddEventError value),
+  }) {
+    assert(change != null);
+    assert(submit != null);
+    assert(error != null);
+    return change(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result change(AddEventChange value),
+    Result submit(AddEventSubmit value),
+    Result error(AddEventError value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (change != null) {
+      return change(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AddEventChange implements AddEvent {
+  const factory AddEventChange(String value) = _$AddEventChange;
+
+  String get value;
+  $AddEventChangeCopyWith<AddEventChange> get copyWith;
+}
+
+abstract class $AddEventSubmitCopyWith<$Res> {
+  factory $AddEventSubmitCopyWith(
+          AddEventSubmit value, $Res Function(AddEventSubmit) then) =
+      _$AddEventSubmitCopyWithImpl<$Res>;
+}
+
+class _$AddEventSubmitCopyWithImpl<$Res> extends _$AddEventCopyWithImpl<$Res>
+    implements $AddEventSubmitCopyWith<$Res> {
+  _$AddEventSubmitCopyWithImpl(
+      AddEventSubmit _value, $Res Function(AddEventSubmit) _then)
+      : super(_value, (v) => _then(v as AddEventSubmit));
+
+  @override
+  AddEventSubmit get _value => super._value as AddEventSubmit;
+}
+
+class _$AddEventSubmit implements AddEventSubmit {
+  const _$AddEventSubmit();
+
+  @override
+  String toString() {
+    return 'AddEvent.submit()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is AddEventSubmit);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result change(String value),
+    @required Result submit(),
+    @required Result error(),
+  }) {
+    assert(change != null);
+    assert(submit != null);
+    assert(error != null);
+    return submit();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result change(String value),
+    Result submit(),
+    Result error(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (submit != null) {
+      return submit();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result change(AddEventChange value),
+    @required Result submit(AddEventSubmit value),
+    @required Result error(AddEventError value),
+  }) {
+    assert(change != null);
+    assert(submit != null);
+    assert(error != null);
+    return submit(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result change(AddEventChange value),
+    Result submit(AddEventSubmit value),
+    Result error(AddEventError value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (submit != null) {
+      return submit(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AddEventSubmit implements AddEvent {
+  const factory AddEventSubmit() = _$AddEventSubmit;
+}
+
+abstract class $AddEventErrorCopyWith<$Res> {
+  factory $AddEventErrorCopyWith(
+          AddEventError value, $Res Function(AddEventError) then) =
+      _$AddEventErrorCopyWithImpl<$Res>;
+}
+
+class _$AddEventErrorCopyWithImpl<$Res> extends _$AddEventCopyWithImpl<$Res>
+    implements $AddEventErrorCopyWith<$Res> {
+  _$AddEventErrorCopyWithImpl(
+      AddEventError _value, $Res Function(AddEventError) _then)
+      : super(_value, (v) => _then(v as AddEventError));
+
+  @override
+  AddEventError get _value => super._value as AddEventError;
+}
+
+class _$AddEventError implements AddEventError {
+  const _$AddEventError();
+
+  @override
+  String toString() {
+    return 'AddEvent.error()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is AddEventError);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result change(String value),
+    @required Result submit(),
+    @required Result error(),
+  }) {
+    assert(change != null);
+    assert(submit != null);
+    assert(error != null);
+    return error();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result change(String value),
+    Result submit(),
+    Result error(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (error != null) {
+      return error();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result change(AddEventChange value),
+    @required Result submit(AddEventSubmit value),
+    @required Result error(AddEventError value),
+  }) {
+    assert(change != null);
+    assert(submit != null);
+    assert(error != null);
+    return error(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result change(AddEventChange value),
+    Result submit(AddEventSubmit value),
+    Result error(AddEventError value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (error != null) {
+      return error(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AddEventError implements AddEvent {
+  const factory AddEventError() = _$AddEventError;
+}

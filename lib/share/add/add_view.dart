@@ -20,7 +20,7 @@ class AddPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: BlocProvider(
-          create: (context) => AddCubit(
+          create: (context) => AddBloc(
             RepositoryProvider.of<Data>(context),
           ),
           child: AddForm(),
@@ -33,7 +33,7 @@ class AddPage extends StatelessWidget {
 class AddForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AddCubit, AddState>(
+    return BlocConsumer<AddBloc, AddState>(
       listener: (context, state) {
         state.page.map(
           form: (state) => true,
@@ -69,7 +69,7 @@ class AddForm extends StatelessWidget {
 class _NameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddCubit, AddState>(
+    return BlocBuilder<AddBloc, AddState>(
       buildWhen: (previous, current) {
         return previous.form.name != current.form.name;
       },
@@ -81,7 +81,7 @@ class _NameInput extends StatelessWidget {
                 key: Keys.name,
                 initialValue: state.form.name.value,
                 onChanged: (email) {
-                  context.bloc<AddCubit>().nameChanged(email);
+                  context.bloc<AddBloc>().add(AddEvent.change(email));
                 },
                 decoration: InputDecoration(
                   labelText: 'name',
@@ -96,7 +96,7 @@ class _NameInput extends StatelessWidget {
 class _AddButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddCubit, AddState>(
+    return BlocBuilder<AddBloc, AddState>(
       buildWhen: (previous, current) {
         return previous.form.status != current.form.status;
       },
@@ -108,12 +108,7 @@ class _AddButton extends StatelessWidget {
                 child: const Text('Add'),
                 onPressed: () async {
                   if (state.form.status.isValidated) {
-                    await task(
-                      context,
-                      null,
-                      context.bloc<AddCubit>().submit,
-                      offlineWarning: false,
-                    );
+                    context.bloc<AddBloc>().add(AddEvent.submit());
                   }
                 },
               );

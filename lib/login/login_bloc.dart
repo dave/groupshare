@@ -107,38 +107,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         );
       },
       submitEmail: (event) async* {
-        //try {
         yield state.copyWith(
           email: state.email.copyWith(
             status: FormzStatus.submissionInProgress,
           ),
         );
         await _auth.login(state.email.email.value);
-        // } finally {
-        //   // reset submissionInProgress status
-        //   emit(state.copyWith(
-        //     email: state.email.copyWith(
-        //       status: Formz.validate([state.email.email]),
-        //     ),
-        //   ));
-        // }
       },
       submitCode: (event) async* {
-        //try {
         yield state.copyWith(
           code: state.code.copyWith(
             status: FormzStatus.submissionInProgress,
           ),
         );
         await _auth.code(state.code.code.value);
-        // } finally {
-        //   // reset submissionInProgress status
-        //   emit(state.copyWith(
-        //     code: state.code.copyWith(
-        //       status: Formz.validate([state.code.code]),
-        //     ),
-        //   ));
-        // }
       },
       error: (event) async* {
         // reset submissionInProgress status

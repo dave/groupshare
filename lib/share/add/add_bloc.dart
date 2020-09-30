@@ -32,41 +32,62 @@ abstract class FormState with _$FormState {
   }) = _FormState;
 }
 
-class AddCubit extends Cubit<AddState> {
+@freezed
+abstract class AddEvent with _$AddEvent {
+  const factory AddEvent.change(String value) = AddEventChange;
+
+  const factory AddEvent.submit() = AddEventSubmit;
+
+  const factory AddEvent.error() = AddEventError;
+}
+
+class AddBloc extends Bloc<AddEvent, AddState> {
   final Data _data;
 
-  AddCubit(Data data)
+  AddBloc(Data data)
       : _data = data,
         super(AddState(PageState.form(), FormState()));
 
-  void nameChanged(String name) {
-    final value = Name.dirty(name);
-    emit(state.copyWith(
-      form: state.form.copyWith(name: value, status: Formz.validate([value])),
-    ));
+  @override
+  Stream<AddState> mapEventToState(AddEvent event) async* {
+    yield* event.map(
+      change: (event) async* {
+        final value = Name.dirty(event.value);
+        yield state.copyWith(
+          form: state.form.copyWith(
+            name: value,
+            status: Formz.validate([value]),
+          ),
+        );
+      },
+      submit: (event) async* {
+        yield state.copyWith(
+          form: state.form.copyWith(status: FormzStatus.submissionInProgress),
+        );
+        final id = _data.shares.randomUnique();
+        _data.shares.add(id, Share()..name = state.form.name.value);
+        _data.user.op(
+          op.user.shares.insert(
+            0,
+            User_AvailableShare()
+              ..id = id
+              ..name = state.form.name.value,
+          ),
+        );
+        yield state.copyWith(page: PageState.done());
+      },
+      error: (event) async* {
+        // reset submissionInProgress status
+        yield state.copyWith(
+          form: state.form.copyWith(status: Formz.validate([state.form.name])),
+        );
+      },
+    );
   }
 
-  Future<void> submit() async {
-    try {
-      emit(state.copyWith(
-        form: state.form.copyWith(status: FormzStatus.submissionInProgress),
-      ));
-      final id = _data.shares.randomUnique();
-      _data.shares.add(id, Share()..name = state.form.name.value);
-      _data.user.op(
-        op.user.shares.insert(
-          0,
-          User_AvailableShare()
-            ..id = id
-            ..name = state.form.name.value,
-        ),
-      );
-      emit(state.copyWith(page: PageState.done()));
-    } finally {
-      // reset submissionInProgress status
-      emit(state.copyWith(
-        form: state.form.copyWith(status: Formz.validate([state.form.name])),
-      ));
-    }
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    add(AddEvent.error());
+    super.onError(error, stackTrace);
   }
 }
