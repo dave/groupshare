@@ -12,7 +12,7 @@ part 'details_bloc.freezed.dart';
 
 @freezed
 abstract class DetailsState with _$DetailsState {
-  @Implements(IncompleteState)
+  @Implements(PageStateIncomplete)
   const factory DetailsState.loading() = DetailsStateLoading;
 
   const factory DetailsState.done(String id, String name) = DetailsStateDone;
@@ -31,21 +31,19 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
   StreamSubscription<DataEvent<Share>> _subscription;
 
   DetailsBloc(this._id, this._data) : super(DetailsState.loading()) {
-    _subscription = _data.shares.stream.listen(
-      (DataEvent<Share> event) async* {
-        if (event.id != _id) {
-          return;
-        }
-        if (event is DataEventApply<Share>) {
-          add(DetailsEvent.init());
-          return;
-        }
-        if (event is DataEventGot<Share>) {
-          add(DetailsEvent.init());
-          return;
-        }
-      },
-    );
+    _subscription = _data.shares.stream.listen((DataEvent<Share> event) {
+      if (event.id != _id) {
+        return;
+      }
+      if (event is DataEventApply<Share>) {
+        add(DetailsEvent.init());
+        return;
+      }
+      if (event is DataEventGot<Share>) {
+        add(DetailsEvent.init());
+        return;
+      }
+    });
     add(DetailsEvent.init());
   }
 

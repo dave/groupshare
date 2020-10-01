@@ -85,7 +85,7 @@ class _$DetailsStateLoadingCopyWithImpl<$Res>
   DetailsStateLoading get _value => super._value as DetailsStateLoading;
 }
 
-@Implements(IncompleteState)
+@Implements(PageStateIncomplete)
 class _$DetailsStateLoading implements DetailsStateLoading {
   const _$DetailsStateLoading();
 
@@ -153,7 +153,8 @@ class _$DetailsStateLoading implements DetailsStateLoading {
   }
 }
 
-abstract class DetailsStateLoading implements DetailsState, IncompleteState {
+abstract class DetailsStateLoading
+    implements DetailsState, PageStateIncomplete {
   const factory DetailsStateLoading() = _$DetailsStateLoading;
 }
 

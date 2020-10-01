@@ -15,7 +15,7 @@ part 'app_bloc.freezed.dart';
 
 @freezed
 abstract class AppState with _$AppState {
-  @Implements(IncompleteState)
+  @Implements(PageStateIncomplete)
   const factory AppState.loading() = AppStateLoading;
 
   const factory AppState.login(bool auth) = AppStateLogin;
@@ -50,11 +50,9 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     this._auth,
     this._data,
   ) : super(AppState.loading()) {
-    _subscription = _auth.statusChange.listen(
-      (Status value) {
-        add(AppEvent.init());
-      },
-    );
+    _subscription = _auth.statusChange.listen((Status value) {
+      add(AppEvent.init());
+    });
     Future<void> f() async {
       await _device.init();
       await _discovery.init();

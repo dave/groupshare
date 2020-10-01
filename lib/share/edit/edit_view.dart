@@ -40,22 +40,11 @@ class EditPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: BlocProvider(
-          create: (context) {
-            final cubit = EditCubit(
-              _id,
-              _back,
-              RepositoryProvider.of<Data>(context),
-            );
-            task(
-              context,
-              null,
-              cubit.init,
-              offlineWarning: false,
-              home: true,
-              retry: true,
-            );
-            return cubit;
-          },
+          create: (context) => EditBloc(
+            _id,
+            _back,
+            RepositoryProvider.of<Data>(context),
+          ),
           child: EditForm(global),
         ),
       ),
@@ -70,7 +59,7 @@ class EditForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<EditCubit, EditState>(
+    return BlocConsumer<EditBloc, EditState>(
       listener: (context, state) {
         state.page.map(
           loading: (page) => true,
@@ -106,7 +95,7 @@ class EditForm extends StatelessWidget {
 class _NameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EditCubit, EditState>(
+    return BlocBuilder<EditBloc, EditState>(
       buildWhen: (previous, current) {
         return previous.form.name != current.form.name;
       },
@@ -116,7 +105,7 @@ class _NameInput extends StatelessWidget {
           key: Keys.name,
           initialValue: state.form.name.value,
           onChanged: (value) {
-            context.bloc<EditCubit>().nameChanged(value);
+            context.bloc<EditBloc>().add(EditEvent.change(value));
           },
           decoration: InputDecoration(
             labelText: 'name',
@@ -135,7 +124,7 @@ class _SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EditCubit, EditState>(
+    return BlocBuilder<EditBloc, EditState>(
       buildWhen: (previous, current) {
         return previous.form.status != current.form.status;
       },
@@ -147,12 +136,7 @@ class _SubmitButton extends StatelessWidget {
                 child: const Text('Submit'),
                 onPressed: () async {
                   if (state.form.status.isValidated) {
-                    await task(
-                      context,
-                      _global,
-                      context.bloc<EditCubit>().submit,
-                      offlineWarning: false,
-                    );
+                    context.bloc<EditBloc>().add(EditEvent.submit());
                   }
                 },
               );

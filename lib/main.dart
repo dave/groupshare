@@ -173,7 +173,9 @@ class MyBlocObserver extends BlocObserver {
         retry: retry,
         logoff: true,
       );
-    } else if (cubit.state is IncompleteState) {
+    } else if (cubit.state is PageStateIncomplete ||
+        (cubit.state is PageStateHolder &&
+            cubit.state.page is PageStateIncomplete)) {
       // States that implement IncompleteState are for when the UI is
       // incomplete - e.g. a loading screen. The error popup in this state
       // should not have an "ok" button to dismiss it, since the UI below is
@@ -207,7 +209,11 @@ class MyBlocObserver extends BlocObserver {
   }
 }
 
-class IncompleteState {}
+class PageStateIncomplete {}
+
+abstract class PageStateHolder {
+  dynamic get page;
+}
 
 //class ProtoAdapter<T extends GeneratedMessage> extends TypeAdapter<T> {
 //  // TODO: ProtoAdapter is unused now... remove it?

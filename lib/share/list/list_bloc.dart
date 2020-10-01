@@ -51,8 +51,7 @@ class ListCubit extends Cubit<ListState> {
 
   Future<void> setup() async {
     if (_sharesSubscription == null) {
-      _sharesSubscription =
-          _data.shares.stream.listen((DataEvent<Share> event) {
+      _sharesSubscription = _data.shares.stream.listen((DataEvent<Share> event) {
         if (event is DataEventApply ||
             event is DataEventGetting ||
             event is DataEventGetFailed ||

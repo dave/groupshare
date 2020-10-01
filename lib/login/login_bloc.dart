@@ -67,9 +67,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           EmailFormState(),
           CodeFormState(),
         )) {
-    _subscription = _auth.statusChange.listen(
-      (Status value) => add(LoginEvent.changeStatus(value)),
-    );
+    _subscription = _auth.statusChange.listen((Status value) {
+      add(LoginEvent.changeStatus(value));
+    });
   }
 
   @override

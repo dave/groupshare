@@ -43,7 +43,9 @@ class Data {
     futures.add(_users.init());
     await Future.wait(futures);
 
-    _api.backOnlineStream.listen((event) => update());
+    _api.backOnlineStream.listen((bool event) {
+      update();
+    });
 
     Future<void> f() async {
       if (_auth.status == Status.Done && user == null) {

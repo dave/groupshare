@@ -39,9 +39,9 @@ class AppBarBloc extends Bloc<AppBarEvent, AppBarState> {
   StreamSubscription<ConnectionStatus> _subscription;
 
   AppBarBloc(this._api, this._data) : super(AppBarState.saved()) {
-    _subscription = _api.statusStream.listen(
-      (ConnectionStatus value) => add(AppBarEvent.change(value)),
-    );
+    _subscription = _api.statusStream.listen((ConnectionStatus value) {
+      add(AppBarEvent.change(value));
+    });
   }
 
   @override

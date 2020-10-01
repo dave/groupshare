@@ -112,6 +112,7 @@ class __$EditStateCopyWithImpl<$Res> extends _$EditStateCopyWithImpl<$Res>
   }
 }
 
+@Implements(PageStateHolder)
 class _$_EditState implements _EditState {
   const _$_EditState(this.page, this.form)
       : assert(page != null),
@@ -148,7 +149,7 @@ class _$_EditState implements _EditState {
       __$EditStateCopyWithImpl<_EditState>(this, _$identity);
 }
 
-abstract class _EditState implements EditState {
+abstract class _EditState implements EditState, PageStateHolder {
   const factory _EditState(PageState page, FormState form) = _$_EditState;
 
   @override
@@ -390,6 +391,7 @@ class _$PageStateLoadingCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
   PageStateLoading get _value => super._value as PageStateLoading;
 }
 
+@Implements(PageStateIncomplete)
 class _$PageStateLoading implements PageStateLoading {
   const _$PageStateLoading();
 
@@ -463,7 +465,7 @@ class _$PageStateLoading implements PageStateLoading {
   }
 }
 
-abstract class PageStateLoading implements PageState {
+abstract class PageStateLoading implements PageState, PageStateIncomplete {
   const factory PageStateLoading() = _$PageStateLoading;
 }
 
@@ -675,4 +677,525 @@ abstract class PageStateDone implements PageState {
 
   String get route;
   $PageStateDoneCopyWith<PageStateDone> get copyWith;
+}
+
+class _$EditEventTearOff {
+  const _$EditEventTearOff();
+
+// ignore: unused_element
+  EditEventInit init(String value) {
+    return EditEventInit(
+      value,
+    );
+  }
+
+// ignore: unused_element
+  EditEventChange change(String value) {
+    return EditEventChange(
+      value,
+    );
+  }
+
+// ignore: unused_element
+  EditEventSubmit submit() {
+    return const EditEventSubmit();
+  }
+
+// ignore: unused_element
+  EditEventError error() {
+    return const EditEventError();
+  }
+}
+
+// ignore: unused_element
+const $EditEvent = _$EditEventTearOff();
+
+mixin _$EditEvent {
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(String value),
+    @required Result change(String value),
+    @required Result submit(),
+    @required Result error(),
+  });
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(String value),
+    Result change(String value),
+    Result submit(),
+    Result error(),
+    @required Result orElse(),
+  });
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(EditEventInit value),
+    @required Result change(EditEventChange value),
+    @required Result submit(EditEventSubmit value),
+    @required Result error(EditEventError value),
+  });
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(EditEventInit value),
+    Result change(EditEventChange value),
+    Result submit(EditEventSubmit value),
+    Result error(EditEventError value),
+    @required Result orElse(),
+  });
+}
+
+abstract class $EditEventCopyWith<$Res> {
+  factory $EditEventCopyWith(EditEvent value, $Res Function(EditEvent) then) =
+      _$EditEventCopyWithImpl<$Res>;
+}
+
+class _$EditEventCopyWithImpl<$Res> implements $EditEventCopyWith<$Res> {
+  _$EditEventCopyWithImpl(this._value, this._then);
+
+  final EditEvent _value;
+  // ignore: unused_field
+  final $Res Function(EditEvent) _then;
+}
+
+abstract class $EditEventInitCopyWith<$Res> {
+  factory $EditEventInitCopyWith(
+          EditEventInit value, $Res Function(EditEventInit) then) =
+      _$EditEventInitCopyWithImpl<$Res>;
+  $Res call({String value});
+}
+
+class _$EditEventInitCopyWithImpl<$Res> extends _$EditEventCopyWithImpl<$Res>
+    implements $EditEventInitCopyWith<$Res> {
+  _$EditEventInitCopyWithImpl(
+      EditEventInit _value, $Res Function(EditEventInit) _then)
+      : super(_value, (v) => _then(v as EditEventInit));
+
+  @override
+  EditEventInit get _value => super._value as EditEventInit;
+
+  @override
+  $Res call({
+    Object value = freezed,
+  }) {
+    return _then(EditEventInit(
+      value == freezed ? _value.value : value as String,
+    ));
+  }
+}
+
+class _$EditEventInit implements EditEventInit {
+  const _$EditEventInit(this.value) : assert(value != null);
+
+  @override
+  final String value;
+
+  @override
+  String toString() {
+    return 'EditEvent.init(value: $value)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is EditEventInit &&
+            (identical(other.value, value) ||
+                const DeepCollectionEquality().equals(other.value, value)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(value);
+
+  @override
+  $EditEventInitCopyWith<EditEventInit> get copyWith =>
+      _$EditEventInitCopyWithImpl<EditEventInit>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(String value),
+    @required Result change(String value),
+    @required Result submit(),
+    @required Result error(),
+  }) {
+    assert(init != null);
+    assert(change != null);
+    assert(submit != null);
+    assert(error != null);
+    return init(value);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(String value),
+    Result change(String value),
+    Result submit(),
+    Result error(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (init != null) {
+      return init(value);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(EditEventInit value),
+    @required Result change(EditEventChange value),
+    @required Result submit(EditEventSubmit value),
+    @required Result error(EditEventError value),
+  }) {
+    assert(init != null);
+    assert(change != null);
+    assert(submit != null);
+    assert(error != null);
+    return init(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(EditEventInit value),
+    Result change(EditEventChange value),
+    Result submit(EditEventSubmit value),
+    Result error(EditEventError value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (init != null) {
+      return init(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class EditEventInit implements EditEvent {
+  const factory EditEventInit(String value) = _$EditEventInit;
+
+  String get value;
+  $EditEventInitCopyWith<EditEventInit> get copyWith;
+}
+
+abstract class $EditEventChangeCopyWith<$Res> {
+  factory $EditEventChangeCopyWith(
+          EditEventChange value, $Res Function(EditEventChange) then) =
+      _$EditEventChangeCopyWithImpl<$Res>;
+  $Res call({String value});
+}
+
+class _$EditEventChangeCopyWithImpl<$Res> extends _$EditEventCopyWithImpl<$Res>
+    implements $EditEventChangeCopyWith<$Res> {
+  _$EditEventChangeCopyWithImpl(
+      EditEventChange _value, $Res Function(EditEventChange) _then)
+      : super(_value, (v) => _then(v as EditEventChange));
+
+  @override
+  EditEventChange get _value => super._value as EditEventChange;
+
+  @override
+  $Res call({
+    Object value = freezed,
+  }) {
+    return _then(EditEventChange(
+      value == freezed ? _value.value : value as String,
+    ));
+  }
+}
+
+class _$EditEventChange implements EditEventChange {
+  const _$EditEventChange(this.value) : assert(value != null);
+
+  @override
+  final String value;
+
+  @override
+  String toString() {
+    return 'EditEvent.change(value: $value)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is EditEventChange &&
+            (identical(other.value, value) ||
+                const DeepCollectionEquality().equals(other.value, value)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(value);
+
+  @override
+  $EditEventChangeCopyWith<EditEventChange> get copyWith =>
+      _$EditEventChangeCopyWithImpl<EditEventChange>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(String value),
+    @required Result change(String value),
+    @required Result submit(),
+    @required Result error(),
+  }) {
+    assert(init != null);
+    assert(change != null);
+    assert(submit != null);
+    assert(error != null);
+    return change(value);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(String value),
+    Result change(String value),
+    Result submit(),
+    Result error(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (change != null) {
+      return change(value);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(EditEventInit value),
+    @required Result change(EditEventChange value),
+    @required Result submit(EditEventSubmit value),
+    @required Result error(EditEventError value),
+  }) {
+    assert(init != null);
+    assert(change != null);
+    assert(submit != null);
+    assert(error != null);
+    return change(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(EditEventInit value),
+    Result change(EditEventChange value),
+    Result submit(EditEventSubmit value),
+    Result error(EditEventError value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (change != null) {
+      return change(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class EditEventChange implements EditEvent {
+  const factory EditEventChange(String value) = _$EditEventChange;
+
+  String get value;
+  $EditEventChangeCopyWith<EditEventChange> get copyWith;
+}
+
+abstract class $EditEventSubmitCopyWith<$Res> {
+  factory $EditEventSubmitCopyWith(
+          EditEventSubmit value, $Res Function(EditEventSubmit) then) =
+      _$EditEventSubmitCopyWithImpl<$Res>;
+}
+
+class _$EditEventSubmitCopyWithImpl<$Res> extends _$EditEventCopyWithImpl<$Res>
+    implements $EditEventSubmitCopyWith<$Res> {
+  _$EditEventSubmitCopyWithImpl(
+      EditEventSubmit _value, $Res Function(EditEventSubmit) _then)
+      : super(_value, (v) => _then(v as EditEventSubmit));
+
+  @override
+  EditEventSubmit get _value => super._value as EditEventSubmit;
+}
+
+class _$EditEventSubmit implements EditEventSubmit {
+  const _$EditEventSubmit();
+
+  @override
+  String toString() {
+    return 'EditEvent.submit()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is EditEventSubmit);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(String value),
+    @required Result change(String value),
+    @required Result submit(),
+    @required Result error(),
+  }) {
+    assert(init != null);
+    assert(change != null);
+    assert(submit != null);
+    assert(error != null);
+    return submit();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(String value),
+    Result change(String value),
+    Result submit(),
+    Result error(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (submit != null) {
+      return submit();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(EditEventInit value),
+    @required Result change(EditEventChange value),
+    @required Result submit(EditEventSubmit value),
+    @required Result error(EditEventError value),
+  }) {
+    assert(init != null);
+    assert(change != null);
+    assert(submit != null);
+    assert(error != null);
+    return submit(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(EditEventInit value),
+    Result change(EditEventChange value),
+    Result submit(EditEventSubmit value),
+    Result error(EditEventError value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (submit != null) {
+      return submit(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class EditEventSubmit implements EditEvent {
+  const factory EditEventSubmit() = _$EditEventSubmit;
+}
+
+abstract class $EditEventErrorCopyWith<$Res> {
+  factory $EditEventErrorCopyWith(
+          EditEventError value, $Res Function(EditEventError) then) =
+      _$EditEventErrorCopyWithImpl<$Res>;
+}
+
+class _$EditEventErrorCopyWithImpl<$Res> extends _$EditEventCopyWithImpl<$Res>
+    implements $EditEventErrorCopyWith<$Res> {
+  _$EditEventErrorCopyWithImpl(
+      EditEventError _value, $Res Function(EditEventError) _then)
+      : super(_value, (v) => _then(v as EditEventError));
+
+  @override
+  EditEventError get _value => super._value as EditEventError;
+}
+
+class _$EditEventError implements EditEventError {
+  const _$EditEventError();
+
+  @override
+  String toString() {
+    return 'EditEvent.error()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is EditEventError);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(String value),
+    @required Result change(String value),
+    @required Result submit(),
+    @required Result error(),
+  }) {
+    assert(init != null);
+    assert(change != null);
+    assert(submit != null);
+    assert(error != null);
+    return error();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(String value),
+    Result change(String value),
+    Result submit(),
+    Result error(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (error != null) {
+      return error();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(EditEventInit value),
+    @required Result change(EditEventChange value),
+    @required Result submit(EditEventSubmit value),
+    @required Result error(EditEventError value),
+  }) {
+    assert(init != null);
+    assert(change != null);
+    assert(submit != null);
+    assert(error != null);
+    return error(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(EditEventInit value),
+    Result change(EditEventChange value),
+    Result submit(EditEventSubmit value),
+    Result error(EditEventError value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (error != null) {
+      return error(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class EditEventError implements EditEvent {
+  const factory EditEventError() = _$EditEventError;
 }

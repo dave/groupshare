@@ -91,7 +91,7 @@ class _$AppStateLoadingCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
   AppStateLoading get _value => super._value as AppStateLoading;
 }
 
-@Implements(IncompleteState)
+@Implements(PageStateIncomplete)
 class _$AppStateLoading implements AppStateLoading {
   const _$AppStateLoading();
 
@@ -165,7 +165,7 @@ class _$AppStateLoading implements AppStateLoading {
   }
 }
 
-abstract class AppStateLoading implements AppState, IncompleteState {
+abstract class AppStateLoading implements AppState, PageStateIncomplete {
   const factory AppStateLoading() = _$AppStateLoading;
 }
 
