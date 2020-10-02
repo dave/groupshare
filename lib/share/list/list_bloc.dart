@@ -5,20 +5,31 @@ import 'package:data_repository/data_repository.dart';
 import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:groupshare/main.dart';
 import 'package:protod/pserver/pserver.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'list_bloc.freezed.dart';
 
 @freezed
 abstract class ListState with _$ListState {
+  @Implements(PageHolder)
+  @Implements(ActionHolder)
   const factory ListState({
     @required PageState page,
     @required List<AvailableShare> items,
+    ListAction action,
   }) = _ListState;
 }
 
 @freezed
+abstract class ListAction with _$ListAction {
+  const factory ListAction.refreshComplete() = ListActionRefreshComplete;
+}
+
+@freezed
 abstract class PageState with _$PageState {
+  @Implements(PageIncomplete)
   const factory PageState.loading() = PageStateLoading;
 
   const factory PageState.list() = PageStateList;
@@ -35,56 +46,130 @@ abstract class AvailableShare with _$AvailableShare {
   ) = _AvailableShare;
 }
 
-class ListCubit extends Cubit<ListState> {
+@freezed
+abstract class ListEvent with _$ListEvent {
+  const factory ListEvent.init() = ListEventInit;
+
+  const factory ListEvent.update() = ListEventUpdate;
+
+  const factory ListEvent.refresh() = ListEventRefresh;
+
+  const factory ListEvent.item(String id) = ListEventItem;
+
+  const factory ListEvent.delete(String id) = ListEventDelete;
+
+  const factory ListEvent.reorder(int from, int to) = ListEventReorder;
+}
+
+class ListBloc extends Bloc<ListEvent, ListState> {
   final Data _data;
   final Api _api;
   StreamSubscription<DataEvent<Share>> _sharesSubscription;
   StreamSubscription<DataEvent<User>> _userSubscription;
 
-  ListCubit(Data data, Api api)
-      : _data = data,
-        _api = api,
-        super(ListState(
-          page: PageState.loading(),
-          items: [],
-        ));
-
-  Future<void> setup() async {
-    if (_sharesSubscription == null) {
-      _sharesSubscription = _data.shares.stream.listen((DataEvent<Share> event) {
-        if (event is DataEventApply ||
-            event is DataEventGetting ||
-            event is DataEventGetFailed ||
-            event is DataEventGot ||
-            event is DataEventSending ||
-            event is DataEventSent ||
-            event is DataEventDeleted) {
-          emit(_listPage());
-        }
-      });
-    }
-    if (_userSubscription == null) {
-      _userSubscription = _data.user.stream.listen((DataEvent<User> event) {
-        if (event is DataEventApply) {
-          emit(_listPage());
-        }
-      });
-    }
-    await init();
+  ListBloc(this._data, this._api)
+      : super(ListState(page: PageState.loading(), items: [])) {
+    _sharesSubscription = _data.shares.stream.listen((DataEvent<Share> event) {
+      print("_shares $event");
+      if (event is DataEventApply ||
+          event is DataEventGetting ||
+          event is DataEventGetFailed ||
+          event is DataEventGot ||
+          event is DataEventSending ||
+          event is DataEventSent ||
+          event is DataEventDeleted) {
+        add(ListEvent.update());
+      }
+    });
+    _userSubscription = _data.user.stream.listen((DataEvent<User> event) {
+      print("_user $event");
+      if (event is DataEventApply) {
+        add(ListEvent.update());
+      }
+    });
+    add(ListEvent.init());
   }
 
-  Future<void> init() async {
-    if (_data.user == null) {
-      throw UserException("Offline");
-    }
+  // @override
+  // Stream<Transition<ListEvent, ListState>> transformEvents(
+  //     Stream<ListEvent> events, transitionFn) {
+  //   return events.flatMap(transitionFn);
+  // }
 
-    emit(_listPage());
+  @override
+  Stream<ListState> mapEventToState(ListEvent event) async* {
+    yield* event.map(
+      init: (event) async* {
+        if (_data.user == null) {
+          throw UserException("Looks like you're offline.");
+        }
 
-    if (_api.offline()) {
-      return;
-    }
+        yield _listPage();
 
-    await _data.user.send();
+        if (_api.offline()) {
+          return;
+        }
+
+        await _data.user.send();
+      },
+      update: (event) async* {
+        if (_data.user == null) {
+          throw UserException("Looks like you're offline.");
+        }
+
+        yield _listPage();
+      },
+      refresh: (event) async* {
+        await _data.user.refresh();
+        yield _listPage();
+        List<Future> futures = [];
+        _data.user.value.shares.forEach((User_AvailableShare userShare) {
+          if (_data.shares.has(userShare.id)) {
+            futures.add(_data.shares.refresh(userShare.id));
+          }
+        });
+        await Future.wait(futures);
+        yield _listPage().copyWith(action: ListAction.refreshComplete());
+      },
+      item: (event) async* {
+        await _data.shares.refresh(event.id);
+      },
+      delete: (event) async* {
+        // final i = _data.user.value.shares.indexWhere((s) => s.id == id);
+        // if (i == -1) {
+        //   return;
+        // }
+        //_data.user.op(Op().User().Shares().Index(i).Delete());
+        _data.shares.delete(event.id);
+      },
+      reorder: (event) async* {
+        _data.user.op(op.user.shares.move(event.from, event.to));
+      },
+    );
+  }
+
+  ListState _listPage() {
+    final items = _data.user.value.shares.map(
+      (e) {
+        return AvailableShare(
+          e.id,
+          _data.shares.has(e.id) ? _data.shares.meta(e.id) : e.name,
+          _data.shares.has(e.id),
+          _data.shares.dirty().contains(e.id),
+          _data.shares.getting().contains(e.id)
+              ? true
+              : _data.shares.open(e.id)
+                  ? _data.shares.get(e.id).item.sending()
+                  : false,
+        );
+      },
+    ).toList();
+
+    return state.copyWith(
+      page: PageState.list(),
+      items: items,
+      action: null,
+    );
   }
 
   @override
@@ -92,75 +177,5 @@ class ListCubit extends Cubit<ListState> {
     _sharesSubscription?.cancel();
     _userSubscription?.cancel();
     return super.close();
-  }
-
-  void deleteItem(String id) {
-    // final i = _data.user.value.shares.indexWhere((s) => s.id == id);
-    // if (i == -1) {
-    //   return;
-    // }
-    //_data.user.op(Op().User().Shares().Index(i).Delete());
-    _data.shares.delete(id);
-  }
-
-  Future<void> refreshItem(String id) async {
-    final item = await _data.shares.refresh(id);
-    final name = item.value.name;
-    final shares = _data.user.value.shares;
-    final index = shares.indexWhere((s) => s.id == id);
-    if (index > -1 && shares[index].name != name) {
-      _data.user.op(
-        op.user.shares.index(index).name.set(name),
-      );
-    }
-  }
-
-  Future<void> reorder(oldIndex, newIndex) async {
-    _data.user.op(op.user.shares.move(oldIndex, newIndex));
-  }
-
-  Future<void> refreshAllItems() async {
-    await _data.user.refresh();
-    emit(_listPage());
-    List<Future> futures = [];
-    _data.user.value.shares.forEach((userShare) {
-      if (_data.shares.has(userShare.id)) {
-        futures.add(refreshItem(userShare.id));
-      }
-    });
-    await Future.wait(futures);
-  }
-
-  Future<void> initItem(String id) async {
-    await _data.shares.refresh(id);
-  }
-
-  // @override
-  // void emit(ListState state) {
-  //   print("emit: $state");
-  //   super.emit(state);
-  // }
-
-  ListState _listPage() {
-    final items = _data.user.value.shares
-        .map(
-          (e) => AvailableShare(
-            e.id,
-            _data.shares.has(e.id) ? _data.shares.meta(e.id) : e.name,
-            _data.shares.has(e.id),
-            _data.shares.dirty().contains(e.id),
-            _data.shares.getting().contains(e.id)
-                ? true
-                : _data.shares.open(e.id)
-                    ? _data.shares.get(e.id).item.sending()
-                    : false,
-          ),
-        )
-        .toList();
-
-    return state.copyWith(
-      page: PageState.list(),
-      items: items,
-    );
   }
 }

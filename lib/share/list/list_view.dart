@@ -27,21 +27,10 @@ class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) {
-        final cubit = ListCubit(
-          RepositoryProvider.of<Data>(context),
-          RepositoryProvider.of<Api>(context),
-        );
-        task(
-          context,
-          null,
-          cubit.setup,
-          offlineWarning: false,
-          retry: true,
-          logoff: true,
-        );
-        return cubit;
-      },
+      create: (context) => ListBloc(
+        RepositoryProvider.of<Data>(context),
+        RepositoryProvider.of<Api>(context),
+      ),
       child: ListPageContent(),
     );
   }
@@ -51,7 +40,7 @@ class ListPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final global = GlobalKey();
-    return BlocConsumer<ListCubit, ListState>(
+    return BlocConsumer<ListBloc, ListState>(
       key: global,
       listener: (context, state) {
         state.page.map(
@@ -82,11 +71,7 @@ class ListPageContent extends StatelessWidget {
                       onRefresh: () async {
                         // When we pull down the refresh on the empty list, we
                         // refresh the list but not all of the items.
-                        await task(
-                          context,
-                          global,
-                          context.bloc<ListCubit>().init,
-                        );
+                        context.bloc<ListBloc>().add(ListEvent.init());
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -94,20 +79,14 @@ class ListPageContent extends StatelessWidget {
                         children: [Center(child: Text("List empty."))],
                       ),
                     )
-                  : RefreshIndicator(
-                      onRefresh: () async {
-                        // When we pull down the refresh on the list view, we
-                        // initiate a refresh of all the items.
-                        await task(
-                          context,
-                          global,
-                          context.bloc<ListCubit>().refreshAllItems,
-                        );
-                      },
+                  : BlocRefreshIndicator<ListBloc, ListEvent, ListState, ListActionRefreshComplete>(
+                      onRefreshEvent: ListEvent.refresh(),
                       child: RefreshableReorderableListView(
                         physics: AlwaysScrollableScrollPhysics(),
-                        onReorder: (oldIndex, newIndex) {
-                          context.bloc<ListCubit>().reorder(oldIndex, newIndex);
+                        onReorder: (from, to) {
+                          context.bloc<ListBloc>().add(
+                                ListEvent.reorder(from, to),
+                              );
                         },
                         children: state.items.map(
                           (item) {
@@ -133,14 +112,9 @@ class ListPageContent extends StatelessWidget {
                                     foregroundColor: iconColor,
                                     icon: Icons.delete,
                                     onTap: () async {
-                                      await task(
-                                        context,
-                                        global,
-                                        () => context
-                                            .bloc<ListCubit>()
-                                            .deleteItem(item.id),
-                                        offlineWarning: false,
-                                      );
+                                      context
+                                          .bloc<ListBloc>()
+                                          .add(ListEvent.delete(item.id));
                                     },
                                   ),
                                 if (item.local)
@@ -150,13 +124,9 @@ class ListPageContent extends StatelessWidget {
                                     icon: Icons.sync,
                                     foregroundColor: iconColor,
                                     onTap: () async {
-                                      await task(
-                                        context,
-                                        global,
-                                        () async => await context
-                                            .bloc<ListCubit>()
-                                            .refreshItem(item.id),
-                                      );
+                                      context
+                                          .bloc<ListBloc>()
+                                          .add(ListEvent.item(item.id));
                                     },
                                   ),
                                 if (item.local)
@@ -208,7 +178,8 @@ class SlidableListTile extends StatelessWidget {
         await task(
           context,
           global,
-          () async => await Navigator.of(context).push(DetailsPage.route(item.id)),
+          () async =>
+              await Navigator.of(context).push(DetailsPage.route(item.id)),
           offlineWarning: !item.local,
         );
       },
@@ -248,12 +219,7 @@ class SlidableListTile extends StatelessWidget {
               : IconButton(
                   icon: Icon(Icons.file_download),
                   onPressed: () async {
-                    await task(
-                      context,
-                      global,
-                      () async =>
-                          await context.bloc<ListCubit>().initItem(item.id),
-                    );
+                    context.bloc<ListBloc>().add(ListEvent.item(item.id));
                   },
                 ),
     );

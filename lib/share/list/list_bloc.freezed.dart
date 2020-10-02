@@ -14,10 +14,13 @@ class _$ListStateTearOff {
 
 // ignore: unused_element
   _ListState call(
-      {@required PageState page, @required List<AvailableShare> items}) {
+      {@required PageState page,
+      @required List<AvailableShare> items,
+      ListAction action}) {
     return _ListState(
       page: page,
       items: items,
+      action: action,
     );
   }
 }
@@ -28,6 +31,7 @@ const $ListState = _$ListStateTearOff();
 mixin _$ListState {
   PageState get page;
   List<AvailableShare> get items;
+  ListAction get action;
 
   $ListStateCopyWith<ListState> get copyWith;
 }
@@ -35,9 +39,10 @@ mixin _$ListState {
 abstract class $ListStateCopyWith<$Res> {
   factory $ListStateCopyWith(ListState value, $Res Function(ListState) then) =
       _$ListStateCopyWithImpl<$Res>;
-  $Res call({PageState page, List<AvailableShare> items});
+  $Res call({PageState page, List<AvailableShare> items, ListAction action});
 
   $PageStateCopyWith<$Res> get page;
+  $ListActionCopyWith<$Res> get action;
 }
 
 class _$ListStateCopyWithImpl<$Res> implements $ListStateCopyWith<$Res> {
@@ -51,10 +56,12 @@ class _$ListStateCopyWithImpl<$Res> implements $ListStateCopyWith<$Res> {
   $Res call({
     Object page = freezed,
     Object items = freezed,
+    Object action = freezed,
   }) {
     return _then(_value.copyWith(
       page: page == freezed ? _value.page : page as PageState,
       items: items == freezed ? _value.items : items as List<AvailableShare>,
+      action: action == freezed ? _value.action : action as ListAction,
     ));
   }
 
@@ -67,6 +74,16 @@ class _$ListStateCopyWithImpl<$Res> implements $ListStateCopyWith<$Res> {
       return _then(_value.copyWith(page: value));
     });
   }
+
+  @override
+  $ListActionCopyWith<$Res> get action {
+    if (_value.action == null) {
+      return null;
+    }
+    return $ListActionCopyWith<$Res>(_value.action, (value) {
+      return _then(_value.copyWith(action: value));
+    });
+  }
 }
 
 abstract class _$ListStateCopyWith<$Res> implements $ListStateCopyWith<$Res> {
@@ -74,10 +91,12 @@ abstract class _$ListStateCopyWith<$Res> implements $ListStateCopyWith<$Res> {
           _ListState value, $Res Function(_ListState) then) =
       __$ListStateCopyWithImpl<$Res>;
   @override
-  $Res call({PageState page, List<AvailableShare> items});
+  $Res call({PageState page, List<AvailableShare> items, ListAction action});
 
   @override
   $PageStateCopyWith<$Res> get page;
+  @override
+  $ListActionCopyWith<$Res> get action;
 }
 
 class __$ListStateCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
@@ -92,16 +111,20 @@ class __$ListStateCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
   $Res call({
     Object page = freezed,
     Object items = freezed,
+    Object action = freezed,
   }) {
     return _then(_ListState(
       page: page == freezed ? _value.page : page as PageState,
       items: items == freezed ? _value.items : items as List<AvailableShare>,
+      action: action == freezed ? _value.action : action as ListAction,
     ));
   }
 }
 
+@Implements(PageHolder)
+@Implements(ActionHolder)
 class _$_ListState implements _ListState {
-  const _$_ListState({@required this.page, @required this.items})
+  const _$_ListState({@required this.page, @required this.items, this.action})
       : assert(page != null),
         assert(items != null);
 
@@ -109,10 +132,12 @@ class _$_ListState implements _ListState {
   final PageState page;
   @override
   final List<AvailableShare> items;
+  @override
+  final ListAction action;
 
   @override
   String toString() {
-    return 'ListState(page: $page, items: $items)';
+    return 'ListState(page: $page, items: $items, action: $action)';
   }
 
   @override
@@ -122,31 +147,167 @@ class _$_ListState implements _ListState {
             (identical(other.page, page) ||
                 const DeepCollectionEquality().equals(other.page, page)) &&
             (identical(other.items, items) ||
-                const DeepCollectionEquality().equals(other.items, items)));
+                const DeepCollectionEquality().equals(other.items, items)) &&
+            (identical(other.action, action) ||
+                const DeepCollectionEquality().equals(other.action, action)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(page) ^
-      const DeepCollectionEquality().hash(items);
+      const DeepCollectionEquality().hash(items) ^
+      const DeepCollectionEquality().hash(action);
 
   @override
   _$ListStateCopyWith<_ListState> get copyWith =>
       __$ListStateCopyWithImpl<_ListState>(this, _$identity);
 }
 
-abstract class _ListState implements ListState {
+abstract class _ListState implements ListState, PageHolder, ActionHolder {
   const factory _ListState(
       {@required PageState page,
-      @required List<AvailableShare> items}) = _$_ListState;
+      @required List<AvailableShare> items,
+      ListAction action}) = _$_ListState;
 
   @override
   PageState get page;
   @override
   List<AvailableShare> get items;
   @override
+  ListAction get action;
+  @override
   _$ListStateCopyWith<_ListState> get copyWith;
+}
+
+class _$ListActionTearOff {
+  const _$ListActionTearOff();
+
+// ignore: unused_element
+  ListActionRefreshComplete refreshComplete() {
+    return const ListActionRefreshComplete();
+  }
+}
+
+// ignore: unused_element
+const $ListAction = _$ListActionTearOff();
+
+mixin _$ListAction {
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result refreshComplete(),
+  });
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result refreshComplete(),
+    @required Result orElse(),
+  });
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result refreshComplete(ListActionRefreshComplete value),
+  });
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result refreshComplete(ListActionRefreshComplete value),
+    @required Result orElse(),
+  });
+}
+
+abstract class $ListActionCopyWith<$Res> {
+  factory $ListActionCopyWith(
+          ListAction value, $Res Function(ListAction) then) =
+      _$ListActionCopyWithImpl<$Res>;
+}
+
+class _$ListActionCopyWithImpl<$Res> implements $ListActionCopyWith<$Res> {
+  _$ListActionCopyWithImpl(this._value, this._then);
+
+  final ListAction _value;
+  // ignore: unused_field
+  final $Res Function(ListAction) _then;
+}
+
+abstract class $ListActionRefreshCompleteCopyWith<$Res> {
+  factory $ListActionRefreshCompleteCopyWith(ListActionRefreshComplete value,
+          $Res Function(ListActionRefreshComplete) then) =
+      _$ListActionRefreshCompleteCopyWithImpl<$Res>;
+}
+
+class _$ListActionRefreshCompleteCopyWithImpl<$Res>
+    extends _$ListActionCopyWithImpl<$Res>
+    implements $ListActionRefreshCompleteCopyWith<$Res> {
+  _$ListActionRefreshCompleteCopyWithImpl(ListActionRefreshComplete _value,
+      $Res Function(ListActionRefreshComplete) _then)
+      : super(_value, (v) => _then(v as ListActionRefreshComplete));
+
+  @override
+  ListActionRefreshComplete get _value =>
+      super._value as ListActionRefreshComplete;
+}
+
+class _$ListActionRefreshComplete implements ListActionRefreshComplete {
+  const _$ListActionRefreshComplete();
+
+  @override
+  String toString() {
+    return 'ListAction.refreshComplete()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is ListActionRefreshComplete);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result refreshComplete(),
+  }) {
+    assert(refreshComplete != null);
+    return refreshComplete();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result refreshComplete(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (refreshComplete != null) {
+      return refreshComplete();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result refreshComplete(ListActionRefreshComplete value),
+  }) {
+    assert(refreshComplete != null);
+    return refreshComplete(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result refreshComplete(ListActionRefreshComplete value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (refreshComplete != null) {
+      return refreshComplete(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ListActionRefreshComplete implements ListAction {
+  const factory ListActionRefreshComplete() = _$ListActionRefreshComplete;
 }
 
 class _$PageStateTearOff {
@@ -220,6 +381,7 @@ class _$PageStateLoadingCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
   PageStateLoading get _value => super._value as PageStateLoading;
 }
 
+@Implements(PageIncomplete)
 class _$PageStateLoading implements PageStateLoading {
   const _$PageStateLoading();
 
@@ -287,7 +449,7 @@ class _$PageStateLoading implements PageStateLoading {
   }
 }
 
-abstract class PageStateLoading implements PageState {
+abstract class PageStateLoading implements PageState, PageIncomplete {
   const factory PageStateLoading() = _$PageStateLoading;
 }
 
@@ -549,4 +711,851 @@ abstract class _AvailableShare implements AvailableShare {
   bool get sending;
   @override
   _$AvailableShareCopyWith<_AvailableShare> get copyWith;
+}
+
+class _$ListEventTearOff {
+  const _$ListEventTearOff();
+
+// ignore: unused_element
+  ListEventInit init() {
+    return const ListEventInit();
+  }
+
+// ignore: unused_element
+  ListEventUpdate update() {
+    return const ListEventUpdate();
+  }
+
+// ignore: unused_element
+  ListEventRefresh refresh() {
+    return const ListEventRefresh();
+  }
+
+// ignore: unused_element
+  ListEventItem item(String id) {
+    return ListEventItem(
+      id,
+    );
+  }
+
+// ignore: unused_element
+  ListEventDelete delete(String id) {
+    return ListEventDelete(
+      id,
+    );
+  }
+
+// ignore: unused_element
+  ListEventReorder reorder(int from, int to) {
+    return ListEventReorder(
+      from,
+      to,
+    );
+  }
+}
+
+// ignore: unused_element
+const $ListEvent = _$ListEventTearOff();
+
+mixin _$ListEvent {
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(),
+    @required Result update(),
+    @required Result refresh(),
+    @required Result item(String id),
+    @required Result delete(String id),
+    @required Result reorder(int from, int to),
+  });
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(),
+    Result update(),
+    Result refresh(),
+    Result item(String id),
+    Result delete(String id),
+    Result reorder(int from, int to),
+    @required Result orElse(),
+  });
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(ListEventInit value),
+    @required Result update(ListEventUpdate value),
+    @required Result refresh(ListEventRefresh value),
+    @required Result item(ListEventItem value),
+    @required Result delete(ListEventDelete value),
+    @required Result reorder(ListEventReorder value),
+  });
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(ListEventInit value),
+    Result update(ListEventUpdate value),
+    Result refresh(ListEventRefresh value),
+    Result item(ListEventItem value),
+    Result delete(ListEventDelete value),
+    Result reorder(ListEventReorder value),
+    @required Result orElse(),
+  });
+}
+
+abstract class $ListEventCopyWith<$Res> {
+  factory $ListEventCopyWith(ListEvent value, $Res Function(ListEvent) then) =
+      _$ListEventCopyWithImpl<$Res>;
+}
+
+class _$ListEventCopyWithImpl<$Res> implements $ListEventCopyWith<$Res> {
+  _$ListEventCopyWithImpl(this._value, this._then);
+
+  final ListEvent _value;
+  // ignore: unused_field
+  final $Res Function(ListEvent) _then;
+}
+
+abstract class $ListEventInitCopyWith<$Res> {
+  factory $ListEventInitCopyWith(
+          ListEventInit value, $Res Function(ListEventInit) then) =
+      _$ListEventInitCopyWithImpl<$Res>;
+}
+
+class _$ListEventInitCopyWithImpl<$Res> extends _$ListEventCopyWithImpl<$Res>
+    implements $ListEventInitCopyWith<$Res> {
+  _$ListEventInitCopyWithImpl(
+      ListEventInit _value, $Res Function(ListEventInit) _then)
+      : super(_value, (v) => _then(v as ListEventInit));
+
+  @override
+  ListEventInit get _value => super._value as ListEventInit;
+}
+
+class _$ListEventInit implements ListEventInit {
+  const _$ListEventInit();
+
+  @override
+  String toString() {
+    return 'ListEvent.init()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is ListEventInit);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(),
+    @required Result update(),
+    @required Result refresh(),
+    @required Result item(String id),
+    @required Result delete(String id),
+    @required Result reorder(int from, int to),
+  }) {
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(item != null);
+    assert(delete != null);
+    assert(reorder != null);
+    return init();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(),
+    Result update(),
+    Result refresh(),
+    Result item(String id),
+    Result delete(String id),
+    Result reorder(int from, int to),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (init != null) {
+      return init();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(ListEventInit value),
+    @required Result update(ListEventUpdate value),
+    @required Result refresh(ListEventRefresh value),
+    @required Result item(ListEventItem value),
+    @required Result delete(ListEventDelete value),
+    @required Result reorder(ListEventReorder value),
+  }) {
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(item != null);
+    assert(delete != null);
+    assert(reorder != null);
+    return init(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(ListEventInit value),
+    Result update(ListEventUpdate value),
+    Result refresh(ListEventRefresh value),
+    Result item(ListEventItem value),
+    Result delete(ListEventDelete value),
+    Result reorder(ListEventReorder value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (init != null) {
+      return init(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ListEventInit implements ListEvent {
+  const factory ListEventInit() = _$ListEventInit;
+}
+
+abstract class $ListEventUpdateCopyWith<$Res> {
+  factory $ListEventUpdateCopyWith(
+          ListEventUpdate value, $Res Function(ListEventUpdate) then) =
+      _$ListEventUpdateCopyWithImpl<$Res>;
+}
+
+class _$ListEventUpdateCopyWithImpl<$Res> extends _$ListEventCopyWithImpl<$Res>
+    implements $ListEventUpdateCopyWith<$Res> {
+  _$ListEventUpdateCopyWithImpl(
+      ListEventUpdate _value, $Res Function(ListEventUpdate) _then)
+      : super(_value, (v) => _then(v as ListEventUpdate));
+
+  @override
+  ListEventUpdate get _value => super._value as ListEventUpdate;
+}
+
+class _$ListEventUpdate implements ListEventUpdate {
+  const _$ListEventUpdate();
+
+  @override
+  String toString() {
+    return 'ListEvent.update()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is ListEventUpdate);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(),
+    @required Result update(),
+    @required Result refresh(),
+    @required Result item(String id),
+    @required Result delete(String id),
+    @required Result reorder(int from, int to),
+  }) {
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(item != null);
+    assert(delete != null);
+    assert(reorder != null);
+    return update();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(),
+    Result update(),
+    Result refresh(),
+    Result item(String id),
+    Result delete(String id),
+    Result reorder(int from, int to),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (update != null) {
+      return update();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(ListEventInit value),
+    @required Result update(ListEventUpdate value),
+    @required Result refresh(ListEventRefresh value),
+    @required Result item(ListEventItem value),
+    @required Result delete(ListEventDelete value),
+    @required Result reorder(ListEventReorder value),
+  }) {
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(item != null);
+    assert(delete != null);
+    assert(reorder != null);
+    return update(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(ListEventInit value),
+    Result update(ListEventUpdate value),
+    Result refresh(ListEventRefresh value),
+    Result item(ListEventItem value),
+    Result delete(ListEventDelete value),
+    Result reorder(ListEventReorder value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (update != null) {
+      return update(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ListEventUpdate implements ListEvent {
+  const factory ListEventUpdate() = _$ListEventUpdate;
+}
+
+abstract class $ListEventRefreshCopyWith<$Res> {
+  factory $ListEventRefreshCopyWith(
+          ListEventRefresh value, $Res Function(ListEventRefresh) then) =
+      _$ListEventRefreshCopyWithImpl<$Res>;
+}
+
+class _$ListEventRefreshCopyWithImpl<$Res> extends _$ListEventCopyWithImpl<$Res>
+    implements $ListEventRefreshCopyWith<$Res> {
+  _$ListEventRefreshCopyWithImpl(
+      ListEventRefresh _value, $Res Function(ListEventRefresh) _then)
+      : super(_value, (v) => _then(v as ListEventRefresh));
+
+  @override
+  ListEventRefresh get _value => super._value as ListEventRefresh;
+}
+
+class _$ListEventRefresh implements ListEventRefresh {
+  const _$ListEventRefresh();
+
+  @override
+  String toString() {
+    return 'ListEvent.refresh()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is ListEventRefresh);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(),
+    @required Result update(),
+    @required Result refresh(),
+    @required Result item(String id),
+    @required Result delete(String id),
+    @required Result reorder(int from, int to),
+  }) {
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(item != null);
+    assert(delete != null);
+    assert(reorder != null);
+    return refresh();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(),
+    Result update(),
+    Result refresh(),
+    Result item(String id),
+    Result delete(String id),
+    Result reorder(int from, int to),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (refresh != null) {
+      return refresh();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(ListEventInit value),
+    @required Result update(ListEventUpdate value),
+    @required Result refresh(ListEventRefresh value),
+    @required Result item(ListEventItem value),
+    @required Result delete(ListEventDelete value),
+    @required Result reorder(ListEventReorder value),
+  }) {
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(item != null);
+    assert(delete != null);
+    assert(reorder != null);
+    return refresh(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(ListEventInit value),
+    Result update(ListEventUpdate value),
+    Result refresh(ListEventRefresh value),
+    Result item(ListEventItem value),
+    Result delete(ListEventDelete value),
+    Result reorder(ListEventReorder value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (refresh != null) {
+      return refresh(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ListEventRefresh implements ListEvent {
+  const factory ListEventRefresh() = _$ListEventRefresh;
+}
+
+abstract class $ListEventItemCopyWith<$Res> {
+  factory $ListEventItemCopyWith(
+          ListEventItem value, $Res Function(ListEventItem) then) =
+      _$ListEventItemCopyWithImpl<$Res>;
+  $Res call({String id});
+}
+
+class _$ListEventItemCopyWithImpl<$Res> extends _$ListEventCopyWithImpl<$Res>
+    implements $ListEventItemCopyWith<$Res> {
+  _$ListEventItemCopyWithImpl(
+      ListEventItem _value, $Res Function(ListEventItem) _then)
+      : super(_value, (v) => _then(v as ListEventItem));
+
+  @override
+  ListEventItem get _value => super._value as ListEventItem;
+
+  @override
+  $Res call({
+    Object id = freezed,
+  }) {
+    return _then(ListEventItem(
+      id == freezed ? _value.id : id as String,
+    ));
+  }
+}
+
+class _$ListEventItem implements ListEventItem {
+  const _$ListEventItem(this.id) : assert(id != null);
+
+  @override
+  final String id;
+
+  @override
+  String toString() {
+    return 'ListEvent.item(id: $id)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is ListEventItem &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(id);
+
+  @override
+  $ListEventItemCopyWith<ListEventItem> get copyWith =>
+      _$ListEventItemCopyWithImpl<ListEventItem>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(),
+    @required Result update(),
+    @required Result refresh(),
+    @required Result item(String id),
+    @required Result delete(String id),
+    @required Result reorder(int from, int to),
+  }) {
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(item != null);
+    assert(delete != null);
+    assert(reorder != null);
+    return item(id);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(),
+    Result update(),
+    Result refresh(),
+    Result item(String id),
+    Result delete(String id),
+    Result reorder(int from, int to),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (item != null) {
+      return item(id);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(ListEventInit value),
+    @required Result update(ListEventUpdate value),
+    @required Result refresh(ListEventRefresh value),
+    @required Result item(ListEventItem value),
+    @required Result delete(ListEventDelete value),
+    @required Result reorder(ListEventReorder value),
+  }) {
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(item != null);
+    assert(delete != null);
+    assert(reorder != null);
+    return item(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(ListEventInit value),
+    Result update(ListEventUpdate value),
+    Result refresh(ListEventRefresh value),
+    Result item(ListEventItem value),
+    Result delete(ListEventDelete value),
+    Result reorder(ListEventReorder value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (item != null) {
+      return item(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ListEventItem implements ListEvent {
+  const factory ListEventItem(String id) = _$ListEventItem;
+
+  String get id;
+  $ListEventItemCopyWith<ListEventItem> get copyWith;
+}
+
+abstract class $ListEventDeleteCopyWith<$Res> {
+  factory $ListEventDeleteCopyWith(
+          ListEventDelete value, $Res Function(ListEventDelete) then) =
+      _$ListEventDeleteCopyWithImpl<$Res>;
+  $Res call({String id});
+}
+
+class _$ListEventDeleteCopyWithImpl<$Res> extends _$ListEventCopyWithImpl<$Res>
+    implements $ListEventDeleteCopyWith<$Res> {
+  _$ListEventDeleteCopyWithImpl(
+      ListEventDelete _value, $Res Function(ListEventDelete) _then)
+      : super(_value, (v) => _then(v as ListEventDelete));
+
+  @override
+  ListEventDelete get _value => super._value as ListEventDelete;
+
+  @override
+  $Res call({
+    Object id = freezed,
+  }) {
+    return _then(ListEventDelete(
+      id == freezed ? _value.id : id as String,
+    ));
+  }
+}
+
+class _$ListEventDelete implements ListEventDelete {
+  const _$ListEventDelete(this.id) : assert(id != null);
+
+  @override
+  final String id;
+
+  @override
+  String toString() {
+    return 'ListEvent.delete(id: $id)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is ListEventDelete &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(id);
+
+  @override
+  $ListEventDeleteCopyWith<ListEventDelete> get copyWith =>
+      _$ListEventDeleteCopyWithImpl<ListEventDelete>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(),
+    @required Result update(),
+    @required Result refresh(),
+    @required Result item(String id),
+    @required Result delete(String id),
+    @required Result reorder(int from, int to),
+  }) {
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(item != null);
+    assert(delete != null);
+    assert(reorder != null);
+    return delete(id);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(),
+    Result update(),
+    Result refresh(),
+    Result item(String id),
+    Result delete(String id),
+    Result reorder(int from, int to),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (delete != null) {
+      return delete(id);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(ListEventInit value),
+    @required Result update(ListEventUpdate value),
+    @required Result refresh(ListEventRefresh value),
+    @required Result item(ListEventItem value),
+    @required Result delete(ListEventDelete value),
+    @required Result reorder(ListEventReorder value),
+  }) {
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(item != null);
+    assert(delete != null);
+    assert(reorder != null);
+    return delete(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(ListEventInit value),
+    Result update(ListEventUpdate value),
+    Result refresh(ListEventRefresh value),
+    Result item(ListEventItem value),
+    Result delete(ListEventDelete value),
+    Result reorder(ListEventReorder value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (delete != null) {
+      return delete(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ListEventDelete implements ListEvent {
+  const factory ListEventDelete(String id) = _$ListEventDelete;
+
+  String get id;
+  $ListEventDeleteCopyWith<ListEventDelete> get copyWith;
+}
+
+abstract class $ListEventReorderCopyWith<$Res> {
+  factory $ListEventReorderCopyWith(
+          ListEventReorder value, $Res Function(ListEventReorder) then) =
+      _$ListEventReorderCopyWithImpl<$Res>;
+  $Res call({int from, int to});
+}
+
+class _$ListEventReorderCopyWithImpl<$Res> extends _$ListEventCopyWithImpl<$Res>
+    implements $ListEventReorderCopyWith<$Res> {
+  _$ListEventReorderCopyWithImpl(
+      ListEventReorder _value, $Res Function(ListEventReorder) _then)
+      : super(_value, (v) => _then(v as ListEventReorder));
+
+  @override
+  ListEventReorder get _value => super._value as ListEventReorder;
+
+  @override
+  $Res call({
+    Object from = freezed,
+    Object to = freezed,
+  }) {
+    return _then(ListEventReorder(
+      from == freezed ? _value.from : from as int,
+      to == freezed ? _value.to : to as int,
+    ));
+  }
+}
+
+class _$ListEventReorder implements ListEventReorder {
+  const _$ListEventReorder(this.from, this.to)
+      : assert(from != null),
+        assert(to != null);
+
+  @override
+  final int from;
+  @override
+  final int to;
+
+  @override
+  String toString() {
+    return 'ListEvent.reorder(from: $from, to: $to)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is ListEventReorder &&
+            (identical(other.from, from) ||
+                const DeepCollectionEquality().equals(other.from, from)) &&
+            (identical(other.to, to) ||
+                const DeepCollectionEquality().equals(other.to, to)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(from) ^
+      const DeepCollectionEquality().hash(to);
+
+  @override
+  $ListEventReorderCopyWith<ListEventReorder> get copyWith =>
+      _$ListEventReorderCopyWithImpl<ListEventReorder>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result init(),
+    @required Result update(),
+    @required Result refresh(),
+    @required Result item(String id),
+    @required Result delete(String id),
+    @required Result reorder(int from, int to),
+  }) {
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(item != null);
+    assert(delete != null);
+    assert(reorder != null);
+    return reorder(from, to);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result init(),
+    Result update(),
+    Result refresh(),
+    Result item(String id),
+    Result delete(String id),
+    Result reorder(int from, int to),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (reorder != null) {
+      return reorder(from, to);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result init(ListEventInit value),
+    @required Result update(ListEventUpdate value),
+    @required Result refresh(ListEventRefresh value),
+    @required Result item(ListEventItem value),
+    @required Result delete(ListEventDelete value),
+    @required Result reorder(ListEventReorder value),
+  }) {
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(item != null);
+    assert(delete != null);
+    assert(reorder != null);
+    return reorder(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result init(ListEventInit value),
+    Result update(ListEventUpdate value),
+    Result refresh(ListEventRefresh value),
+    Result item(ListEventItem value),
+    Result delete(ListEventDelete value),
+    Result reorder(ListEventReorder value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (reorder != null) {
+      return reorder(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ListEventReorder implements ListEvent {
+  const factory ListEventReorder(int from, int to) = _$ListEventReorder;
+
+  int get from;
+  int get to;
+  $ListEventReorderCopyWith<ListEventReorder> get copyWith;
 }

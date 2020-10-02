@@ -12,10 +12,25 @@ part 'details_bloc.freezed.dart';
 
 @freezed
 abstract class DetailsState with _$DetailsState {
-  @Implements(PageStateIncomplete)
-  const factory DetailsState.loading() = DetailsStateLoading;
+  @Implements(PageHolder)
+  @Implements(ActionHolder)
+  const factory DetailsState({
+    @required PageState page,
+    DetailsAction action,
+  }) = _DetailsState;
+}
 
-  const factory DetailsState.done(String id, String name) = DetailsStateDone;
+@freezed
+abstract class PageState with _$DetailsState {
+  @Implements(PageIncomplete)
+  const factory PageState.loading() = PageStateLoading;
+
+  const factory PageState.done(String id, String name) = PageStateDone;
+}
+
+@freezed
+abstract class DetailsAction with _$DetailsAction {
+  const factory DetailsAction.refreshComplete() = DetailsActionRefreshComplete;
 }
 
 @freezed
@@ -30,7 +45,7 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
   final Data _data;
   StreamSubscription<DataEvent<Share>> _subscription;
 
-  DetailsBloc(this._id, this._data) : super(DetailsState.loading()) {
+  DetailsBloc(this._id, this._data) : super(DetailsState(page: PageState.loading())) {
     _subscription = _data.shares.stream.listen((DataEvent<Share> event) {
       if (event.id != _id) {
         return;
@@ -55,7 +70,7 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
         if (item == null) {
           throw UserException("Can't find document");
         }
-        yield DetailsState.done(item.id, item.value.name);
+        yield state.copyWith(page:PageState.done(item.id, item.value.name));
       },
       refresh: (event) async* {
         await _data.shares.refresh(_id);

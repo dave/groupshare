@@ -173,16 +173,16 @@ class MyBlocObserver extends BlocObserver {
         retry: retry,
         logoff: true,
       );
-    } else if (cubit.state is PageStateIncomplete ||
-        (cubit.state is PageStateHolder &&
-            cubit.state.page is PageStateIncomplete)) {
+    } else if (cubit.state is PageIncomplete ||
+        (cubit.state is PageHolder &&
+            cubit.state.page is PageIncomplete)) {
       // States that implement IncompleteState are for when the UI is
       // incomplete - e.g. a loading screen. The error popup in this state
       // should not have an "ok" button to dismiss it, since the UI below is
       // not complete. If an error is shown in this state, the error dialog
       // should include a button to go home / log off.
       // TODO: Detect if the navigator can be popped and include a "back" button instead of "home"?
-      final homeButtonValid = !(cubit is ListCubit || cubit is LoginBloc);
+      final homeButtonValid = !(cubit is ListBloc || cubit is LoginBloc);
       handle(
         _navigator.currentState.overlay.context,
         ex,
@@ -209,10 +209,14 @@ class MyBlocObserver extends BlocObserver {
   }
 }
 
-class PageStateIncomplete {}
+class PageIncomplete {}
 
-abstract class PageStateHolder {
+abstract class PageHolder {
   dynamic get page;
+}
+
+abstract class ActionHolder {
+  dynamic get action;
 }
 
 //class ProtoAdapter<T extends GeneratedMessage> extends TypeAdapter<T> {

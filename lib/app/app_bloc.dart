@@ -15,7 +15,7 @@ part 'app_bloc.freezed.dart';
 
 @freezed
 abstract class AppState with _$AppState {
-  @Implements(PageStateIncomplete)
+  @Implements(PageIncomplete)
   const factory AppState.loading() = AppStateLoading;
 
   const factory AppState.login(bool auth) = AppStateLogin;

@@ -112,7 +112,7 @@ class __$EditStateCopyWithImpl<$Res> extends _$EditStateCopyWithImpl<$Res>
   }
 }
 
-@Implements(PageStateHolder)
+@Implements(PageHolder)
 class _$_EditState implements _EditState {
   const _$_EditState(this.page, this.form)
       : assert(page != null),
@@ -149,7 +149,7 @@ class _$_EditState implements _EditState {
       __$EditStateCopyWithImpl<_EditState>(this, _$identity);
 }
 
-abstract class _EditState implements EditState, PageStateHolder {
+abstract class _EditState implements EditState, PageHolder {
   const factory _EditState(PageState page, FormState form) = _$_EditState;
 
   @override
@@ -391,7 +391,7 @@ class _$PageStateLoadingCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
   PageStateLoading get _value => super._value as PageStateLoading;
 }
 
-@Implements(PageStateIncomplete)
+@Implements(PageIncomplete)
 class _$PageStateLoading implements PageStateLoading {
   const _$PageStateLoading();
 
@@ -465,7 +465,7 @@ class _$PageStateLoading implements PageStateLoading {
   }
 }
 
-abstract class PageStateLoading implements PageState, PageStateIncomplete {
+abstract class PageStateLoading implements PageState, PageIncomplete {
   const factory PageStateLoading() = _$PageStateLoading;
 }
 

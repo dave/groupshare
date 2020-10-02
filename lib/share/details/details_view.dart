@@ -46,26 +46,36 @@ class DetailsContent extends StatelessWidget {
     final global = GlobalKey();
     return BlocConsumer<DetailsBloc, DetailsState>(
       key: global,
+      listenWhen: (previous, current) => current.map(
+        resetRefresh: (state) => true,
+        loading: (state) => false,
+        done: (state) => false,
+      ),
       listener: (context, state) {
         state.map(
           loading: (state) => true,
           done: (state) => true,
         );
       },
+      buildWhen: (previous, current) => current.map(
+        loading: (state) => true,
+        done: (state) => true,
+      ),
       builder: (context, state) {
         return Scaffold(
           appBar: AppBarWidget('Title'),
-          floatingActionButton: state is DetailsStateDone
-              ? FloatingActionButton(
-                  child: Icon(Icons.edit),
-                  onPressed: () async {
-                    await Navigator.of(context).push(EditPage.route(
-                      state.id,
-                      DetailsPage.routeName,
-                    ));
-                  },
-                )
-              : null,
+          floatingActionButton: state.map(
+            loading: (state) => Container(),
+            done: (state) => FloatingActionButton(
+              child: Icon(Icons.edit),
+              onPressed: () async {
+                await Navigator.of(context).push(EditPage.route(
+                  state.id,
+                  DetailsPage.routeName,
+                ));
+              },
+            ),
+          ),
           body: Padding(
             padding: const EdgeInsets.all(12),
             child: Align(

@@ -12,7 +12,7 @@ part 'edit_bloc.freezed.dart';
 
 @freezed
 abstract class EditState with _$EditState {
-  @Implements(PageStateHolder)
+  @Implements(PageHolder)
   const factory EditState(
     PageState page,
     FormState form,
@@ -30,7 +30,7 @@ abstract class FormState with _$FormState {
 
 @freezed
 abstract class PageState with _$PageState {
-  @Implements(PageStateIncomplete)
+  @Implements(PageIncomplete)
   const factory PageState.loading() = PageStateLoading;
 
   const factory PageState.form() = PageStateForm;

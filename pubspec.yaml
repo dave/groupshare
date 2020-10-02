@@ -36,6 +36,7 @@ dependencies:
   formz:
   refreshable_reorderable_list: ^0.0.1
   flutter_slidable: "^0.5.6"
+  rxdart: ^0.24.1
   protod:
     path: "../protod"
   api_repository:
