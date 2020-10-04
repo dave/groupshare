@@ -44,6 +44,7 @@ class ListPageContent extends StatelessWidget {
       buildWhen: (previous, current) => current.map(
         loading: (_) => true,
         list: (_) => true,
+        flush: (_) => false,
         refreshFinished: (_) => false,
       ),
       builder: (context, state) {

@@ -18,6 +18,11 @@ class _$ListStateTearOff {
   }
 
 // ignore: unused_element
+  ListStateFlush flush() {
+    return const ListStateFlush();
+  }
+
+// ignore: unused_element
   ListStateRefreshFinished refreshFinished() {
     return const ListStateRefreshFinished();
   }
@@ -37,12 +42,14 @@ mixin _$ListState {
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result loading(),
+    @required Result flush(),
     @required Result refreshFinished(),
     @required Result list(List<AvailableShare> items),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result loading(),
+    Result flush(),
     Result refreshFinished(),
     Result list(List<AvailableShare> items),
     @required Result orElse(),
@@ -50,12 +57,14 @@ mixin _$ListState {
   @optionalTypeArgs
   Result map<Result extends Object>({
     @required Result loading(ListStateLoading value),
+    @required Result flush(ListStateFlush value),
     @required Result refreshFinished(ListStateRefreshFinished value),
     @required Result list(ListStateList value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
     Result loading(ListStateLoading value),
+    Result flush(ListStateFlush value),
     Result refreshFinished(ListStateRefreshFinished value),
     Result list(ListStateList value),
     @required Result orElse(),
@@ -112,10 +121,12 @@ class _$ListStateLoading implements ListStateLoading {
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result loading(),
+    @required Result flush(),
     @required Result refreshFinished(),
     @required Result list(List<AvailableShare> items),
   }) {
     assert(loading != null);
+    assert(flush != null);
     assert(refreshFinished != null);
     assert(list != null);
     return loading();
@@ -125,6 +136,7 @@ class _$ListStateLoading implements ListStateLoading {
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result loading(),
+    Result flush(),
     Result refreshFinished(),
     Result list(List<AvailableShare> items),
     @required Result orElse(),
@@ -140,10 +152,12 @@ class _$ListStateLoading implements ListStateLoading {
   @optionalTypeArgs
   Result map<Result extends Object>({
     @required Result loading(ListStateLoading value),
+    @required Result flush(ListStateFlush value),
     @required Result refreshFinished(ListStateRefreshFinished value),
     @required Result list(ListStateList value),
   }) {
     assert(loading != null);
+    assert(flush != null);
     assert(refreshFinished != null);
     assert(list != null);
     return loading(this);
@@ -153,6 +167,7 @@ class _$ListStateLoading implements ListStateLoading {
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
     Result loading(ListStateLoading value),
+    Result flush(ListStateFlush value),
     Result refreshFinished(ListStateRefreshFinished value),
     Result list(ListStateList value),
     @required Result orElse(),
@@ -167,6 +182,105 @@ class _$ListStateLoading implements ListStateLoading {
 
 abstract class ListStateLoading implements ListState, Incomplete {
   const factory ListStateLoading() = _$ListStateLoading;
+}
+
+abstract class $ListStateFlushCopyWith<$Res> {
+  factory $ListStateFlushCopyWith(
+          ListStateFlush value, $Res Function(ListStateFlush) then) =
+      _$ListStateFlushCopyWithImpl<$Res>;
+}
+
+class _$ListStateFlushCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
+    implements $ListStateFlushCopyWith<$Res> {
+  _$ListStateFlushCopyWithImpl(
+      ListStateFlush _value, $Res Function(ListStateFlush) _then)
+      : super(_value, (v) => _then(v as ListStateFlush));
+
+  @override
+  ListStateFlush get _value => super._value as ListStateFlush;
+}
+
+class _$ListStateFlush implements ListStateFlush {
+  const _$ListStateFlush();
+
+  @override
+  String toString() {
+    return 'ListState.flush()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is ListStateFlush);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result loading(),
+    @required Result flush(),
+    @required Result refreshFinished(),
+    @required Result list(List<AvailableShare> items),
+  }) {
+    assert(loading != null);
+    assert(flush != null);
+    assert(refreshFinished != null);
+    assert(list != null);
+    return flush();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result loading(),
+    Result flush(),
+    Result refreshFinished(),
+    Result list(List<AvailableShare> items),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (flush != null) {
+      return flush();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result loading(ListStateLoading value),
+    @required Result flush(ListStateFlush value),
+    @required Result refreshFinished(ListStateRefreshFinished value),
+    @required Result list(ListStateList value),
+  }) {
+    assert(loading != null);
+    assert(flush != null);
+    assert(refreshFinished != null);
+    assert(list != null);
+    return flush(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result loading(ListStateLoading value),
+    Result flush(ListStateFlush value),
+    Result refreshFinished(ListStateRefreshFinished value),
+    Result list(ListStateList value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (flush != null) {
+      return flush(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ListStateFlush implements ListState {
+  const factory ListStateFlush() = _$ListStateFlush;
 }
 
 abstract class $ListStateRefreshFinishedCopyWith<$Res> {
@@ -207,10 +321,12 @@ class _$ListStateRefreshFinished implements ListStateRefreshFinished {
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result loading(),
+    @required Result flush(),
     @required Result refreshFinished(),
     @required Result list(List<AvailableShare> items),
   }) {
     assert(loading != null);
+    assert(flush != null);
     assert(refreshFinished != null);
     assert(list != null);
     return refreshFinished();
@@ -220,6 +336,7 @@ class _$ListStateRefreshFinished implements ListStateRefreshFinished {
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result loading(),
+    Result flush(),
     Result refreshFinished(),
     Result list(List<AvailableShare> items),
     @required Result orElse(),
@@ -235,10 +352,12 @@ class _$ListStateRefreshFinished implements ListStateRefreshFinished {
   @optionalTypeArgs
   Result map<Result extends Object>({
     @required Result loading(ListStateLoading value),
+    @required Result flush(ListStateFlush value),
     @required Result refreshFinished(ListStateRefreshFinished value),
     @required Result list(ListStateList value),
   }) {
     assert(loading != null);
+    assert(flush != null);
     assert(refreshFinished != null);
     assert(list != null);
     return refreshFinished(this);
@@ -248,6 +367,7 @@ class _$ListStateRefreshFinished implements ListStateRefreshFinished {
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
     Result loading(ListStateLoading value),
+    Result flush(ListStateFlush value),
     Result refreshFinished(ListStateRefreshFinished value),
     Result list(ListStateList value),
     @required Result orElse(),
@@ -322,10 +442,12 @@ class _$ListStateList implements ListStateList {
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result loading(),
+    @required Result flush(),
     @required Result refreshFinished(),
     @required Result list(List<AvailableShare> items),
   }) {
     assert(loading != null);
+    assert(flush != null);
     assert(refreshFinished != null);
     assert(list != null);
     return list(items);
@@ -335,6 +457,7 @@ class _$ListStateList implements ListStateList {
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result loading(),
+    Result flush(),
     Result refreshFinished(),
     Result list(List<AvailableShare> items),
     @required Result orElse(),
@@ -350,10 +473,12 @@ class _$ListStateList implements ListStateList {
   @optionalTypeArgs
   Result map<Result extends Object>({
     @required Result loading(ListStateLoading value),
+    @required Result flush(ListStateFlush value),
     @required Result refreshFinished(ListStateRefreshFinished value),
     @required Result list(ListStateList value),
   }) {
     assert(loading != null);
+    assert(flush != null);
     assert(refreshFinished != null);
     assert(list != null);
     return list(this);
@@ -363,6 +488,7 @@ class _$ListStateList implements ListStateList {
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
     Result loading(ListStateLoading value),
+    Result flush(ListStateFlush value),
     Result refreshFinished(ListStateRefreshFinished value),
     Result list(ListStateList value),
     @required Result orElse(),

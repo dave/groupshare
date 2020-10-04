@@ -43,6 +43,7 @@ class _BlocRefreshIndicatorState<B extends Bloc<E, S>, E, S, A>
         },
         builder: (BuildContext context, S state) {
           return RefreshIndicator(
+            key: widget.key,
             onRefresh: () async {
               BlocProvider.of<B>(context).add(widget.event);
               return _completer.future;

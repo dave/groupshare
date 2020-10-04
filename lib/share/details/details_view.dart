@@ -45,9 +45,10 @@ class DetailsContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<DetailsBloc, DetailsState>(
       buildWhen: (previous, current) => current.map(
-        refreshing: (state) => false,
         loading: (state) => true,
         done: (state) => true,
+        flush: (state) => false,
+        refreshFinished: (state) => false,
       ),
       builder: (context, state) {
         return Scaffold(
@@ -71,7 +72,7 @@ class DetailsContent extends StatelessWidget {
             child: Align(
               alignment: Alignment(0, -1 / 3),
               child: BlocRefreshIndicator<DetailsBloc, DetailsEvent,
-                  DetailsState, DetailsStateDone>(
+                  DetailsState, DetailsStateRefreshFinished>(
                 single: true,
                 event: DetailsEvent.refresh(),
                 child: state.maybeMap(

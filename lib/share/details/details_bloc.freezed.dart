@@ -18,16 +18,21 @@ class _$DetailsStateTearOff {
   }
 
 // ignore: unused_element
-  DetailsStateRefreshing refreshing() {
-    return const DetailsStateRefreshing();
-  }
-
-// ignore: unused_element
   DetailsStateDone done(String id, String name) {
     return DetailsStateDone(
       id,
       name,
     );
+  }
+
+// ignore: unused_element
+  DetailsStateFlush flush() {
+    return const DetailsStateFlush();
+  }
+
+// ignore: unused_element
+  DetailsStateRefreshFinished refreshFinished() {
+    return const DetailsStateRefreshFinished();
   }
 }
 
@@ -38,27 +43,31 @@ mixin _$DetailsState {
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result loading(),
-    @required Result refreshing(),
     @required Result done(String id, String name),
+    @required Result flush(),
+    @required Result refreshFinished(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result loading(),
-    Result refreshing(),
     Result done(String id, String name),
+    Result flush(),
+    Result refreshFinished(),
     @required Result orElse(),
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
     @required Result loading(DetailsStateLoading value),
-    @required Result refreshing(DetailsStateRefreshing value),
     @required Result done(DetailsStateDone value),
+    @required Result flush(DetailsStateFlush value),
+    @required Result refreshFinished(DetailsStateRefreshFinished value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
     Result loading(DetailsStateLoading value),
-    Result refreshing(DetailsStateRefreshing value),
     Result done(DetailsStateDone value),
+    Result flush(DetailsStateFlush value),
+    Result refreshFinished(DetailsStateRefreshFinished value),
     @required Result orElse(),
   });
 }
@@ -115,12 +124,14 @@ class _$DetailsStateLoading implements DetailsStateLoading {
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result loading(),
-    @required Result refreshing(),
     @required Result done(String id, String name),
+    @required Result flush(),
+    @required Result refreshFinished(),
   }) {
     assert(loading != null);
-    assert(refreshing != null);
     assert(done != null);
+    assert(flush != null);
+    assert(refreshFinished != null);
     return loading();
   }
 
@@ -128,8 +139,9 @@ class _$DetailsStateLoading implements DetailsStateLoading {
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result loading(),
-    Result refreshing(),
     Result done(String id, String name),
+    Result flush(),
+    Result refreshFinished(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -143,12 +155,14 @@ class _$DetailsStateLoading implements DetailsStateLoading {
   @optionalTypeArgs
   Result map<Result extends Object>({
     @required Result loading(DetailsStateLoading value),
-    @required Result refreshing(DetailsStateRefreshing value),
     @required Result done(DetailsStateDone value),
+    @required Result flush(DetailsStateFlush value),
+    @required Result refreshFinished(DetailsStateRefreshFinished value),
   }) {
     assert(loading != null);
-    assert(refreshing != null);
     assert(done != null);
+    assert(flush != null);
+    assert(refreshFinished != null);
     return loading(this);
   }
 
@@ -156,8 +170,9 @@ class _$DetailsStateLoading implements DetailsStateLoading {
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
     Result loading(DetailsStateLoading value),
-    Result refreshing(DetailsStateRefreshing value),
     Result done(DetailsStateDone value),
+    Result flush(DetailsStateFlush value),
+    Result refreshFinished(DetailsStateRefreshFinished value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -170,100 +185,6 @@ class _$DetailsStateLoading implements DetailsStateLoading {
 
 abstract class DetailsStateLoading implements DetailsState, Incomplete {
   const factory DetailsStateLoading() = _$DetailsStateLoading;
-}
-
-abstract class $DetailsStateRefreshingCopyWith<$Res> {
-  factory $DetailsStateRefreshingCopyWith(DetailsStateRefreshing value,
-          $Res Function(DetailsStateRefreshing) then) =
-      _$DetailsStateRefreshingCopyWithImpl<$Res>;
-}
-
-class _$DetailsStateRefreshingCopyWithImpl<$Res>
-    extends _$DetailsStateCopyWithImpl<$Res>
-    implements $DetailsStateRefreshingCopyWith<$Res> {
-  _$DetailsStateRefreshingCopyWithImpl(DetailsStateRefreshing _value,
-      $Res Function(DetailsStateRefreshing) _then)
-      : super(_value, (v) => _then(v as DetailsStateRefreshing));
-
-  @override
-  DetailsStateRefreshing get _value => super._value as DetailsStateRefreshing;
-}
-
-class _$DetailsStateRefreshing implements DetailsStateRefreshing {
-  const _$DetailsStateRefreshing();
-
-  @override
-  String toString() {
-    return 'DetailsState.refreshing()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is DetailsStateRefreshing);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result loading(),
-    @required Result refreshing(),
-    @required Result done(String id, String name),
-  }) {
-    assert(loading != null);
-    assert(refreshing != null);
-    assert(done != null);
-    return refreshing();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result loading(),
-    Result refreshing(),
-    Result done(String id, String name),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (refreshing != null) {
-      return refreshing();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result loading(DetailsStateLoading value),
-    @required Result refreshing(DetailsStateRefreshing value),
-    @required Result done(DetailsStateDone value),
-  }) {
-    assert(loading != null);
-    assert(refreshing != null);
-    assert(done != null);
-    return refreshing(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result loading(DetailsStateLoading value),
-    Result refreshing(DetailsStateRefreshing value),
-    Result done(DetailsStateDone value),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (refreshing != null) {
-      return refreshing(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class DetailsStateRefreshing implements DetailsState {
-  const factory DetailsStateRefreshing() = _$DetailsStateRefreshing;
 }
 
 abstract class $DetailsStateDoneCopyWith<$Res> {
@@ -335,12 +256,14 @@ class _$DetailsStateDone implements DetailsStateDone {
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result loading(),
-    @required Result refreshing(),
     @required Result done(String id, String name),
+    @required Result flush(),
+    @required Result refreshFinished(),
   }) {
     assert(loading != null);
-    assert(refreshing != null);
     assert(done != null);
+    assert(flush != null);
+    assert(refreshFinished != null);
     return done(id, name);
   }
 
@@ -348,8 +271,9 @@ class _$DetailsStateDone implements DetailsStateDone {
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result loading(),
-    Result refreshing(),
     Result done(String id, String name),
+    Result flush(),
+    Result refreshFinished(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -363,12 +287,14 @@ class _$DetailsStateDone implements DetailsStateDone {
   @optionalTypeArgs
   Result map<Result extends Object>({
     @required Result loading(DetailsStateLoading value),
-    @required Result refreshing(DetailsStateRefreshing value),
     @required Result done(DetailsStateDone value),
+    @required Result flush(DetailsStateFlush value),
+    @required Result refreshFinished(DetailsStateRefreshFinished value),
   }) {
     assert(loading != null);
-    assert(refreshing != null);
     assert(done != null);
+    assert(flush != null);
+    assert(refreshFinished != null);
     return done(this);
   }
 
@@ -376,8 +302,9 @@ class _$DetailsStateDone implements DetailsStateDone {
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
     Result loading(DetailsStateLoading value),
-    Result refreshing(DetailsStateRefreshing value),
     Result done(DetailsStateDone value),
+    Result flush(DetailsStateFlush value),
+    Result refreshFinished(DetailsStateRefreshFinished value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -394,6 +321,208 @@ abstract class DetailsStateDone implements DetailsState, Complete {
   String get id;
   String get name;
   $DetailsStateDoneCopyWith<DetailsStateDone> get copyWith;
+}
+
+abstract class $DetailsStateFlushCopyWith<$Res> {
+  factory $DetailsStateFlushCopyWith(
+          DetailsStateFlush value, $Res Function(DetailsStateFlush) then) =
+      _$DetailsStateFlushCopyWithImpl<$Res>;
+}
+
+class _$DetailsStateFlushCopyWithImpl<$Res>
+    extends _$DetailsStateCopyWithImpl<$Res>
+    implements $DetailsStateFlushCopyWith<$Res> {
+  _$DetailsStateFlushCopyWithImpl(
+      DetailsStateFlush _value, $Res Function(DetailsStateFlush) _then)
+      : super(_value, (v) => _then(v as DetailsStateFlush));
+
+  @override
+  DetailsStateFlush get _value => super._value as DetailsStateFlush;
+}
+
+class _$DetailsStateFlush implements DetailsStateFlush {
+  const _$DetailsStateFlush();
+
+  @override
+  String toString() {
+    return 'DetailsState.flush()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is DetailsStateFlush);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result loading(),
+    @required Result done(String id, String name),
+    @required Result flush(),
+    @required Result refreshFinished(),
+  }) {
+    assert(loading != null);
+    assert(done != null);
+    assert(flush != null);
+    assert(refreshFinished != null);
+    return flush();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result loading(),
+    Result done(String id, String name),
+    Result flush(),
+    Result refreshFinished(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (flush != null) {
+      return flush();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result loading(DetailsStateLoading value),
+    @required Result done(DetailsStateDone value),
+    @required Result flush(DetailsStateFlush value),
+    @required Result refreshFinished(DetailsStateRefreshFinished value),
+  }) {
+    assert(loading != null);
+    assert(done != null);
+    assert(flush != null);
+    assert(refreshFinished != null);
+    return flush(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result loading(DetailsStateLoading value),
+    Result done(DetailsStateDone value),
+    Result flush(DetailsStateFlush value),
+    Result refreshFinished(DetailsStateRefreshFinished value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (flush != null) {
+      return flush(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DetailsStateFlush implements DetailsState {
+  const factory DetailsStateFlush() = _$DetailsStateFlush;
+}
+
+abstract class $DetailsStateRefreshFinishedCopyWith<$Res> {
+  factory $DetailsStateRefreshFinishedCopyWith(
+          DetailsStateRefreshFinished value,
+          $Res Function(DetailsStateRefreshFinished) then) =
+      _$DetailsStateRefreshFinishedCopyWithImpl<$Res>;
+}
+
+class _$DetailsStateRefreshFinishedCopyWithImpl<$Res>
+    extends _$DetailsStateCopyWithImpl<$Res>
+    implements $DetailsStateRefreshFinishedCopyWith<$Res> {
+  _$DetailsStateRefreshFinishedCopyWithImpl(DetailsStateRefreshFinished _value,
+      $Res Function(DetailsStateRefreshFinished) _then)
+      : super(_value, (v) => _then(v as DetailsStateRefreshFinished));
+
+  @override
+  DetailsStateRefreshFinished get _value =>
+      super._value as DetailsStateRefreshFinished;
+}
+
+class _$DetailsStateRefreshFinished implements DetailsStateRefreshFinished {
+  const _$DetailsStateRefreshFinished();
+
+  @override
+  String toString() {
+    return 'DetailsState.refreshFinished()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is DetailsStateRefreshFinished);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result loading(),
+    @required Result done(String id, String name),
+    @required Result flush(),
+    @required Result refreshFinished(),
+  }) {
+    assert(loading != null);
+    assert(done != null);
+    assert(flush != null);
+    assert(refreshFinished != null);
+    return refreshFinished();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result loading(),
+    Result done(String id, String name),
+    Result flush(),
+    Result refreshFinished(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (refreshFinished != null) {
+      return refreshFinished();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result loading(DetailsStateLoading value),
+    @required Result done(DetailsStateDone value),
+    @required Result flush(DetailsStateFlush value),
+    @required Result refreshFinished(DetailsStateRefreshFinished value),
+  }) {
+    assert(loading != null);
+    assert(done != null);
+    assert(flush != null);
+    assert(refreshFinished != null);
+    return refreshFinished(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result loading(DetailsStateLoading value),
+    Result done(DetailsStateDone value),
+    Result flush(DetailsStateFlush value),
+    Result refreshFinished(DetailsStateRefreshFinished value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (refreshFinished != null) {
+      return refreshFinished(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DetailsStateRefreshFinished implements DetailsState {
+  const factory DetailsStateRefreshFinished() = _$DetailsStateRefreshFinished;
 }
 
 class _$DetailsEventTearOff {

@@ -15,6 +15,8 @@ abstract class ListState with _$ListState {
   @Implements(Incomplete)
   const factory ListState.loading() = ListStateLoading;
 
+  const factory ListState.flush() = ListStateFlush;
+
   const factory ListState.refreshFinished() = ListStateRefreshFinished;
 
   @Implements(Complete)
@@ -52,7 +54,6 @@ abstract class ListEvent with _$ListEvent {
 class ListBloc extends ExtendedBloc<ListEvent, ListState> {
   final Data _data;
   final Api _api;
-  //StreamSubscription<DataEvent<Share>> _sharesSubscription;
   StreamSubscription<DataEvent<User>> _subscription;
 
   ListBloc(this._data, this._api)
@@ -89,16 +90,20 @@ class ListBloc extends ExtendedBloc<ListEvent, ListState> {
         yield _listPage();
       },
       refresh: (event) async* {
-        yield _listPage();
-        List<Future> futures = [];
-        _data.user.value.shares.forEach((User_AvailableShare userShare) {
-          if (_data.shares.has(userShare.id)) {
-            futures.add(_data.shares.refresh(userShare.id));
-          }
-        });
-        futures.add(_data.user.refresh());
-        await Future.wait(futures);
-        yield ListState.refreshFinished();
+        try {
+          yield _listPage();
+          List<Future> futures = [];
+          _data.user.value.shares.forEach((User_AvailableShare userShare) {
+            if (_data.shares.has(userShare.id)) {
+              futures.add(_data.shares.refresh(userShare.id));
+            }
+          });
+          futures.add(_data.user.refresh());
+          await Future.wait(futures);
+        } finally {
+          yield ListState.flush();
+          yield ListState.refreshFinished();
+        }
       },
       item: (event) async* {
         await _data.shares.refresh(event.id);

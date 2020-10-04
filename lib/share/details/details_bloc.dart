@@ -14,10 +14,12 @@ abstract class DetailsState with _$DetailsState {
   @Implements(Incomplete)
   const factory DetailsState.loading() = DetailsStateLoading;
 
-  const factory DetailsState.refreshing() = DetailsStateRefreshing;
-
   @Implements(Complete)
   const factory DetailsState.done(String id, String name) = DetailsStateDone;
+
+  const factory DetailsState.flush() = DetailsStateFlush;
+
+  const factory DetailsState.refreshFinished() = DetailsStateRefreshFinished;
 }
 
 @freezed
@@ -56,12 +58,16 @@ class DetailsBloc extends ExtendedBloc<DetailsEvent, DetailsState> {
         yield DetailsState.done(item.id, item.value.name);
       },
       refresh: (event) async* {
-        yield DetailsState.refreshing();
-        final item = await _data.shares.refresh(_id);
-        if (item == null) {
-          throw UserException("Can't refresh");
+        try {
+          final item = await _data.shares.refresh(_id);
+          if (item == null) {
+            throw UserException("Can't refresh");
+          }
+          yield DetailsState.done(item.id, item.value.name);
+        } finally {
+          yield DetailsState.flush();
+          yield DetailsState.refreshFinished();
         }
-        yield DetailsState.done(item.id, item.value.name);
       },
     );
   }
