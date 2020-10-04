@@ -5,42 +5,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:groupshare/_foo/foo.dart';
+import 'package:groupshare/observer.dart';
 
 part 'foo_bloc.freezed.dart';
 
 @freezed
 abstract class FooState with _$FooState {
-  const factory FooState({
-    PageState page,
-    FormState form,
-  }) = _FooState;
-}
+  @Implements(Incomplete)
+  const factory FooState.loading() = FooStateLoading;
 
-@freezed
-abstract class FormState with _$FormState {
-  const factory FormState({
+  @Implements(Complete)
+  const factory FooState.form({
     @Default(FormzStatus.pure) FormzStatus status,
     @Default(const Name.pure()) Name name,
-  }) = _FormState;
-}
+  }) = FooStateForm;
 
-@freezed
-abstract class PageState with _$PageState {
-  const factory PageState.loading() = PageStateLoading;
-
-  const factory PageState.form() = PageStateForm;
-
-  const factory PageState.done() = PageStateDone;
+  const factory FooState.done() = FooStateDone;
 }
 
 class FooCubit extends Cubit<FooState> {
   final Data _data;
 
   FooCubit(this._data)
-      : super(FooState(
-          page: PageState.loading(),
-          form: FormState(),
-        ));
+      : super(FooState.loading());
 
   Future<void> init() async {
     //...

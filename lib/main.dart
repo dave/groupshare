@@ -6,15 +6,11 @@ import 'package:connection_repository/connection_repository.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:device_repository/device_repository.dart';
 import 'package:discovery_repository/discovery_repository.dart';
-import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/app/app.dart';
 import 'package:groupshare/appbar/appbar.dart';
-import 'package:groupshare/handle.dart';
-import 'package:groupshare/login/login.dart';
-import 'package:groupshare/share/list/list.dart';
-import 'package:groupshare/task.dart';
+import 'package:groupshare/observer.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:protod/delta/delta.dart';
@@ -85,7 +81,7 @@ void main() async {
           api,
         );
         final navigator = GlobalKey<NavigatorState>();
-        Bloc.observer = MyBlocObserver(navigator);
+        Bloc.observer = ErrorObserver(navigator);
 
         runApp(
           MultiRepositoryProvider(
@@ -150,74 +146,6 @@ void main() async {
   }
 }
 
-class MyBlocObserver extends BlocObserver {
-  final GlobalKey<NavigatorState> _navigator;
-
-  MyBlocObserver(this._navigator);
-
-  @override
-  void onError(Cubit cubit, dynamic ex, StackTrace stack) {
-    Function() retry;
-    if (ex is UserException && cubit is Bloc && ex.retry != null) {
-      retry = () => cubit.add(ex.retry);
-    }
-    if (cubit is AppBloc) {
-      // TODO what are appropriate options for errors in AppCubit?
-      handle(
-        _navigator.currentState.overlay.context,
-        ex,
-        stack,
-        back: _navigator.currentState.canPop()
-            ? _navigator.currentState.pop
-            : null,
-        retry: retry,
-        logoff: true,
-      );
-    } else if (cubit.state is PageIncomplete ||
-        (cubit.state is PageHolder &&
-            cubit.state.page is PageIncomplete)) {
-      // States that implement IncompleteState are for when the UI is
-      // incomplete - e.g. a loading screen. The error popup in this state
-      // should not have an "ok" button to dismiss it, since the UI below is
-      // not complete. If an error is shown in this state, the error dialog
-      // should include a button to go home / log off.
-      // TODO: Detect if the navigator can be popped and include a "back" button instead of "home"?
-      final homeButtonValid = !(cubit is ListBloc || cubit is LoginBloc);
-      handle(
-        _navigator.currentState.overlay.context,
-        ex,
-        stack,
-        back: _navigator.currentState.canPop()
-            ? _navigator.currentState.pop
-            : null,
-        retry: retry,
-        home: homeButtonValid,
-        logoff: !homeButtonValid,
-      );
-    } else {
-      // If the UI is in a complete state, we should be able to just show the
-      // OK button, so the user can retry the action if they want.
-      handle(
-        _navigator.currentState.overlay.context,
-        ex,
-        stack,
-        retry: retry,
-      );
-    }
-
-    super.onError(cubit, ex, stack);
-  }
-}
-
-class PageIncomplete {}
-
-abstract class PageHolder {
-  dynamic get page;
-}
-
-abstract class ActionHolder {
-  dynamic get action;
-}
 
 //class ProtoAdapter<T extends GeneratedMessage> extends TypeAdapter<T> {
 //  // TODO: ProtoAdapter is unused now... remove it?

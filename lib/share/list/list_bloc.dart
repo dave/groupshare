@@ -5,34 +5,22 @@ import 'package:data_repository/data_repository.dart';
 import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:groupshare/main.dart';
+import 'package:groupshare/observer.dart';
 import 'package:protod/pserver/pserver.dart';
-import 'package:rxdart/rxdart.dart';
 
 part 'list_bloc.freezed.dart';
 
 @freezed
 abstract class ListState with _$ListState {
-  @Implements(PageHolder)
-  @Implements(ActionHolder)
-  const factory ListState({
-    @required PageState page,
-    @required List<AvailableShare> items,
-    ListAction action,
-  }) = _ListState;
-}
+  @Implements(Incomplete)
+  const factory ListState.loading() = ListStateLoading;
 
-@freezed
-abstract class ListAction with _$ListAction {
-  const factory ListAction.refreshComplete() = ListActionRefreshComplete;
-}
+  const factory ListState.refreshFinished() = ListStateRefreshFinished;
 
-@freezed
-abstract class PageState with _$PageState {
-  @Implements(PageIncomplete)
-  const factory PageState.loading() = PageStateLoading;
-
-  const factory PageState.list() = PageStateList;
+  @Implements(Complete)
+  const factory ListState.list(
+    List<AvailableShare> items,
+  ) = ListStateList;
 }
 
 @freezed
@@ -64,37 +52,18 @@ abstract class ListEvent with _$ListEvent {
 class ListBloc extends Bloc<ListEvent, ListState> {
   final Data _data;
   final Api _api;
-  StreamSubscription<DataEvent<Share>> _sharesSubscription;
+  //StreamSubscription<DataEvent<Share>> _sharesSubscription;
   StreamSubscription<DataEvent<User>> _userSubscription;
 
   ListBloc(this._data, this._api)
-      : super(ListState(page: PageState.loading(), items: [])) {
-    _sharesSubscription = _data.shares.stream.listen((DataEvent<Share> event) {
-      print("_shares $event");
-      if (event is DataEventApply ||
-          event is DataEventGetting ||
-          event is DataEventGetFailed ||
-          event is DataEventGot ||
-          event is DataEventSending ||
-          event is DataEventSent ||
-          event is DataEventDeleted) {
-        add(ListEvent.update());
-      }
-    });
+      : super(ListState.loading()) {
     _userSubscription = _data.user.stream.listen((DataEvent<User> event) {
-      print("_user $event");
       if (event is DataEventApply) {
         add(ListEvent.update());
       }
     });
     add(ListEvent.init());
   }
-
-  // @override
-  // Stream<Transition<ListEvent, ListState>> transformEvents(
-  //     Stream<ListEvent> events, transitionFn) {
-  //   return events.flatMap(transitionFn);
-  // }
 
   @override
   Stream<ListState> mapEventToState(ListEvent event) async* {
@@ -120,7 +89,6 @@ class ListBloc extends Bloc<ListEvent, ListState> {
         yield _listPage();
       },
       refresh: (event) async* {
-        await _data.user.refresh();
         yield _listPage();
         List<Future> futures = [];
         _data.user.value.shares.forEach((User_AvailableShare userShare) {
@@ -128,8 +96,9 @@ class ListBloc extends Bloc<ListEvent, ListState> {
             futures.add(_data.shares.refresh(userShare.id));
           }
         });
+        futures.add(_data.user.refresh());
         await Future.wait(futures);
-        yield _listPage().copyWith(action: ListAction.refreshComplete());
+        yield ListState.refreshFinished();
       },
       item: (event) async* {
         await _data.shares.refresh(event.id);
@@ -165,16 +134,12 @@ class ListBloc extends Bloc<ListEvent, ListState> {
       },
     ).toList();
 
-    return state.copyWith(
-      page: PageState.list(),
-      items: items,
-      action: null,
-    );
+    return ListState.list(items);
   }
 
   @override
   Future<void> close() {
-    _sharesSubscription?.cancel();
+    //_sharesSubscription?.cancel();
     _userSubscription?.cancel();
     return super.close();
   }

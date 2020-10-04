@@ -3,54 +3,27 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groupshare/main.dart';
 
-class Refresher extends StatelessWidget {
+class BlocRefreshIndicator<B extends Bloc<E, S>, E, S, A>
+    extends StatefulWidget {
   final Widget child;
-  final Future<void> Function() onRefresh;
-
-  const Refresher({
-    Key key,
-    @required this.child,
-    @required this.onRefresh,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return RefreshIndicator(
-          onRefresh: onRefresh,
-          child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
-              ),
-              child: child,
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class BlocRefreshIndicator<B extends Bloc<E, S>, E, S, A> extends StatefulWidget {
-  final Widget child;
-  final E onRefreshEvent;
+  final E event;
+  final bool single;
 
   const BlocRefreshIndicator({
     Key key,
     @required this.child,
-    @required this.onRefreshEvent,
+    @required this.event,
+    this.single = false,
   }) : super(key: key);
 
   @override
-  _BlocRefreshIndicatorState<B, E, S, A> createState() => _BlocRefreshIndicatorState<B, E, S, A>();
+  _BlocRefreshIndicatorState<B, E, S, A> createState() =>
+      _BlocRefreshIndicatorState<B, E, S, A>();
 }
 
-class _BlocRefreshIndicatorState<B extends Bloc<E, S>, E, S, A> extends State<BlocRefreshIndicator<B,E,S, A>> {
+class _BlocRefreshIndicatorState<B extends Bloc<E, S>, E, S, A>
+    extends State<BlocRefreshIndicator<B, E, S, A>> {
   Completer<void> _completer;
 
   @override
@@ -61,23 +34,43 @@ class _BlocRefreshIndicatorState<B extends Bloc<E, S>, E, S, A> extends State<Bl
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<B, S>(
-      listener: (BuildContext context, S state) {
-        if (state is A || (state is ActionHolder && state.action is A)) {
+    BlocConsumer<B, S> consumerAndRefresher(Widget child) {
+      return BlocConsumer<B, S>(
+        listenWhen: (S previous, S current) => current is A,
+        listener: (BuildContext context, S state) {
           _completer?.complete();
           _completer = Completer();
-        }
-      },
-      builder: (BuildContext context, S state) {
-        return RefreshIndicator(
-          onRefresh: () async {
-            BlocProvider.of<B>(context).add(widget.onRefreshEvent);
-            return _completer.future;
-          },
-          child: widget.child,
-        );
-      },
-    );
+        },
+        builder: (BuildContext context, S state) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              BlocProvider.of<B>(context).add(widget.event);
+              return _completer.future;
+            },
+            child: child,
+          );
+        },
+      );
+    }
 
+    if (widget.single) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          return consumerAndRefresher(
+            SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                ),
+                child: widget.child,
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      return consumerAndRefresher(widget.child);
+    }
   }
 }

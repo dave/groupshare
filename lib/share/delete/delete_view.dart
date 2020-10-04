@@ -16,7 +16,7 @@ class DeletePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBarWidget('Delete'),
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         child: BlocProvider(
           create: (context) => DeleteCubit(
             RepositoryProvider.of<Data>(context),
@@ -61,7 +61,7 @@ class DeleteForm extends StatelessWidget {
       },
       builder: (context, state) {
         return Align(
-          alignment: const Alignment(0, -1 / 3),
+          alignment: Alignment(0, -1 / 3),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: state.map(
@@ -88,7 +88,7 @@ class DeleteForm extends StatelessWidget {
                     "Delete document",
                     "Delete this document completely. It will be deleted for all other editors.",
                   ),
-                  const Padding(padding: EdgeInsets.all(12)),
+                  Padding(padding: EdgeInsets.all(12)),
                   _SubmitButton(),
                 ];
               },
@@ -169,7 +169,7 @@ class _SubmitButton extends StatelessWidget {
               ? const CircularProgressIndicator()
               : RaisedButton(
                   key: Keys.submit,
-                  child: const Text('Submit'),
+                  child: Text('Submit'),
                   onPressed: () {
                     if (state.status.isValidated) {
                       context.bloc<DeleteCubit>().submit();

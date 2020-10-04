@@ -18,11 +18,12 @@ class AddPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBarWidget('Add'),
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         child: BlocProvider(
-          create: (context) => AddBloc(
-            RepositoryProvider.of<Data>(context),
-          ),
+          create: (context) =>
+              AddBloc(
+                RepositoryProvider.of<Data>(context),
+              ),
           child: AddForm(),
         ),
       ),
@@ -34,30 +35,27 @@ class AddForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AddBloc, AddState>(
+      listenWhen: (previous, current) => current is AddStateDone,
       listener: (context, state) {
-        state.page.map(
-          form: (state) => true,
-          done: (state) {
-            Navigator.of(context).popUntil(
-              ModalRoute.withName(ListPage.routeName),
-            );
-          },
+        Navigator.of(context).popUntil(
+          ModalRoute.withName(ListPage.routeName),
         );
       },
+      buildWhen: (previous, current) => current is AddStateForm,
       builder: (context, state) {
         return Align(
-          alignment: const Alignment(0, -1 / 3),
+          alignment: Alignment(0, -1 / 3),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: state.page.map(
+            children: state.maybeMap(
               form: (state) {
                 return [
                   _NameInput(),
-                  const Padding(padding: EdgeInsets.all(12)),
+                  Padding(padding: EdgeInsets.all(12)),
                   _AddButton(),
                 ];
               },
-              done: (state) => [],
+              orElse: () => [],
             ),
           ),
         );
@@ -71,23 +69,24 @@ class _NameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AddBloc, AddState>(
       buildWhen: (previous, current) {
-        return previous.form.name != current.form.name;
+        return current is AddStateForm && (previous is! AddStateForm ||
+            previous is AddStateForm && previous.name != current.name);
       },
       builder: (context, state) {
-        return state.form.status.isSubmissionInProgress
+        return state is AddStateForm ? state.status.isSubmissionInProgress
             ? CircularProgressIndicator()
             : TextFormField(
-                autofocus: true,
-                key: Keys.name,
-                initialValue: state.form.name.value,
-                onChanged: (email) {
-                  context.bloc<AddBloc>().add(AddEvent.change(email));
-                },
-                decoration: InputDecoration(
-                  labelText: 'name',
-                  errorText: state.form.name.invalid ? 'invalid name' : null,
-                ),
-              );
+          autofocus: true,
+          key: Keys.name,
+          initialValue: state.name.value,
+          onChanged: (email) {
+            context.bloc<AddBloc>().add(AddEvent.change(email));
+          },
+          decoration: InputDecoration(
+            labelText: 'name',
+            errorText: state.name.invalid ? 'invalid name' : null,
+          ),
+        ) : null;
       },
     );
   }
@@ -98,20 +97,21 @@ class _AddButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AddBloc, AddState>(
       buildWhen: (previous, current) {
-        return previous.form.status != current.form.status;
+        return current is AddStateForm && (previous is! AddStateForm ||
+            previous is AddStateForm && previous.status != current.status);
       },
       builder: (context, state) {
-        return state.form.status.isSubmissionInProgress
+        return state is AddStateForm ? state.status.isSubmissionInProgress
             ? const CircularProgressIndicator()
             : RaisedButton(
-                key: Keys.submit,
-                child: const Text('Add'),
-                onPressed: () async {
-                  if (state.form.status.isValidated) {
-                    context.bloc<AddBloc>().add(AddEvent.submit());
-                  }
-                },
-              );
+          key: Keys.submit,
+          child: Text('Add'),
+          onPressed: () async {
+            if (state.status.isValidated) {
+              context.bloc<AddBloc>().add(AddEvent.submit());
+            }
+          },
+        ) : null;
       },
     );
   }

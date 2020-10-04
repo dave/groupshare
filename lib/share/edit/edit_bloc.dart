@@ -5,37 +5,24 @@ import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:groupshare/main.dart';
+import 'package:groupshare/observer.dart';
 import 'package:groupshare/share/edit/edit.dart';
 
 part 'edit_bloc.freezed.dart';
 
 @freezed
 abstract class EditState with _$EditState {
-  @Implements(PageHolder)
-  const factory EditState(
-    PageState page,
-    FormState form,
-  ) = _EditState;
-}
+  @Implements(Incomplete)
+  const factory EditState.loading() = EditStateLoading;
 
-@freezed
-abstract class FormState with _$FormState {
-  const factory FormState({
+  @Implements(Complete)
+  const factory EditState.form({
     @Default(FormzStatus.pure) FormzStatus status,
     @Default("") String initialName,
     @Default(const Name.pure()) Name name,
-  }) = _FormState;
-}
+  }) = EditStateForm;
 
-@freezed
-abstract class PageState with _$PageState {
-  @Implements(PageIncomplete)
-  const factory PageState.loading() = PageStateLoading;
-
-  const factory PageState.form() = PageStateForm;
-
-  const factory PageState.done(String route) = PageStateDone;
+  const factory EditState.done(String route) = EditStateDone;
 }
 
 @freezed
@@ -55,7 +42,7 @@ class EditBloc extends Bloc<EditEvent, EditState> {
   final String _back;
 
   EditBloc(this._id, this._back, this._data)
-      : super(EditState(PageState.loading(), FormState())) {
+      : super(EditState.loading()) {
     void f() async {
       final share = await _data.shares.item(_id);
       if (share == null) {
@@ -69,65 +56,58 @@ class EditBloc extends Bloc<EditEvent, EditState> {
 
   @override
   Stream<EditState> mapEventToState(EditEvent event) async* {
+    final _state = state;
     yield* event.map(
       init: (event) async* {
         final value = Name.dirty(event.value);
-        yield state.copyWith(
-          page: PageState.form(),
-          form: FormState(
-            initialName: event.value,
-            name: value,
-            status: Formz.validate([value]),
-          ),
+        yield EditState.form(
+          initialName: event.value,
+          name: value,
+          status: Formz.validate([value]),
         );
       },
       change: (event) async* {
-        final value = Name.dirty(event.value);
-        yield state.copyWith(
-          form: state.form.copyWith(
-            name: value,
-            status: Formz.validate([value]),
-          ),
-        );
+        if (_state is EditStateForm) {
+          final value = Name.dirty(event.value);
+          yield _state.copyWith(name: value, status: Formz.validate([value]));
+        }
       },
       submit: (event) async* {
-        if (state.form.initialName == state.form.name.value) {
-          yield state.copyWith(page: PageState.done(_back));
-          return;
-        }
+        if (_state is EditStateForm) {
+          if (_state.initialName == _state.name.value) {
+            yield EditState.done(_back);
+            return;
+          }
 
-        yield state.copyWith(
-          form: state.form.copyWith(
-            status: FormzStatus.submissionInProgress,
-          ),
-        );
+          yield _state.copyWith(status: FormzStatus.submissionInProgress);
 
-        final share = await _data.shares.item(_id);
+          final share = await _data.shares.item(_id);
 
-        share.op(
-          op.share.name.edit(state.form.initialName, state.form.name.value),
-        );
-
-        final userDataIndex = _data.user.value.shares.indexWhere(
-          (s) => s.id == _id,
-        );
-        if (userDataIndex > -1) {
-          _data.user.op(
-            op.user.shares.index(userDataIndex).name.set(state.form.name.value),
+          share.op(
+            op.share.name.edit(_state.initialName, _state.name.value),
           );
-        }
 
-        yield state.copyWith(
-          page: PageState.done(_back),
-        );
+          final userDataIndex = _data.user.value.shares.indexWhere(
+                (s) => s.id == _id,
+          );
+
+          if (userDataIndex > -1) {
+            _data.user.op(
+              op.user.shares
+                  .index(userDataIndex)
+                  .name
+                  .set(_state.name.value),
+            );
+          }
+
+          yield EditState.done(_back);
+        }
       },
       error: (event) async* {
         // reset submissionInProgress status
-        yield state.copyWith(
-          form: state.form.copyWith(
-            status: Formz.validate([state.form.name]),
-          ),
-        );
+        if (_state is EditStateForm) {
+          yield _state.copyWith(status: Formz.validate([_state.name]));
+        }
       },
     );
   }

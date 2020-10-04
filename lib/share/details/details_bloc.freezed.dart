@@ -13,10 +13,20 @@ class _$DetailsStateTearOff {
   const _$DetailsStateTearOff();
 
 // ignore: unused_element
-  _DetailsState call({@required PageState page, DetailsAction action}) {
-    return _DetailsState(
-      page: page,
-      action: action,
+  DetailsStateLoading loading() {
+    return const DetailsStateLoading();
+  }
+
+// ignore: unused_element
+  DetailsStateRefreshing refreshing() {
+    return const DetailsStateRefreshing();
+  }
+
+// ignore: unused_element
+  DetailsStateDone done(String id, String name) {
+    return DetailsStateDone(
+      id,
+      name,
     );
   }
 }
@@ -25,20 +35,38 @@ class _$DetailsStateTearOff {
 const $DetailsState = _$DetailsStateTearOff();
 
 mixin _$DetailsState {
-  PageState get page;
-  DetailsAction get action;
-
-  $DetailsStateCopyWith<DetailsState> get copyWith;
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result loading(),
+    @required Result refreshing(),
+    @required Result done(String id, String name),
+  });
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result loading(),
+    Result refreshing(),
+    Result done(String id, String name),
+    @required Result orElse(),
+  });
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result loading(DetailsStateLoading value),
+    @required Result refreshing(DetailsStateRefreshing value),
+    @required Result done(DetailsStateDone value),
+  });
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result loading(DetailsStateLoading value),
+    Result refreshing(DetailsStateRefreshing value),
+    Result done(DetailsStateDone value),
+    @required Result orElse(),
+  });
 }
 
 abstract class $DetailsStateCopyWith<$Res> {
   factory $DetailsStateCopyWith(
           DetailsState value, $Res Function(DetailsState) then) =
       _$DetailsStateCopyWithImpl<$Res>;
-  $Res call({PageState page, DetailsAction action});
-
-  $PageStateCopyWith<$Res> get page;
-  $DetailsActionCopyWith<$Res> get action;
 }
 
 class _$DetailsStateCopyWithImpl<$Res> implements $DetailsStateCopyWith<$Res> {
@@ -47,209 +75,37 @@ class _$DetailsStateCopyWithImpl<$Res> implements $DetailsStateCopyWith<$Res> {
   final DetailsState _value;
   // ignore: unused_field
   final $Res Function(DetailsState) _then;
-
-  @override
-  $Res call({
-    Object page = freezed,
-    Object action = freezed,
-  }) {
-    return _then(_value.copyWith(
-      page: page == freezed ? _value.page : page as PageState,
-      action: action == freezed ? _value.action : action as DetailsAction,
-    ));
-  }
-
-  @override
-  $PageStateCopyWith<$Res> get page {
-    if (_value.page == null) {
-      return null;
-    }
-    return $PageStateCopyWith<$Res>(_value.page, (value) {
-      return _then(_value.copyWith(page: value));
-    });
-  }
-
-  @override
-  $DetailsActionCopyWith<$Res> get action {
-    if (_value.action == null) {
-      return null;
-    }
-    return $DetailsActionCopyWith<$Res>(_value.action, (value) {
-      return _then(_value.copyWith(action: value));
-    });
-  }
 }
 
-abstract class _$DetailsStateCopyWith<$Res>
-    implements $DetailsStateCopyWith<$Res> {
-  factory _$DetailsStateCopyWith(
-          _DetailsState value, $Res Function(_DetailsState) then) =
-      __$DetailsStateCopyWithImpl<$Res>;
-  @override
-  $Res call({PageState page, DetailsAction action});
-
-  @override
-  $PageStateCopyWith<$Res> get page;
-  @override
-  $DetailsActionCopyWith<$Res> get action;
+abstract class $DetailsStateLoadingCopyWith<$Res> {
+  factory $DetailsStateLoadingCopyWith(
+          DetailsStateLoading value, $Res Function(DetailsStateLoading) then) =
+      _$DetailsStateLoadingCopyWithImpl<$Res>;
 }
 
-class __$DetailsStateCopyWithImpl<$Res> extends _$DetailsStateCopyWithImpl<$Res>
-    implements _$DetailsStateCopyWith<$Res> {
-  __$DetailsStateCopyWithImpl(
-      _DetailsState _value, $Res Function(_DetailsState) _then)
-      : super(_value, (v) => _then(v as _DetailsState));
+class _$DetailsStateLoadingCopyWithImpl<$Res>
+    extends _$DetailsStateCopyWithImpl<$Res>
+    implements $DetailsStateLoadingCopyWith<$Res> {
+  _$DetailsStateLoadingCopyWithImpl(
+      DetailsStateLoading _value, $Res Function(DetailsStateLoading) _then)
+      : super(_value, (v) => _then(v as DetailsStateLoading));
 
   @override
-  _DetailsState get _value => super._value as _DetailsState;
-
-  @override
-  $Res call({
-    Object page = freezed,
-    Object action = freezed,
-  }) {
-    return _then(_DetailsState(
-      page: page == freezed ? _value.page : page as PageState,
-      action: action == freezed ? _value.action : action as DetailsAction,
-    ));
-  }
-}
-
-@Implements(PageHolder)
-@Implements(ActionHolder)
-class _$_DetailsState implements _DetailsState {
-  const _$_DetailsState({@required this.page, this.action})
-      : assert(page != null);
-
-  @override
-  final PageState page;
-  @override
-  final DetailsAction action;
-
-  @override
-  String toString() {
-    return 'DetailsState(page: $page, action: $action)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is _DetailsState &&
-            (identical(other.page, page) ||
-                const DeepCollectionEquality().equals(other.page, page)) &&
-            (identical(other.action, action) ||
-                const DeepCollectionEquality().equals(other.action, action)));
-  }
-
-  @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(page) ^
-      const DeepCollectionEquality().hash(action);
-
-  @override
-  _$DetailsStateCopyWith<_DetailsState> get copyWith =>
-      __$DetailsStateCopyWithImpl<_DetailsState>(this, _$identity);
-}
-
-abstract class _DetailsState implements DetailsState, PageHolder, ActionHolder {
-  const factory _DetailsState(
-      {@required PageState page, DetailsAction action}) = _$_DetailsState;
-
-  @override
-  PageState get page;
-  @override
-  DetailsAction get action;
-  @override
-  _$DetailsStateCopyWith<_DetailsState> get copyWith;
-}
-
-class _$PageStateTearOff {
-  const _$PageStateTearOff();
-
-// ignore: unused_element
-  PageStateLoading loading() {
-    return const PageStateLoading();
-  }
-
-// ignore: unused_element
-  PageStateDone done(String id, String name) {
-    return PageStateDone(
-      id,
-      name,
-    );
-  }
-}
-
-// ignore: unused_element
-const $PageState = _$PageStateTearOff();
-
-mixin _$PageState {
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result loading(),
-    @required Result done(String id, String name),
-  });
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result loading(),
-    Result done(String id, String name),
-    @required Result orElse(),
-  });
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result loading(PageStateLoading value),
-    @required Result done(PageStateDone value),
-  });
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result loading(PageStateLoading value),
-    Result done(PageStateDone value),
-    @required Result orElse(),
-  });
-}
-
-abstract class $PageStateCopyWith<$Res> {
-  factory $PageStateCopyWith(PageState value, $Res Function(PageState) then) =
-      _$PageStateCopyWithImpl<$Res>;
-}
-
-class _$PageStateCopyWithImpl<$Res> implements $PageStateCopyWith<$Res> {
-  _$PageStateCopyWithImpl(this._value, this._then);
-
-  final PageState _value;
-  // ignore: unused_field
-  final $Res Function(PageState) _then;
-}
-
-abstract class $PageStateLoadingCopyWith<$Res> {
-  factory $PageStateLoadingCopyWith(
-          PageStateLoading value, $Res Function(PageStateLoading) then) =
-      _$PageStateLoadingCopyWithImpl<$Res>;
-}
-
-class _$PageStateLoadingCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
-    implements $PageStateLoadingCopyWith<$Res> {
-  _$PageStateLoadingCopyWithImpl(
-      PageStateLoading _value, $Res Function(PageStateLoading) _then)
-      : super(_value, (v) => _then(v as PageStateLoading));
-
-  @override
-  PageStateLoading get _value => super._value as PageStateLoading;
+  DetailsStateLoading get _value => super._value as DetailsStateLoading;
 }
 
 @Implements(PageIncomplete)
-class _$PageStateLoading implements PageStateLoading {
-  const _$PageStateLoading();
+class _$DetailsStateLoading implements DetailsStateLoading {
+  const _$DetailsStateLoading();
 
   @override
   String toString() {
-    return 'PageState.loading()';
+    return 'DetailsState.loading()';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is PageStateLoading);
+    return identical(this, other) || (other is DetailsStateLoading);
   }
 
   @override
@@ -259,9 +115,11 @@ class _$PageStateLoading implements PageStateLoading {
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result loading(),
+    @required Result refreshing(),
     @required Result done(String id, String name),
   }) {
     assert(loading != null);
+    assert(refreshing != null);
     assert(done != null);
     return loading();
   }
@@ -270,6 +128,7 @@ class _$PageStateLoading implements PageStateLoading {
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result loading(),
+    Result refreshing(),
     Result done(String id, String name),
     @required Result orElse(),
   }) {
@@ -283,10 +142,12 @@ class _$PageStateLoading implements PageStateLoading {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result loading(PageStateLoading value),
-    @required Result done(PageStateDone value),
+    @required Result loading(DetailsStateLoading value),
+    @required Result refreshing(DetailsStateRefreshing value),
+    @required Result done(DetailsStateDone value),
   }) {
     assert(loading != null);
+    assert(refreshing != null);
     assert(done != null);
     return loading(this);
   }
@@ -294,8 +155,9 @@ class _$PageStateLoading implements PageStateLoading {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result loading(PageStateLoading value),
-    Result done(PageStateDone value),
+    Result loading(DetailsStateLoading value),
+    Result refreshing(DetailsStateRefreshing value),
+    Result done(DetailsStateDone value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -306,40 +168,135 @@ class _$PageStateLoading implements PageStateLoading {
   }
 }
 
-abstract class PageStateLoading implements PageState, PageIncomplete {
-  const factory PageStateLoading() = _$PageStateLoading;
+abstract class DetailsStateLoading implements DetailsState, PageIncomplete {
+  const factory DetailsStateLoading() = _$DetailsStateLoading;
 }
 
-abstract class $PageStateDoneCopyWith<$Res> {
-  factory $PageStateDoneCopyWith(
-          PageStateDone value, $Res Function(PageStateDone) then) =
-      _$PageStateDoneCopyWithImpl<$Res>;
+abstract class $DetailsStateRefreshingCopyWith<$Res> {
+  factory $DetailsStateRefreshingCopyWith(DetailsStateRefreshing value,
+          $Res Function(DetailsStateRefreshing) then) =
+      _$DetailsStateRefreshingCopyWithImpl<$Res>;
+}
+
+class _$DetailsStateRefreshingCopyWithImpl<$Res>
+    extends _$DetailsStateCopyWithImpl<$Res>
+    implements $DetailsStateRefreshingCopyWith<$Res> {
+  _$DetailsStateRefreshingCopyWithImpl(DetailsStateRefreshing _value,
+      $Res Function(DetailsStateRefreshing) _then)
+      : super(_value, (v) => _then(v as DetailsStateRefreshing));
+
+  @override
+  DetailsStateRefreshing get _value => super._value as DetailsStateRefreshing;
+}
+
+class _$DetailsStateRefreshing implements DetailsStateRefreshing {
+  const _$DetailsStateRefreshing();
+
+  @override
+  String toString() {
+    return 'DetailsState.refreshing()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is DetailsStateRefreshing);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result loading(),
+    @required Result refreshing(),
+    @required Result done(String id, String name),
+  }) {
+    assert(loading != null);
+    assert(refreshing != null);
+    assert(done != null);
+    return refreshing();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result loading(),
+    Result refreshing(),
+    Result done(String id, String name),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (refreshing != null) {
+      return refreshing();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result loading(DetailsStateLoading value),
+    @required Result refreshing(DetailsStateRefreshing value),
+    @required Result done(DetailsStateDone value),
+  }) {
+    assert(loading != null);
+    assert(refreshing != null);
+    assert(done != null);
+    return refreshing(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result loading(DetailsStateLoading value),
+    Result refreshing(DetailsStateRefreshing value),
+    Result done(DetailsStateDone value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (refreshing != null) {
+      return refreshing(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DetailsStateRefreshing implements DetailsState {
+  const factory DetailsStateRefreshing() = _$DetailsStateRefreshing;
+}
+
+abstract class $DetailsStateDoneCopyWith<$Res> {
+  factory $DetailsStateDoneCopyWith(
+          DetailsStateDone value, $Res Function(DetailsStateDone) then) =
+      _$DetailsStateDoneCopyWithImpl<$Res>;
   $Res call({String id, String name});
 }
 
-class _$PageStateDoneCopyWithImpl<$Res> extends _$PageStateCopyWithImpl<$Res>
-    implements $PageStateDoneCopyWith<$Res> {
-  _$PageStateDoneCopyWithImpl(
-      PageStateDone _value, $Res Function(PageStateDone) _then)
-      : super(_value, (v) => _then(v as PageStateDone));
+class _$DetailsStateDoneCopyWithImpl<$Res>
+    extends _$DetailsStateCopyWithImpl<$Res>
+    implements $DetailsStateDoneCopyWith<$Res> {
+  _$DetailsStateDoneCopyWithImpl(
+      DetailsStateDone _value, $Res Function(DetailsStateDone) _then)
+      : super(_value, (v) => _then(v as DetailsStateDone));
 
   @override
-  PageStateDone get _value => super._value as PageStateDone;
+  DetailsStateDone get _value => super._value as DetailsStateDone;
 
   @override
   $Res call({
     Object id = freezed,
     Object name = freezed,
   }) {
-    return _then(PageStateDone(
+    return _then(DetailsStateDone(
       id == freezed ? _value.id : id as String,
       name == freezed ? _value.name : name as String,
     ));
   }
 }
 
-class _$PageStateDone implements PageStateDone {
-  const _$PageStateDone(this.id, this.name)
+class _$DetailsStateDone implements DetailsStateDone {
+  const _$DetailsStateDone(this.id, this.name)
       : assert(id != null),
         assert(name != null);
 
@@ -350,13 +307,13 @@ class _$PageStateDone implements PageStateDone {
 
   @override
   String toString() {
-    return 'PageState.done(id: $id, name: $name)';
+    return 'DetailsState.done(id: $id, name: $name)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is PageStateDone &&
+        (other is DetailsStateDone &&
             (identical(other.id, id) ||
                 const DeepCollectionEquality().equals(other.id, id)) &&
             (identical(other.name, name) ||
@@ -370,16 +327,18 @@ class _$PageStateDone implements PageStateDone {
       const DeepCollectionEquality().hash(name);
 
   @override
-  $PageStateDoneCopyWith<PageStateDone> get copyWith =>
-      _$PageStateDoneCopyWithImpl<PageStateDone>(this, _$identity);
+  $DetailsStateDoneCopyWith<DetailsStateDone> get copyWith =>
+      _$DetailsStateDoneCopyWithImpl<DetailsStateDone>(this, _$identity);
 
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
     @required Result loading(),
+    @required Result refreshing(),
     @required Result done(String id, String name),
   }) {
     assert(loading != null);
+    assert(refreshing != null);
     assert(done != null);
     return done(id, name);
   }
@@ -388,6 +347,7 @@ class _$PageStateDone implements PageStateDone {
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result loading(),
+    Result refreshing(),
     Result done(String id, String name),
     @required Result orElse(),
   }) {
@@ -401,10 +361,12 @@ class _$PageStateDone implements PageStateDone {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result loading(PageStateLoading value),
-    @required Result done(PageStateDone value),
+    @required Result loading(DetailsStateLoading value),
+    @required Result refreshing(DetailsStateRefreshing value),
+    @required Result done(DetailsStateDone value),
   }) {
     assert(loading != null);
+    assert(refreshing != null);
     assert(done != null);
     return done(this);
   }
@@ -412,8 +374,9 @@ class _$PageStateDone implements PageStateDone {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result loading(PageStateLoading value),
-    Result done(PageStateDone value),
+    Result loading(DetailsStateLoading value),
+    Result refreshing(DetailsStateRefreshing value),
+    Result done(DetailsStateDone value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -424,145 +387,12 @@ class _$PageStateDone implements PageStateDone {
   }
 }
 
-abstract class PageStateDone implements PageState {
-  const factory PageStateDone(String id, String name) = _$PageStateDone;
+abstract class DetailsStateDone implements DetailsState {
+  const factory DetailsStateDone(String id, String name) = _$DetailsStateDone;
 
   String get id;
   String get name;
-  $PageStateDoneCopyWith<PageStateDone> get copyWith;
-}
-
-class _$DetailsActionTearOff {
-  const _$DetailsActionTearOff();
-
-// ignore: unused_element
-  DetailsActionRefreshComplete refreshComplete() {
-    return const DetailsActionRefreshComplete();
-  }
-}
-
-// ignore: unused_element
-const $DetailsAction = _$DetailsActionTearOff();
-
-mixin _$DetailsAction {
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result refreshComplete(),
-  });
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result refreshComplete(),
-    @required Result orElse(),
-  });
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result refreshComplete(DetailsActionRefreshComplete value),
-  });
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result refreshComplete(DetailsActionRefreshComplete value),
-    @required Result orElse(),
-  });
-}
-
-abstract class $DetailsActionCopyWith<$Res> {
-  factory $DetailsActionCopyWith(
-          DetailsAction value, $Res Function(DetailsAction) then) =
-      _$DetailsActionCopyWithImpl<$Res>;
-}
-
-class _$DetailsActionCopyWithImpl<$Res>
-    implements $DetailsActionCopyWith<$Res> {
-  _$DetailsActionCopyWithImpl(this._value, this._then);
-
-  final DetailsAction _value;
-  // ignore: unused_field
-  final $Res Function(DetailsAction) _then;
-}
-
-abstract class $DetailsActionRefreshCompleteCopyWith<$Res> {
-  factory $DetailsActionRefreshCompleteCopyWith(
-          DetailsActionRefreshComplete value,
-          $Res Function(DetailsActionRefreshComplete) then) =
-      _$DetailsActionRefreshCompleteCopyWithImpl<$Res>;
-}
-
-class _$DetailsActionRefreshCompleteCopyWithImpl<$Res>
-    extends _$DetailsActionCopyWithImpl<$Res>
-    implements $DetailsActionRefreshCompleteCopyWith<$Res> {
-  _$DetailsActionRefreshCompleteCopyWithImpl(
-      DetailsActionRefreshComplete _value,
-      $Res Function(DetailsActionRefreshComplete) _then)
-      : super(_value, (v) => _then(v as DetailsActionRefreshComplete));
-
-  @override
-  DetailsActionRefreshComplete get _value =>
-      super._value as DetailsActionRefreshComplete;
-}
-
-class _$DetailsActionRefreshComplete implements DetailsActionRefreshComplete {
-  const _$DetailsActionRefreshComplete();
-
-  @override
-  String toString() {
-    return 'DetailsAction.refreshComplete()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is DetailsActionRefreshComplete);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result refreshComplete(),
-  }) {
-    assert(refreshComplete != null);
-    return refreshComplete();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result refreshComplete(),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (refreshComplete != null) {
-      return refreshComplete();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result refreshComplete(DetailsActionRefreshComplete value),
-  }) {
-    assert(refreshComplete != null);
-    return refreshComplete(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result refreshComplete(DetailsActionRefreshComplete value),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (refreshComplete != null) {
-      return refreshComplete(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class DetailsActionRefreshComplete implements DetailsAction {
-  const factory DetailsActionRefreshComplete() = _$DetailsActionRefreshComplete;
+  $DetailsStateDoneCopyWith<DetailsStateDone> get copyWith;
 }
 
 class _$DetailsEventTearOff {

@@ -1,36 +1,23 @@
 import 'dart:async';
 
-import 'package:api_repository/api_repository.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:groupshare/main.dart';
+import 'package:groupshare/observer.dart';
 import 'package:protod/pserver/pserver.dart';
 
 part 'details_bloc.freezed.dart';
 
 @freezed
 abstract class DetailsState with _$DetailsState {
-  @Implements(PageHolder)
-  @Implements(ActionHolder)
-  const factory DetailsState({
-    @required PageState page,
-    DetailsAction action,
-  }) = _DetailsState;
-}
+  @Implements(Incomplete)
+  const factory DetailsState.loading() = DetailsStateLoading;
 
-@freezed
-abstract class PageState with _$DetailsState {
-  @Implements(PageIncomplete)
-  const factory PageState.loading() = PageStateLoading;
+  const factory DetailsState.refreshing() = DetailsStateRefreshing;
 
-  const factory PageState.done(String id, String name) = PageStateDone;
-}
-
-@freezed
-abstract class DetailsAction with _$DetailsAction {
-  const factory DetailsAction.refreshComplete() = DetailsActionRefreshComplete;
+  @Implements(Complete)
+  const factory DetailsState.done(String id, String name) = DetailsStateDone;
 }
 
 @freezed
@@ -45,16 +32,12 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
   final Data _data;
   StreamSubscription<DataEvent<Share>> _subscription;
 
-  DetailsBloc(this._id, this._data) : super(DetailsState(page: PageState.loading())) {
+  DetailsBloc(this._id, this._data) : super(DetailsState.loading()) {
     _subscription = _data.shares.stream.listen((DataEvent<Share> event) {
       if (event.id != _id) {
         return;
       }
-      if (event is DataEventApply<Share>) {
-        add(DetailsEvent.init());
-        return;
-      }
-      if (event is DataEventGot<Share>) {
+      if (event is DataEventApply || event is DataEventGot) {
         add(DetailsEvent.init());
         return;
       }
@@ -70,13 +53,30 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
         if (item == null) {
           throw UserException("Can't find document");
         }
-        yield state.copyWith(page:PageState.done(item.id, item.value.name));
+        yield DetailsState.done(item.id, item.value.name);
       },
       refresh: (event) async* {
-        await _data.shares.refresh(_id);
+        yield DetailsState.refreshing();
+        final item = await _data.shares.refresh(_id);
+        if (item == null) {
+          throw UserException("Can't refresh");
+        }
+        yield DetailsState.done(item.id, item.value.name);
       },
     );
   }
+
+
+  // @override
+  // void onChange(Change<DetailsState> change) {
+  //   print("change ${change.currentState} ${change.nextState}");
+  // }
+  //
+  //
+  // @override
+  // void add(DetailsEvent event) {
+  //   super.add(event);
+  // }
 
   @override
   Future<void> close() {

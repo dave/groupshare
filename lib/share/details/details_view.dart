@@ -43,52 +43,45 @@ class DetailsPage extends StatelessWidget {
 class DetailsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final global = GlobalKey();
-    return BlocConsumer<DetailsBloc, DetailsState>(
-      key: global,
-      listenWhen: (previous, current) => current.map(
-        resetRefresh: (state) => true,
-        loading: (state) => false,
-        done: (state) => false,
-      ),
-      listener: (context, state) {
-        state.map(
-          loading: (state) => true,
-          done: (state) => true,
-        );
-      },
+    return BlocBuilder<DetailsBloc, DetailsState>(
       buildWhen: (previous, current) => current.map(
+        refreshing: (state) => false,
         loading: (state) => true,
         done: (state) => true,
       ),
       builder: (context, state) {
         return Scaffold(
           appBar: AppBarWidget('Title'),
-          floatingActionButton: state.map(
-            loading: (state) => Container(),
+          floatingActionButton: state.maybeMap(
             done: (state) => FloatingActionButton(
               child: Icon(Icons.edit),
               onPressed: () async {
-                await Navigator.of(context).push(EditPage.route(
-                  state.id,
-                  DetailsPage.routeName,
-                ));
+                await Navigator.of(context).push(
+                  EditPage.route(
+                    state.id,
+                    DetailsPage.routeName,
+                  ),
+                );
               },
             ),
+            orElse: () => Container(),
           ),
           body: Padding(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(12),
             child: Align(
-              alignment: const Alignment(0, -1 / 3),
-              child: Refresher(
-                onRefresh: () async {
-                  context.bloc<DetailsBloc>().add(DetailsEvent.refresh());
-                },
-                child: state.map(
-                  loading: (_) => Center(
+              alignment: Alignment(0, -1 / 3),
+              child: BlocRefreshIndicator<DetailsBloc, DetailsEvent,
+                  DetailsState, DetailsStateDone>(
+                single: true,
+                event: DetailsEvent.refresh(),
+                child: state.maybeMap(
+                  loading: (state) => Center(
                     child: CircularProgressIndicator(),
                   ),
-                  done: (state) => Center(child: Text(state.name)),
+                  done: (state) => Center(
+                    child: Text(state.name),
+                  ),
+                  orElse: () => Container(),
                 ),
               ),
             ),

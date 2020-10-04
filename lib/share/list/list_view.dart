@@ -7,6 +7,7 @@ import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/add/add.dart';
 import 'package:groupshare/share/edit/edit.dart';
+import 'package:groupshare/share/list/item/item.dart';
 import 'package:groupshare/share/list/list.dart';
 import 'package:groupshare/share/details/details.dart';
 import 'package:groupshare/task.dart';
@@ -39,15 +40,12 @@ class ListPage extends StatelessWidget {
 class ListPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final global = GlobalKey();
-    return BlocConsumer<ListBloc, ListState>(
-      key: global,
-      listener: (context, state) {
-        state.page.map(
-          loading: (state) => true,
-          list: (state) => true,
-        );
-      },
+    return BlocBuilder<ListBloc, ListState>(
+      buildWhen: (previous, current) => current.map(
+        loading: (_) => true,
+        list: (_) => true,
+        refreshFinished: (_) => false,
+      ),
       builder: (context, state) {
         final controller = SlidableController();
         return Scaffold(
@@ -59,29 +57,24 @@ class ListPageContent extends StatelessWidget {
             },
           ),
           body: Padding(
-            padding: const EdgeInsets.all(12),
-            child: state.page.when(
-              loading: () => Column(
+            padding: EdgeInsets.all(12),
+            child: state.maybeMap(
+              loading: (state) => Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [Center(child: Text("loading"))],
               ),
-              list: () => state.items.length == 0
-                  ? Refresher(
-                      onRefresh: () async {
-                        // When we pull down the refresh on the empty list, we
-                        // refresh the list but not all of the items.
-                        context.bloc<ListBloc>().add(ListEvent.init());
-                      },
-                      child: Column(
+              list: (state) => BlocRefreshIndicator<ListBloc, ListEvent,
+                  ListState, ListStateRefreshFinished>(
+                single: state.items.isEmpty,
+                event: ListEvent.refresh(),
+                child: state.items.isEmpty
+                    ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [Center(child: Text("List empty."))],
-                      ),
-                    )
-                  : BlocRefreshIndicator<ListBloc, ListEvent, ListState, ListActionRefreshComplete>(
-                      onRefreshEvent: ListEvent.refresh(),
-                      child: RefreshableReorderableListView(
+                      )
+                    : RefreshableReorderableListView(
                         physics: AlwaysScrollableScrollPhysics(),
                         onReorder: (from, to) {
                           context.bloc<ListBloc>().add(
@@ -90,163 +83,39 @@ class ListPageContent extends StatelessWidget {
                         },
                         children: state.items.map(
                           (item) {
-                            final iconColor = _iconColor(
-                              Theme.of(context),
-                              ListTileTheme.of(context),
-                            );
-                            return Slidable(
-                              controller: controller,
-                              key: ValueKey(item.id),
-                              actionPane: SlidableDrawerActionPane(),
-                              actionExtentRatio: 0.1,
-                              child: SlidableListTile(
-                                controller: controller,
-                                item: item,
-                                global: global,
+                            return ItemWidget(
+                              item.id,
+                              item.name,
+                              controller,
+                              onDelete: () => context
+                                  .bloc<ListBloc>()
+                                  .add(ListEvent.delete(item.id)),
+                              onRefresh: () => context
+                                  .bloc<ListBloc>()
+                                  .add(ListEvent.item(item.id)),
+                              onEdit: () => Navigator.of(context).push(
+                                EditPage.route(
+                                  item.id,
+                                  ListPage.routeName,
+                                ),
                               ),
-                              secondaryActions: <Widget>[
-                                if (item.local)
-                                  IconSlideAction(
-                                    //caption: 'Delete',
-                                    color: Colors.transparent,
-                                    foregroundColor: iconColor,
-                                    icon: Icons.delete,
-                                    onTap: () async {
-                                      context
-                                          .bloc<ListBloc>()
-                                          .add(ListEvent.delete(item.id));
-                                    },
+                              onDownload: () => context.bloc<ListBloc>().add(
+                                    ListEvent.item(item.id),
                                   ),
-                                if (item.local)
-                                  IconSlideAction(
-                                    //caption: 'Refresh',
-                                    color: Colors.transparent,
-                                    icon: Icons.sync,
-                                    foregroundColor: iconColor,
-                                    onTap: () async {
-                                      context
-                                          .bloc<ListBloc>()
-                                          .add(ListEvent.item(item.id));
-                                    },
-                                  ),
-                                if (item.local)
-                                  IconSlideAction(
-                                    //caption: 'Edit',
-                                    color: Colors.transparent,
-                                    icon: Icons.edit,
-                                    foregroundColor: iconColor,
-                                    onTap: () async {
-                                      await Navigator.of(context).push(
-                                        EditPage.route(
-                                          item.id,
-                                          ListPage.routeName,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                              ],
+                              onOpen: () => Navigator.of(context).push(
+                                DetailsPage.route(item.id),
+                              ),
+                              key: ValueKey(item.id),
                             );
                           },
                         ).toList(),
                       ),
-                    ),
+              ),
+              orElse: () => Container(),
             ),
           ),
         );
       },
     );
   }
-}
-
-class SlidableListTile extends StatelessWidget {
-  final AvailableShare item;
-  final SlidableController controller;
-  final GlobalKey global;
-
-  const SlidableListTile({
-    Key key,
-    this.controller,
-    this.item,
-    this.global,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(item.name),
-      onTap: () async {
-        await task(
-          context,
-          global,
-          () async =>
-              await Navigator.of(context).push(DetailsPage.route(item.id)),
-          offlineWarning: !item.local,
-        );
-      },
-      trailing: item.sending
-          ? IconButton(
-              icon: Spinner(icon: Icons.sync),
-              onPressed: () {},
-            )
-          : item.local
-              ? IconButton(
-                  icon: Icon(
-                    item.dirty ? Icons.offline_bolt : Icons.offline_pin,
-                  ),
-                  onPressed: () {
-                    final thisItemIsOpen = controller.activeState != null &&
-                        controller.activeState == Slidable.of(context) &&
-                        controller.activeState.actionType ==
-                            SlideActionType.secondary;
-
-                    final anotherItemIsOpen = controller.activeState != null &&
-                        controller.activeState != Slidable.of(context) &&
-                        controller.activeState.actionType ==
-                            SlideActionType.secondary;
-
-                    if (anotherItemIsOpen) {
-                      controller.activeState.close();
-                    }
-                    if (thisItemIsOpen) {
-                      Slidable.of(context).close();
-                    } else {
-                      Slidable.of(context).open(
-                        actionType: SlideActionType.secondary,
-                      );
-                    }
-                  },
-                )
-              : IconButton(
-                  icon: Icon(Icons.file_download),
-                  onPressed: () async {
-                    context.bloc<ListBloc>().add(ListEvent.item(item.id));
-                  },
-                ),
-    );
-  }
-}
-
-Color _iconColor(ThemeData theme, ListTileTheme tileTheme) {
-  final enabled = true; // TODO: always?
-  final selected = false; // TODO: always?
-
-  // This logic was copied from ListTile:
-
-  if (!enabled) return theme.disabledColor;
-
-  if (selected && tileTheme?.selectedColor != null)
-    return tileTheme.selectedColor;
-
-  if (!selected && tileTheme?.iconColor != null) return tileTheme.iconColor;
-
-  switch (theme.brightness) {
-    case Brightness.light:
-      return selected ? theme.primaryColor : Colors.black45;
-    case Brightness.dark:
-      return selected
-          ? theme.accentColor
-          : null; // null - use current icon theme color
-  }
-  assert(theme.brightness != null);
-  return null;
 }

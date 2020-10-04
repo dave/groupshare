@@ -302,6 +302,7 @@ class _$AppStateDoneCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
   AppStateDone get _value => super._value as AppStateDone;
 }
 
+@Implements(PageIncomplete)
 class _$AppStateDone implements AppStateDone {
   const _$AppStateDone();
 
@@ -375,7 +376,7 @@ class _$AppStateDone implements AppStateDone {
   }
 }
 
-abstract class AppStateDone implements AppState {
+abstract class AppStateDone implements AppState, PageIncomplete {
   const factory AppStateDone() = _$AppStateDone;
 }
 

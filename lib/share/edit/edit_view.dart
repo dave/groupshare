@@ -33,19 +33,17 @@ class EditPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final global = GlobalKey();
     return Scaffold(
-      key: global,
       appBar: AppBarWidget('Title'),
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         child: BlocProvider(
           create: (context) => EditBloc(
             _id,
             _back,
             RepositoryProvider.of<Data>(context),
           ),
-          child: EditForm(global),
+          child: EditForm(),
         ),
       ),
     );
@@ -53,37 +51,42 @@ class EditPage extends StatelessWidget {
 }
 
 class EditForm extends StatelessWidget {
-  final GlobalKey _global;
-
-  EditForm(this._global);
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<EditBloc, EditState>(
+      listenWhen: (previous, current) => current.map(
+        loading: (_) => false,
+        form: (_) => false,
+        done: (_) => true,
+      ),
       listener: (context, state) {
-        state.page.map(
-          loading: (page) => true,
-          form: (page) => true,
-          done: (page) {
-            Navigator.of(context).popUntil(ModalRoute.withName(page.route));
+        state.maybeMap(
+          done: (state) {
+            Navigator.of(context).popUntil(ModalRoute.withName(state.route));
           },
+          orElse: () => true,
         );
       },
+      buildWhen: (previous, current) => current.map(
+        loading: (_) => true,
+        form: (_) => true,
+        done: (_) => false,
+      ),
       builder: (context, state) {
         return Align(
-          alignment: const Alignment(0, -1 / 3),
+          alignment: Alignment(0, -1 / 3),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: state.page.map(
-              loading: (_) => [Center(child: CircularProgressIndicator())],
-              form: (_) {
-                return [
-                  _NameInput(),
-                  const Padding(padding: EdgeInsets.all(12)),
-                  _SubmitButton(_global),
-                ];
-              },
-              done: (_) => [],
+            children: state.maybeMap(
+              loading: (_) => [
+                Center(child: CircularProgressIndicator()),
+              ],
+              form: (_) => [
+                _NameInput(),
+                Padding(padding: EdgeInsets.all(12)),
+                _SubmitButton(),
+              ],
+              orElse: () => [],
             ),
           ),
         );
@@ -97,49 +100,53 @@ class _NameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<EditBloc, EditState>(
       buildWhen: (previous, current) {
-        return previous.form.name != current.form.name;
+        return current is EditStateForm &&
+            (previous is! EditStateForm ||
+                previous is EditStateForm && previous.name != current.name);
       },
       builder: (context, state) {
-        return TextFormField(
-          autofocus: true,
-          key: Keys.name,
-          initialValue: state.form.name.value,
-          onChanged: (value) {
-            context.bloc<EditBloc>().add(EditEvent.change(value));
-          },
-          decoration: InputDecoration(
-            labelText: 'name',
-            errorText: state.form.name.invalid ? 'invalid name' : null,
-          ),
-        );
+        return state is EditStateForm
+            ? TextFormField(
+                autofocus: true,
+                key: Keys.name,
+                initialValue: state.name.value,
+                onChanged: (value) {
+                  context.bloc<EditBloc>().add(EditEvent.change(value));
+                },
+                decoration: InputDecoration(
+                  labelText: 'name',
+                  errorText: state.name.invalid ? 'invalid name' : null,
+                ),
+              )
+            : null;
       },
     );
   }
 }
 
 class _SubmitButton extends StatelessWidget {
-  final GlobalKey _global;
-
-  _SubmitButton(this._global);
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditBloc, EditState>(
       buildWhen: (previous, current) {
-        return previous.form.status != current.form.status;
+        return current is EditStateForm &&
+            (previous is! EditStateForm ||
+                previous is EditStateForm && previous.status != current.status);
       },
       builder: (context, state) {
-        return state.form.status.isSubmissionInProgress
-            ? const CircularProgressIndicator()
-            : RaisedButton(
-                key: Keys.submit,
-                child: const Text('Submit'),
-                onPressed: () async {
-                  if (state.form.status.isValidated) {
-                    context.bloc<EditBloc>().add(EditEvent.submit());
-                  }
-                },
-              );
+        return state is EditStateForm
+            ? state.status.isSubmissionInProgress
+                ? const CircularProgressIndicator()
+                : RaisedButton(
+                    key: Keys.submit,
+                    child: Text('Submit'),
+                    onPressed: () async {
+                      if (state.status.isValidated) {
+                        context.bloc<EditBloc>().add(EditEvent.submit());
+                      }
+                    },
+                  )
+            : null;
       },
     );
   }

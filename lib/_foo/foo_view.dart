@@ -19,7 +19,7 @@ class FooPage extends StatelessWidget {
       key: global,
       appBar: AppBarWidget('Title'),
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         child: BlocProvider(
           create: (context) {
             final cubit = FooCubit(
@@ -52,16 +52,17 @@ class FooForm extends StatelessWidget {
     final global = GlobalKey();
     return BlocConsumer<FooCubit, FooState>(
       key: global,
+      listenWhen: (previous, current) => current.map(loading: (_)=>false, form: (_)=>false, done: (_)=>true,),
       listener: (context, state) {
-        state.page.map(
-          loading: (state) {},
-          form: (state) {},
+        state.page.maybeMap(
           done: (state) => true,
+          orElse: () => true,
         );
       },
+      buildWhen: (previous, current) => current.map(loading: (_)=>true, form: (_)=>true, done: (_)=>false,),
       builder: (context, state) {
         return Align(
-          alignment: const Alignment(0, -1 / 3),
+          alignment: Alignment(0, -1 / 3),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: state.page.map(
@@ -69,7 +70,7 @@ class FooForm extends StatelessWidget {
               form: (state) {
                 return [
                   _NameInput(),
-                  const Padding(padding: EdgeInsets.all(12)),
+                  Padding(padding: EdgeInsets.all(12)),
                   _SubmitButton(_global),
                 ];
               },

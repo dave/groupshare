@@ -18,17 +18,15 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final global = GlobalKey();
     return Scaffold(
-      key: global,
       appBar: AppBarWidget('Login'),
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         child: BlocProvider(
           create: (context) => LoginBloc(
             RepositoryProvider.of<Auth>(context),
           ),
-          child: LoginForm(global),
+          child: LoginForm(),
         ),
       ),
     );
@@ -36,46 +34,51 @@ class LoginPage extends StatelessWidget {
 }
 
 class LoginForm extends StatelessWidget {
-  final GlobalKey _global;
-
-  LoginForm(this._global);
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginState>(
+      listenWhen: (previous, current) => current.map(
+        email: (_) => false,
+        code: (_) => false,
+        done: (_) => true,
+      ),
       listener: (context, state) {
-        state.page.map(
-          email: (state) => true,
-          code: (state) => true,
+        state.maybeMap(
           done: (state) {
             Navigator.of(context).pushAndRemoveUntil(
               ListPage.route(),
               (route) => false,
             );
           },
+          orElse: () {},
         );
       },
+      buildWhen: (previous, current) => current.map(
+        email: (_) => true,
+        code: (_) => true,
+        done: (_) => false,
+      ),
       builder: (context, state) {
         return Align(
-          alignment: const Alignment(0, -1 / 3),
+          alignment: Alignment(0, -1 / 3),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: state.page.map(
+            children: state.maybeMap(
               email: (state) {
                 return [
                   _EmailInput(),
-                  const Padding(padding: EdgeInsets.all(12)),
-                  _EmailButton(_global),
+                  Padding(padding: EdgeInsets.all(12)),
+                  _EmailButton(),
                 ];
               },
               code: (state) {
                 return [
                   _CodeInput(),
-                  const Padding(padding: EdgeInsets.all(12)),
-                  _CodeButton(_global),
+                  Padding(padding: EdgeInsets.all(12)),
+                  _CodeButton(),
                 ];
               },
-              done: (state) => [],
+              orElse: () => [],
             ),
           ),
         );
@@ -89,21 +92,25 @@ class _EmailInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) {
-        return previous.email.email != current.email.email;
+        return current is LoginStateEmail &&
+            (previous is! LoginStateEmail ||
+                previous is LoginStateEmail && previous.email != current.email);
       },
       builder: (context, state) {
-        return TextFormField(
-          autofocus: true,
-          key: Keys.email,
-          initialValue: state.email.email.value,
-          onChanged: (email) {
-            context.bloc<LoginBloc>().add(LoginEvent.changeEmail(email));
-          },
-          decoration: InputDecoration(
-            labelText: 'email',
-            errorText: state.email.email.invalid ? 'invalid email' : null,
-          ),
-        );
+        return state is LoginStateEmail
+            ? TextFormField(
+                autofocus: true,
+                key: Keys.email,
+                initialValue: state.email.value,
+                onChanged: (email) {
+                  context.bloc<LoginBloc>().add(LoginEvent.changeEmail(email));
+                },
+                decoration: InputDecoration(
+                  labelText: 'email',
+                  errorText: state.email.invalid ? 'invalid email' : null,
+                ),
+              )
+            : null;
       },
     );
   }
@@ -114,77 +121,83 @@ class _CodeInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) {
-        return previous.code.code != current.code.code;
+        return current is LoginStateCode &&
+            (previous is! LoginStateCode ||
+                previous is LoginStateCode && previous.code != current.code);
       },
       builder: (context, state) {
-        return TextFormField(
-          autofocus: true,
-          key: Keys.code,
-          initialValue: state.code.code.value,
-          onChanged: (code) {
-            context.bloc<LoginBloc>().add(LoginEvent.changeCode(code));
-          },
-          decoration: InputDecoration(
-            labelText: 'code',
-            errorText: state.code.code.invalid ? 'invalid code' : null,
-          ),
-        );
+        return state is LoginStateCode
+            ? TextFormField(
+                autofocus: true,
+                key: Keys.code,
+                initialValue: state.code.value,
+                onChanged: (code) {
+                  context.bloc<LoginBloc>().add(LoginEvent.changeCode(code));
+                },
+                decoration: InputDecoration(
+                  labelText: 'code',
+                  errorText: state.code.invalid ? 'invalid code' : null,
+                ),
+              )
+            : null;
       },
     );
   }
 }
 
 class _EmailButton extends StatelessWidget {
-  final GlobalKey _global;
-
-  _EmailButton(this._global);
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) {
-        return previous.email.status != current.email.status;
+        return current is LoginStateEmail &&
+            (previous is! LoginStateEmail ||
+                previous is LoginStateEmail &&
+                    previous.status != current.status);
       },
       builder: (context, state) {
-        return state.email.status.isSubmissionInProgress
-            ? const CircularProgressIndicator()
-            : RaisedButton(
-                key: Keys.emailSubmit,
-                child: const Text('Login email'),
-                onPressed: () async {
-                  if (state.email.status.isValidated) {
-                    context.bloc<LoginBloc>().add(LoginEvent.submitEmail());
-                  }
-                },
-              );
+        return state is LoginStateEmail
+            ? state.status.isSubmissionInProgress
+                ? CircularProgressIndicator()
+                : RaisedButton(
+                    key: Keys.emailSubmit,
+                    child: Text('Login email'),
+                    onPressed: () async {
+                      if (state.status.isValidated) {
+                        context.bloc<LoginBloc>().add(LoginEvent.submitEmail());
+                      }
+                    },
+                  )
+            : null;
       },
     );
   }
 }
 
 class _CodeButton extends StatelessWidget {
-  final GlobalKey _global;
-
-  _CodeButton(this._global);
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) {
-        return previous.code.status != current.code.status;
+        return current is LoginStateCode &&
+            (previous is! LoginStateCode ||
+                previous is LoginStateCode &&
+                    previous.status != current.status);
       },
       builder: (context, state) {
-        return state.code.status.isSubmissionInProgress
-            ? const CircularProgressIndicator()
-            : RaisedButton(
-                key: Keys.codeSubmit,
-                child: const Text('Login code'),
-                onPressed: () async {
-                  if (state.code.status.isValidated) {
-                    context.bloc<LoginBloc>().add(LoginEvent.submitCode());
-                  }
-                },
-              );
+        return state is LoginStateCode
+            ? state.status.isSubmissionInProgress
+                ? CircularProgressIndicator()
+                : RaisedButton(
+                    key: Keys.codeSubmit,
+                    child: Text('Login code'),
+                    onPressed: () async {
+                      if (state.status.isValidated) {
+                        context.bloc<LoginBloc>().add(LoginEvent.submitCode());
+                      }
+                    },
+                  )
+            : null;
       },
     );
   }

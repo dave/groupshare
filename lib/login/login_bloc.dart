@@ -5,41 +5,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:groupshare/login/login.dart';
+import 'package:groupshare/observer.dart';
 
 part 'login_bloc.freezed.dart';
 
 @freezed
 abstract class LoginState with _$LoginState {
-  const factory LoginState(
-    PageState page,
-    EmailFormState email,
-    CodeFormState code,
-  ) = _LoginState;
-}
-
-@freezed
-abstract class PageState with _$PageState {
-  const factory PageState.email() = PageStateEmail;
-
-  const factory PageState.code() = PageStateCode;
-
-  const factory PageState.done() = PageStateDone;
-}
-
-@freezed
-abstract class EmailFormState with _$EmailFormState {
-  const factory EmailFormState({
+  @Implements(Complete)
+  const factory LoginState.email({
     @Default(FormzStatus.pure) FormzStatus status,
     @Default(const Email.pure()) Email email,
-  }) = _EmailFormState;
-}
+  }) = LoginStateEmail;
 
-@freezed
-abstract class CodeFormState with _$CodeFormState {
-  const factory CodeFormState({
+  @Implements(Complete)
+  const factory LoginState.code({
     @Default(FormzStatus.pure) FormzStatus status,
     @Default(const Code.pure()) Code code,
-  }) = _CodeFormState;
+  }) = LoginStateCode;
+
+  const factory LoginState.done() = LoginStateDone;
 }
 
 @freezed
@@ -61,12 +45,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Auth _auth;
   StreamSubscription<Status> _subscription;
 
-  LoginBloc(this._auth)
-      : super(LoginState(
-          PageState.email(),
-          EmailFormState(),
-          CodeFormState(),
-        )) {
+  LoginBloc(this._auth) : super(LoginState.email()) {
     _subscription = _auth.statusChange.listen((Status value) {
       add(LoginEvent.changeStatus(value));
     });
@@ -74,64 +53,53 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
+    final _state = state;
     yield* event.map(
       changeStatus: (event) async* {
         switch (event.status) {
           case Status.Empty:
-            yield state.copyWith(page: PageState.email());
+            yield LoginState.email();
             return;
           case Status.Auth:
-            yield state.copyWith(page: PageState.code());
+            yield LoginState.code();
             return;
           case Status.Done:
-            yield state.copyWith(page: PageState.done());
+            yield LoginState.done();
             return;
         }
       },
       changeEmail: (event) async* {
-        final value = Email.dirty(event.value);
-        yield state.copyWith(
-          email: state.email.copyWith(
-            email: value,
-            status: Formz.validate([value]),
-          ),
-        );
+        if (_state is LoginStateEmail) {
+          final value = Email.dirty(event.value);
+          yield _state.copyWith(email: value, status: Formz.validate([value]));
+        }
       },
       changeCode: (event) async* {
-        final value = Code.dirty(event.value);
-        yield state.copyWith(
-          code: state.code.copyWith(
-            code: value,
-            status: Formz.validate([value]),
-          ),
-        );
+        if (_state is LoginStateCode) {
+          final value = Code.dirty(event.value);
+          yield _state.copyWith(code: value, status: Formz.validate([value]));
+        }
       },
       submitEmail: (event) async* {
-        yield state.copyWith(
-          email: state.email.copyWith(
-            status: FormzStatus.submissionInProgress,
-          ),
-        );
-        await _auth.login(state.email.email.value);
+        if (_state is LoginStateEmail) {
+          yield _state.copyWith(status: FormzStatus.submissionInProgress);
+          await _auth.login(_state.email.value);
+        }
       },
       submitCode: (event) async* {
-        yield state.copyWith(
-          code: state.code.copyWith(
-            status: FormzStatus.submissionInProgress,
-          ),
-        );
-        await _auth.code(state.code.code.value);
+        if (_state is LoginStateCode) {
+          yield _state.copyWith(status: FormzStatus.submissionInProgress);
+          await _auth.code(_state.code.value);
+        }
       },
       error: (event) async* {
         // reset submissionInProgress status
-        yield state.copyWith(
-          email: state.email.copyWith(
-            status: Formz.validate([state.email.email]),
-          ),
-          code: state.code.copyWith(
-            status: Formz.validate([state.code.code]),
-          ),
-        );
+        if (_state is LoginStateEmail) {
+          yield _state.copyWith(status: Formz.validate([_state.email]));
+        }
+        if (_state is LoginStateCode) {
+          yield _state.copyWith(status: Formz.validate([_state.code]));
+        }
       },
     );
   }

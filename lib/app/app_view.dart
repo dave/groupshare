@@ -15,9 +15,13 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppBloc, AppState>(
+      listenWhen: (previous, current) => current.map(
+        loading: (_) => false,
+        login: (_) => true,
+        done: (_) => true,
+      ),
       listener: (context, state) {
-        state.map(
-          loading: (state) {},
+        state.maybeMap(
           login: (state) {
             Navigator.of(context).pushAndRemoveUntil<void>(
               LoginPage.route(),
@@ -30,14 +34,19 @@ class _AppViewState extends State<AppView> {
               (route) => false,
             );
           },
+          orElse: () {},
         );
       },
+      buildWhen: (previous, current) => current.map(
+        loading: (_) => true,
+        login: (_) => false,
+        done: (_) => false,
+      ),
       builder: (context, state) {
         return Scaffold(
-          body: state.map(
+          body: state.maybeMap(
             loading: (state) => Center(child: CircularProgressIndicator()),
-            login: (state) => Container(),
-            done: (state) => Container(),
+            orElse: () => Container(),
           ),
         );
       },

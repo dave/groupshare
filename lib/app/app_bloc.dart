@@ -9,15 +9,16 @@ import 'package:discovery_repository/discovery_repository.dart';
 import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:groupshare/main.dart';
+import 'package:groupshare/observer.dart';
 
 part 'app_bloc.freezed.dart';
 
 @freezed
 abstract class AppState with _$AppState {
-  @Implements(PageIncomplete)
+  @Implements(Incomplete)
   const factory AppState.loading() = AppStateLoading;
 
+  @Implements(Complete)
   const factory AppState.login(bool auth) = AppStateLogin;
 
   const factory AppState.done() = AppStateDone;
