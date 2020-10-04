@@ -37,12 +37,11 @@ class ItemWidget extends StatelessWidget {
     this.onEdit,
     this.onDownload,
     this.onOpen,
-  })  : super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      key: ValueKey(_id),
       create: (context) => ItemBloc(
         _id,
         _name,
@@ -50,7 +49,6 @@ class ItemWidget extends StatelessWidget {
       ),
       child: ItemWidgetContent(
         _controller,
-        key: key,
         onDelete: onDelete,
         onRefresh: onRefresh,
         onEdit: onEdit,
@@ -77,8 +75,8 @@ class ItemWidgetContent extends StatelessWidget {
     this.onEdit,
     this.onDownload,
     this.onOpen,
-        Key key,
-  }): super(key: key);
+    Key key,
+  }) : super(key: key);
 
   Widget build(BuildContext context) {
     return BlocBuilder<ItemBloc, ItemState>(
