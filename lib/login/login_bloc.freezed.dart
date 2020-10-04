@@ -111,6 +111,7 @@ class _$LoginStateEmailCopyWithImpl<$Res> extends _$LoginStateCopyWithImpl<$Res>
   }
 }
 
+@Implements(Complete)
 class _$LoginStateEmail implements LoginStateEmail {
   const _$LoginStateEmail(
       {this.status = FormzStatus.pure, this.email = const Email.pure()})
@@ -206,7 +207,7 @@ class _$LoginStateEmail implements LoginStateEmail {
   }
 }
 
-abstract class LoginStateEmail implements LoginState {
+abstract class LoginStateEmail implements LoginState, Complete {
   const factory LoginStateEmail({FormzStatus status, Email email}) =
       _$LoginStateEmail;
 
@@ -243,6 +244,7 @@ class _$LoginStateCodeCopyWithImpl<$Res> extends _$LoginStateCopyWithImpl<$Res>
   }
 }
 
+@Implements(Complete)
 class _$LoginStateCode implements LoginStateCode {
   const _$LoginStateCode(
       {this.status = FormzStatus.pure, this.code = const Code.pure()})
@@ -338,7 +340,7 @@ class _$LoginStateCode implements LoginStateCode {
   }
 }
 
-abstract class LoginStateCode implements LoginState {
+abstract class LoginStateCode implements LoginState, Complete {
   const factory LoginStateCode({FormzStatus status, Code code}) =
       _$LoginStateCode;
 
@@ -363,7 +365,6 @@ class _$LoginStateDoneCopyWithImpl<$Res> extends _$LoginStateCopyWithImpl<$Res>
   LoginStateDone get _value => super._value as LoginStateDone;
 }
 
-@Implements(PageIncomplete)
 class _$LoginStateDone implements LoginStateDone {
   const _$LoginStateDone();
 
@@ -437,7 +438,7 @@ class _$LoginStateDone implements LoginStateDone {
   }
 }
 
-abstract class LoginStateDone implements LoginState, PageIncomplete {
+abstract class LoginStateDone implements LoginState {
   const factory LoginStateDone() = _$LoginStateDone;
 }
 

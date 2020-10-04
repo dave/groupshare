@@ -26,7 +26,7 @@ abstract class ItemEvent with _$ItemEvent {
   const factory ItemEvent.init() = ItemEventInit;
 }
 
-class ItemBloc extends Bloc<ItemEvent, ItemState> {
+class ItemBloc extends ExtendedBloc<ItemEvent, ItemState> {
   final Data _data;
   final String _id;
   final String _name;

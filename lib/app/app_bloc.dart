@@ -33,7 +33,7 @@ abstract class AppEvent with _$AppEvent {
   const factory AppEvent.logoff() = AppEventLogoff;
 }
 
-class AppBloc extends Bloc<AppEvent, AppState> {
+class AppBloc extends ExtendedBloc<AppEvent, AppState> {
   final Device _device;
   final Discovery _discovery;
   final Connection _connection;

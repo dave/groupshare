@@ -19,6 +19,9 @@ class ErrorObserver extends BlocObserver {
 
   @override
   void onChange(Cubit cubit, Change change) {
+    if (cubit is! ExtendedBloc) {
+      throw Exception("All blocs should be ExtendedBloc");
+    }
     if (change.nextState is Complete) {
       _complete = true;
     } else if (change.nextState is Incomplete) {
@@ -65,3 +68,8 @@ class ErrorObserver extends BlocObserver {
   }
 }
 
+abstract class ExtendedBloc<Event, State> extends Bloc<Event, State> {
+  ExtendedBloc(State initialState) : super(initialState) {
+    onChange(Change<State>(currentState: null, nextState: initialState));
+  }
+}

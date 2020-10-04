@@ -91,7 +91,7 @@ class _$ListStateLoadingCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
   ListStateLoading get _value => super._value as ListStateLoading;
 }
 
-@Implements(PageIncomplete)
+@Implements(Incomplete)
 class _$ListStateLoading implements ListStateLoading {
   const _$ListStateLoading();
 
@@ -165,7 +165,7 @@ class _$ListStateLoading implements ListStateLoading {
   }
 }
 
-abstract class ListStateLoading implements ListState, PageIncomplete {
+abstract class ListStateLoading implements ListState, Incomplete {
   const factory ListStateLoading() = _$ListStateLoading;
 }
 
@@ -290,6 +290,7 @@ class _$ListStateListCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
   }
 }
 
+@Implements(Complete)
 class _$ListStateList implements ListStateList {
   const _$ListStateList(this.items) : assert(items != null);
 
@@ -374,7 +375,7 @@ class _$ListStateList implements ListStateList {
   }
 }
 
-abstract class ListStateList implements ListState {
+abstract class ListStateList implements ListState, Complete {
   const factory ListStateList(List<AvailableShare> items) = _$ListStateList;
 
   List<AvailableShare> get items;

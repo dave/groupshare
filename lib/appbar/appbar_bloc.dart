@@ -7,6 +7,7 @@ import 'package:bloc/bloc.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:groupshare/observer.dart';
 import 'package:hive/hive.dart';
 
 part 'appbar_bloc.freezed.dart';
@@ -33,7 +34,7 @@ abstract class AppBarEvent with _$AppBarEvent {
   const factory AppBarEvent.reconnect() = AppBarEventReconnect;
 }
 
-class AppBarBloc extends Bloc<AppBarEvent, AppBarState> {
+class AppBarBloc extends ExtendedBloc<AppBarEvent, AppBarState> {
   final Api _api;
   final Data _data;
   StreamSubscription<ConnectionStatus> _subscription;

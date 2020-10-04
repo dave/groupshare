@@ -91,7 +91,7 @@ class _$AppStateLoadingCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
   AppStateLoading get _value => super._value as AppStateLoading;
 }
 
-@Implements(PageIncomplete)
+@Implements(Incomplete)
 class _$AppStateLoading implements AppStateLoading {
   const _$AppStateLoading();
 
@@ -165,7 +165,7 @@ class _$AppStateLoading implements AppStateLoading {
   }
 }
 
-abstract class AppStateLoading implements AppState, PageIncomplete {
+abstract class AppStateLoading implements AppState, Incomplete {
   const factory AppStateLoading() = _$AppStateLoading;
 }
 
@@ -195,6 +195,7 @@ class _$AppStateLoginCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
   }
 }
 
+@Implements(Complete)
 class _$AppStateLogin implements AppStateLogin {
   const _$AppStateLogin(this.auth) : assert(auth != null);
 
@@ -279,7 +280,7 @@ class _$AppStateLogin implements AppStateLogin {
   }
 }
 
-abstract class AppStateLogin implements AppState {
+abstract class AppStateLogin implements AppState, Complete {
   const factory AppStateLogin(bool auth) = _$AppStateLogin;
 
   bool get auth;
@@ -302,7 +303,6 @@ class _$AppStateDoneCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
   AppStateDone get _value => super._value as AppStateDone;
 }
 
-@Implements(PageIncomplete)
 class _$AppStateDone implements AppStateDone {
   const _$AppStateDone();
 
@@ -376,7 +376,7 @@ class _$AppStateDone implements AppStateDone {
   }
 }
 
-abstract class AppStateDone implements AppState, PageIncomplete {
+abstract class AppStateDone implements AppState {
   const factory AppStateDone() = _$AppStateDone;
 }
 

@@ -29,7 +29,7 @@ abstract class AddEvent with _$AddEvent {
   const factory AddEvent.error() = AddEventError;
 }
 
-class AddBloc extends Bloc<AddEvent, AddState> {
+class AddBloc extends ExtendedBloc<AddEvent, AddState> {
   final Data _data;
 
   AddBloc(Data data)

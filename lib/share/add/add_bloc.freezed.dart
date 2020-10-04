@@ -96,6 +96,7 @@ class _$AddStateFormCopyWithImpl<$Res> extends _$AddStateCopyWithImpl<$Res>
   }
 }
 
+@Implements(Complete)
 class _$AddStateForm implements AddStateForm {
   const _$AddStateForm(
       {this.status = FormzStatus.pure, this.name = const Name.pure()})
@@ -185,7 +186,7 @@ class _$AddStateForm implements AddStateForm {
   }
 }
 
-abstract class AddStateForm implements AddState {
+abstract class AddStateForm implements AddState, Complete {
   const factory AddStateForm({FormzStatus status, Name name}) = _$AddStateForm;
 
   FormzStatus get status;
@@ -209,7 +210,6 @@ class _$AddStateDoneCopyWithImpl<$Res> extends _$AddStateCopyWithImpl<$Res>
   AddStateDone get _value => super._value as AddStateDone;
 }
 
-@Implements(PageIncomplete)
 class _$AddStateDone implements AddStateDone {
   const _$AddStateDone();
 
@@ -277,7 +277,7 @@ class _$AddStateDone implements AddStateDone {
   }
 }
 
-abstract class AddStateDone implements AddState, PageIncomplete {
+abstract class AddStateDone implements AddState {
   const factory AddStateDone() = _$AddStateDone;
 }
 

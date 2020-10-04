@@ -49,15 +49,15 @@ abstract class ListEvent with _$ListEvent {
   const factory ListEvent.reorder(int from, int to) = ListEventReorder;
 }
 
-class ListBloc extends Bloc<ListEvent, ListState> {
+class ListBloc extends ExtendedBloc<ListEvent, ListState> {
   final Data _data;
   final Api _api;
   //StreamSubscription<DataEvent<Share>> _sharesSubscription;
-  StreamSubscription<DataEvent<User>> _userSubscription;
+  StreamSubscription<DataEvent<User>> _subscription;
 
   ListBloc(this._data, this._api)
       : super(ListState.loading()) {
-    _userSubscription = _data.user.stream.listen((DataEvent<User> event) {
+    _subscription = _data.user.stream.listen((DataEvent<User> event) {
       if (event is DataEventApply) {
         add(ListEvent.update());
       }
@@ -139,8 +139,7 @@ class ListBloc extends Bloc<ListEvent, ListState> {
 
   @override
   Future<void> close() {
-    //_sharesSubscription?.cancel();
-    _userSubscription?.cancel();
+    _subscription?.cancel();
     return super.close();
   }
 }

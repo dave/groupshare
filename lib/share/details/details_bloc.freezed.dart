@@ -94,7 +94,7 @@ class _$DetailsStateLoadingCopyWithImpl<$Res>
   DetailsStateLoading get _value => super._value as DetailsStateLoading;
 }
 
-@Implements(PageIncomplete)
+@Implements(Incomplete)
 class _$DetailsStateLoading implements DetailsStateLoading {
   const _$DetailsStateLoading();
 
@@ -168,7 +168,7 @@ class _$DetailsStateLoading implements DetailsStateLoading {
   }
 }
 
-abstract class DetailsStateLoading implements DetailsState, PageIncomplete {
+abstract class DetailsStateLoading implements DetailsState, Incomplete {
   const factory DetailsStateLoading() = _$DetailsStateLoading;
 }
 
@@ -295,6 +295,7 @@ class _$DetailsStateDoneCopyWithImpl<$Res>
   }
 }
 
+@Implements(Complete)
 class _$DetailsStateDone implements DetailsStateDone {
   const _$DetailsStateDone(this.id, this.name)
       : assert(id != null),
@@ -387,7 +388,7 @@ class _$DetailsStateDone implements DetailsStateDone {
   }
 }
 
-abstract class DetailsStateDone implements DetailsState {
+abstract class DetailsStateDone implements DetailsState, Complete {
   const factory DetailsStateDone(String id, String name) = _$DetailsStateDone;
 
   String get id;

@@ -41,7 +41,7 @@ abstract class LoginEvent with _$LoginEvent {
   const factory LoginEvent.error() = LoginEventError;
 }
 
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
+class LoginBloc extends ExtendedBloc<LoginEvent, LoginState> {
   Auth _auth;
   StreamSubscription<Status> _subscription;
 

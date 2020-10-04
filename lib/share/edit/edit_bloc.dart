@@ -36,7 +36,7 @@ abstract class EditEvent with _$EditEvent {
   const factory EditEvent.error() = EditEventError;
 }
 
-class EditBloc extends Bloc<EditEvent, EditState> {
+class EditBloc extends ExtendedBloc<EditEvent, EditState> {
   final Data _data;
   final String _id;
   final String _back;

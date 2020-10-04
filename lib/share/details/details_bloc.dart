@@ -27,7 +27,7 @@ abstract class DetailsEvent with _$DetailsEvent {
   const factory DetailsEvent.refresh() = DetailsEventRefresh;
 }
 
-class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
+class DetailsBloc extends ExtendedBloc<DetailsEvent, DetailsState> {
   final String _id;
   final Data _data;
   StreamSubscription<DataEvent<Share>> _subscription;

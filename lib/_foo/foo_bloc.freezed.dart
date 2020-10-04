@@ -93,7 +93,7 @@ class _$FooStateLoadingCopyWithImpl<$Res> extends _$FooStateCopyWithImpl<$Res>
   FooStateLoading get _value => super._value as FooStateLoading;
 }
 
-@Implements(PageIncomplete)
+@Implements(Incomplete)
 class _$FooStateLoading implements FooStateLoading {
   const _$FooStateLoading();
 
@@ -167,7 +167,7 @@ class _$FooStateLoading implements FooStateLoading {
   }
 }
 
-abstract class FooStateLoading implements FooState, PageIncomplete {
+abstract class FooStateLoading implements FooState, Incomplete {
   const factory FooStateLoading() = _$FooStateLoading;
 }
 
@@ -199,6 +199,7 @@ class _$FooStateFormCopyWithImpl<$Res> extends _$FooStateCopyWithImpl<$Res>
   }
 }
 
+@Implements(Complete)
 class _$FooStateForm implements FooStateForm {
   const _$FooStateForm(
       {this.status = FormzStatus.pure, this.name = const Name.pure()})
@@ -294,7 +295,7 @@ class _$FooStateForm implements FooStateForm {
   }
 }
 
-abstract class FooStateForm implements FooState {
+abstract class FooStateForm implements FooState, Complete {
   const factory FooStateForm({FormzStatus status, Name name}) = _$FooStateForm;
 
   FormzStatus get status;
@@ -318,7 +319,6 @@ class _$FooStateDoneCopyWithImpl<$Res> extends _$FooStateCopyWithImpl<$Res>
   FooStateDone get _value => super._value as FooStateDone;
 }
 
-@Implements(PageIncomplete)
 class _$FooStateDone implements FooStateDone {
   const _$FooStateDone();
 
@@ -392,6 +392,6 @@ class _$FooStateDone implements FooStateDone {
   }
 }
 
-abstract class FooStateDone implements FooState, PageIncomplete {
+abstract class FooStateDone implements FooState {
   const factory FooStateDone() = _$FooStateDone;
 }

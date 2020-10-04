@@ -98,7 +98,7 @@ class _$EditStateLoadingCopyWithImpl<$Res> extends _$EditStateCopyWithImpl<$Res>
   EditStateLoading get _value => super._value as EditStateLoading;
 }
 
-@Implements(PageIncomplete)
+@Implements(Incomplete)
 class _$EditStateLoading implements EditStateLoading {
   const _$EditStateLoading();
 
@@ -172,7 +172,7 @@ class _$EditStateLoading implements EditStateLoading {
   }
 }
 
-abstract class EditStateLoading implements EditState, PageIncomplete {
+abstract class EditStateLoading implements EditState, Incomplete {
   const factory EditStateLoading() = _$EditStateLoading;
 }
 
@@ -207,6 +207,7 @@ class _$EditStateFormCopyWithImpl<$Res> extends _$EditStateCopyWithImpl<$Res>
   }
 }
 
+@Implements(Complete)
 class _$EditStateForm implements EditStateForm {
   const _$EditStateForm(
       {this.status = FormzStatus.pure,
@@ -312,7 +313,7 @@ class _$EditStateForm implements EditStateForm {
   }
 }
 
-abstract class EditStateForm implements EditState {
+abstract class EditStateForm implements EditState, Complete {
   const factory EditStateForm(
       {FormzStatus status, String initialName, Name name}) = _$EditStateForm;
 
@@ -348,7 +349,6 @@ class _$EditStateDoneCopyWithImpl<$Res> extends _$EditStateCopyWithImpl<$Res>
   }
 }
 
-@Implements(PageIncomplete)
 class _$EditStateDone implements EditStateDone {
   const _$EditStateDone(this.route) : assert(route != null);
 
@@ -433,7 +433,7 @@ class _$EditStateDone implements EditStateDone {
   }
 }
 
-abstract class EditStateDone implements EditState, PageIncomplete {
+abstract class EditStateDone implements EditState {
   const factory EditStateDone(String route) = _$EditStateDone;
 
   String get route;
