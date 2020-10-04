@@ -69,6 +69,7 @@ class ErrorObserver extends BlocObserver with NavigatorObserver {
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
+    _complete.remove(_history.last);
     _history.removeLast();
   }
 
@@ -79,12 +80,14 @@ class ErrorObserver extends BlocObserver with NavigatorObserver {
 
   @override
   void didRemove(Route<dynamic> route, Route<dynamic> previousRoute) {
+    _complete.remove(route);
     _history.remove(route);
   }
 
   @override
   void didReplace({Route<dynamic> newRoute, Route<dynamic> oldRoute}) {
     int oldRouteIndex = _history.indexOf(oldRoute);
+    _complete.remove(oldRoute);
     _history.replaceRange(oldRouteIndex, oldRouteIndex+1, [newRoute]);
   }
 }
