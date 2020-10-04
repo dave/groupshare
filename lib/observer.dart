@@ -10,12 +10,12 @@ class Complete {}
 
 class Incomplete {}
 
-class ErrorObserver extends BlocObserver {
+class ErrorObserver extends BlocObserver with NavigatorObserver {
   final GlobalKey<NavigatorState> _navigator;
+  Map<Route<dynamic>, bool> _complete = {};
+  List<Route<dynamic>> _history = <Route<dynamic>>[];
 
   ErrorObserver(this._navigator);
-
-  bool _complete = false;
 
   @override
   void onChange(Cubit cubit, Change change) {
@@ -23,9 +23,9 @@ class ErrorObserver extends BlocObserver {
       throw Exception("All blocs should be ExtendedBloc");
     }
     if (change.nextState is Complete) {
-      _complete = true;
+      _complete[_history.last] = true;
     } else if (change.nextState is Incomplete) {
-      _complete = false;
+      _complete[_history.last] = false;
     }
     super.onChange(cubit, change);
   }
@@ -36,7 +36,7 @@ class ErrorObserver extends BlocObserver {
     if (ex is UserException && cubit is Bloc && ex.retry != null) {
       retry = () => cubit.add(ex.retry);
     }
-    if (_complete) {
+    if (_complete[_history.last] ?? false) {
       // If the UI is in a complete state, we should be able to just show the
       // OK button, so the user can retry the action if they want.
       handle(
@@ -65,6 +65,27 @@ class ErrorObserver extends BlocObserver {
     }
 
     super.onError(cubit, ex, stack);
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
+    _history.removeLast();
+  }
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic> previousRoute) {
+    _history.add(route);
+  }
+
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic> previousRoute) {
+    _history.remove(route);
+  }
+
+  @override
+  void didReplace({Route<dynamic> newRoute, Route<dynamic> oldRoute}) {
+    int oldRouteIndex = _history.indexOf(oldRoute);
+    _history.replaceRange(oldRouteIndex, oldRouteIndex+1, [newRoute]);
   }
 }
 

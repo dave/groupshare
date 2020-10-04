@@ -81,7 +81,8 @@ void main() async {
           api,
         );
         final navigator = GlobalKey<NavigatorState>();
-        Bloc.observer = ErrorObserver(navigator);
+        final observer =  ErrorObserver(navigator);
+        Bloc.observer = observer;
 
         runApp(
           MultiRepositoryProvider(
@@ -113,6 +114,7 @@ void main() async {
                 ),
               ],
               child: MaterialApp(
+                navigatorObservers: [observer],
                 navigatorKey: navigator,
                 debugShowCheckedModeBanner: false,
                 title: 'Groupshare',
