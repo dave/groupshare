@@ -45,9 +45,6 @@ class EditBloc extends ExtendedBloc<EditEvent, EditState> {
       : super(EditState.loading()) {
     void f() async {
       final share = await _data.shares.item(_id);
-      if (share == null) {
-        throw UserException("Can't find document");
-      }
       add(EditEvent.init(share.value.name));
     }
 

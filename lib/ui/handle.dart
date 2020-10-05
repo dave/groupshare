@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/app/app.dart';
 import 'package:groupshare/login/login.dart';
+import 'package:groupshare/main.dart';
 import 'package:groupshare/share/list/list.dart';
 
 Future<T> handle<T>(
@@ -21,8 +22,14 @@ Future<T> handle<T>(
   if (ex == null) {
     return null;
   }
-  var message = "$ex";
-  //print("handling $ex\n$stack");
+  var message = "We got an error.";
+  if (ex is UserException) {
+    message = ex.toString();
+  }
+
+  if (PRINT_ERRORS) {
+    print("handling $ex\n$stack");
+  }
 
   T retryResult;
   await showDialog(

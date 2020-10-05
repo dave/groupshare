@@ -52,17 +52,11 @@ class DetailsBloc extends ExtendedBloc<DetailsEvent, DetailsState> {
     yield* event.map(
       init: (event) async* {
         final item = await _data.shares.item(_id);
-        if (item == null) {
-          throw UserException("Can't find document");
-        }
         yield DetailsState.done(item.id, item.value.name);
       },
       refresh: (event) async* {
         try {
           final item = await _data.shares.refresh(_id);
-          if (item == null) {
-            throw UserException("Can't refresh");
-          }
           yield DetailsState.done(item.id, item.value.name);
         } finally {
           yield DetailsState.flush();
