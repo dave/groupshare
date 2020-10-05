@@ -28,7 +28,7 @@ class _$ListStateTearOff {
   }
 
 // ignore: unused_element
-  ListStateList list(List<AvailableShare> items) {
+  ListStateList list(List<Item> items) {
     return ListStateList(
       items,
     );
@@ -44,14 +44,14 @@ mixin _$ListState {
     @required Result loading(),
     @required Result flush(),
     @required Result refreshFinished(),
-    @required Result list(List<AvailableShare> items),
+    @required Result list(List<Item> items),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result loading(),
     Result flush(),
     Result refreshFinished(),
-    Result list(List<AvailableShare> items),
+    Result list(List<Item> items),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -123,7 +123,7 @@ class _$ListStateLoading implements ListStateLoading {
     @required Result loading(),
     @required Result flush(),
     @required Result refreshFinished(),
-    @required Result list(List<AvailableShare> items),
+    @required Result list(List<Item> items),
   }) {
     assert(loading != null);
     assert(flush != null);
@@ -138,7 +138,7 @@ class _$ListStateLoading implements ListStateLoading {
     Result loading(),
     Result flush(),
     Result refreshFinished(),
-    Result list(List<AvailableShare> items),
+    Result list(List<Item> items),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -222,7 +222,7 @@ class _$ListStateFlush implements ListStateFlush {
     @required Result loading(),
     @required Result flush(),
     @required Result refreshFinished(),
-    @required Result list(List<AvailableShare> items),
+    @required Result list(List<Item> items),
   }) {
     assert(loading != null);
     assert(flush != null);
@@ -237,7 +237,7 @@ class _$ListStateFlush implements ListStateFlush {
     Result loading(),
     Result flush(),
     Result refreshFinished(),
-    Result list(List<AvailableShare> items),
+    Result list(List<Item> items),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -323,7 +323,7 @@ class _$ListStateRefreshFinished implements ListStateRefreshFinished {
     @required Result loading(),
     @required Result flush(),
     @required Result refreshFinished(),
-    @required Result list(List<AvailableShare> items),
+    @required Result list(List<Item> items),
   }) {
     assert(loading != null);
     assert(flush != null);
@@ -338,7 +338,7 @@ class _$ListStateRefreshFinished implements ListStateRefreshFinished {
     Result loading(),
     Result flush(),
     Result refreshFinished(),
-    Result list(List<AvailableShare> items),
+    Result list(List<Item> items),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -388,7 +388,7 @@ abstract class $ListStateListCopyWith<$Res> {
   factory $ListStateListCopyWith(
           ListStateList value, $Res Function(ListStateList) then) =
       _$ListStateListCopyWithImpl<$Res>;
-  $Res call({List<AvailableShare> items});
+  $Res call({List<Item> items});
 }
 
 class _$ListStateListCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
@@ -405,7 +405,7 @@ class _$ListStateListCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
     Object items = freezed,
   }) {
     return _then(ListStateList(
-      items == freezed ? _value.items : items as List<AvailableShare>,
+      items == freezed ? _value.items : items as List<Item>,
     ));
   }
 }
@@ -415,7 +415,7 @@ class _$ListStateList implements ListStateList {
   const _$ListStateList(this.items) : assert(items != null);
 
   @override
-  final List<AvailableShare> items;
+  final List<Item> items;
 
   @override
   String toString() {
@@ -444,7 +444,7 @@ class _$ListStateList implements ListStateList {
     @required Result loading(),
     @required Result flush(),
     @required Result refreshFinished(),
-    @required Result list(List<AvailableShare> items),
+    @required Result list(List<Item> items),
   }) {
     assert(loading != null);
     assert(flush != null);
@@ -459,7 +459,7 @@ class _$ListStateList implements ListStateList {
     Result loading(),
     Result flush(),
     Result refreshFinished(),
-    Result list(List<AvailableShare> items),
+    Result list(List<Item> items),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -502,119 +502,97 @@ class _$ListStateList implements ListStateList {
 }
 
 abstract class ListStateList implements ListState, Complete {
-  const factory ListStateList(List<AvailableShare> items) = _$ListStateList;
+  const factory ListStateList(List<Item> items) = _$ListStateList;
 
-  List<AvailableShare> get items;
+  List<Item> get items;
   $ListStateListCopyWith<ListStateList> get copyWith;
 }
 
-class _$AvailableShareTearOff {
-  const _$AvailableShareTearOff();
+class _$ItemTearOff {
+  const _$ItemTearOff();
 
 // ignore: unused_element
-  _AvailableShare call(
-      String id, String name, bool local, bool dirty, bool sending) {
-    return _AvailableShare(
+  _Item call(String id, String name, bool local) {
+    return _Item(
       id,
       name,
       local,
-      dirty,
-      sending,
     );
   }
 }
 
 // ignore: unused_element
-const $AvailableShare = _$AvailableShareTearOff();
+const $Item = _$ItemTearOff();
 
-mixin _$AvailableShare {
+mixin _$Item {
   String get id;
   String get name;
   bool get local;
-  bool get dirty;
-  bool get sending;
 
-  $AvailableShareCopyWith<AvailableShare> get copyWith;
+  $ItemCopyWith<Item> get copyWith;
 }
 
-abstract class $AvailableShareCopyWith<$Res> {
-  factory $AvailableShareCopyWith(
-          AvailableShare value, $Res Function(AvailableShare) then) =
-      _$AvailableShareCopyWithImpl<$Res>;
-  $Res call({String id, String name, bool local, bool dirty, bool sending});
+abstract class $ItemCopyWith<$Res> {
+  factory $ItemCopyWith(Item value, $Res Function(Item) then) =
+      _$ItemCopyWithImpl<$Res>;
+  $Res call({String id, String name, bool local});
 }
 
-class _$AvailableShareCopyWithImpl<$Res>
-    implements $AvailableShareCopyWith<$Res> {
-  _$AvailableShareCopyWithImpl(this._value, this._then);
+class _$ItemCopyWithImpl<$Res> implements $ItemCopyWith<$Res> {
+  _$ItemCopyWithImpl(this._value, this._then);
 
-  final AvailableShare _value;
+  final Item _value;
   // ignore: unused_field
-  final $Res Function(AvailableShare) _then;
+  final $Res Function(Item) _then;
 
   @override
   $Res call({
     Object id = freezed,
     Object name = freezed,
     Object local = freezed,
-    Object dirty = freezed,
-    Object sending = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed ? _value.id : id as String,
       name: name == freezed ? _value.name : name as String,
       local: local == freezed ? _value.local : local as bool,
-      dirty: dirty == freezed ? _value.dirty : dirty as bool,
-      sending: sending == freezed ? _value.sending : sending as bool,
     ));
   }
 }
 
-abstract class _$AvailableShareCopyWith<$Res>
-    implements $AvailableShareCopyWith<$Res> {
-  factory _$AvailableShareCopyWith(
-          _AvailableShare value, $Res Function(_AvailableShare) then) =
-      __$AvailableShareCopyWithImpl<$Res>;
+abstract class _$ItemCopyWith<$Res> implements $ItemCopyWith<$Res> {
+  factory _$ItemCopyWith(_Item value, $Res Function(_Item) then) =
+      __$ItemCopyWithImpl<$Res>;
   @override
-  $Res call({String id, String name, bool local, bool dirty, bool sending});
+  $Res call({String id, String name, bool local});
 }
 
-class __$AvailableShareCopyWithImpl<$Res>
-    extends _$AvailableShareCopyWithImpl<$Res>
-    implements _$AvailableShareCopyWith<$Res> {
-  __$AvailableShareCopyWithImpl(
-      _AvailableShare _value, $Res Function(_AvailableShare) _then)
-      : super(_value, (v) => _then(v as _AvailableShare));
+class __$ItemCopyWithImpl<$Res> extends _$ItemCopyWithImpl<$Res>
+    implements _$ItemCopyWith<$Res> {
+  __$ItemCopyWithImpl(_Item _value, $Res Function(_Item) _then)
+      : super(_value, (v) => _then(v as _Item));
 
   @override
-  _AvailableShare get _value => super._value as _AvailableShare;
+  _Item get _value => super._value as _Item;
 
   @override
   $Res call({
     Object id = freezed,
     Object name = freezed,
     Object local = freezed,
-    Object dirty = freezed,
-    Object sending = freezed,
   }) {
-    return _then(_AvailableShare(
+    return _then(_Item(
       id == freezed ? _value.id : id as String,
       name == freezed ? _value.name : name as String,
       local == freezed ? _value.local : local as bool,
-      dirty == freezed ? _value.dirty : dirty as bool,
-      sending == freezed ? _value.sending : sending as bool,
     ));
   }
 }
 
-class _$_AvailableShare implements _AvailableShare {
-  const _$_AvailableShare(
-      this.id, this.name, this.local, this.dirty, this.sending)
+class _$_Item implements _Item {
+  const _$_Item(this.id, this.name, this.local)
       : assert(id != null),
         assert(name != null),
-        assert(local != null),
-        assert(dirty != null),
-        assert(sending != null);
+        assert(local != null);
 
   @override
   final String id;
@@ -622,30 +600,22 @@ class _$_AvailableShare implements _AvailableShare {
   final String name;
   @override
   final bool local;
-  @override
-  final bool dirty;
-  @override
-  final bool sending;
 
   @override
   String toString() {
-    return 'AvailableShare(id: $id, name: $name, local: $local, dirty: $dirty, sending: $sending)';
+    return 'Item(id: $id, name: $name, local: $local)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _AvailableShare &&
+        (other is _Item &&
             (identical(other.id, id) ||
                 const DeepCollectionEquality().equals(other.id, id)) &&
             (identical(other.name, name) ||
                 const DeepCollectionEquality().equals(other.name, name)) &&
             (identical(other.local, local) ||
-                const DeepCollectionEquality().equals(other.local, local)) &&
-            (identical(other.dirty, dirty) ||
-                const DeepCollectionEquality().equals(other.dirty, dirty)) &&
-            (identical(other.sending, sending) ||
-                const DeepCollectionEquality().equals(other.sending, sending)));
+                const DeepCollectionEquality().equals(other.local, local)));
   }
 
   @override
@@ -653,19 +623,15 @@ class _$_AvailableShare implements _AvailableShare {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(name) ^
-      const DeepCollectionEquality().hash(local) ^
-      const DeepCollectionEquality().hash(dirty) ^
-      const DeepCollectionEquality().hash(sending);
+      const DeepCollectionEquality().hash(local);
 
   @override
-  _$AvailableShareCopyWith<_AvailableShare> get copyWith =>
-      __$AvailableShareCopyWithImpl<_AvailableShare>(this, _$identity);
+  _$ItemCopyWith<_Item> get copyWith =>
+      __$ItemCopyWithImpl<_Item>(this, _$identity);
 }
 
-abstract class _AvailableShare implements AvailableShare {
-  const factory _AvailableShare(
-          String id, String name, bool local, bool dirty, bool sending) =
-      _$_AvailableShare;
+abstract class _Item implements Item {
+  const factory _Item(String id, String name, bool local) = _$_Item;
 
   @override
   String get id;
@@ -674,11 +640,7 @@ abstract class _AvailableShare implements AvailableShare {
   @override
   bool get local;
   @override
-  bool get dirty;
-  @override
-  bool get sending;
-  @override
-  _$AvailableShareCopyWith<_AvailableShare> get copyWith;
+  _$ItemCopyWith<_Item> get copyWith;
 }
 
 class _$ListEventTearOff {

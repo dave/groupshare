@@ -22,19 +22,17 @@ abstract class ListState with _$ListState {
 
   @Implements(Complete)
   const factory ListState.list(
-    List<AvailableShare> items,
+    List<Item> items,
   ) = ListStateList;
 }
 
 @freezed
-abstract class AvailableShare with _$AvailableShare {
-  const factory AvailableShare(
+abstract class Item with _$Item {
+  const factory Item(
     String id,
     String name,
     bool local,
-    bool dirty,
-    bool sending,
-  ) = _AvailableShare;
+  ) = _Item;
 }
 
 @freezed
@@ -126,16 +124,10 @@ class ListBloc extends ExtendedBloc<ListEvent, ListState> {
   ListState _list() {
     final items = _data.user.value.shares.map(
       (e) {
-        return AvailableShare(
+        return Item(
           e.id,
           _data.shares.has(e.id) ? _data.shares.meta(e.id) : e.name,
           _data.shares.has(e.id),
-          _data.shares.dirty().contains(e.id),
-          _data.shares.getting().contains(e.id)
-              ? true
-              : _data.shares.open(e.id)
-                  ? _data.shares.get(e.id).item.sending()
-                  : false,
         );
       },
     ).toList();
