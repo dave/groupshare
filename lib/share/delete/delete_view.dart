@@ -166,7 +166,7 @@ class _SubmitButton extends StatelessWidget {
       builder: (context, state) {
         if (state is DeleteStateForm) {
           return state.status.isSubmissionInProgress
-              ? const CircularProgressIndicator()
+              ? CircularProgressIndicator()
               : RaisedButton(
                   key: Keys.submit,
                   child: Text('Submit'),

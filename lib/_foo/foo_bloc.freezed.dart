@@ -13,11 +13,6 @@ class _$FooStateTearOff {
   const _$FooStateTearOff();
 
 // ignore: unused_element
-  FooStateLoading loading() {
-    return const FooStateLoading();
-  }
-
-// ignore: unused_element
   FooStateForm form(
       {FormzStatus status = FormzStatus.pure, Name name = const Name.pure()}) {
     return FooStateForm(
@@ -38,26 +33,22 @@ const $FooState = _$FooStateTearOff();
 mixin _$FooState {
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result loading(),
     @required Result form(FormzStatus status, Name name),
     @required Result done(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result loading(),
     Result form(FormzStatus status, Name name),
     Result done(),
     @required Result orElse(),
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result loading(FooStateLoading value),
     @required Result form(FooStateForm value),
     @required Result done(FooStateDone value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result loading(FooStateLoading value),
     Result form(FooStateForm value),
     Result done(FooStateDone value),
     @required Result orElse(),
@@ -75,100 +66,6 @@ class _$FooStateCopyWithImpl<$Res> implements $FooStateCopyWith<$Res> {
   final FooState _value;
   // ignore: unused_field
   final $Res Function(FooState) _then;
-}
-
-abstract class $FooStateLoadingCopyWith<$Res> {
-  factory $FooStateLoadingCopyWith(
-          FooStateLoading value, $Res Function(FooStateLoading) then) =
-      _$FooStateLoadingCopyWithImpl<$Res>;
-}
-
-class _$FooStateLoadingCopyWithImpl<$Res> extends _$FooStateCopyWithImpl<$Res>
-    implements $FooStateLoadingCopyWith<$Res> {
-  _$FooStateLoadingCopyWithImpl(
-      FooStateLoading _value, $Res Function(FooStateLoading) _then)
-      : super(_value, (v) => _then(v as FooStateLoading));
-
-  @override
-  FooStateLoading get _value => super._value as FooStateLoading;
-}
-
-@Implements(Incomplete)
-class _$FooStateLoading implements FooStateLoading {
-  const _$FooStateLoading();
-
-  @override
-  String toString() {
-    return 'FooState.loading()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is FooStateLoading);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result loading(),
-    @required Result form(FormzStatus status, Name name),
-    @required Result done(),
-  }) {
-    assert(loading != null);
-    assert(form != null);
-    assert(done != null);
-    return loading();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result loading(),
-    Result form(FormzStatus status, Name name),
-    Result done(),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (loading != null) {
-      return loading();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result loading(FooStateLoading value),
-    @required Result form(FooStateForm value),
-    @required Result done(FooStateDone value),
-  }) {
-    assert(loading != null);
-    assert(form != null);
-    assert(done != null);
-    return loading(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result loading(FooStateLoading value),
-    Result form(FooStateForm value),
-    Result done(FooStateDone value),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (loading != null) {
-      return loading(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class FooStateLoading implements FooState, Incomplete {
-  const factory FooStateLoading() = _$FooStateLoading;
 }
 
 abstract class $FooStateFormCopyWith<$Res> {
@@ -241,11 +138,9 @@ class _$FooStateForm implements FooStateForm {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result loading(),
     @required Result form(FormzStatus status, Name name),
     @required Result done(),
   }) {
-    assert(loading != null);
     assert(form != null);
     assert(done != null);
     return form(status, name);
@@ -254,7 +149,6 @@ class _$FooStateForm implements FooStateForm {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result loading(),
     Result form(FormzStatus status, Name name),
     Result done(),
     @required Result orElse(),
@@ -269,11 +163,9 @@ class _$FooStateForm implements FooStateForm {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result loading(FooStateLoading value),
     @required Result form(FooStateForm value),
     @required Result done(FooStateDone value),
   }) {
-    assert(loading != null);
     assert(form != null);
     assert(done != null);
     return form(this);
@@ -282,7 +174,6 @@ class _$FooStateForm implements FooStateForm {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result loading(FooStateLoading value),
     Result form(FooStateForm value),
     Result done(FooStateDone value),
     @required Result orElse(),
@@ -338,11 +229,9 @@ class _$FooStateDone implements FooStateDone {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result loading(),
     @required Result form(FormzStatus status, Name name),
     @required Result done(),
   }) {
-    assert(loading != null);
     assert(form != null);
     assert(done != null);
     return done();
@@ -351,7 +240,6 @@ class _$FooStateDone implements FooStateDone {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result loading(),
     Result form(FormzStatus status, Name name),
     Result done(),
     @required Result orElse(),
@@ -366,11 +254,9 @@ class _$FooStateDone implements FooStateDone {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result loading(FooStateLoading value),
     @required Result form(FooStateForm value),
     @required Result done(FooStateDone value),
   }) {
-    assert(loading != null);
     assert(form != null);
     assert(done != null);
     return done(this);
@@ -379,7 +265,6 @@ class _$FooStateDone implements FooStateDone {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result loading(FooStateLoading value),
     Result form(FooStateForm value),
     Result done(FooStateDone value),
     @required Result orElse(),
@@ -394,4 +279,259 @@ class _$FooStateDone implements FooStateDone {
 
 abstract class FooStateDone implements FooState {
   const factory FooStateDone() = _$FooStateDone;
+}
+
+class _$FooEventTearOff {
+  const _$FooEventTearOff();
+
+// ignore: unused_element
+  FooEventChange change(String value) {
+    return FooEventChange(
+      value,
+    );
+  }
+
+// ignore: unused_element
+  FooEventSubmit submit() {
+    return const FooEventSubmit();
+  }
+}
+
+// ignore: unused_element
+const $FooEvent = _$FooEventTearOff();
+
+mixin _$FooEvent {
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result change(String value),
+    @required Result submit(),
+  });
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result change(String value),
+    Result submit(),
+    @required Result orElse(),
+  });
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result change(FooEventChange value),
+    @required Result submit(FooEventSubmit value),
+  });
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result change(FooEventChange value),
+    Result submit(FooEventSubmit value),
+    @required Result orElse(),
+  });
+}
+
+abstract class $FooEventCopyWith<$Res> {
+  factory $FooEventCopyWith(FooEvent value, $Res Function(FooEvent) then) =
+      _$FooEventCopyWithImpl<$Res>;
+}
+
+class _$FooEventCopyWithImpl<$Res> implements $FooEventCopyWith<$Res> {
+  _$FooEventCopyWithImpl(this._value, this._then);
+
+  final FooEvent _value;
+  // ignore: unused_field
+  final $Res Function(FooEvent) _then;
+}
+
+abstract class $FooEventChangeCopyWith<$Res> {
+  factory $FooEventChangeCopyWith(
+          FooEventChange value, $Res Function(FooEventChange) then) =
+      _$FooEventChangeCopyWithImpl<$Res>;
+  $Res call({String value});
+}
+
+class _$FooEventChangeCopyWithImpl<$Res> extends _$FooEventCopyWithImpl<$Res>
+    implements $FooEventChangeCopyWith<$Res> {
+  _$FooEventChangeCopyWithImpl(
+      FooEventChange _value, $Res Function(FooEventChange) _then)
+      : super(_value, (v) => _then(v as FooEventChange));
+
+  @override
+  FooEventChange get _value => super._value as FooEventChange;
+
+  @override
+  $Res call({
+    Object value = freezed,
+  }) {
+    return _then(FooEventChange(
+      value == freezed ? _value.value : value as String,
+    ));
+  }
+}
+
+class _$FooEventChange implements FooEventChange {
+  const _$FooEventChange(this.value) : assert(value != null);
+
+  @override
+  final String value;
+
+  @override
+  String toString() {
+    return 'FooEvent.change(value: $value)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is FooEventChange &&
+            (identical(other.value, value) ||
+                const DeepCollectionEquality().equals(other.value, value)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(value);
+
+  @override
+  $FooEventChangeCopyWith<FooEventChange> get copyWith =>
+      _$FooEventChangeCopyWithImpl<FooEventChange>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result change(String value),
+    @required Result submit(),
+  }) {
+    assert(change != null);
+    assert(submit != null);
+    return change(value);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result change(String value),
+    Result submit(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (change != null) {
+      return change(value);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result change(FooEventChange value),
+    @required Result submit(FooEventSubmit value),
+  }) {
+    assert(change != null);
+    assert(submit != null);
+    return change(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result change(FooEventChange value),
+    Result submit(FooEventSubmit value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (change != null) {
+      return change(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FooEventChange implements FooEvent {
+  const factory FooEventChange(String value) = _$FooEventChange;
+
+  String get value;
+  $FooEventChangeCopyWith<FooEventChange> get copyWith;
+}
+
+abstract class $FooEventSubmitCopyWith<$Res> {
+  factory $FooEventSubmitCopyWith(
+          FooEventSubmit value, $Res Function(FooEventSubmit) then) =
+      _$FooEventSubmitCopyWithImpl<$Res>;
+}
+
+class _$FooEventSubmitCopyWithImpl<$Res> extends _$FooEventCopyWithImpl<$Res>
+    implements $FooEventSubmitCopyWith<$Res> {
+  _$FooEventSubmitCopyWithImpl(
+      FooEventSubmit _value, $Res Function(FooEventSubmit) _then)
+      : super(_value, (v) => _then(v as FooEventSubmit));
+
+  @override
+  FooEventSubmit get _value => super._value as FooEventSubmit;
+}
+
+class _$FooEventSubmit implements FooEventSubmit {
+  const _$FooEventSubmit();
+
+  @override
+  String toString() {
+    return 'FooEvent.submit()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is FooEventSubmit);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result change(String value),
+    @required Result submit(),
+  }) {
+    assert(change != null);
+    assert(submit != null);
+    return submit();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result change(String value),
+    Result submit(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (submit != null) {
+      return submit();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result change(FooEventChange value),
+    @required Result submit(FooEventSubmit value),
+  }) {
+    assert(change != null);
+    assert(submit != null);
+    return submit(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result change(FooEventChange value),
+    Result submit(FooEventSubmit value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (submit != null) {
+      return submit(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FooEventSubmit implements FooEvent {
+  const factory FooEventSubmit() = _$FooEventSubmit;
 }

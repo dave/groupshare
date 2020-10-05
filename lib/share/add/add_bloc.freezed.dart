@@ -295,11 +295,6 @@ class _$AddEventTearOff {
   AddEventSubmit submit() {
     return const AddEventSubmit();
   }
-
-// ignore: unused_element
-  AddEventError error() {
-    return const AddEventError();
-  }
 }
 
 // ignore: unused_element
@@ -310,26 +305,22 @@ mixin _$AddEvent {
   Result when<Result extends Object>({
     @required Result change(String value),
     @required Result submit(),
-    @required Result error(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result change(String value),
     Result submit(),
-    Result error(),
     @required Result orElse(),
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
     @required Result change(AddEventChange value),
     @required Result submit(AddEventSubmit value),
-    @required Result error(AddEventError value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
     Result change(AddEventChange value),
     Result submit(AddEventSubmit value),
-    Result error(AddEventError value),
     @required Result orElse(),
   });
 }
@@ -405,11 +396,9 @@ class _$AddEventChange implements AddEventChange {
   Result when<Result extends Object>({
     @required Result change(String value),
     @required Result submit(),
-    @required Result error(),
   }) {
     assert(change != null);
     assert(submit != null);
-    assert(error != null);
     return change(value);
   }
 
@@ -418,7 +407,6 @@ class _$AddEventChange implements AddEventChange {
   Result maybeWhen<Result extends Object>({
     Result change(String value),
     Result submit(),
-    Result error(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -433,11 +421,9 @@ class _$AddEventChange implements AddEventChange {
   Result map<Result extends Object>({
     @required Result change(AddEventChange value),
     @required Result submit(AddEventSubmit value),
-    @required Result error(AddEventError value),
   }) {
     assert(change != null);
     assert(submit != null);
-    assert(error != null);
     return change(this);
   }
 
@@ -446,7 +432,6 @@ class _$AddEventChange implements AddEventChange {
   Result maybeMap<Result extends Object>({
     Result change(AddEventChange value),
     Result submit(AddEventSubmit value),
-    Result error(AddEventError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -501,11 +486,9 @@ class _$AddEventSubmit implements AddEventSubmit {
   Result when<Result extends Object>({
     @required Result change(String value),
     @required Result submit(),
-    @required Result error(),
   }) {
     assert(change != null);
     assert(submit != null);
-    assert(error != null);
     return submit();
   }
 
@@ -514,7 +497,6 @@ class _$AddEventSubmit implements AddEventSubmit {
   Result maybeWhen<Result extends Object>({
     Result change(String value),
     Result submit(),
-    Result error(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -529,11 +511,9 @@ class _$AddEventSubmit implements AddEventSubmit {
   Result map<Result extends Object>({
     @required Result change(AddEventChange value),
     @required Result submit(AddEventSubmit value),
-    @required Result error(AddEventError value),
   }) {
     assert(change != null);
     assert(submit != null);
-    assert(error != null);
     return submit(this);
   }
 
@@ -542,7 +522,6 @@ class _$AddEventSubmit implements AddEventSubmit {
   Result maybeMap<Result extends Object>({
     Result change(AddEventChange value),
     Result submit(AddEventSubmit value),
-    Result error(AddEventError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -555,97 +534,4 @@ class _$AddEventSubmit implements AddEventSubmit {
 
 abstract class AddEventSubmit implements AddEvent {
   const factory AddEventSubmit() = _$AddEventSubmit;
-}
-
-abstract class $AddEventErrorCopyWith<$Res> {
-  factory $AddEventErrorCopyWith(
-          AddEventError value, $Res Function(AddEventError) then) =
-      _$AddEventErrorCopyWithImpl<$Res>;
-}
-
-class _$AddEventErrorCopyWithImpl<$Res> extends _$AddEventCopyWithImpl<$Res>
-    implements $AddEventErrorCopyWith<$Res> {
-  _$AddEventErrorCopyWithImpl(
-      AddEventError _value, $Res Function(AddEventError) _then)
-      : super(_value, (v) => _then(v as AddEventError));
-
-  @override
-  AddEventError get _value => super._value as AddEventError;
-}
-
-class _$AddEventError implements AddEventError {
-  const _$AddEventError();
-
-  @override
-  String toString() {
-    return 'AddEvent.error()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is AddEventError);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result change(String value),
-    @required Result submit(),
-    @required Result error(),
-  }) {
-    assert(change != null);
-    assert(submit != null);
-    assert(error != null);
-    return error();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result change(String value),
-    Result submit(),
-    Result error(),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result change(AddEventChange value),
-    @required Result submit(AddEventSubmit value),
-    @required Result error(AddEventError value),
-  }) {
-    assert(change != null);
-    assert(submit != null);
-    assert(error != null);
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result change(AddEventChange value),
-    Result submit(AddEventSubmit value),
-    Result error(AddEventError value),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class AddEventError implements AddEvent {
-  const factory AddEventError() = _$AddEventError;
 }

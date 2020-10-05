@@ -461,11 +461,6 @@ class _$EditEventTearOff {
   EditEventSubmit submit() {
     return const EditEventSubmit();
   }
-
-// ignore: unused_element
-  EditEventError error() {
-    return const EditEventError();
-  }
 }
 
 // ignore: unused_element
@@ -477,14 +472,12 @@ mixin _$EditEvent {
     @required Result init(String value),
     @required Result change(String value),
     @required Result submit(),
-    @required Result error(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result init(String value),
     Result change(String value),
     Result submit(),
-    Result error(),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -492,14 +485,12 @@ mixin _$EditEvent {
     @required Result init(EditEventInit value),
     @required Result change(EditEventChange value),
     @required Result submit(EditEventSubmit value),
-    @required Result error(EditEventError value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
     Result init(EditEventInit value),
     Result change(EditEventChange value),
     Result submit(EditEventSubmit value),
-    Result error(EditEventError value),
     @required Result orElse(),
   });
 }
@@ -576,12 +567,10 @@ class _$EditEventInit implements EditEventInit {
     @required Result init(String value),
     @required Result change(String value),
     @required Result submit(),
-    @required Result error(),
   }) {
     assert(init != null);
     assert(change != null);
     assert(submit != null);
-    assert(error != null);
     return init(value);
   }
 
@@ -591,7 +580,6 @@ class _$EditEventInit implements EditEventInit {
     Result init(String value),
     Result change(String value),
     Result submit(),
-    Result error(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -607,12 +595,10 @@ class _$EditEventInit implements EditEventInit {
     @required Result init(EditEventInit value),
     @required Result change(EditEventChange value),
     @required Result submit(EditEventSubmit value),
-    @required Result error(EditEventError value),
   }) {
     assert(init != null);
     assert(change != null);
     assert(submit != null);
-    assert(error != null);
     return init(this);
   }
 
@@ -622,7 +608,6 @@ class _$EditEventInit implements EditEventInit {
     Result init(EditEventInit value),
     Result change(EditEventChange value),
     Result submit(EditEventSubmit value),
-    Result error(EditEventError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -699,12 +684,10 @@ class _$EditEventChange implements EditEventChange {
     @required Result init(String value),
     @required Result change(String value),
     @required Result submit(),
-    @required Result error(),
   }) {
     assert(init != null);
     assert(change != null);
     assert(submit != null);
-    assert(error != null);
     return change(value);
   }
 
@@ -714,7 +697,6 @@ class _$EditEventChange implements EditEventChange {
     Result init(String value),
     Result change(String value),
     Result submit(),
-    Result error(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -730,12 +712,10 @@ class _$EditEventChange implements EditEventChange {
     @required Result init(EditEventInit value),
     @required Result change(EditEventChange value),
     @required Result submit(EditEventSubmit value),
-    @required Result error(EditEventError value),
   }) {
     assert(init != null);
     assert(change != null);
     assert(submit != null);
-    assert(error != null);
     return change(this);
   }
 
@@ -745,7 +725,6 @@ class _$EditEventChange implements EditEventChange {
     Result init(EditEventInit value),
     Result change(EditEventChange value),
     Result submit(EditEventSubmit value),
-    Result error(EditEventError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -801,12 +780,10 @@ class _$EditEventSubmit implements EditEventSubmit {
     @required Result init(String value),
     @required Result change(String value),
     @required Result submit(),
-    @required Result error(),
   }) {
     assert(init != null);
     assert(change != null);
     assert(submit != null);
-    assert(error != null);
     return submit();
   }
 
@@ -816,7 +793,6 @@ class _$EditEventSubmit implements EditEventSubmit {
     Result init(String value),
     Result change(String value),
     Result submit(),
-    Result error(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -832,12 +808,10 @@ class _$EditEventSubmit implements EditEventSubmit {
     @required Result init(EditEventInit value),
     @required Result change(EditEventChange value),
     @required Result submit(EditEventSubmit value),
-    @required Result error(EditEventError value),
   }) {
     assert(init != null);
     assert(change != null);
     assert(submit != null);
-    assert(error != null);
     return submit(this);
   }
 
@@ -847,7 +821,6 @@ class _$EditEventSubmit implements EditEventSubmit {
     Result init(EditEventInit value),
     Result change(EditEventChange value),
     Result submit(EditEventSubmit value),
-    Result error(EditEventError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -860,103 +833,4 @@ class _$EditEventSubmit implements EditEventSubmit {
 
 abstract class EditEventSubmit implements EditEvent {
   const factory EditEventSubmit() = _$EditEventSubmit;
-}
-
-abstract class $EditEventErrorCopyWith<$Res> {
-  factory $EditEventErrorCopyWith(
-          EditEventError value, $Res Function(EditEventError) then) =
-      _$EditEventErrorCopyWithImpl<$Res>;
-}
-
-class _$EditEventErrorCopyWithImpl<$Res> extends _$EditEventCopyWithImpl<$Res>
-    implements $EditEventErrorCopyWith<$Res> {
-  _$EditEventErrorCopyWithImpl(
-      EditEventError _value, $Res Function(EditEventError) _then)
-      : super(_value, (v) => _then(v as EditEventError));
-
-  @override
-  EditEventError get _value => super._value as EditEventError;
-}
-
-class _$EditEventError implements EditEventError {
-  const _$EditEventError();
-
-  @override
-  String toString() {
-    return 'EditEvent.error()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is EditEventError);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result init(String value),
-    @required Result change(String value),
-    @required Result submit(),
-    @required Result error(),
-  }) {
-    assert(init != null);
-    assert(change != null);
-    assert(submit != null);
-    assert(error != null);
-    return error();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result init(String value),
-    Result change(String value),
-    Result submit(),
-    Result error(),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result init(EditEventInit value),
-    @required Result change(EditEventChange value),
-    @required Result submit(EditEventSubmit value),
-    @required Result error(EditEventError value),
-  }) {
-    assert(init != null);
-    assert(change != null);
-    assert(submit != null);
-    assert(error != null);
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result init(EditEventInit value),
-    Result change(EditEventChange value),
-    Result submit(EditEventSubmit value),
-    Result error(EditEventError value),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class EditEventError implements EditEvent {
-  const factory EditEventError() = _$EditEventError;
 }

@@ -32,8 +32,6 @@ abstract class EditEvent with _$EditEvent {
   const factory EditEvent.change(String value) = EditEventChange;
 
   const factory EditEvent.submit() = EditEventSubmit;
-
-  const factory EditEvent.error() = EditEventError;
 }
 
 class EditBloc extends ExtendedBloc<EditEvent, EditState> {
@@ -71,47 +69,39 @@ class EditBloc extends ExtendedBloc<EditEvent, EditState> {
       },
       submit: (event) async* {
         if (_state is EditStateForm) {
-          if (_state.initialName == _state.name.value) {
-            yield EditState.done(_back);
-            return;
-          }
+          try {
+            if (_state.initialName == _state.name.value) {
+              yield EditState.done(_back);
+              return;
+            }
 
-          yield _state.copyWith(status: FormzStatus.submissionInProgress);
+            yield _state.copyWith(status: FormzStatus.submissionInProgress);
 
-          final share = await _data.shares.item(_id);
+            final share = await _data.shares.item(_id);
 
-          share.op(
-            op.share.name.edit(_state.initialName, _state.name.value),
-          );
-
-          final userDataIndex = _data.user.value.shares.indexWhere(
-                (s) => s.id == _id,
-          );
-
-          if (userDataIndex > -1) {
-            _data.user.op(
-              op.user.shares
-                  .index(userDataIndex)
-                  .name
-                  .set(_state.name.value),
+            share.op(
+              op.share.name.edit(_state.initialName, _state.name.value),
             );
-          }
 
-          yield EditState.done(_back);
-        }
-      },
-      error: (event) async* {
-        // reset submissionInProgress status
-        if (_state is EditStateForm) {
-          yield _state.copyWith(status: Formz.validate([_state.name]));
+            final userDataIndex = _data.user.value.shares.indexWhere(
+                  (s) => s.id == _id,
+            );
+
+            if (userDataIndex > -1) {
+              _data.user.op(
+                op.user.shares
+                    .index(userDataIndex)
+                    .name
+                    .set(_state.name.value),
+              );
+            }
+
+            yield EditState.done(_back);
+          } finally {
+            yield _state.copyWith(status: Formz.validate([_state.name]));
+          }
         }
       },
     );
-  }
-
-  @override
-  void onError(Object error, StackTrace stackTrace) {
-    add(EditEvent.error());
-    super.onError(error, stackTrace);
   }
 }

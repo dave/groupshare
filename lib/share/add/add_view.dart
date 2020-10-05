@@ -100,7 +100,7 @@ class _AddButton extends StatelessWidget {
       },
       builder: (context, state) {
         return state is AddStateForm ? state.status.isSubmissionInProgress
-            ? const CircularProgressIndicator()
+            ? CircularProgressIndicator()
             : RaisedButton(
           key: Keys.submit,
           child: Text('Add'),

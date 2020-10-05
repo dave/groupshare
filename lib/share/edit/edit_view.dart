@@ -133,7 +133,7 @@ class _SubmitButton extends StatelessWidget {
       builder: (context, state) {
         return state is EditStateForm
             ? state.status.isSubmissionInProgress
-                ? const CircularProgressIndicator()
+                ? CircularProgressIndicator()
                 : RaisedButton(
                     key: Keys.submit,
                     child: Text('Submit'),

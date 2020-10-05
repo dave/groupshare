@@ -25,8 +25,6 @@ abstract class AddEvent with _$AddEvent {
   const factory AddEvent.change(String value) = AddEventChange;
 
   const factory AddEvent.submit() = AddEventSubmit;
-
-  const factory AddEvent.error() = AddEventError;
 }
 
 class AddBloc extends ExtendedBloc<AddEvent, AddState> {
@@ -48,32 +46,25 @@ class AddBloc extends ExtendedBloc<AddEvent, AddState> {
       },
       submit: (event) async* {
         if (_state is AddStateForm) {
-          yield _state.copyWith(status: FormzStatus.submissionInProgress);
-          final id = _data.shares.randomUnique();
-          _data.shares.add(id, Share()..name = _state.name.value);
-          _data.user.op(
-            op.user.shares.insert(
-              0,
-              User_AvailableShare()
-                ..id = id
-                ..name = _state.name.value,
-            ),
-          );
-          yield AddState.done();
-        }
-      },
-      error: (event) async* {
-        // reset submissionInProgress status
-        if (_state is AddStateForm) {
-          yield _state.copyWith(status: Formz.validate([_state.name]));
+          try {
+            yield _state.copyWith(status: FormzStatus.submissionInProgress);
+            final id = _data.shares.randomUnique();
+            _data.shares.add(id, Share()
+              ..name = _state.name.value);
+            _data.user.op(
+              op.user.shares.insert(
+                0,
+                User_AvailableShare()
+                  ..id = id
+                  ..name = _state.name.value,
+              ),
+            );
+            yield AddState.done();
+          } finally {
+            yield _state.copyWith(status: Formz.validate([_state.name]));
+          }
         }
       },
     );
-  }
-
-  @override
-  void onError(Object error, StackTrace stackTrace) {
-    add(AddEvent.error());
-    super.onError(error, stackTrace);
   }
 }
