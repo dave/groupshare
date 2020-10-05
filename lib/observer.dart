@@ -1,7 +1,7 @@
 import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:groupshare/handle.dart';
+import 'package:groupshare/ui/handle.dart';
 import 'package:groupshare/bloc.dart';
 import 'package:groupshare/login/login.dart';
 import 'package:groupshare/share/list/list.dart';

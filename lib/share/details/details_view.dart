@@ -3,11 +3,9 @@ import 'package:data_repository/data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/appbar/appbar.dart';
-import 'package:groupshare/handle.dart';
 import 'package:groupshare/share/edit/edit.dart';
 import 'package:groupshare/share/list/list.dart';
 import 'package:groupshare/share/details/details.dart';
-import 'package:groupshare/task.dart';
 import 'package:groupshare/ui/refresher.dart';
 
 class DetailsPage extends StatelessWidget {

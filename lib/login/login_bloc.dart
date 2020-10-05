@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:auth_repository/auth_repository.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:groupshare/bloc.dart';
@@ -38,8 +37,6 @@ abstract class LoginEvent with _$LoginEvent {
   const factory LoginEvent.submitEmail() = LoginEventSubmitEmail;
 
   const factory LoginEvent.submitCode() = LoginEventSubmitCode;
-
-  const factory LoginEvent.error() = LoginEventError;
 }
 
 class LoginBloc extends ExtendedBloc<LoginEvent, LoginState> {
@@ -83,32 +80,27 @@ class LoginBloc extends ExtendedBloc<LoginEvent, LoginState> {
       },
       submitEmail: (event) async* {
         if (_state is LoginStateEmail) {
-          yield _state.copyWith(status: FormzStatus.submissionInProgress);
-          await _auth.login(_state.email.value);
+          try {
+            yield _state.copyWith(status: FormzStatus.submissionInProgress);
+            await _auth.login(_state.email.value);
+          } finally {
+            // clear submissionInProgress
+            yield _state.copyWith(status: Formz.validate([_state.email]));
+          }
         }
       },
       submitCode: (event) async* {
         if (_state is LoginStateCode) {
-          yield _state.copyWith(status: FormzStatus.submissionInProgress);
-          await _auth.code(_state.code.value);
-        }
-      },
-      error: (event) async* {
-        // reset submissionInProgress status
-        if (_state is LoginStateEmail) {
-          yield _state.copyWith(status: Formz.validate([_state.email]));
-        }
-        if (_state is LoginStateCode) {
-          yield _state.copyWith(status: Formz.validate([_state.code]));
+          try {
+            yield _state.copyWith(status: FormzStatus.submissionInProgress);
+            await _auth.code(_state.code.value);
+          } finally {
+            // clear submissionInProgress
+            yield _state.copyWith(status: Formz.validate([_state.code]));
+          }
         }
       },
     );
-  }
-
-  @override
-  void onError(Object error, StackTrace stackTrace) {
-    add(LoginEvent.error());
-    super.onError(error, stackTrace);
   }
 
   @override

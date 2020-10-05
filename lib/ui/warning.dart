@@ -3,45 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/appbar/appbar.dart';
-import 'package:groupshare/handle.dart';
 
-Future<T> task<T>(
-  BuildContext context,
-  GlobalKey global,
-  FutureOr<T> Function() f, {
-  bool offlineWarning = true,
-  List<Button> buttons = const [],
-  bool ok = false,
-  bool home = false,
-  bool retry = false,
-  bool logoff = false,
-}) async {
-  Future<T> tryf() async {
-    try {
-      return await f();
-    } catch (ex, stack) {
-      return await handle(
-        global != null ? global.currentContext : context,
-        ex,
-        stack,
-        buttons: buttons,
-        ok: ok,
-        home: home,
-        retry: retry ? tryf : null,
-        logoff: logoff,
-      );
-    }
+Future<T> warning<T>(BuildContext context, FutureOr<T> Function() f, {bool enabled = true}) async {
+  if (!enabled) {
+    return await f();
   }
-
-  if (!offlineWarning) {
-    return await tryf();
-  }
-
   final state = context.bloc<AppBarBloc>().state;
   final offline = state is AppbarStateOffline || state is AppbarStateFailed;
 
   if (!offline) {
-    return await tryf();
+    return await f();
   }
 
   final tryAnyway = await showDialog<bool>(
@@ -75,7 +46,7 @@ Future<T> task<T>(
     },
   );
   if (tryAnyway) {
-    return await tryf();
+    return await f();
   }
 
   return null;

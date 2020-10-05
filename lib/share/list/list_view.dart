@@ -10,9 +10,9 @@ import 'package:groupshare/share/edit/edit.dart';
 import 'package:groupshare/share/list/item/item.dart';
 import 'package:groupshare/share/list/list.dart';
 import 'package:groupshare/share/details/details.dart';
-import 'package:groupshare/task.dart';
 import 'package:groupshare/ui/refresher.dart';
 import 'package:groupshare/ui/spinner.dart';
+import 'package:groupshare/ui/warning.dart';
 import 'package:refreshable_reorderable_list/refreshable_reorderable_list.dart';
 
 class ListPage extends StatelessWidget {
