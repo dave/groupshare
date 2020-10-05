@@ -7,7 +7,7 @@ import 'package:bloc/bloc.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:groupshare/observer.dart';
+import 'package:groupshare/bloc.dart';
 import 'package:hive/hive.dart';
 
 part 'appbar_bloc.freezed.dart';

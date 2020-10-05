@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:groupshare/appbar/appbar.dart';
+import 'package:groupshare/bloc.dart';
 import 'package:groupshare/handle.dart';
 import 'package:groupshare/login/login.dart';
 import 'package:groupshare/share/list/list.dart';
@@ -164,7 +165,12 @@ class _EmailButton extends StatelessWidget {
                     child: Text('Login email'),
                     onPressed: () async {
                       if (state.status.isValidated) {
-                        context.bloc<LoginBloc>().add(LoginEvent.submitEmail());
+                        warning(
+                          context,
+                          () => context
+                              .bloc<LoginBloc>()
+                              .add(LoginEvent.submitEmail()),
+                        );
                       }
                     },
                   )
@@ -193,7 +199,12 @@ class _CodeButton extends StatelessWidget {
                     child: Text('Login code'),
                     onPressed: () async {
                       if (state.status.isValidated) {
-                        context.bloc<LoginBloc>().add(LoginEvent.submitCode());
+                        warning(
+                          context,
+                          () => context.bloc<LoginBloc>().add(
+                                LoginEvent.submitCode(),
+                              ),
+                        );
                       }
                     },
                   )

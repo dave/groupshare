@@ -2,7 +2,7 @@ import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/handle.dart';
-import 'package:groupshare/app/app.dart';
+import 'package:groupshare/bloc.dart';
 import 'package:groupshare/login/login.dart';
 import 'package:groupshare/share/list/list.dart';
 
@@ -89,11 +89,5 @@ class ErrorObserver extends BlocObserver with NavigatorObserver {
     int oldRouteIndex = _history.indexOf(oldRoute);
     _complete.remove(oldRoute);
     _history.replaceRange(oldRouteIndex, oldRouteIndex+1, [newRoute]);
-  }
-}
-
-abstract class ExtendedBloc<Event, State> extends Bloc<Event, State> {
-  ExtendedBloc(State initialState) : super(initialState) {
-    onChange(Change<State>(currentState: null, nextState: initialState));
   }
 }

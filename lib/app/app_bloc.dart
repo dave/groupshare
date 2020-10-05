@@ -9,6 +9,7 @@ import 'package:discovery_repository/discovery_repository.dart';
 import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:groupshare/bloc.dart';
 import 'package:groupshare/observer.dart';
 
 part 'app_bloc.freezed.dart';

@@ -4,6 +4,7 @@ import 'package:data_repository/data_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:groupshare/bloc.dart';
 import 'package:groupshare/share/add/add.dart';
 import 'package:groupshare/observer.dart';
 

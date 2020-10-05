@@ -5,6 +5,7 @@ import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:groupshare/bloc.dart';
 import 'package:groupshare/observer.dart';
 import 'package:groupshare/share/edit/edit.dart';
 
