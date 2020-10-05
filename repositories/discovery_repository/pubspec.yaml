@@ -8,7 +8,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_is_emulator: ^1.0.0
+  flutter_is_emulator_fixed: ^1.0.0
 
 dev_dependencies:
   flutter_test:

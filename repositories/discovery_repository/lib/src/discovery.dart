@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter_is_emulator/flutter_is_emulator.dart';
+import 'package:flutter_is_emulator_fixed/flutter_is_emulator.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Discovery {

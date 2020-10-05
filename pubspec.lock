@@ -314,10 +314,10 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.0.5"
-  flutter_is_emulator:
+  flutter_is_emulator_fixed:
     dependency: transitive
     description:
-      name: flutter_is_emulator
+      name: flutter_is_emulator_fixed
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
