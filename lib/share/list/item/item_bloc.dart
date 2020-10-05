@@ -1,12 +1,8 @@
 import 'dart:async';
 
-import 'package:api_repository/api_repository.dart';
 import 'package:data_repository/data_repository.dart';
-import 'package:exceptions_repository/exceptions_repository.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:groupshare/bloc.dart';
-import 'package:groupshare/observer.dart';
 import 'package:protod/pserver/pserver.dart';
 
 part 'item_bloc.freezed.dart';

@@ -7,7 +7,6 @@ import 'package:data_repository/data_repository.dart';
 import 'package:device_repository/device_repository.dart';
 import 'package:discovery_repository/discovery_repository.dart';
 import 'package:exceptions_repository/exceptions_repository.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:groupshare/bloc.dart';
 import 'package:groupshare/observer.dart';

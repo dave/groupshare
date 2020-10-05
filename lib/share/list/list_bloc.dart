@@ -21,9 +21,7 @@ abstract class ListState with _$ListState {
   const factory ListState.refreshFinished() = ListStateRefreshFinished;
 
   @Implements(Complete)
-  const factory ListState.list(
-    List<Item> items,
-  ) = ListStateList;
+  const factory ListState.list(List<Item> items) = ListStateList;
 }
 
 @freezed

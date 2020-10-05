@@ -1,4 +1,3 @@
-import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/app/app.dart';
