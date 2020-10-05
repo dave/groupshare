@@ -69,6 +69,7 @@ class ListPageContent extends StatelessWidget {
                   ListState, ListStateRefreshFinished>(
                 single: state.items.isEmpty,
                 event: ListEvent.refresh(),
+                warning: true,
                 child: state.items.isEmpty
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,

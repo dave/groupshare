@@ -33,8 +33,8 @@ class ErrorObserver extends BlocObserver with NavigatorObserver {
   @override
   void onError(Cubit cubit, dynamic ex, StackTrace stack) {
     Function() retry;
-    if (ex is UserException && cubit is Bloc && ex.retry != null) {
-      retry = () => cubit.add(ex.retry);
+    if (cubit is ExtendedBloc && cubit.lastEvent != null) {
+      retry = () => cubit.add(cubit.lastEvent);
     }
     if (_complete[_history.last] ?? false) {
       // If the UI is in a complete state, we should be able to just show the
@@ -43,6 +43,7 @@ class ErrorObserver extends BlocObserver with NavigatorObserver {
         _navigator.currentState.overlay.context,
         ex,
         stack,
+        ok: true,
         retry: retry,
       );
     } else {
@@ -51,16 +52,17 @@ class ErrorObserver extends BlocObserver with NavigatorObserver {
       // it, since the UI below is not complete. If an error is shown in this
       // state, the error dialog should include a button to go home / log off.
       final homeButtonValid = !(cubit is ListBloc || cubit is LoginBloc);
+      final backButtonValid = _navigator.currentState.canPop();
       handle(
         _navigator.currentState.overlay.context,
         ex,
         stack,
-        back: _navigator.currentState.canPop()
+        back: backButtonValid
             ? _navigator.currentState.pop
             : null,
         retry: retry,
-        home: homeButtonValid,
-        logoff: !homeButtonValid,
+        home: homeButtonValid && !backButtonValid,
+        logoff: !homeButtonValid && !backButtonValid,
       );
     }
 

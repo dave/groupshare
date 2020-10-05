@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/appbar/appbar.dart';
 
-Future<T> warning<T>(BuildContext context, FutureOr<T> Function() f, {bool enabled = true}) async {
+Future<bool> warning(BuildContext context, FutureOr<void> Function() f, {bool enabled = true}) async {
   if (!enabled) {
-    return await f();
+    await f();
+    return true;
   }
   final state = context.bloc<AppBarBloc>().state;
   final offline = state is AppbarStateOffline || state is AppbarStateFailed;
 
   if (!offline) {
-    return await f();
+    await f();
+    return true;
   }
 
   final tryAnyway = await showDialog<bool>(
@@ -46,8 +48,9 @@ Future<T> warning<T>(BuildContext context, FutureOr<T> Function() f, {bool enabl
     },
   );
   if (tryAnyway) {
-    return await f();
+    await f();
+    return true;
   }
 
-  return null;
+  return false;
 }

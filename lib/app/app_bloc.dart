@@ -79,10 +79,7 @@ class AppBloc extends ExtendedBloc<AppEvent, AppState> {
           if (_data.user != null) {
             yield AppState.done();
           } else {
-            throw UserException(
-              "It looks like you're offline.",
-              retry: AppEvent.init(),
-            );
+            throw UserException("It looks like you're offline.");
           }
         }
       },

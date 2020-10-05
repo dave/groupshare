@@ -73,6 +73,7 @@ class DetailsContent extends StatelessWidget {
                   DetailsState, DetailsStateRefreshFinished>(
                 single: true,
                 event: DetailsEvent.refresh(),
+                warning: true,
                 child: state.maybeMap(
                   loading: (state) => Center(
                     child: CircularProgressIndicator(),

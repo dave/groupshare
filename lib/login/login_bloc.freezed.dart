@@ -475,11 +475,6 @@ class _$LoginEventTearOff {
   LoginEventSubmitCode submitCode() {
     return const LoginEventSubmitCode();
   }
-
-// ignore: unused_element
-  LoginEventError error() {
-    return const LoginEventError();
-  }
 }
 
 // ignore: unused_element
@@ -493,7 +488,6 @@ mixin _$LoginEvent {
     @required Result changeCode(String value),
     @required Result submitEmail(),
     @required Result submitCode(),
-    @required Result error(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
@@ -502,7 +496,6 @@ mixin _$LoginEvent {
     Result changeCode(String value),
     Result submitEmail(),
     Result submitCode(),
-    Result error(),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -512,7 +505,6 @@ mixin _$LoginEvent {
     @required Result changeCode(LoginEventChangeCode value),
     @required Result submitEmail(LoginEventSubmitEmail value),
     @required Result submitCode(LoginEventSubmitCode value),
-    @required Result error(LoginEventError value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
@@ -521,7 +513,6 @@ mixin _$LoginEvent {
     Result changeCode(LoginEventChangeCode value),
     Result submitEmail(LoginEventSubmitEmail value),
     Result submitCode(LoginEventSubmitCode value),
-    Result error(LoginEventError value),
     @required Result orElse(),
   });
 }
@@ -603,14 +594,12 @@ class _$LoginEventChangeStatus implements LoginEventChangeStatus {
     @required Result changeCode(String value),
     @required Result submitEmail(),
     @required Result submitCode(),
-    @required Result error(),
   }) {
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
     assert(submitEmail != null);
     assert(submitCode != null);
-    assert(error != null);
     return changeStatus(status);
   }
 
@@ -622,7 +611,6 @@ class _$LoginEventChangeStatus implements LoginEventChangeStatus {
     Result changeCode(String value),
     Result submitEmail(),
     Result submitCode(),
-    Result error(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -640,14 +628,12 @@ class _$LoginEventChangeStatus implements LoginEventChangeStatus {
     @required Result changeCode(LoginEventChangeCode value),
     @required Result submitEmail(LoginEventSubmitEmail value),
     @required Result submitCode(LoginEventSubmitCode value),
-    @required Result error(LoginEventError value),
   }) {
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
     assert(submitEmail != null);
     assert(submitCode != null);
-    assert(error != null);
     return changeStatus(this);
   }
 
@@ -659,7 +645,6 @@ class _$LoginEventChangeStatus implements LoginEventChangeStatus {
     Result changeCode(LoginEventChangeCode value),
     Result submitEmail(LoginEventSubmitEmail value),
     Result submitCode(LoginEventSubmitCode value),
-    Result error(LoginEventError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -741,14 +726,12 @@ class _$LoginEventChangeEmail implements LoginEventChangeEmail {
     @required Result changeCode(String value),
     @required Result submitEmail(),
     @required Result submitCode(),
-    @required Result error(),
   }) {
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
     assert(submitEmail != null);
     assert(submitCode != null);
-    assert(error != null);
     return changeEmail(value);
   }
 
@@ -760,7 +743,6 @@ class _$LoginEventChangeEmail implements LoginEventChangeEmail {
     Result changeCode(String value),
     Result submitEmail(),
     Result submitCode(),
-    Result error(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -778,14 +760,12 @@ class _$LoginEventChangeEmail implements LoginEventChangeEmail {
     @required Result changeCode(LoginEventChangeCode value),
     @required Result submitEmail(LoginEventSubmitEmail value),
     @required Result submitCode(LoginEventSubmitCode value),
-    @required Result error(LoginEventError value),
   }) {
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
     assert(submitEmail != null);
     assert(submitCode != null);
-    assert(error != null);
     return changeEmail(this);
   }
 
@@ -797,7 +777,6 @@ class _$LoginEventChangeEmail implements LoginEventChangeEmail {
     Result changeCode(LoginEventChangeCode value),
     Result submitEmail(LoginEventSubmitEmail value),
     Result submitCode(LoginEventSubmitCode value),
-    Result error(LoginEventError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -878,14 +857,12 @@ class _$LoginEventChangeCode implements LoginEventChangeCode {
     @required Result changeCode(String value),
     @required Result submitEmail(),
     @required Result submitCode(),
-    @required Result error(),
   }) {
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
     assert(submitEmail != null);
     assert(submitCode != null);
-    assert(error != null);
     return changeCode(value);
   }
 
@@ -897,7 +874,6 @@ class _$LoginEventChangeCode implements LoginEventChangeCode {
     Result changeCode(String value),
     Result submitEmail(),
     Result submitCode(),
-    Result error(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -915,14 +891,12 @@ class _$LoginEventChangeCode implements LoginEventChangeCode {
     @required Result changeCode(LoginEventChangeCode value),
     @required Result submitEmail(LoginEventSubmitEmail value),
     @required Result submitCode(LoginEventSubmitCode value),
-    @required Result error(LoginEventError value),
   }) {
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
     assert(submitEmail != null);
     assert(submitCode != null);
-    assert(error != null);
     return changeCode(this);
   }
 
@@ -934,7 +908,6 @@ class _$LoginEventChangeCode implements LoginEventChangeCode {
     Result changeCode(LoginEventChangeCode value),
     Result submitEmail(LoginEventSubmitEmail value),
     Result submitCode(LoginEventSubmitCode value),
-    Result error(LoginEventError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -993,14 +966,12 @@ class _$LoginEventSubmitEmail implements LoginEventSubmitEmail {
     @required Result changeCode(String value),
     @required Result submitEmail(),
     @required Result submitCode(),
-    @required Result error(),
   }) {
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
     assert(submitEmail != null);
     assert(submitCode != null);
-    assert(error != null);
     return submitEmail();
   }
 
@@ -1012,7 +983,6 @@ class _$LoginEventSubmitEmail implements LoginEventSubmitEmail {
     Result changeCode(String value),
     Result submitEmail(),
     Result submitCode(),
-    Result error(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -1030,14 +1000,12 @@ class _$LoginEventSubmitEmail implements LoginEventSubmitEmail {
     @required Result changeCode(LoginEventChangeCode value),
     @required Result submitEmail(LoginEventSubmitEmail value),
     @required Result submitCode(LoginEventSubmitCode value),
-    @required Result error(LoginEventError value),
   }) {
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
     assert(submitEmail != null);
     assert(submitCode != null);
-    assert(error != null);
     return submitEmail(this);
   }
 
@@ -1049,7 +1017,6 @@ class _$LoginEventSubmitEmail implements LoginEventSubmitEmail {
     Result changeCode(LoginEventChangeCode value),
     Result submitEmail(LoginEventSubmitEmail value),
     Result submitCode(LoginEventSubmitCode value),
-    Result error(LoginEventError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -1105,14 +1072,12 @@ class _$LoginEventSubmitCode implements LoginEventSubmitCode {
     @required Result changeCode(String value),
     @required Result submitEmail(),
     @required Result submitCode(),
-    @required Result error(),
   }) {
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
     assert(submitEmail != null);
     assert(submitCode != null);
-    assert(error != null);
     return submitCode();
   }
 
@@ -1124,7 +1089,6 @@ class _$LoginEventSubmitCode implements LoginEventSubmitCode {
     Result changeCode(String value),
     Result submitEmail(),
     Result submitCode(),
-    Result error(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -1142,14 +1106,12 @@ class _$LoginEventSubmitCode implements LoginEventSubmitCode {
     @required Result changeCode(LoginEventChangeCode value),
     @required Result submitEmail(LoginEventSubmitEmail value),
     @required Result submitCode(LoginEventSubmitCode value),
-    @required Result error(LoginEventError value),
   }) {
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
     assert(submitEmail != null);
     assert(submitCode != null);
-    assert(error != null);
     return submitCode(this);
   }
 
@@ -1161,7 +1123,6 @@ class _$LoginEventSubmitCode implements LoginEventSubmitCode {
     Result changeCode(LoginEventChangeCode value),
     Result submitEmail(LoginEventSubmitEmail value),
     Result submitCode(LoginEventSubmitCode value),
-    Result error(LoginEventError value),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -1174,115 +1135,4 @@ class _$LoginEventSubmitCode implements LoginEventSubmitCode {
 
 abstract class LoginEventSubmitCode implements LoginEvent {
   const factory LoginEventSubmitCode() = _$LoginEventSubmitCode;
-}
-
-abstract class $LoginEventErrorCopyWith<$Res> {
-  factory $LoginEventErrorCopyWith(
-          LoginEventError value, $Res Function(LoginEventError) then) =
-      _$LoginEventErrorCopyWithImpl<$Res>;
-}
-
-class _$LoginEventErrorCopyWithImpl<$Res> extends _$LoginEventCopyWithImpl<$Res>
-    implements $LoginEventErrorCopyWith<$Res> {
-  _$LoginEventErrorCopyWithImpl(
-      LoginEventError _value, $Res Function(LoginEventError) _then)
-      : super(_value, (v) => _then(v as LoginEventError));
-
-  @override
-  LoginEventError get _value => super._value as LoginEventError;
-}
-
-class _$LoginEventError implements LoginEventError {
-  const _$LoginEventError();
-
-  @override
-  String toString() {
-    return 'LoginEvent.error()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is LoginEventError);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result changeStatus(Status status),
-    @required Result changeEmail(String value),
-    @required Result changeCode(String value),
-    @required Result submitEmail(),
-    @required Result submitCode(),
-    @required Result error(),
-  }) {
-    assert(changeStatus != null);
-    assert(changeEmail != null);
-    assert(changeCode != null);
-    assert(submitEmail != null);
-    assert(submitCode != null);
-    assert(error != null);
-    return error();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result changeStatus(Status status),
-    Result changeEmail(String value),
-    Result changeCode(String value),
-    Result submitEmail(),
-    Result submitCode(),
-    Result error(),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result changeStatus(LoginEventChangeStatus value),
-    @required Result changeEmail(LoginEventChangeEmail value),
-    @required Result changeCode(LoginEventChangeCode value),
-    @required Result submitEmail(LoginEventSubmitEmail value),
-    @required Result submitCode(LoginEventSubmitCode value),
-    @required Result error(LoginEventError value),
-  }) {
-    assert(changeStatus != null);
-    assert(changeEmail != null);
-    assert(changeCode != null);
-    assert(submitEmail != null);
-    assert(submitCode != null);
-    assert(error != null);
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result changeStatus(LoginEventChangeStatus value),
-    Result changeEmail(LoginEventChangeEmail value),
-    Result changeCode(LoginEventChangeCode value),
-    Result submitEmail(LoginEventSubmitEmail value),
-    Result submitCode(LoginEventSubmitCode value),
-    Result error(LoginEventError value),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class LoginEventError implements LoginEvent {
-  const factory LoginEventError() = _$LoginEventError;
 }

@@ -1,9 +1,8 @@
 class UserException implements Exception {
   String message;
   String debug;
-  dynamic retry;
 
-  UserException(this.message, {this.debug = "", this.retry});
+  UserException(this.message, {this.debug = ""});
 
   @override
   String toString() {
@@ -16,9 +15,9 @@ class AuthException extends UserException {
   bool expired;
 
   AuthException(String message,
-      {String debug = "", dynamic retry, bool expired = false})
+      {String debug = "", bool expired = false})
       : this.expired = expired,
-        super(message, debug: debug, retry: retry);
+        super(message, debug: debug);
 
   @override
   String toString() {

@@ -195,7 +195,6 @@ class _$AppStateLoginCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
   }
 }
 
-@Implements(Complete)
 class _$AppStateLogin implements AppStateLogin {
   const _$AppStateLogin(this.auth) : assert(auth != null);
 
@@ -280,7 +279,7 @@ class _$AppStateLogin implements AppStateLogin {
   }
 }
 
-abstract class AppStateLogin implements AppState, Complete {
+abstract class AppStateLogin implements AppState {
   const factory AppStateLogin(bool auth) = _$AppStateLogin;
 
   bool get auth;

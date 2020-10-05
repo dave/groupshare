@@ -3,18 +3,21 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groupshare/ui/warning.dart';
 
 class BlocRefreshIndicator<B extends Bloc<E, S>, E, S, A>
     extends StatefulWidget {
   final Widget child;
   final E event;
   final bool single;
+  final bool warning;
 
   const BlocRefreshIndicator({
     Key key,
     @required this.child,
     @required this.event,
     this.single = false,
+    this.warning = false,
   }) : super(key: key);
 
   @override
@@ -44,8 +47,14 @@ class _BlocRefreshIndicatorState<B extends Bloc<E, S>, E, S, A>
         builder: (BuildContext context, S state) {
           return RefreshIndicator(
             onRefresh: () async {
-              BlocProvider.of<B>(context).add(widget.event);
-              return _completer.future;
+              final done = await warning(
+                context,
+                () => BlocProvider.of<B>(context).add(widget.event),
+                enabled: widget.warning,
+              );
+              if (done) {
+                return _completer.future;
+              }
             },
             child: child,
           );
