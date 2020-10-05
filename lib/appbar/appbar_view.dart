@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groupshare/app/app.dart';
 import 'package:groupshare/appbar/appbar_bloc.dart';
 import 'package:groupshare/login/login.dart';
+import 'package:groupshare/main.dart';
 import 'package:groupshare/ui/spinner.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
@@ -54,6 +55,13 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 PopupMenuItem(
                   child: ListTile(
+                    leading: Icon(Icons.info_outline),
+                    title: Text('About'),
+                    onTap: () => _showInfoPopup(context),
+                  ),
+                ),
+                PopupMenuItem(
+                  child: ListTile(
                     leading: Icon(Icons.delete_forever),
                     title: Text('Reset app storage'),
                     onTap: () async {
@@ -70,6 +78,33 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           },
         ),
       ],
+    );
+  }
+
+  Future<void> _showInfoPopup(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Info"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(VERSION_STRING),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () async {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

@@ -19,6 +19,7 @@ import 'package:protod/pstore/pstore.dart';
 
 const IS_LIVE = true;
 const PRINT_ERRORS = false;
+const VERSION_STRING = "v1.0.1";
 
 void main() async {
   FlutterError.onError = (FlutterErrorDetails details) {
