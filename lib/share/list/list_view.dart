@@ -28,11 +28,10 @@ class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          ListBloc(
-            RepositoryProvider.of<Data>(context),
-            RepositoryProvider.of<Api>(context),
-          ),
+      create: (context) => ListBloc(
+        RepositoryProvider.of<Data>(context),
+        RepositoryProvider.of<Api>(context),
+      ),
       child: ListPageContent(),
     );
   }
@@ -42,13 +41,12 @@ class ListPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ListBloc, ListState>(
-      buildWhen: (previous, current) =>
-          current.map(
-            loading: (_) => true,
-            list: (_) => true,
-            flush: (_) => false,
-            refreshFinished: (_) => false,
-          ),
+      buildWhen: (previous, current) => current.map(
+        loading: (_) => true,
+        list: (_) => true,
+        flush: (_) => false,
+        refreshFinished: (_) => false,
+      ),
       builder: (context, state) {
         final controller = SlidableController();
         return Scaffold(
@@ -62,87 +60,74 @@ class ListPageContent extends StatelessWidget {
           body: Padding(
             padding: EdgeInsets.all(12),
             child: state.maybeMap(
-              loading: (state) =>
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [Center(child: Text("loading"))],
-                  ),
-              list: (state) =>
-                  BlocRefreshIndicator<ListBloc,
-                      ListEvent,
-                      ListState,
-                      ListStateRefreshFinished>(
-                    single: state.items.isEmpty,
-                    event: ListEvent.refresh(),
-                    child: state.items.isEmpty
-                        ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [Center(child: Text("List empty."))],
-                    )
-                        : RefreshableReorderableListView(
-                      physics: AlwaysScrollableScrollPhysics(),
-                      onReorder: (from, to) {
-                        context.bloc<ListBloc>().add(
-                          ListEvent.reorder(from, to),
-                        );
-                      },
-                      children: state.items.map(
-                            (item) {
-                          return ItemWidget(
-                            item.id,
-                            item.name,
-                            controller,
-                            onDelete: () =>
-                                context
-                                    .bloc<ListBloc>()
-                                    .add(ListEvent.delete(item.id)),
-                            onRefresh: () =>
-                                warning(
-                                  context,
-                                      () =>
-                                      context.bloc<ListBloc>().add(
-                                        ListEvent.item(item.id),
-                                      ),
-                                ),
-                            onEdit: () =>
-                                warning(
-                                  context,
-                                      () =>
-                                      Navigator.of(context).push(
-                                        EditPage.route(
-                                          item.id,
-                                          ListPage.routeName,
-                                        ),
-                                      ),
-                                  enabled: !item.local,
-                                ),
-                            onDownload: () =>
-                                warning(
-                                  context,
-                                  () =>
-                                      context.bloc<ListBloc>().add(
-                                        ListEvent.item(item.id),
-                                      ),
-                                ),
-                            onOpen: () =>
-                                warning(
-                                  context,
-                                      () =>
-                                      Navigator.of(context).push(
-                                        DetailsPage.route(
-                                          item.id,
-                                        ),
-                                      ),
-                                  enabled: !item.local,
-                                ),
-                            key: ValueKey(item.id),
-                          );
+              loading: (state) => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [Center(child: Text("loading"))],
+              ),
+              list: (state) => BlocRefreshIndicator<ListBloc, ListEvent,
+                  ListState, ListStateRefreshFinished>(
+                single: state.items.isEmpty,
+                event: ListEvent.refresh(),
+                child: state.items.isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [Center(child: Text("List empty."))],
+                      )
+                    : RefreshableReorderableListView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        onReorder: (from, to) {
+                          context.bloc<ListBloc>().add(
+                                ListEvent.reorder(from, to),
+                              );
                         },
-                      ).toList(),
-                    ),
-                  ),
+                        children: state.items.map(
+                          (item) {
+                            return ItemWidget(
+                              item.id,
+                              item.name,
+                              controller,
+                              onDelete: () => context
+                                  .bloc<ListBloc>()
+                                  .add(ListEvent.delete(item.id)),
+                              onRefresh: () => warning(
+                                context,
+                                () => context.bloc<ListBloc>().add(
+                                      ListEvent.item(item.id),
+                                    ),
+                              ),
+                              onEdit: () => warning(
+                                context,
+                                () => Navigator.of(context).push(
+                                  EditPage.route(
+                                    item.id,
+                                    ListPage.routeName,
+                                  ),
+                                ),
+                                enabled: !item.local,
+                              ),
+                              onDownload: () => warning(
+                                context,
+                                () => context.bloc<ListBloc>().add(
+                                      ListEvent.item(item.id),
+                                    ),
+                              ),
+                              onOpen: () => warning(
+                                context,
+                                () => Navigator.of(context).push(
+                                  DetailsPage.route(
+                                    item.id,
+                                  ),
+                                ),
+                                enabled: !item.local,
+                              ),
+                              key: ValueKey(item.id),
+                            );
+                          },
+                        ).toList(),
+                      ),
+              ),
               orElse: () => Container(),
             ),
           ),
