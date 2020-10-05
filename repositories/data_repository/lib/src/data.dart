@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:api_repository/api_repository.dart';
 import 'package:auth_repository/auth_repository.dart';
 import 'package:data_repository/data_repository.dart';
+import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:protod/pserver/pserver.dart';
 
 class Data {
@@ -23,11 +24,15 @@ class Data {
     await _shares.reset();
   }
 
+  bool get hasUser {
+    return _auth.status == Status.Done && _user != null && _auth.id == _user.id;
+  }
+
   Item<User> get user {
-    if (_auth.status == Status.Done && _user != null && _auth.id == _user.id) {
+    if (hasUser) {
       return _user;
     }
-    return null;
+    throw UserException("User data not found, are you offline?");
   }
 
   Future<void> update() async {
@@ -48,7 +53,7 @@ class Data {
     });
 
     Future<void> f() async {
-      if (_auth.status == Status.Done && user == null) {
+      if (_auth.status == Status.Done && !hasUser) {
         final resp = _users.get(
           _auth.id,
           create: true,

@@ -67,10 +67,6 @@ class ListBloc extends ExtendedBloc<ListEvent, ListState> {
   Stream<ListState> mapEventToState(ListEvent event) async* {
     yield* event.map(
       init: (event) async* {
-        if (_data.user == null) {
-          throw UserException("Looks like you're offline.");
-        }
-
         yield _list();
 
         if (_api.offline()) {
@@ -80,10 +76,6 @@ class ListBloc extends ExtendedBloc<ListEvent, ListState> {
         await _data.user.send();
       },
       update: (event) async* {
-        if (_data.user == null) {
-          throw UserException("Looks like you're offline.");
-        }
-
         yield _list();
       },
       refresh: (event) async* {

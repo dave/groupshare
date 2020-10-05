@@ -12,6 +12,8 @@ dependencies:
     path: "../auth_repository"
   api_repository:
     path: "../api_repository"
+  exceptions_repository:
+    path: "../exceptions_repository"
   protod:
     path: "../../../protod"
 

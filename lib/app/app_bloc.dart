@@ -75,11 +75,7 @@ class AppBloc extends ExtendedBloc<AppEvent, AppState> {
         } else if (_auth.status == Status.Auth) {
           yield AppState.login(true);
         } else if (_auth.status == Status.Done) {
-          if (_data.user != null) {
-            yield AppState.done();
-          } else {
-            throw UserException("It looks like you're offline.");
-          }
+          yield AppState.done();
         }
       },
       reset: (event) async* {
