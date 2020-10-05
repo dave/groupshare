@@ -18,7 +18,6 @@ abstract class AppState with _$AppState {
   @Implements(Incomplete)
   const factory AppState.loading() = AppStateLoading;
 
-  @Implements(Complete)
   const factory AppState.login(bool auth) = AppStateLogin;
 
   const factory AppState.done() = AppStateDone;

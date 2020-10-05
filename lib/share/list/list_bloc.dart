@@ -74,7 +74,7 @@ class ListBloc extends ExtendedBloc<ListEvent, ListState> {
           throw UserException("Looks like you're offline.");
         }
 
-        yield _listPage();
+        yield _list();
 
         if (_api.offline()) {
           return;
@@ -87,11 +87,11 @@ class ListBloc extends ExtendedBloc<ListEvent, ListState> {
           throw UserException("Looks like you're offline.");
         }
 
-        yield _listPage();
+        yield _list();
       },
       refresh: (event) async* {
         try {
-          yield _listPage();
+          yield _list();
           List<Future> futures = [];
           _data.user.value.shares.forEach((User_AvailableShare userShare) {
             if (_data.shares.has(userShare.id)) {
@@ -122,7 +122,7 @@ class ListBloc extends ExtendedBloc<ListEvent, ListState> {
     );
   }
 
-  ListState _listPage() {
+  ListState _list() {
     final items = _data.user.value.shares.map(
       (e) {
         return AvailableShare(
