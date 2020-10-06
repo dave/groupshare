@@ -129,7 +129,11 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<DeleteBloc, DeleteState>(
       buildWhen: (previous, current) {
-        return current is DeleteStateForm;
+        return current is DeleteStateForm &&
+            (previous is! DeleteStateForm ||
+                previous is DeleteStateForm &&
+                    (previous.type != current.type ||
+                        previous.status != current.status));
       },
       builder: (context, state) {
         return state is DeleteStateForm
