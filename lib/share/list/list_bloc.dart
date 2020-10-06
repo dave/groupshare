@@ -43,8 +43,6 @@ abstract class ListEvent with _$ListEvent {
 
   const factory ListEvent.item(String id) = ListEventItem;
 
-  const factory ListEvent.delete(String id) = ListEventDelete;
-
   const factory ListEvent.reorder(int from, int to) = ListEventReorder;
 }
 
@@ -96,14 +94,6 @@ class ListBloc extends ExtendedBloc<ListEvent, ListState> {
       },
       item: (event) async* {
         await _data.shares.refresh(event.id);
-      },
-      delete: (event) async* {
-        // final i = _data.user.value.shares.indexWhere((s) => s.id == id);
-        // if (i == -1) {
-        //   return;
-        // }
-        //_data.user.op(Op().User().Shares().Index(i).Delete());
-        _data.shares.delete(event.id);
       },
       reorder: (event) async* {
         _data.user.op(op.user.shares.move(event.from, event.to));

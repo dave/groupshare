@@ -13,26 +13,11 @@ class _$DeleteStateTearOff {
   const _$DeleteStateTearOff();
 
 // ignore: unused_element
-  DeleteStateInitial initial() {
-    return const DeleteStateInitial();
-  }
-
-// ignore: unused_element
   DeleteStateForm form(
-      {FormzStatus status = FormzStatus.pure, Name name = const Name.pure()}) {
+      {FormzStatus status = FormzStatus.pure, Type type = const Type.pure()}) {
     return DeleteStateForm(
       status: status,
-      name: name,
-    );
-  }
-
-// ignore: unused_element
-  DeleteStateError error(
-      dynamic error, StackTrace stack, DeleteState retryState) {
-    return DeleteStateError(
-      error,
-      stack,
-      retryState,
+      type: type,
     );
   }
 
@@ -48,32 +33,23 @@ const $DeleteState = _$DeleteStateTearOff();
 mixin _$DeleteState {
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result initial(),
-    @required Result form(FormzStatus status, Name name),
-    @required
-        Result error(dynamic error, StackTrace stack, DeleteState retryState),
+    @required Result form(FormzStatus status, Type type),
     @required Result done(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result initial(),
-    Result form(FormzStatus status, Name name),
-    Result error(dynamic error, StackTrace stack, DeleteState retryState),
+    Result form(FormzStatus status, Type type),
     Result done(),
     @required Result orElse(),
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result initial(DeleteStateInitial value),
     @required Result form(DeleteStateForm value),
-    @required Result error(DeleteStateError value),
     @required Result done(DeleteStateDone value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result initial(DeleteStateInitial value),
     Result form(DeleteStateForm value),
-    Result error(DeleteStateError value),
     Result done(DeleteStateDone value),
     @required Result orElse(),
   });
@@ -93,112 +69,11 @@ class _$DeleteStateCopyWithImpl<$Res> implements $DeleteStateCopyWith<$Res> {
   final $Res Function(DeleteState) _then;
 }
 
-abstract class $DeleteStateInitialCopyWith<$Res> {
-  factory $DeleteStateInitialCopyWith(
-          DeleteStateInitial value, $Res Function(DeleteStateInitial) then) =
-      _$DeleteStateInitialCopyWithImpl<$Res>;
-}
-
-class _$DeleteStateInitialCopyWithImpl<$Res>
-    extends _$DeleteStateCopyWithImpl<$Res>
-    implements $DeleteStateInitialCopyWith<$Res> {
-  _$DeleteStateInitialCopyWithImpl(
-      DeleteStateInitial _value, $Res Function(DeleteStateInitial) _then)
-      : super(_value, (v) => _then(v as DeleteStateInitial));
-
-  @override
-  DeleteStateInitial get _value => super._value as DeleteStateInitial;
-}
-
-class _$DeleteStateInitial implements DeleteStateInitial {
-  const _$DeleteStateInitial();
-
-  @override
-  String toString() {
-    return 'DeleteState.initial()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is DeleteStateInitial);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result initial(),
-    @required Result form(FormzStatus status, Name name),
-    @required
-        Result error(dynamic error, StackTrace stack, DeleteState retryState),
-    @required Result done(),
-  }) {
-    assert(initial != null);
-    assert(form != null);
-    assert(error != null);
-    assert(done != null);
-    return initial();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result initial(),
-    Result form(FormzStatus status, Name name),
-    Result error(dynamic error, StackTrace stack, DeleteState retryState),
-    Result done(),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (initial != null) {
-      return initial();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result initial(DeleteStateInitial value),
-    @required Result form(DeleteStateForm value),
-    @required Result error(DeleteStateError value),
-    @required Result done(DeleteStateDone value),
-  }) {
-    assert(initial != null);
-    assert(form != null);
-    assert(error != null);
-    assert(done != null);
-    return initial(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result initial(DeleteStateInitial value),
-    Result form(DeleteStateForm value),
-    Result error(DeleteStateError value),
-    Result done(DeleteStateDone value),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (initial != null) {
-      return initial(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class DeleteStateInitial implements DeleteState {
-  const factory DeleteStateInitial() = _$DeleteStateInitial;
-}
-
 abstract class $DeleteStateFormCopyWith<$Res> {
   factory $DeleteStateFormCopyWith(
           DeleteStateForm value, $Res Function(DeleteStateForm) then) =
       _$DeleteStateFormCopyWithImpl<$Res>;
-  $Res call({FormzStatus status, Name name});
+  $Res call({FormzStatus status, Type type});
 }
 
 class _$DeleteStateFormCopyWithImpl<$Res>
@@ -214,31 +89,31 @@ class _$DeleteStateFormCopyWithImpl<$Res>
   @override
   $Res call({
     Object status = freezed,
-    Object name = freezed,
+    Object type = freezed,
   }) {
     return _then(DeleteStateForm(
       status: status == freezed ? _value.status : status as FormzStatus,
-      name: name == freezed ? _value.name : name as Name,
+      type: type == freezed ? _value.type : type as Type,
     ));
   }
 }
 
 class _$DeleteStateForm implements DeleteStateForm {
   const _$DeleteStateForm(
-      {this.status = FormzStatus.pure, this.name = const Name.pure()})
+      {this.status = FormzStatus.pure, this.type = const Type.pure()})
       : assert(status != null),
-        assert(name != null);
+        assert(type != null);
 
   @JsonKey(defaultValue: FormzStatus.pure)
   @override
   final FormzStatus status;
-  @JsonKey(defaultValue: const Name.pure())
+  @JsonKey(defaultValue: const Type.pure())
   @override
-  final Name name;
+  final Type type;
 
   @override
   String toString() {
-    return 'DeleteState.form(status: $status, name: $name)';
+    return 'DeleteState.form(status: $status, type: $type)';
   }
 
   @override
@@ -247,15 +122,15 @@ class _$DeleteStateForm implements DeleteStateForm {
         (other is DeleteStateForm &&
             (identical(other.status, status) ||
                 const DeepCollectionEquality().equals(other.status, status)) &&
-            (identical(other.name, name) ||
-                const DeepCollectionEquality().equals(other.name, name)));
+            (identical(other.type, type) ||
+                const DeepCollectionEquality().equals(other.type, type)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(status) ^
-      const DeepCollectionEquality().hash(name);
+      const DeepCollectionEquality().hash(type);
 
   @override
   $DeleteStateFormCopyWith<DeleteStateForm> get copyWith =>
@@ -264,31 +139,24 @@ class _$DeleteStateForm implements DeleteStateForm {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result initial(),
-    @required Result form(FormzStatus status, Name name),
-    @required
-        Result error(dynamic error, StackTrace stack, DeleteState retryState),
+    @required Result form(FormzStatus status, Type type),
     @required Result done(),
   }) {
-    assert(initial != null);
     assert(form != null);
-    assert(error != null);
     assert(done != null);
-    return form(status, name);
+    return form(status, type);
   }
 
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result initial(),
-    Result form(FormzStatus status, Name name),
-    Result error(dynamic error, StackTrace stack, DeleteState retryState),
+    Result form(FormzStatus status, Type type),
     Result done(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (form != null) {
-      return form(status, name);
+      return form(status, type);
     }
     return orElse();
   }
@@ -296,14 +164,10 @@ class _$DeleteStateForm implements DeleteStateForm {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result initial(DeleteStateInitial value),
     @required Result form(DeleteStateForm value),
-    @required Result error(DeleteStateError value),
     @required Result done(DeleteStateDone value),
   }) {
-    assert(initial != null);
     assert(form != null);
-    assert(error != null);
     assert(done != null);
     return form(this);
   }
@@ -311,9 +175,7 @@ class _$DeleteStateForm implements DeleteStateForm {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result initial(DeleteStateInitial value),
     Result form(DeleteStateForm value),
-    Result error(DeleteStateError value),
     Result done(DeleteStateDone value),
     @required Result orElse(),
   }) {
@@ -326,172 +188,12 @@ class _$DeleteStateForm implements DeleteStateForm {
 }
 
 abstract class DeleteStateForm implements DeleteState {
-  const factory DeleteStateForm({FormzStatus status, Name name}) =
+  const factory DeleteStateForm({FormzStatus status, Type type}) =
       _$DeleteStateForm;
 
   FormzStatus get status;
-  Name get name;
+  Type get type;
   $DeleteStateFormCopyWith<DeleteStateForm> get copyWith;
-}
-
-abstract class $DeleteStateErrorCopyWith<$Res> {
-  factory $DeleteStateErrorCopyWith(
-          DeleteStateError value, $Res Function(DeleteStateError) then) =
-      _$DeleteStateErrorCopyWithImpl<$Res>;
-  $Res call({dynamic error, StackTrace stack, DeleteState retryState});
-
-  $DeleteStateCopyWith<$Res> get retryState;
-}
-
-class _$DeleteStateErrorCopyWithImpl<$Res>
-    extends _$DeleteStateCopyWithImpl<$Res>
-    implements $DeleteStateErrorCopyWith<$Res> {
-  _$DeleteStateErrorCopyWithImpl(
-      DeleteStateError _value, $Res Function(DeleteStateError) _then)
-      : super(_value, (v) => _then(v as DeleteStateError));
-
-  @override
-  DeleteStateError get _value => super._value as DeleteStateError;
-
-  @override
-  $Res call({
-    Object error = freezed,
-    Object stack = freezed,
-    Object retryState = freezed,
-  }) {
-    return _then(DeleteStateError(
-      error == freezed ? _value.error : error as dynamic,
-      stack == freezed ? _value.stack : stack as StackTrace,
-      retryState == freezed ? _value.retryState : retryState as DeleteState,
-    ));
-  }
-
-  @override
-  $DeleteStateCopyWith<$Res> get retryState {
-    if (_value.retryState == null) {
-      return null;
-    }
-    return $DeleteStateCopyWith<$Res>(_value.retryState, (value) {
-      return _then(_value.copyWith(retryState: value));
-    });
-  }
-}
-
-class _$DeleteStateError implements DeleteStateError {
-  const _$DeleteStateError(this.error, this.stack, this.retryState)
-      : assert(error != null),
-        assert(stack != null),
-        assert(retryState != null);
-
-  @override
-  final dynamic error;
-  @override
-  final StackTrace stack;
-  @override
-  final DeleteState retryState;
-
-  @override
-  String toString() {
-    return 'DeleteState.error(error: $error, stack: $stack, retryState: $retryState)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is DeleteStateError &&
-            (identical(other.error, error) ||
-                const DeepCollectionEquality().equals(other.error, error)) &&
-            (identical(other.stack, stack) ||
-                const DeepCollectionEquality().equals(other.stack, stack)) &&
-            (identical(other.retryState, retryState) ||
-                const DeepCollectionEquality()
-                    .equals(other.retryState, retryState)));
-  }
-
-  @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(error) ^
-      const DeepCollectionEquality().hash(stack) ^
-      const DeepCollectionEquality().hash(retryState);
-
-  @override
-  $DeleteStateErrorCopyWith<DeleteStateError> get copyWith =>
-      _$DeleteStateErrorCopyWithImpl<DeleteStateError>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result initial(),
-    @required Result form(FormzStatus status, Name name),
-    @required
-        Result error(dynamic error, StackTrace stack, DeleteState retryState),
-    @required Result done(),
-  }) {
-    assert(initial != null);
-    assert(form != null);
-    assert(error != null);
-    assert(done != null);
-    return error(this.error, stack, retryState);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result initial(),
-    Result form(FormzStatus status, Name name),
-    Result error(dynamic error, StackTrace stack, DeleteState retryState),
-    Result done(),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error(this.error, stack, retryState);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result initial(DeleteStateInitial value),
-    @required Result form(DeleteStateForm value),
-    @required Result error(DeleteStateError value),
-    @required Result done(DeleteStateDone value),
-  }) {
-    assert(initial != null);
-    assert(form != null);
-    assert(error != null);
-    assert(done != null);
-    return error(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result initial(DeleteStateInitial value),
-    Result form(DeleteStateForm value),
-    Result error(DeleteStateError value),
-    Result done(DeleteStateDone value),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (error != null) {
-      return error(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class DeleteStateError implements DeleteState {
-  const factory DeleteStateError(
-          dynamic error, StackTrace stack, DeleteState retryState) =
-      _$DeleteStateError;
-
-  dynamic get error;
-  StackTrace get stack;
-  DeleteState get retryState;
-  $DeleteStateErrorCopyWith<DeleteStateError> get copyWith;
 }
 
 abstract class $DeleteStateDoneCopyWith<$Res> {
@@ -530,15 +232,10 @@ class _$DeleteStateDone implements DeleteStateDone {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result initial(),
-    @required Result form(FormzStatus status, Name name),
-    @required
-        Result error(dynamic error, StackTrace stack, DeleteState retryState),
+    @required Result form(FormzStatus status, Type type),
     @required Result done(),
   }) {
-    assert(initial != null);
     assert(form != null);
-    assert(error != null);
     assert(done != null);
     return done();
   }
@@ -546,9 +243,7 @@ class _$DeleteStateDone implements DeleteStateDone {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result initial(),
-    Result form(FormzStatus status, Name name),
-    Result error(dynamic error, StackTrace stack, DeleteState retryState),
+    Result form(FormzStatus status, Type type),
     Result done(),
     @required Result orElse(),
   }) {
@@ -562,14 +257,10 @@ class _$DeleteStateDone implements DeleteStateDone {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
-    @required Result initial(DeleteStateInitial value),
     @required Result form(DeleteStateForm value),
-    @required Result error(DeleteStateError value),
     @required Result done(DeleteStateDone value),
   }) {
-    assert(initial != null);
     assert(form != null);
-    assert(error != null);
     assert(done != null);
     return done(this);
   }
@@ -577,9 +268,7 @@ class _$DeleteStateDone implements DeleteStateDone {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
-    Result initial(DeleteStateInitial value),
     Result form(DeleteStateForm value),
-    Result error(DeleteStateError value),
     Result done(DeleteStateDone value),
     @required Result orElse(),
   }) {
@@ -593,4 +282,262 @@ class _$DeleteStateDone implements DeleteStateDone {
 
 abstract class DeleteStateDone implements DeleteState {
   const factory DeleteStateDone() = _$DeleteStateDone;
+}
+
+class _$DeleteEventTearOff {
+  const _$DeleteEventTearOff();
+
+// ignore: unused_element
+  DeleteEventChange change(DeleteType type) {
+    return DeleteEventChange(
+      type,
+    );
+  }
+
+// ignore: unused_element
+  DeleteEventSubmit submit() {
+    return const DeleteEventSubmit();
+  }
+}
+
+// ignore: unused_element
+const $DeleteEvent = _$DeleteEventTearOff();
+
+mixin _$DeleteEvent {
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result change(DeleteType type),
+    @required Result submit(),
+  });
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result change(DeleteType type),
+    Result submit(),
+    @required Result orElse(),
+  });
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result change(DeleteEventChange value),
+    @required Result submit(DeleteEventSubmit value),
+  });
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result change(DeleteEventChange value),
+    Result submit(DeleteEventSubmit value),
+    @required Result orElse(),
+  });
+}
+
+abstract class $DeleteEventCopyWith<$Res> {
+  factory $DeleteEventCopyWith(
+          DeleteEvent value, $Res Function(DeleteEvent) then) =
+      _$DeleteEventCopyWithImpl<$Res>;
+}
+
+class _$DeleteEventCopyWithImpl<$Res> implements $DeleteEventCopyWith<$Res> {
+  _$DeleteEventCopyWithImpl(this._value, this._then);
+
+  final DeleteEvent _value;
+  // ignore: unused_field
+  final $Res Function(DeleteEvent) _then;
+}
+
+abstract class $DeleteEventChangeCopyWith<$Res> {
+  factory $DeleteEventChangeCopyWith(
+          DeleteEventChange value, $Res Function(DeleteEventChange) then) =
+      _$DeleteEventChangeCopyWithImpl<$Res>;
+  $Res call({DeleteType type});
+}
+
+class _$DeleteEventChangeCopyWithImpl<$Res>
+    extends _$DeleteEventCopyWithImpl<$Res>
+    implements $DeleteEventChangeCopyWith<$Res> {
+  _$DeleteEventChangeCopyWithImpl(
+      DeleteEventChange _value, $Res Function(DeleteEventChange) _then)
+      : super(_value, (v) => _then(v as DeleteEventChange));
+
+  @override
+  DeleteEventChange get _value => super._value as DeleteEventChange;
+
+  @override
+  $Res call({
+    Object type = freezed,
+  }) {
+    return _then(DeleteEventChange(
+      type == freezed ? _value.type : type as DeleteType,
+    ));
+  }
+}
+
+class _$DeleteEventChange implements DeleteEventChange {
+  const _$DeleteEventChange(this.type) : assert(type != null);
+
+  @override
+  final DeleteType type;
+
+  @override
+  String toString() {
+    return 'DeleteEvent.change(type: $type)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is DeleteEventChange &&
+            (identical(other.type, type) ||
+                const DeepCollectionEquality().equals(other.type, type)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(type);
+
+  @override
+  $DeleteEventChangeCopyWith<DeleteEventChange> get copyWith =>
+      _$DeleteEventChangeCopyWithImpl<DeleteEventChange>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result change(DeleteType type),
+    @required Result submit(),
+  }) {
+    assert(change != null);
+    assert(submit != null);
+    return change(type);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result change(DeleteType type),
+    Result submit(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (change != null) {
+      return change(type);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result change(DeleteEventChange value),
+    @required Result submit(DeleteEventSubmit value),
+  }) {
+    assert(change != null);
+    assert(submit != null);
+    return change(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result change(DeleteEventChange value),
+    Result submit(DeleteEventSubmit value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (change != null) {
+      return change(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DeleteEventChange implements DeleteEvent {
+  const factory DeleteEventChange(DeleteType type) = _$DeleteEventChange;
+
+  DeleteType get type;
+  $DeleteEventChangeCopyWith<DeleteEventChange> get copyWith;
+}
+
+abstract class $DeleteEventSubmitCopyWith<$Res> {
+  factory $DeleteEventSubmitCopyWith(
+          DeleteEventSubmit value, $Res Function(DeleteEventSubmit) then) =
+      _$DeleteEventSubmitCopyWithImpl<$Res>;
+}
+
+class _$DeleteEventSubmitCopyWithImpl<$Res>
+    extends _$DeleteEventCopyWithImpl<$Res>
+    implements $DeleteEventSubmitCopyWith<$Res> {
+  _$DeleteEventSubmitCopyWithImpl(
+      DeleteEventSubmit _value, $Res Function(DeleteEventSubmit) _then)
+      : super(_value, (v) => _then(v as DeleteEventSubmit));
+
+  @override
+  DeleteEventSubmit get _value => super._value as DeleteEventSubmit;
+}
+
+class _$DeleteEventSubmit implements DeleteEventSubmit {
+  const _$DeleteEventSubmit();
+
+  @override
+  String toString() {
+    return 'DeleteEvent.submit()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is DeleteEventSubmit);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result change(DeleteType type),
+    @required Result submit(),
+  }) {
+    assert(change != null);
+    assert(submit != null);
+    return submit();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result change(DeleteType type),
+    Result submit(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (submit != null) {
+      return submit();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result change(DeleteEventChange value),
+    @required Result submit(DeleteEventSubmit value),
+  }) {
+    assert(change != null);
+    assert(submit != null);
+    return submit(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result change(DeleteEventChange value),
+    Result submit(DeleteEventSubmit value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (submit != null) {
+      return submit(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DeleteEventSubmit implements DeleteEvent {
+  const factory DeleteEventSubmit() = _$DeleteEventSubmit;
 }

@@ -20,6 +20,7 @@ class _AppViewState extends State<AppView> {
       ),
       listener: (context, state) {
         state.maybeMap(
+          orElse: () {},
           login: (state) {
             Navigator.of(context).pushAndRemoveUntil<void>(
               LoginPage.route(),
@@ -32,7 +33,6 @@ class _AppViewState extends State<AppView> {
               (route) => false,
             );
           },
-          orElse: () {},
         );
       },
       buildWhen: (previous, current) => current.map(
@@ -43,8 +43,8 @@ class _AppViewState extends State<AppView> {
       builder: (context, state) {
         return Scaffold(
           body: state.maybeMap(
-            loading: (state) => Center(child: CircularProgressIndicator()),
             orElse: () => Container(),
+            loading: (state) => Center(child: CircularProgressIndicator()),
           ),
         );
       },

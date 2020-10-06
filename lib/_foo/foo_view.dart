@@ -37,11 +37,11 @@ class FooForm extends StatelessWidget {
       ),
       listener: (context, state) {
         state.maybeMap(
+          orElse: () => true,
           done: (state) {
             //...
             return true;
           },
-          orElse: () => true,
         );
       },
       buildWhen: (previous, current) => current.map(
@@ -54,6 +54,7 @@ class FooForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: state.maybeMap(
+              orElse: () => [],
               form: (state) {
                 return [
                   _NameInput(),
@@ -61,7 +62,6 @@ class FooForm extends StatelessWidget {
                   _SubmitButton(),
                 ];
               },
-              orElse: () => [Container()],
             ),
           ),
         );

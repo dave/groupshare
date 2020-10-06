@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/share/add/add.dart';
+import 'package:groupshare/share/delete/delete.dart';
 import 'package:groupshare/share/edit/edit.dart';
 import 'package:groupshare/share/list/item/item.dart';
 import 'package:groupshare/share/list/list.dart';
@@ -58,6 +59,7 @@ class ListPageContent extends StatelessWidget {
           body: Padding(
             padding: EdgeInsets.all(12),
             child: state.maybeMap(
+              orElse: () => Container(),
               loading: (state) => Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -87,9 +89,9 @@ class ListPageContent extends StatelessWidget {
                               item.id,
                               item.name,
                               controller,
-                              onDelete: () => context
-                                  .bloc<ListBloc>()
-                                  .add(ListEvent.delete(item.id)),
+                              onDelete: () => Navigator.of(context).push(
+                                DeletePage.route(item.id),
+                              ),
                               onRefresh: () => warning(
                                 context,
                                 () => context.bloc<ListBloc>().add(
@@ -127,7 +129,6 @@ class ListPageContent extends StatelessWidget {
                         ).toList(),
                       ),
               ),
-              orElse: () => Container(),
             ),
           ),
         );

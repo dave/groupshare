@@ -25,3 +25,24 @@ const Share_List_Response_Item$json = const {
   ],
 };
 
+const Share_Remove_Request$json = const {
+  '1': 'Share_Remove_Request',
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+  ],
+};
+
+const Share_Delete_Request$json = const {
+  '1': 'Share_Delete_Request',
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+  ],
+};
+
+const Share_Delete_Task$json = const {
+  '1': 'Share_Delete_Task',
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+  ],
+};
+

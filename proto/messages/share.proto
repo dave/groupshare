@@ -13,3 +13,15 @@ message Share_List_Response {
     string name = 2;
   }
 }
+
+message Share_Remove_Request {
+  string id = 1;
+}
+
+message Share_Delete_Request {
+  string id = 1;
+}
+
+message Share_Delete_Task {
+  string id = 1;
+}

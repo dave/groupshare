@@ -44,13 +44,13 @@ class LoginForm extends StatelessWidget {
       ),
       listener: (context, state) {
         state.maybeMap(
+          orElse: () => true,
           done: (state) {
             Navigator.of(context).pushAndRemoveUntil(
               ListPage.route(),
               (route) => false,
             );
           },
-          orElse: () {},
         );
       },
       buildWhen: (previous, current) => current.map(
@@ -64,6 +64,7 @@ class LoginForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: state.maybeMap(
+              orElse: () => [],
               email: (state) {
                 return [
                   _EmailInput(),
@@ -78,7 +79,6 @@ class LoginForm extends StatelessWidget {
                   _CodeButton(),
                 ];
               },
-              orElse: () => [],
             ),
           ),
         );

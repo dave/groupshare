@@ -17,6 +17,9 @@ default:
 queue:
 	gcloud tasks queues create ${QUEUE} --configuration ${CONFIG}
 
+install-protoc-plugin:
+	pub global activate protoc_plugin
+
 logs:
 	gcloud app logs tail -s default --configuration ${CONFIG}
 

@@ -50,6 +50,7 @@ class DetailsContent extends StatelessWidget {
         return Scaffold(
           appBar: AppBarWidget('Title'),
           floatingActionButton: state.maybeMap(
+            orElse: () => Container(),
             done: (state) => FloatingActionButton(
               child: Icon(Icons.edit),
               onPressed: () async {
@@ -61,7 +62,6 @@ class DetailsContent extends StatelessWidget {
                 );
               },
             ),
-            orElse: () => Container(),
           ),
           body: Padding(
             padding: EdgeInsets.all(12),
@@ -73,13 +73,13 @@ class DetailsContent extends StatelessWidget {
                 event: DetailsEvent.refresh(),
                 warning: true,
                 child: state.maybeMap(
+                  orElse: () => Container(),
                   loading: (state) => Center(
                     child: CircularProgressIndicator(),
                   ),
                   done: (state) => Center(
                     child: Text(state.name),
                   ),
-                  orElse: () => Container(),
                 ),
               ),
             ),

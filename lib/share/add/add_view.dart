@@ -18,10 +18,9 @@ class AddPage extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.all(12),
         child: BlocProvider(
-          create: (context) =>
-              AddBloc(
-                RepositoryProvider.of<Data>(context),
-              ),
+          create: (context) => AddBloc(
+            RepositoryProvider.of<Data>(context),
+          ),
           child: AddForm(),
         ),
       ),
@@ -46,6 +45,7 @@ class AddForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: state.maybeMap(
+              orElse: () => [],
               form: (state) {
                 return [
                   _NameInput(),
@@ -53,7 +53,6 @@ class AddForm extends StatelessWidget {
                   _AddButton(),
                 ];
               },
-              orElse: () => [],
             ),
           ),
         );
@@ -67,24 +66,27 @@ class _NameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AddBloc, AddState>(
       buildWhen: (previous, current) {
-        return current is AddStateForm && (previous is! AddStateForm ||
-            previous is AddStateForm && previous.name != current.name);
+        return current is AddStateForm &&
+            (previous is! AddStateForm ||
+                previous is AddStateForm && previous.name != current.name);
       },
       builder: (context, state) {
-        return state is AddStateForm ? state.status.isSubmissionInProgress
-            ? CircularProgressIndicator()
-            : TextFormField(
-          autofocus: true,
-          key: Keys.name,
-          initialValue: state.name.value,
-          onChanged: (email) {
-            context.bloc<AddBloc>().add(AddEvent.change(email));
-          },
-          decoration: InputDecoration(
-            labelText: 'name',
-            errorText: state.name.invalid ? 'invalid name' : null,
-          ),
-        ) : null;
+        return state is AddStateForm
+            ? state.status.isSubmissionInProgress
+                ? CircularProgressIndicator()
+                : TextFormField(
+                    autofocus: true,
+                    key: Keys.name,
+                    initialValue: state.name.value,
+                    onChanged: (email) {
+                      context.bloc<AddBloc>().add(AddEvent.change(email));
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'name',
+                      errorText: state.name.invalid ? 'invalid name' : null,
+                    ),
+                  )
+            : null;
       },
     );
   }
@@ -95,21 +97,24 @@ class _AddButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AddBloc, AddState>(
       buildWhen: (previous, current) {
-        return current is AddStateForm && (previous is! AddStateForm ||
-            previous is AddStateForm && previous.status != current.status);
+        return current is AddStateForm &&
+            (previous is! AddStateForm ||
+                previous is AddStateForm && previous.status != current.status);
       },
       builder: (context, state) {
-        return state is AddStateForm ? state.status.isSubmissionInProgress
-            ? CircularProgressIndicator()
-            : RaisedButton(
-          key: Keys.submit,
-          child: Text('Add'),
-          onPressed: () async {
-            if (state.status.isValidated) {
-              context.bloc<AddBloc>().add(AddEvent.submit());
-            }
-          },
-        ) : null;
+        return state is AddStateForm
+            ? state.status.isSubmissionInProgress
+                ? CircularProgressIndicator()
+                : RaisedButton(
+                    key: Keys.submit,
+                    child: Text('Add'),
+                    onPressed: () async {
+                      if (state.status.isValidated) {
+                        context.bloc<AddBloc>().add(AddEvent.submit());
+                      }
+                    },
+                  )
+            : null;
       },
     );
   }

@@ -669,13 +669,6 @@ class _$ListEventTearOff {
   }
 
 // ignore: unused_element
-  ListEventDelete delete(String id) {
-    return ListEventDelete(
-      id,
-    );
-  }
-
-// ignore: unused_element
   ListEventReorder reorder(int from, int to) {
     return ListEventReorder(
       from,
@@ -694,7 +687,6 @@ mixin _$ListEvent {
     @required Result update(),
     @required Result refresh(),
     @required Result item(String id),
-    @required Result delete(String id),
     @required Result reorder(int from, int to),
   });
   @optionalTypeArgs
@@ -703,7 +695,6 @@ mixin _$ListEvent {
     Result update(),
     Result refresh(),
     Result item(String id),
-    Result delete(String id),
     Result reorder(int from, int to),
     @required Result orElse(),
   });
@@ -713,7 +704,6 @@ mixin _$ListEvent {
     @required Result update(ListEventUpdate value),
     @required Result refresh(ListEventRefresh value),
     @required Result item(ListEventItem value),
-    @required Result delete(ListEventDelete value),
     @required Result reorder(ListEventReorder value),
   });
   @optionalTypeArgs
@@ -722,7 +712,6 @@ mixin _$ListEvent {
     Result update(ListEventUpdate value),
     Result refresh(ListEventRefresh value),
     Result item(ListEventItem value),
-    Result delete(ListEventDelete value),
     Result reorder(ListEventReorder value),
     @required Result orElse(),
   });
@@ -780,14 +769,12 @@ class _$ListEventInit implements ListEventInit {
     @required Result update(),
     @required Result refresh(),
     @required Result item(String id),
-    @required Result delete(String id),
     @required Result reorder(int from, int to),
   }) {
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
     assert(item != null);
-    assert(delete != null);
     assert(reorder != null);
     return init();
   }
@@ -799,7 +786,6 @@ class _$ListEventInit implements ListEventInit {
     Result update(),
     Result refresh(),
     Result item(String id),
-    Result delete(String id),
     Result reorder(int from, int to),
     @required Result orElse(),
   }) {
@@ -817,14 +803,12 @@ class _$ListEventInit implements ListEventInit {
     @required Result update(ListEventUpdate value),
     @required Result refresh(ListEventRefresh value),
     @required Result item(ListEventItem value),
-    @required Result delete(ListEventDelete value),
     @required Result reorder(ListEventReorder value),
   }) {
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
     assert(item != null);
-    assert(delete != null);
     assert(reorder != null);
     return init(this);
   }
@@ -836,7 +820,6 @@ class _$ListEventInit implements ListEventInit {
     Result update(ListEventUpdate value),
     Result refresh(ListEventRefresh value),
     Result item(ListEventItem value),
-    Result delete(ListEventDelete value),
     Result reorder(ListEventReorder value),
     @required Result orElse(),
   }) {
@@ -891,14 +874,12 @@ class _$ListEventUpdate implements ListEventUpdate {
     @required Result update(),
     @required Result refresh(),
     @required Result item(String id),
-    @required Result delete(String id),
     @required Result reorder(int from, int to),
   }) {
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
     assert(item != null);
-    assert(delete != null);
     assert(reorder != null);
     return update();
   }
@@ -910,7 +891,6 @@ class _$ListEventUpdate implements ListEventUpdate {
     Result update(),
     Result refresh(),
     Result item(String id),
-    Result delete(String id),
     Result reorder(int from, int to),
     @required Result orElse(),
   }) {
@@ -928,14 +908,12 @@ class _$ListEventUpdate implements ListEventUpdate {
     @required Result update(ListEventUpdate value),
     @required Result refresh(ListEventRefresh value),
     @required Result item(ListEventItem value),
-    @required Result delete(ListEventDelete value),
     @required Result reorder(ListEventReorder value),
   }) {
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
     assert(item != null);
-    assert(delete != null);
     assert(reorder != null);
     return update(this);
   }
@@ -947,7 +925,6 @@ class _$ListEventUpdate implements ListEventUpdate {
     Result update(ListEventUpdate value),
     Result refresh(ListEventRefresh value),
     Result item(ListEventItem value),
-    Result delete(ListEventDelete value),
     Result reorder(ListEventReorder value),
     @required Result orElse(),
   }) {
@@ -1002,14 +979,12 @@ class _$ListEventRefresh implements ListEventRefresh {
     @required Result update(),
     @required Result refresh(),
     @required Result item(String id),
-    @required Result delete(String id),
     @required Result reorder(int from, int to),
   }) {
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
     assert(item != null);
-    assert(delete != null);
     assert(reorder != null);
     return refresh();
   }
@@ -1021,7 +996,6 @@ class _$ListEventRefresh implements ListEventRefresh {
     Result update(),
     Result refresh(),
     Result item(String id),
-    Result delete(String id),
     Result reorder(int from, int to),
     @required Result orElse(),
   }) {
@@ -1039,14 +1013,12 @@ class _$ListEventRefresh implements ListEventRefresh {
     @required Result update(ListEventUpdate value),
     @required Result refresh(ListEventRefresh value),
     @required Result item(ListEventItem value),
-    @required Result delete(ListEventDelete value),
     @required Result reorder(ListEventReorder value),
   }) {
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
     assert(item != null);
-    assert(delete != null);
     assert(reorder != null);
     return refresh(this);
   }
@@ -1058,7 +1030,6 @@ class _$ListEventRefresh implements ListEventRefresh {
     Result update(ListEventUpdate value),
     Result refresh(ListEventRefresh value),
     Result item(ListEventItem value),
-    Result delete(ListEventDelete value),
     Result reorder(ListEventReorder value),
     @required Result orElse(),
   }) {
@@ -1134,14 +1105,12 @@ class _$ListEventItem implements ListEventItem {
     @required Result update(),
     @required Result refresh(),
     @required Result item(String id),
-    @required Result delete(String id),
     @required Result reorder(int from, int to),
   }) {
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
     assert(item != null);
-    assert(delete != null);
     assert(reorder != null);
     return item(id);
   }
@@ -1153,7 +1122,6 @@ class _$ListEventItem implements ListEventItem {
     Result update(),
     Result refresh(),
     Result item(String id),
-    Result delete(String id),
     Result reorder(int from, int to),
     @required Result orElse(),
   }) {
@@ -1171,14 +1139,12 @@ class _$ListEventItem implements ListEventItem {
     @required Result update(ListEventUpdate value),
     @required Result refresh(ListEventRefresh value),
     @required Result item(ListEventItem value),
-    @required Result delete(ListEventDelete value),
     @required Result reorder(ListEventReorder value),
   }) {
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
     assert(item != null);
-    assert(delete != null);
     assert(reorder != null);
     return item(this);
   }
@@ -1190,7 +1156,6 @@ class _$ListEventItem implements ListEventItem {
     Result update(ListEventUpdate value),
     Result refresh(ListEventRefresh value),
     Result item(ListEventItem value),
-    Result delete(ListEventDelete value),
     Result reorder(ListEventReorder value),
     @required Result orElse(),
   }) {
@@ -1207,141 +1172,6 @@ abstract class ListEventItem implements ListEvent {
 
   String get id;
   $ListEventItemCopyWith<ListEventItem> get copyWith;
-}
-
-abstract class $ListEventDeleteCopyWith<$Res> {
-  factory $ListEventDeleteCopyWith(
-          ListEventDelete value, $Res Function(ListEventDelete) then) =
-      _$ListEventDeleteCopyWithImpl<$Res>;
-  $Res call({String id});
-}
-
-class _$ListEventDeleteCopyWithImpl<$Res> extends _$ListEventCopyWithImpl<$Res>
-    implements $ListEventDeleteCopyWith<$Res> {
-  _$ListEventDeleteCopyWithImpl(
-      ListEventDelete _value, $Res Function(ListEventDelete) _then)
-      : super(_value, (v) => _then(v as ListEventDelete));
-
-  @override
-  ListEventDelete get _value => super._value as ListEventDelete;
-
-  @override
-  $Res call({
-    Object id = freezed,
-  }) {
-    return _then(ListEventDelete(
-      id == freezed ? _value.id : id as String,
-    ));
-  }
-}
-
-class _$ListEventDelete implements ListEventDelete {
-  const _$ListEventDelete(this.id) : assert(id != null);
-
-  @override
-  final String id;
-
-  @override
-  String toString() {
-    return 'ListEvent.delete(id: $id)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is ListEventDelete &&
-            (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)));
-  }
-
-  @override
-  int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(id);
-
-  @override
-  $ListEventDeleteCopyWith<ListEventDelete> get copyWith =>
-      _$ListEventDeleteCopyWithImpl<ListEventDelete>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result init(),
-    @required Result update(),
-    @required Result refresh(),
-    @required Result item(String id),
-    @required Result delete(String id),
-    @required Result reorder(int from, int to),
-  }) {
-    assert(init != null);
-    assert(update != null);
-    assert(refresh != null);
-    assert(item != null);
-    assert(delete != null);
-    assert(reorder != null);
-    return delete(id);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result init(),
-    Result update(),
-    Result refresh(),
-    Result item(String id),
-    Result delete(String id),
-    Result reorder(int from, int to),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (delete != null) {
-      return delete(id);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result init(ListEventInit value),
-    @required Result update(ListEventUpdate value),
-    @required Result refresh(ListEventRefresh value),
-    @required Result item(ListEventItem value),
-    @required Result delete(ListEventDelete value),
-    @required Result reorder(ListEventReorder value),
-  }) {
-    assert(init != null);
-    assert(update != null);
-    assert(refresh != null);
-    assert(item != null);
-    assert(delete != null);
-    assert(reorder != null);
-    return delete(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result init(ListEventInit value),
-    Result update(ListEventUpdate value),
-    Result refresh(ListEventRefresh value),
-    Result item(ListEventItem value),
-    Result delete(ListEventDelete value),
-    Result reorder(ListEventReorder value),
-    @required Result orElse(),
-  }) {
-    assert(orElse != null);
-    if (delete != null) {
-      return delete(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class ListEventDelete implements ListEvent {
-  const factory ListEventDelete(String id) = _$ListEventDelete;
-
-  String get id;
-  $ListEventDeleteCopyWith<ListEventDelete> get copyWith;
 }
 
 abstract class $ListEventReorderCopyWith<$Res> {
@@ -1414,14 +1244,12 @@ class _$ListEventReorder implements ListEventReorder {
     @required Result update(),
     @required Result refresh(),
     @required Result item(String id),
-    @required Result delete(String id),
     @required Result reorder(int from, int to),
   }) {
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
     assert(item != null);
-    assert(delete != null);
     assert(reorder != null);
     return reorder(from, to);
   }
@@ -1433,7 +1261,6 @@ class _$ListEventReorder implements ListEventReorder {
     Result update(),
     Result refresh(),
     Result item(String id),
-    Result delete(String id),
     Result reorder(int from, int to),
     @required Result orElse(),
   }) {
@@ -1451,14 +1278,12 @@ class _$ListEventReorder implements ListEventReorder {
     @required Result update(ListEventUpdate value),
     @required Result refresh(ListEventRefresh value),
     @required Result item(ListEventItem value),
-    @required Result delete(ListEventDelete value),
     @required Result reorder(ListEventReorder value),
   }) {
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
     assert(item != null);
-    assert(delete != null);
     assert(reorder != null);
     return reorder(this);
   }
@@ -1470,7 +1295,6 @@ class _$ListEventReorder implements ListEventReorder {
     Result update(ListEventUpdate value),
     Result refresh(ListEventRefresh value),
     Result item(ListEventItem value),
-    Result delete(ListEventDelete value),
     Result reorder(ListEventReorder value),
     @required Result orElse(),
   }) {

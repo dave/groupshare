@@ -58,10 +58,10 @@ class EditForm extends StatelessWidget {
       ),
       listener: (context, state) {
         state.maybeMap(
+          orElse: () => true,
           done: (state) {
             Navigator.of(context).popUntil(ModalRoute.withName(state.route));
           },
-          orElse: () => true,
         );
       },
       buildWhen: (previous, current) => current.map(
@@ -75,6 +75,7 @@ class EditForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: state.maybeMap(
+              orElse: () => [],
               loading: (_) => [
                 Center(child: CircularProgressIndicator()),
               ],
@@ -83,7 +84,6 @@ class EditForm extends StatelessWidget {
                 Padding(padding: EdgeInsets.all(12)),
                 _SubmitButton(),
               ],
-              orElse: () => [],
             ),
           ),
         );

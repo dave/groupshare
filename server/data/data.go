@@ -13,6 +13,7 @@ import (
 	"github.com/dave/protod/pmsg"
 	"github.com/dave/protod/pserver"
 	"github.com/dave/protod/pstore"
+	"google.golang.org/api/iterator"
 	taskspb "google.golang.org/genproto/googleapis/cloud/tasks/v2"
 	"google.golang.org/protobuf/proto"
 )
@@ -76,9 +77,8 @@ func EditRequest(ctx context.Context, server *pserver.Server, user *auth.User, r
 			return perr.Wrap(err).Debug("pstore refresh")
 		}
 	} else if state%UPDATE_SNAPSHOT_FREQUENCY == 0 {
-		refreshRequest := pmsg.New()
-		refreshRequest.MustSet(&pstore.Payload_Refresh_Request{DocumentType: req.DocumentType, DocumentId: req.DocumentId})
-		if _, err := TriggerRefreshTask(ctx, server, refreshRequest); err != nil {
+		refreshRequest := &pstore.Payload_Refresh_Request{DocumentType: req.DocumentType, DocumentId: req.DocumentId}
+		if _, err := AddTask(ctx, server, refreshRequest); err != nil {
 			return perr.Wrap(err).Debug("triggering refresh task")
 		}
 	}
@@ -86,7 +86,7 @@ func EditRequest(ctx context.Context, server *pserver.Server, user *auth.User, r
 	return nil
 }
 
-func RefreshRequest(ctx context.Context, server *pserver.Server, request, response *pmsg.Bundle) error {
+func RefreshRequest(ctx context.Context, server *pserver.Server, request *pmsg.Bundle) error {
 
 	req := &pstore.Payload_Refresh_Request{}
 	if _, err := request.Get(req); err != nil {
@@ -98,6 +98,145 @@ func RefreshRequest(ctx context.Context, server *pserver.Server, request, respon
 	}
 
 	return nil
+}
+
+func ShareRemoveRequest(ctx context.Context, server *pserver.Server, user *auth.User, request, response *pmsg.Bundle) error {
+	req := &messages.Share_Remove_Request{}
+	if _, err := request.Get(req); err != nil {
+		return perr.Wrap(err).Debug("getting request").Message("Invalid request")
+	}
+
+	f := func(ctx context.Context, tx *firestore.Transaction) error {
+
+		found, err := removeShareFromUser(ctx, server, tx, user.Id, req.Id)
+		if err != nil {
+			return perr.Wrap(err).Debug("removing share")
+		}
+		if !found {
+			return perr.Message("Document not found").Debug("share not found in user shares")
+		}
+		return nil
+
+	}
+	if err := server.Firestore.RunTransaction(server.FirestoreContext(ctx), f); err != nil {
+		return perr.Wrap(err).Debug("running user transaction").Flag(pserver.Firestore)
+	}
+	return nil
+}
+
+func ShareDeleteRequest(ctx context.Context, server *pserver.Server, user *auth.User, request, response *pmsg.Bundle) error {
+	req := &messages.Share_Delete_Request{}
+	if _, err := request.Get(req); err != nil {
+		return perr.Wrap(err).Debug("getting request").Message("Invalid request")
+	}
+
+	f := func(ctx context.Context, tx *firestore.Transaction) error {
+
+		found, err := removeShareFromUser(ctx, server, tx, user.Id, req.Id)
+		if err != nil {
+			return perr.Wrap(err).Debug("removing share")
+		}
+		if !found {
+			return perr.Debug("share not found in user shares").Message("Document not found")
+		}
+
+		ref := server.Firestore.Collection(SHARE_DOCUMENT_TYPE.CollectionName()).Doc(req.Id)
+		if err := tx.Delete(ref); err != nil {
+			return perr.Wrap(err).Debug("deleting share")
+		}
+
+		return nil
+
+	}
+	if err := server.Firestore.RunTransaction(server.FirestoreContext(ctx), f); err != nil {
+		return perr.Wrap(err).Debug("running user transaction").Flag(pserver.Firestore)
+	}
+
+	if _, err := AddTask(ctx, server, &messages.Share_Delete_Task{Id: req.Id}); err != nil {
+		return perr.Wrap(err).Debug("adding delete task")
+	}
+
+	return nil
+}
+
+func removeShareFromUser(ctx context.Context, server *pserver.Server, tx *firestore.Transaction, userId, shareId string) (bool, error) {
+	userRef, user, err := auth.GetUser(ctx, server, tx, userId)
+	if err != nil {
+		return false, perr.Wrap(err).Debug("getting user")
+	}
+	var shares []string
+	var found bool
+	for _, share := range user.Shares {
+		if share == shareId {
+			found = true
+		} else {
+			shares = append(shares, share)
+		}
+	}
+
+	if !found {
+		return false, nil
+	}
+
+	user.Shares = shares
+
+	if err := tx.Set(userRef, user); err != nil {
+		return true, perr.Wrap(err).Debug("firestore set").Flag(pserver.Firestore)
+	}
+	return true, nil
+}
+
+func ShareDeleteTask(ctx context.Context, server *pserver.Server, request *pmsg.Bundle) error {
+	req := &messages.Share_Delete_Task{}
+	if _, err := request.Get(req); err != nil {
+		return perr.Wrap(err).Debug("getting request").Message("Invalid request")
+	}
+
+	collectionRef := server.Firestore.Collection(SHARE_DOCUMENT_TYPE.CollectionName()).Doc(req.Id).Collection(pserver.STATES_COLLECTION)
+
+	if err := deleteCollection(ctx, server.Firestore, collectionRef, 100); err != nil {
+		return perr.Wrap(err).Debug("deleting collection")
+	}
+
+	return nil
+}
+
+func deleteCollection(ctx context.Context, client *firestore.Client, ref *firestore.CollectionRef, batchSize int) error {
+	for {
+		// Get a batch of documents
+		iter := ref.Limit(batchSize).Documents(ctx)
+		numDeleted := 0
+
+		// Iterate through the documents, adding
+		// a delete operation for each one to a
+		// WriteBatch.
+		batch := client.Batch()
+		for {
+			doc, err := iter.Next()
+			if err == iterator.Done {
+				break
+			}
+			if err != nil {
+				return err
+			}
+
+			batch.Delete(doc.Ref)
+			numDeleted++
+		}
+
+		// If there are no documents to delete,
+		// the process is over.
+		if numDeleted == 0 {
+			return nil
+		}
+
+		_, err := batch.Commit(ctx)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println("*** DELETING STATES ***", numDeleted, "deleted")
+	}
 }
 
 func ShareListRequest(ctx context.Context, server *pserver.Server, user *auth.User, request, response *pmsg.Bundle) error {
@@ -130,16 +269,21 @@ func ShareListRequest(ctx context.Context, server *pserver.Server, user *auth.Us
 	return nil
 }
 
-func TriggerRefreshTask(ctx context.Context, server *pserver.Server, message proto.Message) (*taskspb.Task, error) {
+func AddTask(ctx context.Context, server *pserver.Server, message proto.Message) (*taskspb.Task, error) {
 
 	client, err := cloudtasks.NewClient(ctx)
 	if err != nil {
 		return nil, perr.Wrap(err).Debug("getting new cloudtasks client").Flag(CloudTasks)
 	}
 
-	body, err := proto.Marshal(message)
+	bundle := pmsg.New()
+	if err := bundle.Set(message); err != nil {
+		return nil, perr.Wrap(err).Debug("setting task message")
+	}
+
+	body, err := proto.Marshal(bundle)
 	if err != nil {
-		return nil, perr.Wrap(err).Debug("marshaling refresh message")
+		return nil, perr.Wrap(err).Debug("marshaling task message")
 	}
 
 	req := &taskspb.CreateTaskRequest{

@@ -1,13 +1,20 @@
 import 'package:formz/formz.dart';
 
-enum NameValidationError { empty }
+enum DeleteType {
+  local,
+  favourites,
+  remove,
+  delete,
+}
 
-class Name extends FormzInput<String, NameValidationError> {
-  const Name.pure() : super.pure('');
-  const Name.dirty([String value = '']) : super.dirty(value);
+enum TypeValidationError { empty }
+
+class Type extends FormzInput<DeleteType, TypeValidationError> {
+  const Type.pure() : super.pure(null);
+  const Type.dirty([DeleteType value]) : super.dirty(value);
 
   @override
-  NameValidationError validator(String value) {
-    return value?.isNotEmpty == true ? null : NameValidationError.empty;
+  TypeValidationError validator(DeleteType value) {
+    return value == null ? TypeValidationError.empty : null;
   }
 }

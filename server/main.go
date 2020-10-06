@@ -119,7 +119,10 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 
 		fmt.Println("request:", mustJson(request))
 
-		err = ProcessBundle(ctx, server, request, response)
+		// did this request come from the tasks queue?
+		tasks := r.Header.Get("X-Cloudtasks-Queuename") == TASKS_QUEUE
+
+		err = ProcessBundle(ctx, server, request, response, tasks)
 
 		if err != nil {
 			fmt.Printf("error: \n%s\n", perr.Stack(err))
@@ -128,6 +131,12 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 		if perr.AnyFlag(err, perr.NotFound) {
 			fmt.Println("error: 404 path not found")
 			http.NotFound(w, r)
+			return
+		}
+
+		if tasks && err != nil {
+			// if there's an error in a task, always send a simple 500 http error
+			http.Error(w, err.Error(), 500)
 			return
 		}
 
@@ -174,27 +183,27 @@ func indexHandler(server *pserver.Server) func(w http.ResponseWriter, r *http.Re
 }
 
 func TestProcessMessage(ctx context.Context, t *testing.T, server *pserver.Server, token *auth.Token, message proto.Message) *pmsg.Bundle {
-	response, err := ProcessMessage(ctx, server, token, message)
+	response, err := ProcessMessage(ctx, server, token, message, false)
 	if err != nil {
 		t.Fatal(err)
 	}
 	return response
 }
 
-func ProcessMessage(ctx context.Context, server *pserver.Server, token *auth.Token, message proto.Message) (*pmsg.Bundle, error) {
+func ProcessMessage(ctx context.Context, server *pserver.Server, token *auth.Token, message proto.Message, tasks bool) (*pmsg.Bundle, error) {
 	request := pmsg.New()
 	if token != nil {
 		request.MustSet(token)
 	}
 	request.MustSet(message)
 	response := pmsg.New()
-	if err := ProcessBundle(ctx, server, request, response); err != nil {
+	if err := ProcessBundle(ctx, server, request, response, tasks); err != nil {
 		return nil, perr.Wrap(err).Debug("processing bundle")
 	}
 	return response, nil
 }
 
-func ProcessBundle(ctx context.Context, server *pserver.Server, request, response *pmsg.Bundle) (err error) {
+func ProcessBundle(ctx context.Context, server *pserver.Server, request, response *pmsg.Bundle, tasks bool) (err error) {
 
 	//time.Sleep(time.Millisecond * 500)
 
@@ -221,14 +230,22 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 		}()
 	}
 
+	// handle requests that only come from the tasks API
+	if tasks {
+		switch {
+		case request.Has(&pstore.Payload_Refresh_Request{}):
+			return data.RefreshRequest(ctx, server, request)
+		case request.Has(&messages.Share_Delete_Task{}):
+			return data.ShareDeleteTask(ctx, server, request)
+		}
+	}
+
 	// handle requests that don't need auth token
 	switch {
 	case request.Has(&auth.Login_Request{}):
 		return auth.LoginRequest(ctx, request, response)
 	case request.Has(&auth.Code_Request{}):
 		return auth.CodeRequest(ctx, server, request, response)
-	case request.Has(&pstore.Payload_Refresh_Request{}):
-		return data.RefreshRequest(ctx, server, request, response)
 	}
 
 	var user *auth.User
@@ -272,6 +289,10 @@ func ProcessBundle(ctx context.Context, server *pserver.Server, request, respons
 	switch {
 	case request.Has(&messages.Share_List_Request{}):
 		return data.ShareListRequest(ctx, server, user, request, response)
+	case request.Has(&messages.Share_Remove_Request{}):
+		return data.ShareRemoveRequest(ctx, server, user, request, response)
+	case request.Has(&messages.Share_Delete_Request{}):
+		return data.ShareDeleteRequest(ctx, server, user, request, response)
 	}
 
 	return perr.Flag(perr.NotFound)

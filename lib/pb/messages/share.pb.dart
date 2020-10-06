@@ -96,3 +96,96 @@ class Share_List_Response extends $pb.GeneratedMessage {
   $core.List<Share_List_Response_Item> get items => $_getList(0);
 }
 
+class Share_Remove_Request extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share_Remove_Request', package: const $pb.PackageName('messages'), createEmptyInstance: create)
+    ..aOS(1, 'id')
+    ..hasRequiredFields = false
+  ;
+
+  Share_Remove_Request._() : super();
+  factory Share_Remove_Request() => create();
+  factory Share_Remove_Request.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Share_Remove_Request.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  Share_Remove_Request clone() => Share_Remove_Request()..mergeFromMessage(this);
+  Share_Remove_Request copyWith(void Function(Share_Remove_Request) updates) => super.copyWith((message) => updates(message as Share_Remove_Request));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Share_Remove_Request create() => Share_Remove_Request._();
+  Share_Remove_Request createEmptyInstance() => create();
+  static $pb.PbList<Share_Remove_Request> createRepeated() => $pb.PbList<Share_Remove_Request>();
+  @$core.pragma('dart2js:noInline')
+  static Share_Remove_Request getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Share_Remove_Request>(create);
+  static Share_Remove_Request _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => clearField(1);
+}
+
+class Share_Delete_Request extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share_Delete_Request', package: const $pb.PackageName('messages'), createEmptyInstance: create)
+    ..aOS(1, 'id')
+    ..hasRequiredFields = false
+  ;
+
+  Share_Delete_Request._() : super();
+  factory Share_Delete_Request() => create();
+  factory Share_Delete_Request.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Share_Delete_Request.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  Share_Delete_Request clone() => Share_Delete_Request()..mergeFromMessage(this);
+  Share_Delete_Request copyWith(void Function(Share_Delete_Request) updates) => super.copyWith((message) => updates(message as Share_Delete_Request));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Share_Delete_Request create() => Share_Delete_Request._();
+  Share_Delete_Request createEmptyInstance() => create();
+  static $pb.PbList<Share_Delete_Request> createRepeated() => $pb.PbList<Share_Delete_Request>();
+  @$core.pragma('dart2js:noInline')
+  static Share_Delete_Request getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Share_Delete_Request>(create);
+  static Share_Delete_Request _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => clearField(1);
+}
+
+class Share_Delete_Task extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Share_Delete_Task', package: const $pb.PackageName('messages'), createEmptyInstance: create)
+    ..aOS(1, 'id')
+    ..hasRequiredFields = false
+  ;
+
+  Share_Delete_Task._() : super();
+  factory Share_Delete_Task() => create();
+  factory Share_Delete_Task.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Share_Delete_Task.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  Share_Delete_Task clone() => Share_Delete_Task()..mergeFromMessage(this);
+  Share_Delete_Task copyWith(void Function(Share_Delete_Task) updates) => super.copyWith((message) => updates(message as Share_Delete_Task));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Share_Delete_Task create() => Share_Delete_Task._();
+  Share_Delete_Task createEmptyInstance() => create();
+  static $pb.PbList<Share_Delete_Task> createRepeated() => $pb.PbList<Share_Delete_Task>();
+  @$core.pragma('dart2js:noInline')
+  static Share_Delete_Task getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Share_Delete_Task>(create);
+  static Share_Delete_Task _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => clearField(1);
+}
+
