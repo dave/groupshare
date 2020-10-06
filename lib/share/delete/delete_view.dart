@@ -82,7 +82,7 @@ class DeleteForm extends StatelessWidget {
                   "Delete this document completely. It will be deleted for all other editors.",
                 ),
                 Padding(padding: EdgeInsets.all(12)),
-                _SubmitButton(),
+                Center(child: Container(child: _SubmitButton())),
               ];
             },
           ),

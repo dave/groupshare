@@ -83,8 +83,8 @@ class LoginBloc extends ExtendedBloc<LoginEvent, LoginState> {
           try {
             yield _state.copyWith(status: FormzStatus.submissionInProgress);
             await _auth.login(_state.email.value);
-          } finally {
-            // clear submissionInProgress
+          } catch (ex) {
+            // Clear submissionInProgress on error
             yield _state.copyWith(status: Formz.validate([_state.email]));
           }
         }
@@ -94,8 +94,8 @@ class LoginBloc extends ExtendedBloc<LoginEvent, LoginState> {
           try {
             yield _state.copyWith(status: FormzStatus.submissionInProgress);
             await _auth.code(_state.code.value);
-          } finally {
-            // clear submissionInProgress
+          } catch (ex) {
+            // Clear submissionInProgress on error
             yield _state.copyWith(status: Formz.validate([_state.code]));
           }
         }

@@ -39,9 +39,9 @@ class AddBloc extends ExtendedBloc<AddEvent, AddState> {
     final _state = state;
     yield* event.map(
       change: (event) async* {
-        if (_state is AddStateForm){
-        final value = Name.dirty(event.value);
-        yield _state.copyWith(name: value,status: Formz.validate([value]));
+        if (_state is AddStateForm) {
+          final value = Name.dirty(event.value);
+          yield _state.copyWith(name: value, status: Formz.validate([value]));
         }
       },
       submit: (event) async* {
@@ -49,8 +49,7 @@ class AddBloc extends ExtendedBloc<AddEvent, AddState> {
           try {
             yield _state.copyWith(status: FormzStatus.submissionInProgress);
             final id = _data.shares.randomUnique();
-            _data.shares.add(id, Share()
-              ..name = _state.name.value);
+            _data.shares.add(id, Share()..name = _state.name.value);
             _data.user.op(
               op.user.shares.insert(
                 0,
@@ -60,7 +59,8 @@ class AddBloc extends ExtendedBloc<AddEvent, AddState> {
               ),
             );
             yield AddState.done();
-          } finally {
+          } catch (ex) {
+            // Clear submissionInProgress on error
             yield _state.copyWith(status: Formz.validate([_state.name]));
           }
         }

@@ -97,7 +97,8 @@ class EditBloc extends ExtendedBloc<EditEvent, EditState> {
             }
 
             yield EditState.done(_back);
-          } finally {
+          } catch (ex) {
+            // Clear submissionInProgress on error
             yield _state.copyWith(status: Formz.validate([_state.name]));
           }
         }
