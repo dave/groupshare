@@ -91,11 +91,7 @@ class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (previous, current) {
-        return current is LoginStateEmail &&
-            (previous is! LoginStateEmail ||
-                previous is LoginStateEmail && previous.email != current.email);
-      },
+      buildWhen: stateIs<LoginStateEmail>((p, c) => p.email != c.email),
       builder: (context, state) {
         return state is LoginStateEmail
             ? TextFormField(
@@ -120,11 +116,7 @@ class _CodeInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (previous, current) {
-        return current is LoginStateCode &&
-            (previous is! LoginStateCode ||
-                previous is LoginStateCode && previous.code != current.code);
-      },
+      buildWhen: stateIs<LoginStateCode>((p, c) => p.code != c.code),
       builder: (context, state) {
         return state is LoginStateCode
             ? TextFormField(
@@ -149,12 +141,7 @@ class _EmailButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (previous, current) {
-        return current is LoginStateEmail &&
-            (previous is! LoginStateEmail ||
-                previous is LoginStateEmail &&
-                    previous.status != current.status);
-      },
+      buildWhen: stateIs<LoginStateEmail>((p, c) => p.status != c.status),
       builder: (context, state) {
         return state is LoginStateEmail
             ? state.status.isSubmissionInProgress
@@ -183,12 +170,7 @@ class _CodeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (previous, current) {
-        return current is LoginStateCode &&
-            (previous is! LoginStateCode ||
-                previous is LoginStateCode &&
-                    previous.status != current.status);
-      },
+      buildWhen: stateIs<LoginStateCode>((p, c) => p.status != c.status),
       builder: (context, state) {
         return state is LoginStateCode
             ? state.status.isSubmissionInProgress

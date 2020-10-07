@@ -28,9 +28,10 @@ class _$ListStateTearOff {
   }
 
 // ignore: unused_element
-  ListStateList list(List<Item> items) {
+  ListStateList list(List<Item> items, String badge) {
     return ListStateList(
       items,
+      badge,
     );
   }
 }
@@ -44,14 +45,14 @@ mixin _$ListState {
     @required Result loading(),
     @required Result flush(),
     @required Result refreshFinished(),
-    @required Result list(List<Item> items),
+    @required Result list(List<Item> items, String badge),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
     Result loading(),
     Result flush(),
     Result refreshFinished(),
-    Result list(List<Item> items),
+    Result list(List<Item> items, String badge),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -123,7 +124,7 @@ class _$ListStateLoading implements ListStateLoading {
     @required Result loading(),
     @required Result flush(),
     @required Result refreshFinished(),
-    @required Result list(List<Item> items),
+    @required Result list(List<Item> items, String badge),
   }) {
     assert(loading != null);
     assert(flush != null);
@@ -138,7 +139,7 @@ class _$ListStateLoading implements ListStateLoading {
     Result loading(),
     Result flush(),
     Result refreshFinished(),
-    Result list(List<Item> items),
+    Result list(List<Item> items, String badge),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -222,7 +223,7 @@ class _$ListStateFlush implements ListStateFlush {
     @required Result loading(),
     @required Result flush(),
     @required Result refreshFinished(),
-    @required Result list(List<Item> items),
+    @required Result list(List<Item> items, String badge),
   }) {
     assert(loading != null);
     assert(flush != null);
@@ -237,7 +238,7 @@ class _$ListStateFlush implements ListStateFlush {
     Result loading(),
     Result flush(),
     Result refreshFinished(),
-    Result list(List<Item> items),
+    Result list(List<Item> items, String badge),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -323,7 +324,7 @@ class _$ListStateRefreshFinished implements ListStateRefreshFinished {
     @required Result loading(),
     @required Result flush(),
     @required Result refreshFinished(),
-    @required Result list(List<Item> items),
+    @required Result list(List<Item> items, String badge),
   }) {
     assert(loading != null);
     assert(flush != null);
@@ -338,7 +339,7 @@ class _$ListStateRefreshFinished implements ListStateRefreshFinished {
     Result loading(),
     Result flush(),
     Result refreshFinished(),
-    Result list(List<Item> items),
+    Result list(List<Item> items, String badge),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -388,7 +389,7 @@ abstract class $ListStateListCopyWith<$Res> {
   factory $ListStateListCopyWith(
           ListStateList value, $Res Function(ListStateList) then) =
       _$ListStateListCopyWithImpl<$Res>;
-  $Res call({List<Item> items});
+  $Res call({List<Item> items, String badge});
 }
 
 class _$ListStateListCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
@@ -403,23 +404,29 @@ class _$ListStateListCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object items = freezed,
+    Object badge = freezed,
   }) {
     return _then(ListStateList(
       items == freezed ? _value.items : items as List<Item>,
+      badge == freezed ? _value.badge : badge as String,
     ));
   }
 }
 
 @Implements(Complete)
 class _$ListStateList implements ListStateList {
-  const _$ListStateList(this.items) : assert(items != null);
+  const _$ListStateList(this.items, this.badge)
+      : assert(items != null),
+        assert(badge != null);
 
   @override
   final List<Item> items;
+  @override
+  final String badge;
 
   @override
   String toString() {
-    return 'ListState.list(items: $items)';
+    return 'ListState.list(items: $items, badge: $badge)';
   }
 
   @override
@@ -427,12 +434,16 @@ class _$ListStateList implements ListStateList {
     return identical(this, other) ||
         (other is ListStateList &&
             (identical(other.items, items) ||
-                const DeepCollectionEquality().equals(other.items, items)));
+                const DeepCollectionEquality().equals(other.items, items)) &&
+            (identical(other.badge, badge) ||
+                const DeepCollectionEquality().equals(other.badge, badge)));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(items);
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(items) ^
+      const DeepCollectionEquality().hash(badge);
 
   @override
   $ListStateListCopyWith<ListStateList> get copyWith =>
@@ -444,13 +455,13 @@ class _$ListStateList implements ListStateList {
     @required Result loading(),
     @required Result flush(),
     @required Result refreshFinished(),
-    @required Result list(List<Item> items),
+    @required Result list(List<Item> items, String badge),
   }) {
     assert(loading != null);
     assert(flush != null);
     assert(refreshFinished != null);
     assert(list != null);
-    return list(items);
+    return list(items, badge);
   }
 
   @override
@@ -459,12 +470,12 @@ class _$ListStateList implements ListStateList {
     Result loading(),
     Result flush(),
     Result refreshFinished(),
-    Result list(List<Item> items),
+    Result list(List<Item> items, String badge),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (list != null) {
-      return list(items);
+      return list(items, badge);
     }
     return orElse();
   }
@@ -502,9 +513,10 @@ class _$ListStateList implements ListStateList {
 }
 
 abstract class ListStateList implements ListState, Complete {
-  const factory ListStateList(List<Item> items) = _$ListStateList;
+  const factory ListStateList(List<Item> items, String badge) = _$ListStateList;
 
   List<Item> get items;
+  String get badge;
   $ListStateListCopyWith<ListStateList> get copyWith;
 }
 

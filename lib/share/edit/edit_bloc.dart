@@ -83,14 +83,14 @@ class EditBloc extends ExtendedBloc<EditEvent, EditState> {
               op.share.name.edit(_state.initialName, _state.name.value),
             );
 
-            final userDataIndex = _data.user.value.shares.indexWhere(
-                  (s) => s.id == _id,
+            final userFavIndex = _data.user.value.favourites.indexWhere(
+                  (fav) => fav.id == _id,
             );
 
-            if (userDataIndex > -1) {
+            if (userFavIndex > -1) {
               _data.user.op(
-                op.user.shares
-                    .index(userDataIndex)
+                op.user.favourites
+                    .index(userFavIndex)
                     .name
                     .set(_state.name.value),
               );

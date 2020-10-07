@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:groupshare/appbar/appbar.dart';
+import 'package:groupshare/bloc.dart';
 import 'package:groupshare/share/delete/delete.dart';
 import 'package:groupshare/ui/warning.dart';
 
@@ -102,11 +103,7 @@ class _RadioInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DeleteBloc, DeleteState>(
-      buildWhen: (previous, current) {
-        return current is DeleteStateForm &&
-            (previous is! DeleteStateForm ||
-                previous is DeleteStateForm && previous.type != current.type);
-      },
+      buildWhen: stateIs<DeleteStateForm>((p, c) => p.type != c.type),
       builder: (context, state) {
         return state is DeleteStateForm
             ? RadioListTile(
@@ -128,13 +125,9 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DeleteBloc, DeleteState>(
-      buildWhen: (previous, current) {
-        return current is DeleteStateForm &&
-            (previous is! DeleteStateForm ||
-                previous is DeleteStateForm &&
-                    (previous.type != current.type ||
-                        previous.status != current.status));
-      },
+      buildWhen: stateIs<DeleteStateForm>(
+        (p, c) => p.type != c.type || p.status != c.status,
+      ),
       builder: (context, state) {
         return state is DeleteStateForm
             ? state.status.isSubmissionInProgress

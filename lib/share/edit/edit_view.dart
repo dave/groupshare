@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:groupshare/appbar/appbar.dart';
+import 'package:groupshare/bloc.dart';
 import 'package:groupshare/share/edit/edit.dart';
 
 //import 'package:formz/formz.dart';
@@ -96,11 +97,7 @@ class _NameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditBloc, EditState>(
-      buildWhen: (previous, current) {
-        return current is EditStateForm &&
-            (previous is! EditStateForm ||
-                previous is EditStateForm && previous.name != current.name);
-      },
+      buildWhen: stateIs<EditStateForm>((p, c) => p.name != c.name),
       builder: (context, state) {
         return state is EditStateForm
             ? TextFormField(
@@ -125,11 +122,7 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditBloc, EditState>(
-      buildWhen: (previous, current) {
-        return current is EditStateForm &&
-            (previous is! EditStateForm ||
-                previous is EditStateForm && previous.status != current.status);
-      },
+      buildWhen: stateIs<EditStateForm>((p, c) => p.status != c.status),
       builder: (context, state) {
         return state is EditStateForm
             ? state.status.isSubmissionInProgress

@@ -5,8 +5,9 @@ option go_package = "github.com/dave/groupshare/server/data;data";
 
 // [proto:data]
 message User {
-  repeated AvailableShare shares = 1;
-  message AvailableShare {
+  repeated Share favourites = 1;
+  repeated Share available = 2;
+  message Share {
     string id = 1;
     string name = 2;
   }

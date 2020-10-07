@@ -16,8 +16,8 @@ class Op_root_type {
   User_type get user {
     return User_type([]);
   }
-  User_AvailableShare_type get user_availableShare {
-    return User_AvailableShare_type([]);
+  User_Share_type get user_share {
+    return User_Share_type([]);
   }
 }
 
@@ -178,8 +178,11 @@ class Share_type_string_map extends delta.Location {
 
 class User_type extends delta.Location {
   User_type(List<delta.Locator> location) : super(location);
-  User_AvailableShare_type_list get shares {
-    return User_AvailableShare_type_list(delta.copyAndAppendField(location, "shares", 1));
+  User_Share_type_list get favourites {
+    return User_Share_type_list(delta.copyAndAppendField(location, "favourites", 1));
+  }
+  User_Share_type_list get available {
+    return User_Share_type_list(delta.copyAndAppendField(location, "available", 2));
   }
   delta.Op delete() {
     return delta.delete(location);
@@ -328,8 +331,8 @@ class User_type_string_map extends delta.Location {
 
 }
 
-class User_AvailableShare_type extends delta.Location {
-  User_AvailableShare_type(List<delta.Locator> location) : super(location);
+class User_Share_type extends delta.Location {
+  User_Share_type(List<delta.Locator> location) : super(location);
   delta.String_scalar get id {
     return delta.String_scalar(delta.copyAndAppendField(location, "id", 1));
   }
@@ -340,18 +343,18 @@ class User_AvailableShare_type extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op set(pb.User_AvailableShare value) {
+  delta.Op set(pb.User_Share value) {
     return delta.set(location, value);
   }
 
 }
 
-class User_AvailableShare_type_list extends delta.Location {
-  User_AvailableShare_type_list(List<delta.Locator> location) : super(location);
-  User_AvailableShare_type index(int i) {
-    return User_AvailableShare_type(delta.copyAndAppendIndex(location, fixnum.Int64(i)));
+class User_Share_type_list extends delta.Location {
+  User_Share_type_list(List<delta.Locator> location) : super(location);
+  User_Share_type index(int i) {
+    return User_Share_type(delta.copyAndAppendIndex(location, fixnum.Int64(i)));
   }
-  delta.Op insert(int index, pb.User_AvailableShare value) {
+  delta.Op insert(int index, pb.User_Share value) {
     return delta.insert(delta.copyAndAppendIndex(location, fixnum.Int64(index)), value);
   }
 
@@ -363,16 +366,16 @@ class User_AvailableShare_type_list extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op set(List<pb.User_AvailableShare> value) {
+  delta.Op set(List<pb.User_Share> value) {
     return delta.set(location, value);
   }
 
 }
 
-class User_AvailableShare_type_bool_map extends delta.Location {
-  User_AvailableShare_type_bool_map(List<delta.Locator> location) : super(location);
-  User_AvailableShare_type key(bool key) {
-    return User_AvailableShare_type(delta.copyAndAppendKeyBool(location, key));
+class User_Share_type_bool_map extends delta.Location {
+  User_Share_type_bool_map(List<delta.Locator> location) : super(location);
+  User_Share_type key(bool key) {
+    return User_Share_type(delta.copyAndAppendKeyBool(location, key));
   }
   delta.Op rename(bool from, bool to) {
     return delta.rename(delta.copyAndAppendKeyBool(location, from), delta.keyBool(to));
@@ -382,16 +385,16 @@ class User_AvailableShare_type_bool_map extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op set(Map<bool, pb.User_AvailableShare> value) {
+  delta.Op set(Map<bool, pb.User_Share> value) {
     return delta.set(location, value);
   }
 
 }
 
-class User_AvailableShare_type_int32_map extends delta.Location {
-  User_AvailableShare_type_int32_map(List<delta.Locator> location) : super(location);
-  User_AvailableShare_type key(int key) {
-    return User_AvailableShare_type(delta.copyAndAppendKeyInt32(location, key));
+class User_Share_type_int32_map extends delta.Location {
+  User_Share_type_int32_map(List<delta.Locator> location) : super(location);
+  User_Share_type key(int key) {
+    return User_Share_type(delta.copyAndAppendKeyInt32(location, key));
   }
   delta.Op rename(int from, int to) {
     return delta.rename(delta.copyAndAppendKeyInt32(location, from), delta.keyInt32(to));
@@ -401,16 +404,16 @@ class User_AvailableShare_type_int32_map extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op set(Map<int, pb.User_AvailableShare> value) {
+  delta.Op set(Map<int, pb.User_Share> value) {
     return delta.set(location, value);
   }
 
 }
 
-class User_AvailableShare_type_int64_map extends delta.Location {
-  User_AvailableShare_type_int64_map(List<delta.Locator> location) : super(location);
-  User_AvailableShare_type key(int key) {
-    return User_AvailableShare_type(delta.copyAndAppendKeyInt64(location, fixnum.Int64(key)));
+class User_Share_type_int64_map extends delta.Location {
+  User_Share_type_int64_map(List<delta.Locator> location) : super(location);
+  User_Share_type key(int key) {
+    return User_Share_type(delta.copyAndAppendKeyInt64(location, fixnum.Int64(key)));
   }
   delta.Op rename(int from, int to) {
     return delta.rename(delta.copyAndAppendKeyInt64(location, fixnum.Int64(from)), delta.keyInt64(fixnum.Int64(to)));
@@ -420,16 +423,16 @@ class User_AvailableShare_type_int64_map extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op set(Map<fixnum.Int64, pb.User_AvailableShare> value) {
+  delta.Op set(Map<fixnum.Int64, pb.User_Share> value) {
     return delta.set(location, value);
   }
 
 }
 
-class User_AvailableShare_type_uint32_map extends delta.Location {
-  User_AvailableShare_type_uint32_map(List<delta.Locator> location) : super(location);
-  User_AvailableShare_type key(int key) {
-    return User_AvailableShare_type(delta.copyAndAppendKeyUint32(location, key));
+class User_Share_type_uint32_map extends delta.Location {
+  User_Share_type_uint32_map(List<delta.Locator> location) : super(location);
+  User_Share_type key(int key) {
+    return User_Share_type(delta.copyAndAppendKeyUint32(location, key));
   }
   delta.Op rename(int from, int to) {
     return delta.rename(delta.copyAndAppendKeyUint32(location, from), delta.keyUint32(to));
@@ -439,16 +442,16 @@ class User_AvailableShare_type_uint32_map extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op set(Map<int, pb.User_AvailableShare> value) {
+  delta.Op set(Map<int, pb.User_Share> value) {
     return delta.set(location, value);
   }
 
 }
 
-class User_AvailableShare_type_uint64_map extends delta.Location {
-  User_AvailableShare_type_uint64_map(List<delta.Locator> location) : super(location);
-  User_AvailableShare_type key(int key) {
-    return User_AvailableShare_type(delta.copyAndAppendKeyUint64(location, fixnum.Int64(key)));
+class User_Share_type_uint64_map extends delta.Location {
+  User_Share_type_uint64_map(List<delta.Locator> location) : super(location);
+  User_Share_type key(int key) {
+    return User_Share_type(delta.copyAndAppendKeyUint64(location, fixnum.Int64(key)));
   }
   delta.Op rename(int from, int to) {
     return delta.rename(delta.copyAndAppendKeyUint64(location, fixnum.Int64(from)), delta.keyUint64(fixnum.Int64(to)));
@@ -458,16 +461,16 @@ class User_AvailableShare_type_uint64_map extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op set(Map<fixnum.Int64, pb.User_AvailableShare> value) {
+  delta.Op set(Map<fixnum.Int64, pb.User_Share> value) {
     return delta.set(location, value);
   }
 
 }
 
-class User_AvailableShare_type_string_map extends delta.Location {
-  User_AvailableShare_type_string_map(List<delta.Locator> location) : super(location);
-  User_AvailableShare_type key(String key) {
-    return User_AvailableShare_type(delta.copyAndAppendKeyString(location, key));
+class User_Share_type_string_map extends delta.Location {
+  User_Share_type_string_map(List<delta.Locator> location) : super(location);
+  User_Share_type key(String key) {
+    return User_Share_type(delta.copyAndAppendKeyString(location, key));
   }
   delta.Op rename(String from, String to) {
     return delta.rename(delta.copyAndAppendKeyString(location, from), delta.keyString(to));
@@ -477,7 +480,7 @@ class User_AvailableShare_type_string_map extends delta.Location {
     return delta.delete(location);
   }
 
-  delta.Op set(Map<String, pb.User_AvailableShare> value) {
+  delta.Op set(Map<String, pb.User_Share> value) {
     return delta.set(location, value);
   }
 

@@ -5,6 +5,6 @@ import 'package:data_repository/pb/data/user.pb.dart' as data_data;
 final types = protobuf.TypeRegistry([
   data_data.Share(),
   data_data.User(),
-  data_data.User_AvailableShare(),
+  data_data.User_Share(),
 ]);
 

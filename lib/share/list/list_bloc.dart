@@ -4,10 +4,13 @@ import 'package:api_repository/api_repository.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:groupshare/bloc.dart';
 import 'package:groupshare/observer.dart';
+import 'package:groupshare/pb/messages/share.pb.dart';
 import 'package:protod/pserver/pserver.dart';
+import 'package:flutter/foundation.dart';
 
 part 'list_bloc.freezed.dart';
 
@@ -21,7 +24,7 @@ abstract class ListState with _$ListState {
   const factory ListState.refreshFinished() = ListStateRefreshFinished;
 
   @Implements(Complete)
-  const factory ListState.list(List<Item> items) = ListStateList;
+  const factory ListState.list(List<Item> items, String badge) = ListStateList;
 }
 
 @freezed
@@ -51,8 +54,7 @@ class ListBloc extends ExtendedBloc<ListEvent, ListState> {
   final Api _api;
   StreamSubscription<DataEvent<User>> _subscription;
 
-  ListBloc(this._data, this._api)
-      : super(ListState.loading()) {
+  ListBloc(this._data, this._api) : super(ListState.loading()) {
     _subscription = _data.user.stream.listen((DataEvent<User> event) {
       if (event is DataEventApply) {
         add(ListEvent.update());
@@ -71,20 +73,22 @@ class ListBloc extends ExtendedBloc<ListEvent, ListState> {
           return;
         }
 
-        await _data.user.send();
+        await _updateUserAvailable();
+
+        yield _list();
       },
       update: (event) async* {
         yield _list();
       },
       refresh: (event) async* {
         try {
-          yield _list();
           List<Future> futures = [];
-          _data.user.value.shares.forEach((User_AvailableShare userShare) {
+          _data.user.value.favourites.forEach((User_Share userShare) {
             if (_data.shares.has(userShare.id)) {
               futures.add(_data.shares.refresh(userShare.id));
             }
           });
+          futures.add(_updateUserAvailable());
           futures.add(_data.user.refresh());
           await Future.wait(futures);
         } finally {
@@ -96,23 +100,59 @@ class ListBloc extends ExtendedBloc<ListEvent, ListState> {
         await _data.shares.refresh(event.id);
       },
       reorder: (event) async* {
-        _data.user.op(op.user.shares.move(event.from, event.to));
+        _data.user.op(op.user.favourites.move(event.from, event.to));
       },
     );
   }
 
-  ListState _list() {
-    final items = _data.user.value.shares.map(
-      (e) {
-        return Item(
-          e.id,
-          _data.shares.has(e.id) ? _data.shares.meta(e.id) : e.name,
-          _data.shares.has(e.id),
-        );
-      },
-    ).toList();
+  Future<void> _updateUserAvailable() async {
+    final response = await _api.send(
+      Share_List_Response(),
+      Share_List_Request(),
+    );
+    List<User_Share> available = [];
+    response.items.forEach((item) {
+      available.add(
+        User_Share()
+          ..id = item.id
+          ..name = item.name,
+      );
+    });
+    available.sort((a, b) {
+      final byName = a.name.compareTo(b.name);
+      if (byName != 0) {
+        return byName;
+      }
+      return a.id.compareTo(b.id);
+    });
+    if (!listEquals(available, _data.user.value.available)) {
+      _data.user.op(op.user.available.set(available));
+    }
+    await _data.user.send();
+  }
 
-    return ListState.list(items);
+  ListState _list() {
+    final items = _data.user.value.favourites
+        .map(
+          (fav) => Item(
+            fav.id,
+            _data.shares.has(fav.id) ? _data.shares.meta(fav.id) : fav.name,
+            _data.shares.has(fav.id),
+          ),
+        )
+        .toList();
+
+    var count = 0;
+
+    if (_data.user.value.available != null) {
+      _data.user.value.available.forEach((ava) {
+        if (!_data.user.value.favourites.any((fav) => fav.id == ava.id)) {
+          count++;
+        }
+      });
+    }
+
+    return ListState.list(items, count == 0 ? "" : count.toString());
   }
 
   @override

@@ -87,11 +87,11 @@ class DeleteBloc extends ExtendedBloc<DeleteEvent, DeleteState> {
   }
 
   bool _deleteUser(String id) {
-    final userIndex = _data.user.value.shares.indexWhere((s) => s.id == _id);
-    if (userIndex == -1) {
+    final userFavIndex = _data.user.value.favourites.indexWhere((fav) => fav.id == _id);
+    if (userFavIndex == -1) {
       return false;
     }
-    _data.user.op(op.user.shares.index(userIndex).delete());
+    _data.user.op(op.user.favourites.index(userFavIndex).delete());
     return true;
   }
 }

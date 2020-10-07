@@ -15,3 +15,11 @@ abstract class ExtendedBloc<Event, State> extends Bloc<Event, State> {
   }
 }
 
+bool Function(dynamic, dynamic) stateIs<T>(bool Function(T, T) f) {
+  bool wrap(dynamic previous, dynamic current) {
+    return current is T &&
+        (previous is! T || (previous is T && f(previous, current)));
+  }
+
+  return wrap;
+}

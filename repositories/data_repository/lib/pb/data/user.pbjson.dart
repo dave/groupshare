@@ -8,13 +8,14 @@
 const User$json = const {
   '1': 'User',
   '2': const [
-    const {'1': 'shares', '3': 1, '4': 3, '5': 11, '6': '.data.User.AvailableShare', '10': 'shares'},
+    const {'1': 'favourites', '3': 1, '4': 3, '5': 11, '6': '.data.User.Share', '10': 'favourites'},
+    const {'1': 'available', '3': 2, '4': 3, '5': 11, '6': '.data.User.Share', '10': 'available'},
   ],
-  '3': const [User_AvailableShare$json],
+  '3': const [User_Share$json],
 };
 
-const User_AvailableShare$json = const {
-  '1': 'AvailableShare',
+const User_Share$json = const {
+  '1': 'Share',
   '2': const [
     const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
     const {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},

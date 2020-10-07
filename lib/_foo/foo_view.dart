@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:groupshare/_foo/foo.dart';
 import 'package:groupshare/appbar/appbar.dart';
+import 'package:groupshare/bloc.dart';
 
 class FooPage extends StatelessWidget {
   static Route route() {
@@ -74,11 +75,7 @@ class _NameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FooBloc, FooState>(
-      buildWhen: (previous, current) {
-        return current is FooStateForm &&
-            (previous is! FooStateForm ||
-                previous is FooStateForm && previous.name != current.name);
-      },
+      buildWhen: stateIs<FooStateForm>((p, c) => p.name != c.name),
       builder: (context, state) {
         return state is FooStateForm
             ? TextFormField(
@@ -103,11 +100,7 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FooBloc, FooState>(
-      buildWhen: (previous, current) {
-        return current is FooStateForm &&
-            (previous is! FooStateForm ||
-                previous is FooStateForm && previous.status != current.status);
-      },
+      buildWhen: stateIs<FooStateForm>((p, c) => p.status != c.status),
       builder: (context, state) {
         return state is FooStateForm
             ? state.status.isSubmissionInProgress

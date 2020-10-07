@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:groupshare/appbar/appbar.dart';
+import 'package:groupshare/bloc.dart';
 import 'package:groupshare/share/add/add.dart';
 import 'package:groupshare/share/delete/delete.dart';
 import 'package:groupshare/share/edit/edit.dart';
@@ -13,6 +14,7 @@ import 'package:groupshare/share/details/details.dart';
 import 'package:groupshare/ui/refresher.dart';
 import 'package:groupshare/ui/warning.dart';
 import 'package:refreshable_reorderable_list/refreshable_reorderable_list.dart';
+import 'package:groupshare/ui/unicorndial.dart';
 
 class ListPage extends StatelessWidget {
   static const String routeName = 'ShareListPage';
@@ -39,24 +41,59 @@ class ListPage extends StatelessWidget {
 class ListPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ListBloc, ListState>(
-      buildWhen: (previous, current) => current.map(
-        loading: (_) => true,
-        list: (_) => true,
-        flush: (_) => false,
-        refreshFinished: (_) => false,
-      ),
-      builder: (context, state) {
-        final controller = SlidableController();
-        return Scaffold(
-          appBar: AppBarWidget('Shares'),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () async {
-              await Navigator.of(context).push(AddPage.route());
-            },
-          ),
-          body: Padding(
+    final controller = SlidableController();
+    return Scaffold(
+      appBar: AppBarWidget('Shares'),
+      floatingActionButton: BlocBuilder<ListBloc, ListState>(
+          buildWhen: stateIs<ListStateList>((p, c) => p.badge != c.badge),
+          builder: (context, state) {
+            return UnicornDialer(
+              orientation: UnicornOrientation.VERTICAL,
+              parentButton: Icon(Icons.add),
+              hasBackground: false,
+              badge: state is ListStateList ? state.badge : "",
+              buttons: [
+                UnicornButton(
+                  button: FloatingActionButton(
+                    heroTag: "open",
+                    mini: true,
+                    child: Icon(Icons.create_new_folder_outlined),
+                    onPressed: () async {
+                      await Navigator.of(context).push(AddPage.route());
+                    },
+                  ),
+                  labelText: "Open",
+                  hasLabel: true,
+                  labelBackgroundColor: Colors.transparent,
+                  labelHasShadow: false,
+                  badge: state is ListStateList ? state.badge : "",
+                ),
+                UnicornButton(
+                  button: FloatingActionButton(
+                    heroTag: "new",
+                    mini: true,
+                    child: Icon(Icons.add),
+                    onPressed: () async {
+                      await Navigator.of(context).push(AddPage.route());
+                    },
+                  ),
+                  labelText: "New",
+                  hasLabel: true,
+                  labelBackgroundColor: Colors.transparent,
+                  labelHasShadow: false,
+                ),
+              ],
+            );
+          }),
+      body: BlocBuilder<ListBloc, ListState>(
+        buildWhen: (previous, current) => current.map(
+          loading: (_) => true,
+          list: (_) => true,
+          flush: (_) => false,
+          refreshFinished: (_) => false,
+        ),
+        builder: (context, state) {
+          return Padding(
             padding: EdgeInsets.all(12),
             child: state.maybeMap(
               orElse: () => Container(),
@@ -130,9 +167,9 @@ class ListPageContent extends StatelessWidget {
                       ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

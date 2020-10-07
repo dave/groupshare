@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:groupshare/appbar/appbar.dart';
+import 'package:groupshare/bloc.dart';
 import 'package:groupshare/share/add/add.dart';
 import 'package:groupshare/share/list/list.dart';
 
@@ -65,11 +66,7 @@ class _NameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AddBloc, AddState>(
-      buildWhen: (previous, current) {
-        return current is AddStateForm &&
-            (previous is! AddStateForm ||
-                previous is AddStateForm && previous.name != current.name);
-      },
+      buildWhen: stateIs<AddStateForm>((p, c) => p.name != c.name),
       builder: (context, state) {
         return state is AddStateForm
             ? state.status.isSubmissionInProgress
@@ -96,11 +93,7 @@ class _AddButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AddBloc, AddState>(
-      buildWhen: (previous, current) {
-        return current is AddStateForm &&
-            (previous is! AddStateForm ||
-                previous is AddStateForm && previous.status != current.status);
-      },
+      buildWhen: stateIs<AddStateForm>((p, c) => p.status != c.status),
       builder: (context, state) {
         return state is AddStateForm
             ? state.status.isSubmissionInProgress

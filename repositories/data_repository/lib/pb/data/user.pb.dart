@@ -9,27 +9,27 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-class User_AvailableShare extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('User.AvailableShare', package: const $pb.PackageName('data'), createEmptyInstance: create)
+class User_Share extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('User.Share', package: const $pb.PackageName('data'), createEmptyInstance: create)
     ..aOS(1, 'id')
     ..aOS(2, 'name')
     ..hasRequiredFields = false
   ;
 
-  User_AvailableShare._() : super();
-  factory User_AvailableShare() => create();
-  factory User_AvailableShare.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory User_AvailableShare.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  User_AvailableShare clone() => User_AvailableShare()..mergeFromMessage(this);
-  User_AvailableShare copyWith(void Function(User_AvailableShare) updates) => super.copyWith((message) => updates(message as User_AvailableShare));
+  User_Share._() : super();
+  factory User_Share() => create();
+  factory User_Share.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory User_Share.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  User_Share clone() => User_Share()..mergeFromMessage(this);
+  User_Share copyWith(void Function(User_Share) updates) => super.copyWith((message) => updates(message as User_Share));
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static User_AvailableShare create() => User_AvailableShare._();
-  User_AvailableShare createEmptyInstance() => create();
-  static $pb.PbList<User_AvailableShare> createRepeated() => $pb.PbList<User_AvailableShare>();
+  static User_Share create() => User_Share._();
+  User_Share createEmptyInstance() => create();
+  static $pb.PbList<User_Share> createRepeated() => $pb.PbList<User_Share>();
   @$core.pragma('dart2js:noInline')
-  static User_AvailableShare getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<User_AvailableShare>(create);
-  static User_AvailableShare _defaultInstance;
+  static User_Share getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<User_Share>(create);
+  static User_Share _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get id => $_getSZ(0);
@@ -52,7 +52,8 @@ class User_AvailableShare extends $pb.GeneratedMessage {
 
 class User extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('User', package: const $pb.PackageName('data'), createEmptyInstance: create)
-    ..pc<User_AvailableShare>(1, 'shares', $pb.PbFieldType.PM, subBuilder: User_AvailableShare.create)
+    ..pc<User_Share>(1, 'favourites', $pb.PbFieldType.PM, subBuilder: User_Share.create)
+    ..pc<User_Share>(2, 'available', $pb.PbFieldType.PM, subBuilder: User_Share.create)
     ..hasRequiredFields = false
   ;
 
@@ -72,6 +73,9 @@ class User extends $pb.GeneratedMessage {
   static User _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<User_AvailableShare> get shares => $_getList(0);
+  $core.List<User_Share> get favourites => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $core.List<User_Share> get available => $_getList(1);
 }
 

@@ -51,9 +51,9 @@ class AddBloc extends ExtendedBloc<AddEvent, AddState> {
             final id = _data.shares.randomUnique();
             _data.shares.add(id, Share()..name = _state.name.value);
             _data.user.op(
-              op.user.shares.insert(
+              op.user.favourites.insert(
                 0,
-                User_AvailableShare()
+                User_Share()
                   ..id = id
                   ..name = _state.name.value,
               ),
