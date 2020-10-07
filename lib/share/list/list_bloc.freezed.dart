@@ -102,12 +102,20 @@ class _$ListStateLoadingCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
 }
 
 @Implements(Incomplete)
-class _$ListStateLoading implements ListStateLoading {
+class _$ListStateLoading
+    with DiagnosticableTreeMixin
+    implements ListStateLoading {
   const _$ListStateLoading();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'ListState.loading()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty('type', 'ListState.loading'));
   }
 
   @override
@@ -201,12 +209,18 @@ class _$ListStateFlushCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
   ListStateFlush get _value => super._value as ListStateFlush;
 }
 
-class _$ListStateFlush implements ListStateFlush {
+class _$ListStateFlush with DiagnosticableTreeMixin implements ListStateFlush {
   const _$ListStateFlush();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'ListState.flush()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty('type', 'ListState.flush'));
   }
 
   @override
@@ -302,12 +316,20 @@ class _$ListStateRefreshFinishedCopyWithImpl<$Res>
       super._value as ListStateRefreshFinished;
 }
 
-class _$ListStateRefreshFinished implements ListStateRefreshFinished {
+class _$ListStateRefreshFinished
+    with DiagnosticableTreeMixin
+    implements ListStateRefreshFinished {
   const _$ListStateRefreshFinished();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'ListState.refreshFinished()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty('type', 'ListState.refreshFinished'));
   }
 
   @override
@@ -414,7 +436,7 @@ class _$ListStateListCopyWithImpl<$Res> extends _$ListStateCopyWithImpl<$Res>
 }
 
 @Implements(Complete)
-class _$ListStateList implements ListStateList {
+class _$ListStateList with DiagnosticableTreeMixin implements ListStateList {
   const _$ListStateList(this.items, this.badge)
       : assert(items != null),
         assert(badge != null);
@@ -425,8 +447,17 @@ class _$ListStateList implements ListStateList {
   final String badge;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'ListState.list(items: $items, badge: $badge)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'ListState.list'))
+      ..add(DiagnosticsProperty('items', items))
+      ..add(DiagnosticsProperty('badge', badge));
   }
 
   @override
@@ -600,7 +631,7 @@ class __$ItemCopyWithImpl<$Res> extends _$ItemCopyWithImpl<$Res>
   }
 }
 
-class _$_Item implements _Item {
+class _$_Item with DiagnosticableTreeMixin implements _Item {
   const _$_Item(this.id, this.name, this.local)
       : assert(id != null),
         assert(name != null),
@@ -614,8 +645,18 @@ class _$_Item implements _Item {
   final bool local;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'Item(id: $id, name: $name, local: $local)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'Item'))
+      ..add(DiagnosticsProperty('id', id))
+      ..add(DiagnosticsProperty('name', name))
+      ..add(DiagnosticsProperty('local', local));
   }
 
   @override
@@ -758,12 +799,18 @@ class _$ListEventInitCopyWithImpl<$Res> extends _$ListEventCopyWithImpl<$Res>
   ListEventInit get _value => super._value as ListEventInit;
 }
 
-class _$ListEventInit implements ListEventInit {
+class _$ListEventInit with DiagnosticableTreeMixin implements ListEventInit {
   const _$ListEventInit();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'ListEvent.init()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty('type', 'ListEvent.init'));
   }
 
   @override
@@ -863,12 +910,20 @@ class _$ListEventUpdateCopyWithImpl<$Res> extends _$ListEventCopyWithImpl<$Res>
   ListEventUpdate get _value => super._value as ListEventUpdate;
 }
 
-class _$ListEventUpdate implements ListEventUpdate {
+class _$ListEventUpdate
+    with DiagnosticableTreeMixin
+    implements ListEventUpdate {
   const _$ListEventUpdate();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'ListEvent.update()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty('type', 'ListEvent.update'));
   }
 
   @override
@@ -968,12 +1023,20 @@ class _$ListEventRefreshCopyWithImpl<$Res> extends _$ListEventCopyWithImpl<$Res>
   ListEventRefresh get _value => super._value as ListEventRefresh;
 }
 
-class _$ListEventRefresh implements ListEventRefresh {
+class _$ListEventRefresh
+    with DiagnosticableTreeMixin
+    implements ListEventRefresh {
   const _$ListEventRefresh();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'ListEvent.refresh()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty('type', 'ListEvent.refresh'));
   }
 
   @override
@@ -1083,15 +1146,23 @@ class _$ListEventItemCopyWithImpl<$Res> extends _$ListEventCopyWithImpl<$Res>
   }
 }
 
-class _$ListEventItem implements ListEventItem {
+class _$ListEventItem with DiagnosticableTreeMixin implements ListEventItem {
   const _$ListEventItem(this.id) : assert(id != null);
 
   @override
   final String id;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'ListEvent.item(id: $id)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'ListEvent.item'))
+      ..add(DiagnosticsProperty('id', id));
   }
 
   @override
@@ -1214,7 +1285,9 @@ class _$ListEventReorderCopyWithImpl<$Res> extends _$ListEventCopyWithImpl<$Res>
   }
 }
 
-class _$ListEventReorder implements ListEventReorder {
+class _$ListEventReorder
+    with DiagnosticableTreeMixin
+    implements ListEventReorder {
   const _$ListEventReorder(this.from, this.to)
       : assert(from != null),
         assert(to != null);
@@ -1225,8 +1298,17 @@ class _$ListEventReorder implements ListEventReorder {
   final int to;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'ListEvent.reorder(from: $from, to: $to)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'ListEvent.reorder'))
+      ..add(DiagnosticsProperty('from', from))
+      ..add(DiagnosticsProperty('to', to));
   }
 
   @override

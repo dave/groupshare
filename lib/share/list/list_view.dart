@@ -11,6 +11,7 @@ import 'package:groupshare/share/edit/edit.dart';
 import 'package:groupshare/share/list/item/item.dart';
 import 'package:groupshare/share/list/list.dart';
 import 'package:groupshare/share/details/details.dart';
+import 'package:groupshare/share/open/open.dart';
 import 'package:groupshare/ui/refresher.dart';
 import 'package:groupshare/ui/warning.dart';
 import 'package:refreshable_reorderable_list/refreshable_reorderable_list.dart';
@@ -43,7 +44,7 @@ class ListPageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = SlidableController();
     return Scaffold(
-      appBar: AppBarWidget('Shares'),
+      appBar: AppBarWidget('Favourites'),
       floatingActionButton: BlocBuilder<ListBloc, ListState>(
           buildWhen: stateIs<ListStateList>((p, c) => p.badge != c.badge),
           builder: (context, state) {
@@ -59,7 +60,9 @@ class ListPageContent extends StatelessWidget {
                     mini: true,
                     child: Icon(Icons.create_new_folder_outlined),
                     onPressed: () async {
-                      await Navigator.of(context).push(AddPage.route());
+                      await warning(context, () async {
+                        await Navigator.of(context).push(OpenPage.route());
+                      });
                     },
                   ),
                   labelText: "Open",
