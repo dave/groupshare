@@ -626,6 +626,11 @@ class _$AppBarEventTearOff {
   const _$AppBarEventTearOff();
 
 // ignore: unused_element
+  AppBarEventSetup setup() {
+    return const AppBarEventSetup();
+  }
+
+// ignore: unused_element
   AppBarEventChange change(ConnectionStatus status) {
     return AppBarEventChange(
       status,
@@ -649,12 +654,14 @@ const $AppBarEvent = _$AppBarEventTearOff();
 mixin _$AppBarEvent {
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result change(ConnectionStatus status),
     @required Result disconnect(),
     @required Result reconnect(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result change(ConnectionStatus status),
     Result disconnect(),
     Result reconnect(),
@@ -662,12 +669,14 @@ mixin _$AppBarEvent {
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(AppBarEventSetup value),
     @required Result change(AppBarEventChange value),
     @required Result disconnect(AppBarEventDisconnect value),
     @required Result reconnect(AppBarEventReconnect value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(AppBarEventSetup value),
     Result change(AppBarEventChange value),
     Result disconnect(AppBarEventDisconnect value),
     Result reconnect(AppBarEventReconnect value),
@@ -687,6 +696,106 @@ class _$AppBarEventCopyWithImpl<$Res> implements $AppBarEventCopyWith<$Res> {
   final AppBarEvent _value;
   // ignore: unused_field
   final $Res Function(AppBarEvent) _then;
+}
+
+abstract class $AppBarEventSetupCopyWith<$Res> {
+  factory $AppBarEventSetupCopyWith(
+          AppBarEventSetup value, $Res Function(AppBarEventSetup) then) =
+      _$AppBarEventSetupCopyWithImpl<$Res>;
+}
+
+class _$AppBarEventSetupCopyWithImpl<$Res>
+    extends _$AppBarEventCopyWithImpl<$Res>
+    implements $AppBarEventSetupCopyWith<$Res> {
+  _$AppBarEventSetupCopyWithImpl(
+      AppBarEventSetup _value, $Res Function(AppBarEventSetup) _then)
+      : super(_value, (v) => _then(v as AppBarEventSetup));
+
+  @override
+  AppBarEventSetup get _value => super._value as AppBarEventSetup;
+}
+
+class _$AppBarEventSetup implements AppBarEventSetup {
+  const _$AppBarEventSetup();
+
+  @override
+  String toString() {
+    return 'AppBarEvent.setup()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is AppBarEventSetup);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result setup(),
+    @required Result change(ConnectionStatus status),
+    @required Result disconnect(),
+    @required Result reconnect(),
+  }) {
+    assert(setup != null);
+    assert(change != null);
+    assert(disconnect != null);
+    assert(reconnect != null);
+    return setup();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result setup(),
+    Result change(ConnectionStatus status),
+    Result disconnect(),
+    Result reconnect(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result setup(AppBarEventSetup value),
+    @required Result change(AppBarEventChange value),
+    @required Result disconnect(AppBarEventDisconnect value),
+    @required Result reconnect(AppBarEventReconnect value),
+  }) {
+    assert(setup != null);
+    assert(change != null);
+    assert(disconnect != null);
+    assert(reconnect != null);
+    return setup(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result setup(AppBarEventSetup value),
+    Result change(AppBarEventChange value),
+    Result disconnect(AppBarEventDisconnect value),
+    Result reconnect(AppBarEventReconnect value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AppBarEventSetup implements AppBarEvent {
+  const factory AppBarEventSetup() = _$AppBarEventSetup;
 }
 
 abstract class $AppBarEventChangeCopyWith<$Res> {
@@ -746,10 +855,12 @@ class _$AppBarEventChange implements AppBarEventChange {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result change(ConnectionStatus status),
     @required Result disconnect(),
     @required Result reconnect(),
   }) {
+    assert(setup != null);
     assert(change != null);
     assert(disconnect != null);
     assert(reconnect != null);
@@ -759,6 +870,7 @@ class _$AppBarEventChange implements AppBarEventChange {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result change(ConnectionStatus status),
     Result disconnect(),
     Result reconnect(),
@@ -774,10 +886,12 @@ class _$AppBarEventChange implements AppBarEventChange {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(AppBarEventSetup value),
     @required Result change(AppBarEventChange value),
     @required Result disconnect(AppBarEventDisconnect value),
     @required Result reconnect(AppBarEventReconnect value),
   }) {
+    assert(setup != null);
     assert(change != null);
     assert(disconnect != null);
     assert(reconnect != null);
@@ -787,6 +901,7 @@ class _$AppBarEventChange implements AppBarEventChange {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(AppBarEventSetup value),
     Result change(AppBarEventChange value),
     Result disconnect(AppBarEventDisconnect value),
     Result reconnect(AppBarEventReconnect value),
@@ -844,10 +959,12 @@ class _$AppBarEventDisconnect implements AppBarEventDisconnect {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result change(ConnectionStatus status),
     @required Result disconnect(),
     @required Result reconnect(),
   }) {
+    assert(setup != null);
     assert(change != null);
     assert(disconnect != null);
     assert(reconnect != null);
@@ -857,6 +974,7 @@ class _$AppBarEventDisconnect implements AppBarEventDisconnect {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result change(ConnectionStatus status),
     Result disconnect(),
     Result reconnect(),
@@ -872,10 +990,12 @@ class _$AppBarEventDisconnect implements AppBarEventDisconnect {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(AppBarEventSetup value),
     @required Result change(AppBarEventChange value),
     @required Result disconnect(AppBarEventDisconnect value),
     @required Result reconnect(AppBarEventReconnect value),
   }) {
+    assert(setup != null);
     assert(change != null);
     assert(disconnect != null);
     assert(reconnect != null);
@@ -885,6 +1005,7 @@ class _$AppBarEventDisconnect implements AppBarEventDisconnect {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(AppBarEventSetup value),
     Result change(AppBarEventChange value),
     Result disconnect(AppBarEventDisconnect value),
     Result reconnect(AppBarEventReconnect value),
@@ -938,10 +1059,12 @@ class _$AppBarEventReconnect implements AppBarEventReconnect {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result change(ConnectionStatus status),
     @required Result disconnect(),
     @required Result reconnect(),
   }) {
+    assert(setup != null);
     assert(change != null);
     assert(disconnect != null);
     assert(reconnect != null);
@@ -951,6 +1074,7 @@ class _$AppBarEventReconnect implements AppBarEventReconnect {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result change(ConnectionStatus status),
     Result disconnect(),
     Result reconnect(),
@@ -966,10 +1090,12 @@ class _$AppBarEventReconnect implements AppBarEventReconnect {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(AppBarEventSetup value),
     @required Result change(AppBarEventChange value),
     @required Result disconnect(AppBarEventDisconnect value),
     @required Result reconnect(AppBarEventReconnect value),
   }) {
+    assert(setup != null);
     assert(change != null);
     assert(disconnect != null);
     assert(reconnect != null);
@@ -979,6 +1105,7 @@ class _$AppBarEventReconnect implements AppBarEventReconnect {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(AppBarEventSetup value),
     Result change(AppBarEventChange value),
     Result disconnect(AppBarEventDisconnect value),
     Result reconnect(AppBarEventReconnect value),

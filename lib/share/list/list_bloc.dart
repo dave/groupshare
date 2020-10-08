@@ -36,6 +36,8 @@ abstract class Item with _$Item {
 
 @freezed
 abstract class ListEvent with _$ListEvent {
+  const factory ListEvent.setup() = ListEventSetup;
+
   const factory ListEvent.init() = ListEventInit;
 
   const factory ListEvent.update() = ListEventUpdate;
@@ -53,17 +55,21 @@ class ListBloc extends ExtendedBloc<ListEvent, ListState> {
   StreamSubscription<DataEvent<User>> _subscription;
 
   ListBloc(this._data, this._api) : super(ListState.loading()) {
-    _subscription = _data.user.stream.listen((DataEvent<User> event) {
-      if (event is DataEventApply) {
-        add(ListEvent.update());
-      }
-    });
-    add(ListEvent.init());
+    add(ListEvent.setup());
   }
 
   @override
   Stream<ListState> mapEventToState(ListEvent event) async* {
     yield* event.map(
+      setup: (event) async* {
+        _subscription?.cancel();
+        _subscription = _data.user.stream.listen((DataEvent<User> event) {
+          if (event is DataEventApply<User>) {
+            add(ListEvent.update());
+          }
+        });
+        add(ListEvent.init());
+      },
       init: (event) async* {
         yield _list();
 
@@ -116,9 +122,9 @@ class ListBloc extends ExtendedBloc<ListEvent, ListState> {
 
     var count = 0;
 
-    if (_data.user.value.available != null) {
-      _data.user.value.available.forEach((ava) {
-        if (!_data.user.value.favourites.any((fav) => fav.id == ava.id)) {
+    if (_data.user.value.all != null) {
+      _data.user.value.all.forEach((id, name) {
+        if (!_data.user.value.favourites.any((fav) => fav.id == id)) {
           count++;
         }
       });

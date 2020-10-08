@@ -56,16 +56,14 @@ class ListPageContent extends StatelessWidget {
               buttons: [
                 UnicornButton(
                   button: FloatingActionButton(
-                    heroTag: "open",
+                    heroTag: "all",
                     mini: true,
-                    child: Icon(Icons.create_new_folder_outlined),
+                    child: Icon(Icons.article_outlined),
                     onPressed: () async {
-                      await warning(context, () async {
-                        await Navigator.of(context).push(OpenPage.route());
-                      });
+                      await Navigator.of(context).push(OpenPage.route());
                     },
                   ),
-                  labelText: "Open",
+                  labelText: "All",
                   hasLabel: true,
                   labelBackgroundColor: Colors.transparent,
                   labelHasShadow: false,
@@ -75,7 +73,7 @@ class ListPageContent extends StatelessWidget {
                   button: FloatingActionButton(
                     heroTag: "new",
                     mini: true,
-                    child: Icon(Icons.add),
+                    child: Icon(Icons.post_add),
                     onPressed: () async {
                       await Navigator.of(context).push(AddPage.route());
                     },

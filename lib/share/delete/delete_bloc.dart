@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:api_repository/api_repository.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:exceptions_repository/exceptions_repository.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:groupshare/bloc.dart';
 import 'package:groupshare/pb/messages/share.pb.dart';
 import 'package:groupshare/share/delete/delete.dart';
+import 'package:groupshare/share/open/open.dart';
 
 part 'delete_bloc.freezed.dart';
 
@@ -64,18 +64,21 @@ class DeleteBloc extends ExtendedBloc<DeleteEvent, DeleteState> {
               case DeleteType.remove:
                 _deleteLocal(_id);
                 _deleteUser(_id);
+                updateUserAvailableDelete(_data, _id);
                 await _api.send(null, Share_Remove_Request()..id = _id);
                 break;
               case DeleteType.delete:
                 _deleteLocal(_id);
                 _deleteUser(_id);
+                updateUserAvailableDelete(_data, _id);
                 await _api.send(null, Share_Delete_Request()..id = _id);
                 break;
             }
             yield DeleteState.done();
           } catch (ex) {
-            // Clear submissionInProgress on error)
+            // Clear submissionInProgress on error
             yield _state.copyWith(status: Formz.validate([_state.type]));
+            throw(ex);
           }
         }
       },

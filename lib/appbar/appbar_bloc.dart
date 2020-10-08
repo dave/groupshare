@@ -23,6 +23,8 @@ abstract class AppBarState with _$AppBarState {
 
 @freezed
 abstract class AppBarEvent with _$AppBarEvent {
+  const factory AppBarEvent.setup() = AppBarEventSetup;
+
   const factory AppBarEvent.change(ConnectionStatus status) = AppBarEventChange;
 
   const factory AppBarEvent.disconnect() = AppBarEventDisconnect;
@@ -36,14 +38,18 @@ class AppBarBloc extends ExtendedBloc<AppBarEvent, AppBarState> {
   StreamSubscription<ConnectionStatus> _subscription;
 
   AppBarBloc(this._api, this._data) : super(AppBarState.saved()) {
-    _subscription = _api.statusStream.listen((ConnectionStatus value) {
-      add(AppBarEvent.change(value));
-    });
+    add(AppBarEvent.setup());
   }
 
   @override
   Stream<AppBarState> mapEventToState(AppBarEvent event) async* {
     yield* event.map(
+      setup: (event) async* {
+        _subscription?.cancel();
+        _subscription = _api.statusStream.listen((ConnectionStatus value) {
+          add(AppBarEvent.change(value));
+        });
+      },
       change: (event) async* {
         switch (event.status) {
           case ConnectionStatus.Saved:

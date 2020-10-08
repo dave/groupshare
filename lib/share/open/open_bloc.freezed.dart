@@ -688,6 +688,11 @@ class _$OpenEventTearOff {
   const _$OpenEventTearOff();
 
 // ignore: unused_element
+  OpenEventSetup setup() {
+    return const OpenEventSetup();
+  }
+
+// ignore: unused_element
   OpenEventInit init() {
     return const OpenEventInit();
   }
@@ -723,6 +728,7 @@ const $OpenEvent = _$OpenEventTearOff();
 mixin _$OpenEvent {
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result update(),
     @required Result refresh(),
@@ -731,6 +737,7 @@ mixin _$OpenEvent {
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result update(),
     Result refresh(),
@@ -740,6 +747,7 @@ mixin _$OpenEvent {
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(OpenEventSetup value),
     @required Result init(OpenEventInit value),
     @required Result update(OpenEventUpdate value),
     @required Result refresh(OpenEventRefresh value),
@@ -748,6 +756,7 @@ mixin _$OpenEvent {
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(OpenEventSetup value),
     Result init(OpenEventInit value),
     Result update(OpenEventUpdate value),
     Result refresh(OpenEventRefresh value),
@@ -768,6 +777,123 @@ class _$OpenEventCopyWithImpl<$Res> implements $OpenEventCopyWith<$Res> {
   final OpenEvent _value;
   // ignore: unused_field
   final $Res Function(OpenEvent) _then;
+}
+
+abstract class $OpenEventSetupCopyWith<$Res> {
+  factory $OpenEventSetupCopyWith(
+          OpenEventSetup value, $Res Function(OpenEventSetup) then) =
+      _$OpenEventSetupCopyWithImpl<$Res>;
+}
+
+class _$OpenEventSetupCopyWithImpl<$Res> extends _$OpenEventCopyWithImpl<$Res>
+    implements $OpenEventSetupCopyWith<$Res> {
+  _$OpenEventSetupCopyWithImpl(
+      OpenEventSetup _value, $Res Function(OpenEventSetup) _then)
+      : super(_value, (v) => _then(v as OpenEventSetup));
+
+  @override
+  OpenEventSetup get _value => super._value as OpenEventSetup;
+}
+
+class _$OpenEventSetup with DiagnosticableTreeMixin implements OpenEventSetup {
+  const _$OpenEventSetup();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'OpenEvent.setup()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty('type', 'OpenEvent.setup'));
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is OpenEventSetup);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result setup(),
+    @required Result init(),
+    @required Result update(),
+    @required Result refresh(),
+    @required Result add(String id),
+    @required Result remove(String id),
+  }) {
+    assert(setup != null);
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(add != null);
+    assert(remove != null);
+    return setup();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result setup(),
+    Result init(),
+    Result update(),
+    Result refresh(),
+    Result add(String id),
+    Result remove(String id),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result setup(OpenEventSetup value),
+    @required Result init(OpenEventInit value),
+    @required Result update(OpenEventUpdate value),
+    @required Result refresh(OpenEventRefresh value),
+    @required Result add(OpenEventAdd value),
+    @required Result remove(OpenEventRemove value),
+  }) {
+    assert(setup != null);
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(add != null);
+    assert(remove != null);
+    return setup(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result setup(OpenEventSetup value),
+    Result init(OpenEventInit value),
+    Result update(OpenEventUpdate value),
+    Result refresh(OpenEventRefresh value),
+    Result add(OpenEventAdd value),
+    Result remove(OpenEventRemove value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class OpenEventSetup implements OpenEvent {
+  const factory OpenEventSetup() = _$OpenEventSetup;
 }
 
 abstract class $OpenEventInitCopyWith<$Res> {
@@ -811,12 +937,14 @@ class _$OpenEventInit with DiagnosticableTreeMixin implements OpenEventInit {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result update(),
     @required Result refresh(),
     @required Result add(String id),
     @required Result remove(String id),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -828,6 +956,7 @@ class _$OpenEventInit with DiagnosticableTreeMixin implements OpenEventInit {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result update(),
     Result refresh(),
@@ -845,12 +974,14 @@ class _$OpenEventInit with DiagnosticableTreeMixin implements OpenEventInit {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(OpenEventSetup value),
     @required Result init(OpenEventInit value),
     @required Result update(OpenEventUpdate value),
     @required Result refresh(OpenEventRefresh value),
     @required Result add(OpenEventAdd value),
     @required Result remove(OpenEventRemove value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -862,6 +993,7 @@ class _$OpenEventInit with DiagnosticableTreeMixin implements OpenEventInit {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(OpenEventSetup value),
     Result init(OpenEventInit value),
     Result update(OpenEventUpdate value),
     Result refresh(OpenEventRefresh value),
@@ -924,12 +1056,14 @@ class _$OpenEventUpdate
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result update(),
     @required Result refresh(),
     @required Result add(String id),
     @required Result remove(String id),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -941,6 +1075,7 @@ class _$OpenEventUpdate
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result update(),
     Result refresh(),
@@ -958,12 +1093,14 @@ class _$OpenEventUpdate
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(OpenEventSetup value),
     @required Result init(OpenEventInit value),
     @required Result update(OpenEventUpdate value),
     @required Result refresh(OpenEventRefresh value),
     @required Result add(OpenEventAdd value),
     @required Result remove(OpenEventRemove value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -975,6 +1112,7 @@ class _$OpenEventUpdate
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(OpenEventSetup value),
     Result init(OpenEventInit value),
     Result update(OpenEventUpdate value),
     Result refresh(OpenEventRefresh value),
@@ -1037,12 +1175,14 @@ class _$OpenEventRefresh
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result update(),
     @required Result refresh(),
     @required Result add(String id),
     @required Result remove(String id),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -1054,6 +1194,7 @@ class _$OpenEventRefresh
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result update(),
     Result refresh(),
@@ -1071,12 +1212,14 @@ class _$OpenEventRefresh
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(OpenEventSetup value),
     @required Result init(OpenEventInit value),
     @required Result update(OpenEventUpdate value),
     @required Result refresh(OpenEventRefresh value),
     @required Result add(OpenEventAdd value),
     @required Result remove(OpenEventRemove value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -1088,6 +1231,7 @@ class _$OpenEventRefresh
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(OpenEventSetup value),
     Result init(OpenEventInit value),
     Result update(OpenEventUpdate value),
     Result refresh(OpenEventRefresh value),
@@ -1171,12 +1315,14 @@ class _$OpenEventAdd with DiagnosticableTreeMixin implements OpenEventAdd {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result update(),
     @required Result refresh(),
     @required Result add(String id),
     @required Result remove(String id),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -1188,6 +1334,7 @@ class _$OpenEventAdd with DiagnosticableTreeMixin implements OpenEventAdd {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result update(),
     Result refresh(),
@@ -1205,12 +1352,14 @@ class _$OpenEventAdd with DiagnosticableTreeMixin implements OpenEventAdd {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(OpenEventSetup value),
     @required Result init(OpenEventInit value),
     @required Result update(OpenEventUpdate value),
     @required Result refresh(OpenEventRefresh value),
     @required Result add(OpenEventAdd value),
     @required Result remove(OpenEventRemove value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -1222,6 +1371,7 @@ class _$OpenEventAdd with DiagnosticableTreeMixin implements OpenEventAdd {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(OpenEventSetup value),
     Result init(OpenEventInit value),
     Result update(OpenEventUpdate value),
     Result refresh(OpenEventRefresh value),
@@ -1310,12 +1460,14 @@ class _$OpenEventRemove
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result update(),
     @required Result refresh(),
     @required Result add(String id),
     @required Result remove(String id),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -1327,6 +1479,7 @@ class _$OpenEventRemove
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result update(),
     Result refresh(),
@@ -1344,12 +1497,14 @@ class _$OpenEventRemove
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(OpenEventSetup value),
     @required Result init(OpenEventInit value),
     @required Result update(OpenEventUpdate value),
     @required Result refresh(OpenEventRefresh value),
     @required Result add(OpenEventAdd value),
     @required Result remove(OpenEventRemove value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -1361,6 +1516,7 @@ class _$OpenEventRemove
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(OpenEventSetup value),
     Result init(OpenEventInit value),
     Result update(OpenEventUpdate value),
     Result refresh(OpenEventRefresh value),

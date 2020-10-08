@@ -9,9 +9,18 @@ const User$json = const {
   '1': 'User',
   '2': const [
     const {'1': 'favourites', '3': 1, '4': 3, '5': 11, '6': '.data.User.Share', '10': 'favourites'},
-    const {'1': 'available', '3': 2, '4': 3, '5': 11, '6': '.data.User.Share', '10': 'available'},
+    const {'1': 'all', '3': 2, '4': 3, '5': 11, '6': '.data.User.AllEntry', '10': 'all'},
   ],
-  '3': const [User_Share$json],
+  '3': const [User_AllEntry$json, User_Share$json],
+};
+
+const User_AllEntry$json = const {
+  '1': 'AllEntry',
+  '2': const [
+    const {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+  ],
+  '7': const {'7': true},
 };
 
 const User_Share$json = const {

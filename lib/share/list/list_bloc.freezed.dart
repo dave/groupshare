@@ -700,6 +700,11 @@ class _$ListEventTearOff {
   const _$ListEventTearOff();
 
 // ignore: unused_element
+  ListEventSetup setup() {
+    return const ListEventSetup();
+  }
+
+// ignore: unused_element
   ListEventInit init() {
     return const ListEventInit();
   }
@@ -736,6 +741,7 @@ const $ListEvent = _$ListEventTearOff();
 mixin _$ListEvent {
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result update(),
     @required Result refresh(),
@@ -744,6 +750,7 @@ mixin _$ListEvent {
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result update(),
     Result refresh(),
@@ -753,6 +760,7 @@ mixin _$ListEvent {
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(ListEventSetup value),
     @required Result init(ListEventInit value),
     @required Result update(ListEventUpdate value),
     @required Result refresh(ListEventRefresh value),
@@ -761,6 +769,7 @@ mixin _$ListEvent {
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(ListEventSetup value),
     Result init(ListEventInit value),
     Result update(ListEventUpdate value),
     Result refresh(ListEventRefresh value),
@@ -781,6 +790,123 @@ class _$ListEventCopyWithImpl<$Res> implements $ListEventCopyWith<$Res> {
   final ListEvent _value;
   // ignore: unused_field
   final $Res Function(ListEvent) _then;
+}
+
+abstract class $ListEventSetupCopyWith<$Res> {
+  factory $ListEventSetupCopyWith(
+          ListEventSetup value, $Res Function(ListEventSetup) then) =
+      _$ListEventSetupCopyWithImpl<$Res>;
+}
+
+class _$ListEventSetupCopyWithImpl<$Res> extends _$ListEventCopyWithImpl<$Res>
+    implements $ListEventSetupCopyWith<$Res> {
+  _$ListEventSetupCopyWithImpl(
+      ListEventSetup _value, $Res Function(ListEventSetup) _then)
+      : super(_value, (v) => _then(v as ListEventSetup));
+
+  @override
+  ListEventSetup get _value => super._value as ListEventSetup;
+}
+
+class _$ListEventSetup with DiagnosticableTreeMixin implements ListEventSetup {
+  const _$ListEventSetup();
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'ListEvent.setup()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty('type', 'ListEvent.setup'));
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is ListEventSetup);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result setup(),
+    @required Result init(),
+    @required Result update(),
+    @required Result refresh(),
+    @required Result item(String id),
+    @required Result reorder(int from, int to),
+  }) {
+    assert(setup != null);
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(item != null);
+    assert(reorder != null);
+    return setup();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result setup(),
+    Result init(),
+    Result update(),
+    Result refresh(),
+    Result item(String id),
+    Result reorder(int from, int to),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result setup(ListEventSetup value),
+    @required Result init(ListEventInit value),
+    @required Result update(ListEventUpdate value),
+    @required Result refresh(ListEventRefresh value),
+    @required Result item(ListEventItem value),
+    @required Result reorder(ListEventReorder value),
+  }) {
+    assert(setup != null);
+    assert(init != null);
+    assert(update != null);
+    assert(refresh != null);
+    assert(item != null);
+    assert(reorder != null);
+    return setup(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result setup(ListEventSetup value),
+    Result init(ListEventInit value),
+    Result update(ListEventUpdate value),
+    Result refresh(ListEventRefresh value),
+    Result item(ListEventItem value),
+    Result reorder(ListEventReorder value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ListEventSetup implements ListEvent {
+  const factory ListEventSetup() = _$ListEventSetup;
 }
 
 abstract class $ListEventInitCopyWith<$Res> {
@@ -824,12 +950,14 @@ class _$ListEventInit with DiagnosticableTreeMixin implements ListEventInit {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result update(),
     @required Result refresh(),
     @required Result item(String id),
     @required Result reorder(int from, int to),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -841,6 +969,7 @@ class _$ListEventInit with DiagnosticableTreeMixin implements ListEventInit {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result update(),
     Result refresh(),
@@ -858,12 +987,14 @@ class _$ListEventInit with DiagnosticableTreeMixin implements ListEventInit {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(ListEventSetup value),
     @required Result init(ListEventInit value),
     @required Result update(ListEventUpdate value),
     @required Result refresh(ListEventRefresh value),
     @required Result item(ListEventItem value),
     @required Result reorder(ListEventReorder value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -875,6 +1006,7 @@ class _$ListEventInit with DiagnosticableTreeMixin implements ListEventInit {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(ListEventSetup value),
     Result init(ListEventInit value),
     Result update(ListEventUpdate value),
     Result refresh(ListEventRefresh value),
@@ -937,12 +1069,14 @@ class _$ListEventUpdate
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result update(),
     @required Result refresh(),
     @required Result item(String id),
     @required Result reorder(int from, int to),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -954,6 +1088,7 @@ class _$ListEventUpdate
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result update(),
     Result refresh(),
@@ -971,12 +1106,14 @@ class _$ListEventUpdate
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(ListEventSetup value),
     @required Result init(ListEventInit value),
     @required Result update(ListEventUpdate value),
     @required Result refresh(ListEventRefresh value),
     @required Result item(ListEventItem value),
     @required Result reorder(ListEventReorder value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -988,6 +1125,7 @@ class _$ListEventUpdate
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(ListEventSetup value),
     Result init(ListEventInit value),
     Result update(ListEventUpdate value),
     Result refresh(ListEventRefresh value),
@@ -1050,12 +1188,14 @@ class _$ListEventRefresh
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result update(),
     @required Result refresh(),
     @required Result item(String id),
     @required Result reorder(int from, int to),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -1067,6 +1207,7 @@ class _$ListEventRefresh
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result update(),
     Result refresh(),
@@ -1084,12 +1225,14 @@ class _$ListEventRefresh
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(ListEventSetup value),
     @required Result init(ListEventInit value),
     @required Result update(ListEventUpdate value),
     @required Result refresh(ListEventRefresh value),
     @required Result item(ListEventItem value),
     @required Result reorder(ListEventReorder value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -1101,6 +1244,7 @@ class _$ListEventRefresh
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(ListEventSetup value),
     Result init(ListEventInit value),
     Result update(ListEventUpdate value),
     Result refresh(ListEventRefresh value),
@@ -1184,12 +1328,14 @@ class _$ListEventItem with DiagnosticableTreeMixin implements ListEventItem {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result update(),
     @required Result refresh(),
     @required Result item(String id),
     @required Result reorder(int from, int to),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -1201,6 +1347,7 @@ class _$ListEventItem with DiagnosticableTreeMixin implements ListEventItem {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result update(),
     Result refresh(),
@@ -1218,12 +1365,14 @@ class _$ListEventItem with DiagnosticableTreeMixin implements ListEventItem {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(ListEventSetup value),
     @required Result init(ListEventInit value),
     @required Result update(ListEventUpdate value),
     @required Result refresh(ListEventRefresh value),
     @required Result item(ListEventItem value),
     @required Result reorder(ListEventReorder value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -1235,6 +1384,7 @@ class _$ListEventItem with DiagnosticableTreeMixin implements ListEventItem {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(ListEventSetup value),
     Result init(ListEventInit value),
     Result update(ListEventUpdate value),
     Result refresh(ListEventRefresh value),
@@ -1334,12 +1484,14 @@ class _$ListEventReorder
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result update(),
     @required Result refresh(),
     @required Result item(String id),
     @required Result reorder(int from, int to),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -1351,6 +1503,7 @@ class _$ListEventReorder
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result update(),
     Result refresh(),
@@ -1368,12 +1521,14 @@ class _$ListEventReorder
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(ListEventSetup value),
     @required Result init(ListEventInit value),
     @required Result update(ListEventUpdate value),
     @required Result refresh(ListEventRefresh value),
     @required Result item(ListEventItem value),
     @required Result reorder(ListEventReorder value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(update != null);
     assert(refresh != null);
@@ -1385,6 +1540,7 @@ class _$ListEventReorder
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(ListEventSetup value),
     Result init(ListEventInit value),
     Result update(ListEventUpdate value),
     Result refresh(ListEventRefresh value),

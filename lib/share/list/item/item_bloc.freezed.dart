@@ -180,6 +180,11 @@ class _$ItemEventTearOff {
   const _$ItemEventTearOff();
 
 // ignore: unused_element
+  ItemEventSetup setup() {
+    return const ItemEventSetup();
+  }
+
+// ignore: unused_element
   ItemEventInit init() {
     return const ItemEventInit();
   }
@@ -191,19 +196,23 @@ const $ItemEvent = _$ItemEventTearOff();
 mixin _$ItemEvent {
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     @required Result orElse(),
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(ItemEventSetup value),
     @required Result init(ItemEventInit value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(ItemEventSetup value),
     Result init(ItemEventInit value),
     @required Result orElse(),
   });
@@ -220,6 +229,93 @@ class _$ItemEventCopyWithImpl<$Res> implements $ItemEventCopyWith<$Res> {
   final ItemEvent _value;
   // ignore: unused_field
   final $Res Function(ItemEvent) _then;
+}
+
+abstract class $ItemEventSetupCopyWith<$Res> {
+  factory $ItemEventSetupCopyWith(
+          ItemEventSetup value, $Res Function(ItemEventSetup) then) =
+      _$ItemEventSetupCopyWithImpl<$Res>;
+}
+
+class _$ItemEventSetupCopyWithImpl<$Res> extends _$ItemEventCopyWithImpl<$Res>
+    implements $ItemEventSetupCopyWith<$Res> {
+  _$ItemEventSetupCopyWithImpl(
+      ItemEventSetup _value, $Res Function(ItemEventSetup) _then)
+      : super(_value, (v) => _then(v as ItemEventSetup));
+
+  @override
+  ItemEventSetup get _value => super._value as ItemEventSetup;
+}
+
+class _$ItemEventSetup implements ItemEventSetup {
+  const _$ItemEventSetup();
+
+  @override
+  String toString() {
+    return 'ItemEvent.setup()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is ItemEventSetup);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result setup(),
+    @required Result init(),
+  }) {
+    assert(setup != null);
+    assert(init != null);
+    return setup();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result setup(),
+    Result init(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result setup(ItemEventSetup value),
+    @required Result init(ItemEventInit value),
+  }) {
+    assert(setup != null);
+    assert(init != null);
+    return setup(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result setup(ItemEventSetup value),
+    Result init(ItemEventInit value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ItemEventSetup implements ItemEvent {
+  const factory ItemEventSetup() = _$ItemEventSetup;
 }
 
 abstract class $ItemEventInitCopyWith<$Res> {
@@ -257,8 +353,10 @@ class _$ItemEventInit implements ItemEventInit {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
   }) {
+    assert(setup != null);
     assert(init != null);
     return init();
   }
@@ -266,6 +364,7 @@ class _$ItemEventInit implements ItemEventInit {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     @required Result orElse(),
   }) {
@@ -279,8 +378,10 @@ class _$ItemEventInit implements ItemEventInit {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(ItemEventSetup value),
     @required Result init(ItemEventInit value),
   }) {
+    assert(setup != null);
     assert(init != null);
     return init(this);
   }
@@ -288,6 +389,7 @@ class _$ItemEventInit implements ItemEventInit {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(ItemEventSetup value),
     Result init(ItemEventInit value),
     @required Result orElse(),
   }) {

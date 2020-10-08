@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:groupshare/bloc.dart';
 import 'package:groupshare/share/add/add.dart';
 import 'package:groupshare/observer.dart';
+import 'package:groupshare/share/open/open.dart';
 
 part 'add_bloc.freezed.dart';
 
@@ -58,10 +59,12 @@ class AddBloc extends ExtendedBloc<AddEvent, AddState> {
                   ..name = _state.name.value,
               ),
             );
+            updateUserAvailableAdd(_data, id, _state.name.value);
             yield AddState.done();
           } catch (ex) {
             // Clear submissionInProgress on error
             yield _state.copyWith(status: Formz.validate([_state.name]));
+            throw(ex);
           }
         }
       },

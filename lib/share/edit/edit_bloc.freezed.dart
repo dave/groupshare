@@ -444,6 +444,11 @@ class _$EditEventTearOff {
   const _$EditEventTearOff();
 
 // ignore: unused_element
+  EditEventSetup setup() {
+    return const EditEventSetup();
+  }
+
+// ignore: unused_element
   EditEventInit init(String value) {
     return EditEventInit(
       value,
@@ -469,12 +474,14 @@ const $EditEvent = _$EditEventTearOff();
 mixin _$EditEvent {
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(String value),
     @required Result change(String value),
     @required Result submit(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(String value),
     Result change(String value),
     Result submit(),
@@ -482,12 +489,14 @@ mixin _$EditEvent {
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(EditEventSetup value),
     @required Result init(EditEventInit value),
     @required Result change(EditEventChange value),
     @required Result submit(EditEventSubmit value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(EditEventSetup value),
     Result init(EditEventInit value),
     Result change(EditEventChange value),
     Result submit(EditEventSubmit value),
@@ -506,6 +515,105 @@ class _$EditEventCopyWithImpl<$Res> implements $EditEventCopyWith<$Res> {
   final EditEvent _value;
   // ignore: unused_field
   final $Res Function(EditEvent) _then;
+}
+
+abstract class $EditEventSetupCopyWith<$Res> {
+  factory $EditEventSetupCopyWith(
+          EditEventSetup value, $Res Function(EditEventSetup) then) =
+      _$EditEventSetupCopyWithImpl<$Res>;
+}
+
+class _$EditEventSetupCopyWithImpl<$Res> extends _$EditEventCopyWithImpl<$Res>
+    implements $EditEventSetupCopyWith<$Res> {
+  _$EditEventSetupCopyWithImpl(
+      EditEventSetup _value, $Res Function(EditEventSetup) _then)
+      : super(_value, (v) => _then(v as EditEventSetup));
+
+  @override
+  EditEventSetup get _value => super._value as EditEventSetup;
+}
+
+class _$EditEventSetup implements EditEventSetup {
+  const _$EditEventSetup();
+
+  @override
+  String toString() {
+    return 'EditEvent.setup()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is EditEventSetup);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result setup(),
+    @required Result init(String value),
+    @required Result change(String value),
+    @required Result submit(),
+  }) {
+    assert(setup != null);
+    assert(init != null);
+    assert(change != null);
+    assert(submit != null);
+    return setup();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result setup(),
+    Result init(String value),
+    Result change(String value),
+    Result submit(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result setup(EditEventSetup value),
+    @required Result init(EditEventInit value),
+    @required Result change(EditEventChange value),
+    @required Result submit(EditEventSubmit value),
+  }) {
+    assert(setup != null);
+    assert(init != null);
+    assert(change != null);
+    assert(submit != null);
+    return setup(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result setup(EditEventSetup value),
+    Result init(EditEventInit value),
+    Result change(EditEventChange value),
+    Result submit(EditEventSubmit value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class EditEventSetup implements EditEvent {
+  const factory EditEventSetup() = _$EditEventSetup;
 }
 
 abstract class $EditEventInitCopyWith<$Res> {
@@ -564,10 +672,12 @@ class _$EditEventInit implements EditEventInit {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(String value),
     @required Result change(String value),
     @required Result submit(),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(change != null);
     assert(submit != null);
@@ -577,6 +687,7 @@ class _$EditEventInit implements EditEventInit {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(String value),
     Result change(String value),
     Result submit(),
@@ -592,10 +703,12 @@ class _$EditEventInit implements EditEventInit {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(EditEventSetup value),
     @required Result init(EditEventInit value),
     @required Result change(EditEventChange value),
     @required Result submit(EditEventSubmit value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(change != null);
     assert(submit != null);
@@ -605,6 +718,7 @@ class _$EditEventInit implements EditEventInit {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(EditEventSetup value),
     Result init(EditEventInit value),
     Result change(EditEventChange value),
     Result submit(EditEventSubmit value),
@@ -681,10 +795,12 @@ class _$EditEventChange implements EditEventChange {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(String value),
     @required Result change(String value),
     @required Result submit(),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(change != null);
     assert(submit != null);
@@ -694,6 +810,7 @@ class _$EditEventChange implements EditEventChange {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(String value),
     Result change(String value),
     Result submit(),
@@ -709,10 +826,12 @@ class _$EditEventChange implements EditEventChange {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(EditEventSetup value),
     @required Result init(EditEventInit value),
     @required Result change(EditEventChange value),
     @required Result submit(EditEventSubmit value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(change != null);
     assert(submit != null);
@@ -722,6 +841,7 @@ class _$EditEventChange implements EditEventChange {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(EditEventSetup value),
     Result init(EditEventInit value),
     Result change(EditEventChange value),
     Result submit(EditEventSubmit value),
@@ -777,10 +897,12 @@ class _$EditEventSubmit implements EditEventSubmit {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(String value),
     @required Result change(String value),
     @required Result submit(),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(change != null);
     assert(submit != null);
@@ -790,6 +912,7 @@ class _$EditEventSubmit implements EditEventSubmit {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(String value),
     Result change(String value),
     Result submit(),
@@ -805,10 +928,12 @@ class _$EditEventSubmit implements EditEventSubmit {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(EditEventSetup value),
     @required Result init(EditEventInit value),
     @required Result change(EditEventChange value),
     @required Result submit(EditEventSubmit value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(change != null);
     assert(submit != null);
@@ -818,6 +943,7 @@ class _$EditEventSubmit implements EditEventSubmit {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(EditEventSetup value),
     Result init(EditEventInit value),
     Result change(EditEventChange value),
     Result submit(EditEventSubmit value),

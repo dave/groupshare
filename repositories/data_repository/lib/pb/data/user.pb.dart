@@ -53,7 +53,7 @@ class User_Share extends $pb.GeneratedMessage {
 class User extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('User', package: const $pb.PackageName('data'), createEmptyInstance: create)
     ..pc<User_Share>(1, 'favourites', $pb.PbFieldType.PM, subBuilder: User_Share.create)
-    ..pc<User_Share>(2, 'available', $pb.PbFieldType.PM, subBuilder: User_Share.create)
+    ..m<$core.String, $core.String>(2, 'all', entryClassName: 'User.AllEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('data'))
     ..hasRequiredFields = false
   ;
 
@@ -76,6 +76,6 @@ class User extends $pb.GeneratedMessage {
   $core.List<User_Share> get favourites => $_getList(0);
 
   @$pb.TagNumber(2)
-  $core.List<User_Share> get available => $_getList(1);
+  $core.Map<$core.String, $core.String> get all => $_getMap(1);
 }
 

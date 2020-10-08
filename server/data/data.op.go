@@ -215,8 +215,8 @@ func NewUser_type(l []*delta.Locator) User_type {
 func (b User_type) Favourites() User_Share_type_list {
 	return NewUser_Share_type_list(delta.CopyAndAppendField(b.location, "favourites", 1))
 }
-func (b User_type) Available() User_Share_type_list {
-	return NewUser_Share_type_list(delta.CopyAndAppendField(b.location, "available", 2))
+func (b User_type) All() delta.String_scalar_string_map {
+	return delta.NewString_scalar_string_map(delta.CopyAndAppendField(b.location, "all", 2))
 }
 func (b User_type) Delete() *delta.Op {
 	return delta.Delete(b.location)

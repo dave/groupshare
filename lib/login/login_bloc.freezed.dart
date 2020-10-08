@@ -446,6 +446,11 @@ class _$LoginEventTearOff {
   const _$LoginEventTearOff();
 
 // ignore: unused_element
+  LoginEventSetup setup() {
+    return const LoginEventSetup();
+  }
+
+// ignore: unused_element
   LoginEventChangeStatus changeStatus(Status status) {
     return LoginEventChangeStatus(
       status,
@@ -483,6 +488,7 @@ const $LoginEvent = _$LoginEventTearOff();
 mixin _$LoginEvent {
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result changeStatus(Status status),
     @required Result changeEmail(String value),
     @required Result changeCode(String value),
@@ -491,6 +497,7 @@ mixin _$LoginEvent {
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result changeStatus(Status status),
     Result changeEmail(String value),
     Result changeCode(String value),
@@ -500,6 +507,7 @@ mixin _$LoginEvent {
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(LoginEventSetup value),
     @required Result changeStatus(LoginEventChangeStatus value),
     @required Result changeEmail(LoginEventChangeEmail value),
     @required Result changeCode(LoginEventChangeCode value),
@@ -508,6 +516,7 @@ mixin _$LoginEvent {
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(LoginEventSetup value),
     Result changeStatus(LoginEventChangeStatus value),
     Result changeEmail(LoginEventChangeEmail value),
     Result changeCode(LoginEventChangeCode value),
@@ -529,6 +538,117 @@ class _$LoginEventCopyWithImpl<$Res> implements $LoginEventCopyWith<$Res> {
   final LoginEvent _value;
   // ignore: unused_field
   final $Res Function(LoginEvent) _then;
+}
+
+abstract class $LoginEventSetupCopyWith<$Res> {
+  factory $LoginEventSetupCopyWith(
+          LoginEventSetup value, $Res Function(LoginEventSetup) then) =
+      _$LoginEventSetupCopyWithImpl<$Res>;
+}
+
+class _$LoginEventSetupCopyWithImpl<$Res> extends _$LoginEventCopyWithImpl<$Res>
+    implements $LoginEventSetupCopyWith<$Res> {
+  _$LoginEventSetupCopyWithImpl(
+      LoginEventSetup _value, $Res Function(LoginEventSetup) _then)
+      : super(_value, (v) => _then(v as LoginEventSetup));
+
+  @override
+  LoginEventSetup get _value => super._value as LoginEventSetup;
+}
+
+class _$LoginEventSetup implements LoginEventSetup {
+  const _$LoginEventSetup();
+
+  @override
+  String toString() {
+    return 'LoginEvent.setup()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is LoginEventSetup);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result setup(),
+    @required Result changeStatus(Status status),
+    @required Result changeEmail(String value),
+    @required Result changeCode(String value),
+    @required Result submitEmail(),
+    @required Result submitCode(),
+  }) {
+    assert(setup != null);
+    assert(changeStatus != null);
+    assert(changeEmail != null);
+    assert(changeCode != null);
+    assert(submitEmail != null);
+    assert(submitCode != null);
+    return setup();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result setup(),
+    Result changeStatus(Status status),
+    Result changeEmail(String value),
+    Result changeCode(String value),
+    Result submitEmail(),
+    Result submitCode(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result setup(LoginEventSetup value),
+    @required Result changeStatus(LoginEventChangeStatus value),
+    @required Result changeEmail(LoginEventChangeEmail value),
+    @required Result changeCode(LoginEventChangeCode value),
+    @required Result submitEmail(LoginEventSubmitEmail value),
+    @required Result submitCode(LoginEventSubmitCode value),
+  }) {
+    assert(setup != null);
+    assert(changeStatus != null);
+    assert(changeEmail != null);
+    assert(changeCode != null);
+    assert(submitEmail != null);
+    assert(submitCode != null);
+    return setup(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result setup(LoginEventSetup value),
+    Result changeStatus(LoginEventChangeStatus value),
+    Result changeEmail(LoginEventChangeEmail value),
+    Result changeCode(LoginEventChangeCode value),
+    Result submitEmail(LoginEventSubmitEmail value),
+    Result submitCode(LoginEventSubmitCode value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class LoginEventSetup implements LoginEvent {
+  const factory LoginEventSetup() = _$LoginEventSetup;
 }
 
 abstract class $LoginEventChangeStatusCopyWith<$Res> {
@@ -589,12 +709,14 @@ class _$LoginEventChangeStatus implements LoginEventChangeStatus {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result changeStatus(Status status),
     @required Result changeEmail(String value),
     @required Result changeCode(String value),
     @required Result submitEmail(),
     @required Result submitCode(),
   }) {
+    assert(setup != null);
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
@@ -606,6 +728,7 @@ class _$LoginEventChangeStatus implements LoginEventChangeStatus {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result changeStatus(Status status),
     Result changeEmail(String value),
     Result changeCode(String value),
@@ -623,12 +746,14 @@ class _$LoginEventChangeStatus implements LoginEventChangeStatus {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(LoginEventSetup value),
     @required Result changeStatus(LoginEventChangeStatus value),
     @required Result changeEmail(LoginEventChangeEmail value),
     @required Result changeCode(LoginEventChangeCode value),
     @required Result submitEmail(LoginEventSubmitEmail value),
     @required Result submitCode(LoginEventSubmitCode value),
   }) {
+    assert(setup != null);
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
@@ -640,6 +765,7 @@ class _$LoginEventChangeStatus implements LoginEventChangeStatus {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(LoginEventSetup value),
     Result changeStatus(LoginEventChangeStatus value),
     Result changeEmail(LoginEventChangeEmail value),
     Result changeCode(LoginEventChangeCode value),
@@ -721,12 +847,14 @@ class _$LoginEventChangeEmail implements LoginEventChangeEmail {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result changeStatus(Status status),
     @required Result changeEmail(String value),
     @required Result changeCode(String value),
     @required Result submitEmail(),
     @required Result submitCode(),
   }) {
+    assert(setup != null);
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
@@ -738,6 +866,7 @@ class _$LoginEventChangeEmail implements LoginEventChangeEmail {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result changeStatus(Status status),
     Result changeEmail(String value),
     Result changeCode(String value),
@@ -755,12 +884,14 @@ class _$LoginEventChangeEmail implements LoginEventChangeEmail {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(LoginEventSetup value),
     @required Result changeStatus(LoginEventChangeStatus value),
     @required Result changeEmail(LoginEventChangeEmail value),
     @required Result changeCode(LoginEventChangeCode value),
     @required Result submitEmail(LoginEventSubmitEmail value),
     @required Result submitCode(LoginEventSubmitCode value),
   }) {
+    assert(setup != null);
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
@@ -772,6 +903,7 @@ class _$LoginEventChangeEmail implements LoginEventChangeEmail {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(LoginEventSetup value),
     Result changeStatus(LoginEventChangeStatus value),
     Result changeEmail(LoginEventChangeEmail value),
     Result changeCode(LoginEventChangeCode value),
@@ -852,12 +984,14 @@ class _$LoginEventChangeCode implements LoginEventChangeCode {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result changeStatus(Status status),
     @required Result changeEmail(String value),
     @required Result changeCode(String value),
     @required Result submitEmail(),
     @required Result submitCode(),
   }) {
+    assert(setup != null);
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
@@ -869,6 +1003,7 @@ class _$LoginEventChangeCode implements LoginEventChangeCode {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result changeStatus(Status status),
     Result changeEmail(String value),
     Result changeCode(String value),
@@ -886,12 +1021,14 @@ class _$LoginEventChangeCode implements LoginEventChangeCode {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(LoginEventSetup value),
     @required Result changeStatus(LoginEventChangeStatus value),
     @required Result changeEmail(LoginEventChangeEmail value),
     @required Result changeCode(LoginEventChangeCode value),
     @required Result submitEmail(LoginEventSubmitEmail value),
     @required Result submitCode(LoginEventSubmitCode value),
   }) {
+    assert(setup != null);
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
@@ -903,6 +1040,7 @@ class _$LoginEventChangeCode implements LoginEventChangeCode {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(LoginEventSetup value),
     Result changeStatus(LoginEventChangeStatus value),
     Result changeEmail(LoginEventChangeEmail value),
     Result changeCode(LoginEventChangeCode value),
@@ -961,12 +1099,14 @@ class _$LoginEventSubmitEmail implements LoginEventSubmitEmail {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result changeStatus(Status status),
     @required Result changeEmail(String value),
     @required Result changeCode(String value),
     @required Result submitEmail(),
     @required Result submitCode(),
   }) {
+    assert(setup != null);
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
@@ -978,6 +1118,7 @@ class _$LoginEventSubmitEmail implements LoginEventSubmitEmail {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result changeStatus(Status status),
     Result changeEmail(String value),
     Result changeCode(String value),
@@ -995,12 +1136,14 @@ class _$LoginEventSubmitEmail implements LoginEventSubmitEmail {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(LoginEventSetup value),
     @required Result changeStatus(LoginEventChangeStatus value),
     @required Result changeEmail(LoginEventChangeEmail value),
     @required Result changeCode(LoginEventChangeCode value),
     @required Result submitEmail(LoginEventSubmitEmail value),
     @required Result submitCode(LoginEventSubmitCode value),
   }) {
+    assert(setup != null);
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
@@ -1012,6 +1155,7 @@ class _$LoginEventSubmitEmail implements LoginEventSubmitEmail {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(LoginEventSetup value),
     Result changeStatus(LoginEventChangeStatus value),
     Result changeEmail(LoginEventChangeEmail value),
     Result changeCode(LoginEventChangeCode value),
@@ -1067,12 +1211,14 @@ class _$LoginEventSubmitCode implements LoginEventSubmitCode {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result changeStatus(Status status),
     @required Result changeEmail(String value),
     @required Result changeCode(String value),
     @required Result submitEmail(),
     @required Result submitCode(),
   }) {
+    assert(setup != null);
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
@@ -1084,6 +1230,7 @@ class _$LoginEventSubmitCode implements LoginEventSubmitCode {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result changeStatus(Status status),
     Result changeEmail(String value),
     Result changeCode(String value),
@@ -1101,12 +1248,14 @@ class _$LoginEventSubmitCode implements LoginEventSubmitCode {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(LoginEventSetup value),
     @required Result changeStatus(LoginEventChangeStatus value),
     @required Result changeEmail(LoginEventChangeEmail value),
     @required Result changeCode(LoginEventChangeCode value),
     @required Result submitEmail(LoginEventSubmitEmail value),
     @required Result submitCode(LoginEventSubmitCode value),
   }) {
+    assert(setup != null);
     assert(changeStatus != null);
     assert(changeEmail != null);
     assert(changeCode != null);
@@ -1118,6 +1267,7 @@ class _$LoginEventSubmitCode implements LoginEventSubmitCode {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(LoginEventSetup value),
     Result changeStatus(LoginEventChangeStatus value),
     Result changeEmail(LoginEventChangeEmail value),
     Result changeCode(LoginEventChangeCode value),

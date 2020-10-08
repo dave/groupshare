@@ -20,6 +20,8 @@ abstract class ItemState with _$ItemState {
 
 @freezed
 abstract class ItemEvent with _$ItemEvent {
+  const factory ItemEvent.setup() = ItemEventSetup;
+
   const factory ItemEvent.init() = ItemEventInit;
 }
 
@@ -31,26 +33,30 @@ class ItemBloc extends ExtendedBloc<ItemEvent, ItemState> {
 
   ItemBloc(this._id, this._name, this._data)
       : super(_item(_id, _name, _data)) {
-    _subscription = _data.shares.stream.listen((DataEvent<Share> event) {
-      if (event is DataEventApply ||
-          event is DataEventGetting ||
-          event is DataEventGetFailed ||
-          event is DataEventGot ||
-          event is DataEventSending ||
-          event is DataEventSent ||
-          event is DataEventDeleted) {
-        if (event.id != _id) {
-          return;
-        }
-        add(ItemEvent.init());
-      }
-    });
-    add(ItemEvent.init());
+    add(ItemEvent.setup());
   }
 
   @override
   Stream<ItemState> mapEventToState(ItemEvent event) async* {
     yield* event.map(
+      setup: (event) async* {
+        _subscription?.cancel();
+        _subscription = _data.shares.stream.listen((DataEvent<Share> event) {
+          if (event is DataEventApply ||
+              event is DataEventGetting ||
+              event is DataEventGetFailed ||
+              event is DataEventGot ||
+              event is DataEventSending ||
+              event is DataEventSent ||
+              event is DataEventDeleted) {
+            if (event.id != _id) {
+              return;
+            }
+            add(ItemEvent.init());
+          }
+        });
+        add(ItemEvent.init());
+      },
       init: (event) async* {
         yield _item(_id, _name, _data);
       },

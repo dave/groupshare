@@ -1,6 +1,8 @@
 import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:groupshare/app/app.dart';
+import 'package:groupshare/appbar/appbar.dart';
 import 'package:groupshare/ui/handle.dart';
 import 'package:groupshare/bloc.dart';
 import 'package:groupshare/login/login.dart';
@@ -51,15 +53,16 @@ class ErrorObserver extends BlocObserver with NavigatorObserver {
       // error popup in this state should not have an "ok" button to dismiss
       // it, since the UI below is not complete. If an error is shown in this
       // state, the error dialog should include a button to go home / log off.
-      final homeButtonValid = !(cubit is ListBloc || cubit is LoginBloc);
+      final homeButtonValid = !(cubit is AppBarBloc ||
+          cubit is AppBloc ||
+          cubit is ListBloc ||
+          cubit is LoginBloc);
       final backButtonValid = _navigator.currentState.canPop();
       handle(
         _navigator.currentState.overlay.context,
         ex,
         stack,
-        back: backButtonValid
-            ? _navigator.currentState.pop
-            : null,
+        back: backButtonValid ? _navigator.currentState.pop : null,
         retry: retry,
         home: homeButtonValid && !backButtonValid,
         logoff: !homeButtonValid && !backButtonValid,
@@ -90,6 +93,6 @@ class ErrorObserver extends BlocObserver with NavigatorObserver {
   void didReplace({Route<dynamic> newRoute, Route<dynamic> oldRoute}) {
     int oldRouteIndex = _history.indexOf(oldRoute);
     _complete.remove(oldRoute);
-    _history.replaceRange(oldRouteIndex, oldRouteIndex+1, [newRoute]);
+    _history.replaceRange(oldRouteIndex, oldRouteIndex + 1, [newRoute]);
   }
 }

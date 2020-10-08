@@ -181,8 +181,8 @@ class User_type extends delta.Location {
   User_Share_type_list get favourites {
     return User_Share_type_list(delta.copyAndAppendField(location, "favourites", 1));
   }
-  User_Share_type_list get available {
-    return User_Share_type_list(delta.copyAndAppendField(location, "available", 2));
+  delta.String_scalar_string_map get all {
+    return delta.String_scalar_string_map(delta.copyAndAppendField(location, "all", 2));
   }
   delta.Op delete() {
     return delta.delete(location);

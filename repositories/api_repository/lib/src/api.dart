@@ -17,6 +17,7 @@ class Api {
   final Discovery _discovery;
   final int _retries;
   final int _timeout;
+  StreamSubscription<bool> _subscription;
 
   Api(
     this._conn,
@@ -29,7 +30,8 @@ class Api {
 
   Future<void> init() async {
     // start watching connection state
-    _conn.stream.listen((bool connected) {
+    _subscription?.cancel();
+    _subscription = _conn.stream.listen((bool connected) {
       if (connected) {
         _statusSuccess();
       } else {

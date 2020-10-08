@@ -285,6 +285,11 @@ class _$FooEventTearOff {
   const _$FooEventTearOff();
 
 // ignore: unused_element
+  FooEventSetup setup() {
+    return const FooEventSetup();
+  }
+
+// ignore: unused_element
   FooEventChange change(String value) {
     return FooEventChange(
       value,
@@ -303,22 +308,26 @@ const $FooEvent = _$FooEventTearOff();
 mixin _$FooEvent {
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result change(String value),
     @required Result submit(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result change(String value),
     Result submit(),
     @required Result orElse(),
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(FooEventSetup value),
     @required Result change(FooEventChange value),
     @required Result submit(FooEventSubmit value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(FooEventSetup value),
     Result change(FooEventChange value),
     Result submit(FooEventSubmit value),
     @required Result orElse(),
@@ -336,6 +345,99 @@ class _$FooEventCopyWithImpl<$Res> implements $FooEventCopyWith<$Res> {
   final FooEvent _value;
   // ignore: unused_field
   final $Res Function(FooEvent) _then;
+}
+
+abstract class $FooEventSetupCopyWith<$Res> {
+  factory $FooEventSetupCopyWith(
+          FooEventSetup value, $Res Function(FooEventSetup) then) =
+      _$FooEventSetupCopyWithImpl<$Res>;
+}
+
+class _$FooEventSetupCopyWithImpl<$Res> extends _$FooEventCopyWithImpl<$Res>
+    implements $FooEventSetupCopyWith<$Res> {
+  _$FooEventSetupCopyWithImpl(
+      FooEventSetup _value, $Res Function(FooEventSetup) _then)
+      : super(_value, (v) => _then(v as FooEventSetup));
+
+  @override
+  FooEventSetup get _value => super._value as FooEventSetup;
+}
+
+class _$FooEventSetup implements FooEventSetup {
+  const _$FooEventSetup();
+
+  @override
+  String toString() {
+    return 'FooEvent.setup()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is FooEventSetup);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result setup(),
+    @required Result change(String value),
+    @required Result submit(),
+  }) {
+    assert(setup != null);
+    assert(change != null);
+    assert(submit != null);
+    return setup();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result setup(),
+    Result change(String value),
+    Result submit(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result setup(FooEventSetup value),
+    @required Result change(FooEventChange value),
+    @required Result submit(FooEventSubmit value),
+  }) {
+    assert(setup != null);
+    assert(change != null);
+    assert(submit != null);
+    return setup(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result setup(FooEventSetup value),
+    Result change(FooEventChange value),
+    Result submit(FooEventSubmit value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FooEventSetup implements FooEvent {
+  const factory FooEventSetup() = _$FooEventSetup;
 }
 
 abstract class $FooEventChangeCopyWith<$Res> {
@@ -394,9 +496,11 @@ class _$FooEventChange implements FooEventChange {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result change(String value),
     @required Result submit(),
   }) {
+    assert(setup != null);
     assert(change != null);
     assert(submit != null);
     return change(value);
@@ -405,6 +509,7 @@ class _$FooEventChange implements FooEventChange {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result change(String value),
     Result submit(),
     @required Result orElse(),
@@ -419,9 +524,11 @@ class _$FooEventChange implements FooEventChange {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(FooEventSetup value),
     @required Result change(FooEventChange value),
     @required Result submit(FooEventSubmit value),
   }) {
+    assert(setup != null);
     assert(change != null);
     assert(submit != null);
     return change(this);
@@ -430,6 +537,7 @@ class _$FooEventChange implements FooEventChange {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(FooEventSetup value),
     Result change(FooEventChange value),
     Result submit(FooEventSubmit value),
     @required Result orElse(),
@@ -484,9 +592,11 @@ class _$FooEventSubmit implements FooEventSubmit {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result change(String value),
     @required Result submit(),
   }) {
+    assert(setup != null);
     assert(change != null);
     assert(submit != null);
     return submit();
@@ -495,6 +605,7 @@ class _$FooEventSubmit implements FooEventSubmit {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result change(String value),
     Result submit(),
     @required Result orElse(),
@@ -509,9 +620,11 @@ class _$FooEventSubmit implements FooEventSubmit {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(FooEventSetup value),
     @required Result change(FooEventChange value),
     @required Result submit(FooEventSubmit value),
   }) {
+    assert(setup != null);
     assert(change != null);
     assert(submit != null);
     return submit(this);
@@ -520,6 +633,7 @@ class _$FooEventSubmit implements FooEventSubmit {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(FooEventSetup value),
     Result change(FooEventChange value),
     Result submit(FooEventSubmit value),
     @required Result orElse(),

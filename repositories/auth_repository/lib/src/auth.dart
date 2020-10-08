@@ -17,8 +17,13 @@ class Auth {
 
   Auth(this._api, this._device);
 
+  Future<void> setup() async {
+    if (_box == null) {
+      _box = await Hive.openBox('auth');
+    }
+  }
+
   Future<void> init() async {
-    this._box = await Hive.openBox('auth');
     if (status == Status.Done) {
       _api.setToken(_apiTokenKey, token);
     }

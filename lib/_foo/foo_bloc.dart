@@ -23,6 +23,8 @@ abstract class FooState with _$FooState {
 
 @freezed
 abstract class FooEvent with _$FooEvent {
+  const factory FooEvent.setup() = FooEventSetup;
+
   const factory FooEvent.change(String value) = FooEventChange;
 
   const factory FooEvent.submit() = FooEventSubmit;
@@ -33,12 +35,17 @@ class FooBloc extends ExtendedBloc<FooEvent, FooState> {
 
   FooBloc(Data data)
       : _data = data,
-        super(FooState.form());
+        super(FooState.form()) {
+    add(FooEvent.setup());
+  }
 
   @override
   Stream<FooState> mapEventToState(FooEvent event) async* {
     final _state = state;
     yield* event.map(
+      setup: (event) async* {
+        // ...
+      },
       change: (event) async* {
         if (_state is FooStateForm) {
           final value = Name.dirty(event.value);
@@ -54,6 +61,7 @@ class FooBloc extends ExtendedBloc<FooEvent, FooState> {
           } catch (ex) {
             // Clear submissionInProgress on error
             yield _state.copyWith(status: Formz.validate([_state.name]));
+            throw(ex);
           }
         }
       },

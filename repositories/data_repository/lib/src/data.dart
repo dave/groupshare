@@ -12,6 +12,7 @@ class Data {
   final Auth _auth;
   Item<User> _user;
   Api _api;
+  StreamSubscription<bool> _backOnlineSubscription;
 
   Data(this._shares, this._users, this._auth, this._api);
 
@@ -48,7 +49,8 @@ class Data {
     futures.add(_users.init());
     await Future.wait(futures);
 
-    _api.backOnlineStream.listen((bool event) {
+    _backOnlineSubscription?.cancel();
+    _backOnlineSubscription = _api.backOnlineStream.listen((bool event) {
       update();
     });
 

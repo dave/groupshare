@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auth_repository/auth_repository.dart';
 import 'package:exceptions_repository/exceptions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,7 +43,12 @@ Future<T> handle<T>(
           final showHome = home;
           final showRetry = retry != null;
           final showLogoff = logoff &&
-              (state is AppStateDone || (state is AppStateLogin && state.auth));
+              (state is AppStateDone ||
+                  (state is AppStateLogin && state.auth) ||
+                  (state is AppStateLoading &&
+                      (state.status == Status.Auth ||
+                          state.status == Status.Done)));
+          final showReset = logoff && !showHome && !showBack && !showLogoff;
 
           final showOk = ok ||
               (buttons.length == 0 &&
@@ -106,6 +112,17 @@ Future<T> handle<T>(
                   child: Text("Log off"),
                   onPressed: () async {
                     context.bloc<AppBloc>().add(AppEvent.logoff());
+                    Navigator.of(context).pushAndRemoveUntil(
+                      LoginPage.route(),
+                      (route) => false,
+                    );
+                  },
+                ),
+              if (showReset)
+                FlatButton(
+                  child: Text("Reset app"),
+                  onPressed: () async {
+                    context.bloc<AppBloc>().add(AppEvent.reset());
                     Navigator.of(context).pushAndRemoveUntil(
                       LoginPage.route(),
                       (route) => false,

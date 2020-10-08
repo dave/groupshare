@@ -13,8 +13,10 @@ class _$AppStateTearOff {
   const _$AppStateTearOff();
 
 // ignore: unused_element
-  AppStateLoading loading() {
-    return const AppStateLoading();
+  AppStateLoading loading({Status status}) {
+    return AppStateLoading(
+      status: status,
+    );
   }
 
 // ignore: unused_element
@@ -36,13 +38,13 @@ const $AppState = _$AppStateTearOff();
 mixin _$AppState {
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result loading(),
+    @required Result loading(Status status),
     @required Result login(bool auth),
     @required Result done(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result loading(),
+    Result loading(Status status),
     Result login(bool auth),
     Result done(),
     @required Result orElse(),
@@ -79,6 +81,7 @@ abstract class $AppStateLoadingCopyWith<$Res> {
   factory $AppStateLoadingCopyWith(
           AppStateLoading value, $Res Function(AppStateLoading) then) =
       _$AppStateLoadingCopyWithImpl<$Res>;
+  $Res call({Status status});
 }
 
 class _$AppStateLoadingCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
@@ -89,49 +92,69 @@ class _$AppStateLoadingCopyWithImpl<$Res> extends _$AppStateCopyWithImpl<$Res>
 
   @override
   AppStateLoading get _value => super._value as AppStateLoading;
+
+  @override
+  $Res call({
+    Object status = freezed,
+  }) {
+    return _then(AppStateLoading(
+      status: status == freezed ? _value.status : status as Status,
+    ));
+  }
 }
 
 @Implements(Incomplete)
 class _$AppStateLoading implements AppStateLoading {
-  const _$AppStateLoading();
+  const _$AppStateLoading({this.status});
+
+  @override
+  final Status status;
 
   @override
   String toString() {
-    return 'AppState.loading()';
+    return 'AppState.loading(status: $status)';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is AppStateLoading);
+    return identical(this, other) ||
+        (other is AppStateLoading &&
+            (identical(other.status, status) ||
+                const DeepCollectionEquality().equals(other.status, status)));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(status);
+
+  @override
+  $AppStateLoadingCopyWith<AppStateLoading> get copyWith =>
+      _$AppStateLoadingCopyWithImpl<AppStateLoading>(this, _$identity);
 
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result loading(),
+    @required Result loading(Status status),
     @required Result login(bool auth),
     @required Result done(),
   }) {
     assert(loading != null);
     assert(login != null);
     assert(done != null);
-    return loading();
+    return loading(status);
   }
 
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result loading(),
+    Result loading(Status status),
     Result login(bool auth),
     Result done(),
     @required Result orElse(),
   }) {
     assert(orElse != null);
     if (loading != null) {
-      return loading();
+      return loading(status);
     }
     return orElse();
   }
@@ -166,7 +189,10 @@ class _$AppStateLoading implements AppStateLoading {
 }
 
 abstract class AppStateLoading implements AppState, Incomplete {
-  const factory AppStateLoading() = _$AppStateLoading;
+  const factory AppStateLoading({Status status}) = _$AppStateLoading;
+
+  Status get status;
+  $AppStateLoadingCopyWith<AppStateLoading> get copyWith;
 }
 
 abstract class $AppStateLoginCopyWith<$Res> {
@@ -225,7 +251,7 @@ class _$AppStateLogin implements AppStateLogin {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result loading(),
+    @required Result loading(Status status),
     @required Result login(bool auth),
     @required Result done(),
   }) {
@@ -238,7 +264,7 @@ class _$AppStateLogin implements AppStateLogin {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result loading(),
+    Result loading(Status status),
     Result login(bool auth),
     Result done(),
     @required Result orElse(),
@@ -321,7 +347,7 @@ class _$AppStateDone implements AppStateDone {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result loading(),
+    @required Result loading(Status status),
     @required Result login(bool auth),
     @required Result done(),
   }) {
@@ -334,7 +360,7 @@ class _$AppStateDone implements AppStateDone {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result loading(),
+    Result loading(Status status),
     Result login(bool auth),
     Result done(),
     @required Result orElse(),
@@ -383,6 +409,11 @@ class _$AppEventTearOff {
   const _$AppEventTearOff();
 
 // ignore: unused_element
+  AppEventSetup setup() {
+    return const AppEventSetup();
+  }
+
+// ignore: unused_element
   AppEventInit init() {
     return const AppEventInit();
   }
@@ -404,12 +435,14 @@ const $AppEvent = _$AppEventTearOff();
 mixin _$AppEvent {
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result reset(),
     @required Result logoff(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result reset(),
     Result logoff(),
@@ -417,12 +450,14 @@ mixin _$AppEvent {
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(AppEventSetup value),
     @required Result init(AppEventInit value),
     @required Result reset(AppEventReset value),
     @required Result logoff(AppEventLogoff value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(AppEventSetup value),
     Result init(AppEventInit value),
     Result reset(AppEventReset value),
     Result logoff(AppEventLogoff value),
@@ -441,6 +476,105 @@ class _$AppEventCopyWithImpl<$Res> implements $AppEventCopyWith<$Res> {
   final AppEvent _value;
   // ignore: unused_field
   final $Res Function(AppEvent) _then;
+}
+
+abstract class $AppEventSetupCopyWith<$Res> {
+  factory $AppEventSetupCopyWith(
+          AppEventSetup value, $Res Function(AppEventSetup) then) =
+      _$AppEventSetupCopyWithImpl<$Res>;
+}
+
+class _$AppEventSetupCopyWithImpl<$Res> extends _$AppEventCopyWithImpl<$Res>
+    implements $AppEventSetupCopyWith<$Res> {
+  _$AppEventSetupCopyWithImpl(
+      AppEventSetup _value, $Res Function(AppEventSetup) _then)
+      : super(_value, (v) => _then(v as AppEventSetup));
+
+  @override
+  AppEventSetup get _value => super._value as AppEventSetup;
+}
+
+class _$AppEventSetup implements AppEventSetup {
+  const _$AppEventSetup();
+
+  @override
+  String toString() {
+    return 'AppEvent.setup()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is AppEventSetup);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result setup(),
+    @required Result init(),
+    @required Result reset(),
+    @required Result logoff(),
+  }) {
+    assert(setup != null);
+    assert(init != null);
+    assert(reset != null);
+    assert(logoff != null);
+    return setup();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result setup(),
+    Result init(),
+    Result reset(),
+    Result logoff(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result setup(AppEventSetup value),
+    @required Result init(AppEventInit value),
+    @required Result reset(AppEventReset value),
+    @required Result logoff(AppEventLogoff value),
+  }) {
+    assert(setup != null);
+    assert(init != null);
+    assert(reset != null);
+    assert(logoff != null);
+    return setup(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result setup(AppEventSetup value),
+    Result init(AppEventInit value),
+    Result reset(AppEventReset value),
+    Result logoff(AppEventLogoff value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AppEventSetup implements AppEvent {
+  const factory AppEventSetup() = _$AppEventSetup;
 }
 
 abstract class $AppEventInitCopyWith<$Res> {
@@ -478,10 +612,12 @@ class _$AppEventInit implements AppEventInit {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result reset(),
     @required Result logoff(),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(reset != null);
     assert(logoff != null);
@@ -491,6 +627,7 @@ class _$AppEventInit implements AppEventInit {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result reset(),
     Result logoff(),
@@ -506,10 +643,12 @@ class _$AppEventInit implements AppEventInit {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(AppEventSetup value),
     @required Result init(AppEventInit value),
     @required Result reset(AppEventReset value),
     @required Result logoff(AppEventLogoff value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(reset != null);
     assert(logoff != null);
@@ -519,6 +658,7 @@ class _$AppEventInit implements AppEventInit {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(AppEventSetup value),
     Result init(AppEventInit value),
     Result reset(AppEventReset value),
     Result logoff(AppEventLogoff value),
@@ -571,10 +711,12 @@ class _$AppEventReset implements AppEventReset {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result reset(),
     @required Result logoff(),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(reset != null);
     assert(logoff != null);
@@ -584,6 +726,7 @@ class _$AppEventReset implements AppEventReset {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result reset(),
     Result logoff(),
@@ -599,10 +742,12 @@ class _$AppEventReset implements AppEventReset {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(AppEventSetup value),
     @required Result init(AppEventInit value),
     @required Result reset(AppEventReset value),
     @required Result logoff(AppEventLogoff value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(reset != null);
     assert(logoff != null);
@@ -612,6 +757,7 @@ class _$AppEventReset implements AppEventReset {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(AppEventSetup value),
     Result init(AppEventInit value),
     Result reset(AppEventReset value),
     Result logoff(AppEventLogoff value),
@@ -664,10 +810,12 @@ class _$AppEventLogoff implements AppEventLogoff {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result reset(),
     @required Result logoff(),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(reset != null);
     assert(logoff != null);
@@ -677,6 +825,7 @@ class _$AppEventLogoff implements AppEventLogoff {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result reset(),
     Result logoff(),
@@ -692,10 +841,12 @@ class _$AppEventLogoff implements AppEventLogoff {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(AppEventSetup value),
     @required Result init(AppEventInit value),
     @required Result reset(AppEventReset value),
     @required Result logoff(AppEventLogoff value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(reset != null);
     assert(logoff != null);
@@ -705,6 +856,7 @@ class _$AppEventLogoff implements AppEventLogoff {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(AppEventSetup value),
     Result init(AppEventInit value),
     Result reset(AppEventReset value),
     Result logoff(AppEventLogoff value),

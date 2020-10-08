@@ -28,6 +28,8 @@ abstract class LoginState with _$LoginState {
 
 @freezed
 abstract class LoginEvent with _$LoginEvent {
+  const factory LoginEvent.setup() = LoginEventSetup;
+
   const factory LoginEvent.changeStatus(Status status) = LoginEventChangeStatus;
 
   const factory LoginEvent.changeEmail(String value) = LoginEventChangeEmail;
@@ -44,15 +46,19 @@ class LoginBloc extends ExtendedBloc<LoginEvent, LoginState> {
   StreamSubscription<Status> _subscription;
 
   LoginBloc(this._auth) : super(LoginState.email()) {
-    _subscription = _auth.statusChange.listen((Status value) {
-      add(LoginEvent.changeStatus(value));
-    });
+    add(LoginEvent.setup());
   }
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
     final _state = state;
     yield* event.map(
+      setup: (event) async* {
+        _subscription?.cancel();
+        _subscription = _auth.statusChange.listen((Status value) {
+          add(LoginEvent.changeStatus(value));
+        });
+      },
       changeStatus: (event) async* {
         switch (event.status) {
           case Status.Empty:
@@ -86,6 +92,7 @@ class LoginBloc extends ExtendedBloc<LoginEvent, LoginState> {
           } catch (ex) {
             // Clear submissionInProgress on error
             yield _state.copyWith(status: Formz.validate([_state.email]));
+            throw(ex);
           }
         }
       },
@@ -97,6 +104,7 @@ class LoginBloc extends ExtendedBloc<LoginEvent, LoginState> {
           } catch (ex) {
             // Clear submissionInProgress on error
             yield _state.copyWith(status: Formz.validate([_state.code]));
+            throw(ex);
           }
         }
       },

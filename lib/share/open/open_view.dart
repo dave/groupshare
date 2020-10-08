@@ -74,28 +74,18 @@ class OpenPageContent extends StatelessWidget {
                               trailing: item.favourite
                                   ? IconButton(
                                       icon: Icon(Icons.favorite),
-                                      onPressed: () async {
-                                        await warning(
-                                          context,
-                                          () async {
-                                            context.bloc<OpenBloc>().add(
-                                                  OpenEvent.remove(item.id),
-                                                );
-                                          },
-                                        );
+                                      onPressed: () {
+                                        context.bloc<OpenBloc>().add(
+                                              OpenEvent.remove(item.id),
+                                            );
                                       },
                                     )
                                   : IconButton(
                                       icon: Icon(Icons.favorite_border),
-                                      onPressed: () async {
-                                        await warning(
-                                          context,
-                                          () async {
-                                            context.bloc<OpenBloc>().add(
-                                                  OpenEvent.add(item.id),
-                                                );
-                                          },
-                                        );
+                                      onPressed: () {
+                                        context.bloc<OpenBloc>().add(
+                                              OpenEvent.add(item.id),
+                                            );
                                       },
                                     ),
                             );

@@ -529,6 +529,11 @@ class _$DetailsEventTearOff {
   const _$DetailsEventTearOff();
 
 // ignore: unused_element
+  DetailsEventSetup setup() {
+    return const DetailsEventSetup();
+  }
+
+// ignore: unused_element
   DetailsEventInit init() {
     return const DetailsEventInit();
   }
@@ -545,22 +550,26 @@ const $DetailsEvent = _$DetailsEventTearOff();
 mixin _$DetailsEvent {
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result refresh(),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result refresh(),
     @required Result orElse(),
   });
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(DetailsEventSetup value),
     @required Result init(DetailsEventInit value),
     @required Result refresh(DetailsEventRefresh value),
   });
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(DetailsEventSetup value),
     Result init(DetailsEventInit value),
     Result refresh(DetailsEventRefresh value),
     @required Result orElse(),
@@ -579,6 +588,100 @@ class _$DetailsEventCopyWithImpl<$Res> implements $DetailsEventCopyWith<$Res> {
   final DetailsEvent _value;
   // ignore: unused_field
   final $Res Function(DetailsEvent) _then;
+}
+
+abstract class $DetailsEventSetupCopyWith<$Res> {
+  factory $DetailsEventSetupCopyWith(
+          DetailsEventSetup value, $Res Function(DetailsEventSetup) then) =
+      _$DetailsEventSetupCopyWithImpl<$Res>;
+}
+
+class _$DetailsEventSetupCopyWithImpl<$Res>
+    extends _$DetailsEventCopyWithImpl<$Res>
+    implements $DetailsEventSetupCopyWith<$Res> {
+  _$DetailsEventSetupCopyWithImpl(
+      DetailsEventSetup _value, $Res Function(DetailsEventSetup) _then)
+      : super(_value, (v) => _then(v as DetailsEventSetup));
+
+  @override
+  DetailsEventSetup get _value => super._value as DetailsEventSetup;
+}
+
+class _$DetailsEventSetup implements DetailsEventSetup {
+  const _$DetailsEventSetup();
+
+  @override
+  String toString() {
+    return 'DetailsEvent.setup()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is DetailsEventSetup);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  Result when<Result extends Object>({
+    @required Result setup(),
+    @required Result init(),
+    @required Result refresh(),
+  }) {
+    assert(setup != null);
+    assert(init != null);
+    assert(refresh != null);
+    return setup();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeWhen<Result extends Object>({
+    Result setup(),
+    Result init(),
+    Result refresh(),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  Result map<Result extends Object>({
+    @required Result setup(DetailsEventSetup value),
+    @required Result init(DetailsEventInit value),
+    @required Result refresh(DetailsEventRefresh value),
+  }) {
+    assert(setup != null);
+    assert(init != null);
+    assert(refresh != null);
+    return setup(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  Result maybeMap<Result extends Object>({
+    Result setup(DetailsEventSetup value),
+    Result init(DetailsEventInit value),
+    Result refresh(DetailsEventRefresh value),
+    @required Result orElse(),
+  }) {
+    assert(orElse != null);
+    if (setup != null) {
+      return setup(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DetailsEventSetup implements DetailsEvent {
+  const factory DetailsEventSetup() = _$DetailsEventSetup;
 }
 
 abstract class $DetailsEventInitCopyWith<$Res> {
@@ -617,9 +720,11 @@ class _$DetailsEventInit implements DetailsEventInit {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result refresh(),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(refresh != null);
     return init();
@@ -628,6 +733,7 @@ class _$DetailsEventInit implements DetailsEventInit {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result refresh(),
     @required Result orElse(),
@@ -642,9 +748,11 @@ class _$DetailsEventInit implements DetailsEventInit {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(DetailsEventSetup value),
     @required Result init(DetailsEventInit value),
     @required Result refresh(DetailsEventRefresh value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(refresh != null);
     return init(this);
@@ -653,6 +761,7 @@ class _$DetailsEventInit implements DetailsEventInit {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(DetailsEventSetup value),
     Result init(DetailsEventInit value),
     Result refresh(DetailsEventRefresh value),
     @required Result orElse(),
@@ -705,9 +814,11 @@ class _$DetailsEventRefresh implements DetailsEventRefresh {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
+    @required Result setup(),
     @required Result init(),
     @required Result refresh(),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(refresh != null);
     return refresh();
@@ -716,6 +827,7 @@ class _$DetailsEventRefresh implements DetailsEventRefresh {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
+    Result setup(),
     Result init(),
     Result refresh(),
     @required Result orElse(),
@@ -730,9 +842,11 @@ class _$DetailsEventRefresh implements DetailsEventRefresh {
   @override
   @optionalTypeArgs
   Result map<Result extends Object>({
+    @required Result setup(DetailsEventSetup value),
     @required Result init(DetailsEventInit value),
     @required Result refresh(DetailsEventRefresh value),
   }) {
+    assert(setup != null);
     assert(init != null);
     assert(refresh != null);
     return refresh(this);
@@ -741,6 +855,7 @@ class _$DetailsEventRefresh implements DetailsEventRefresh {
   @override
   @optionalTypeArgs
   Result maybeMap<Result extends Object>({
+    Result setup(DetailsEventSetup value),
     Result init(DetailsEventInit value),
     Result refresh(DetailsEventRefresh value),
     @required Result orElse(),
