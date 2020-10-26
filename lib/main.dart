@@ -36,8 +36,6 @@ void main() async {
         setDefaultRegistry(types);
 
         await Hive.initFlutter();
-        Hive.registerAdapter(ItemAdapter<Share>(0, types));
-        Hive.registerAdapter(ItemAdapter<User>(1, types));
 
         final device = Device();
         final discovery = Discovery(
@@ -64,23 +62,22 @@ void main() async {
           api,
           device,
         );
-        final data = Data(
-          StoreMeta<Share, String>(
-            Share(),
-            Adapter<Share>(api.send),
-            api.offline,
-            types,
-            (Share value) => value.name,
-          ),
-          Store<User>(
-            User(),
-            Adapter<User>(api.send),
-            api.offline,
-            types,
-          ),
-          auth,
-          api,
+        final shares = StoreMeta<Share, String>(
+          0,
+          Share(),
+          Adapter<Share>(api.send),
+          api.offline,
+          types,
+          (Share value) => value.name,
         );
+        final users = Store<User>(
+          1,
+          User(),
+          Adapter<User>(api.send),
+          api.offline,
+          types,
+        );
+        final data = Data(shares,users,auth,api);
         final navigator = GlobalKey<NavigatorState>();
         final observer =  ErrorObserver(navigator);
         Bloc.observer = observer;

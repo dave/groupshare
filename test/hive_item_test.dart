@@ -10,14 +10,14 @@ import 'package:protod/pserver/pserver.dart';
 const BOX_NAME = 'shares-hive-test';
 
 void main() {
-  Hive.registerAdapter(ItemAdapter<Share>(0, types));
+  Hive.registerAdapter(ItemAdapter<Share>(0, types, null));
   setUp(() async {
     Hive.init('.');
     Hive.deleteBoxFromDisk(BOX_NAME);
   });
   test('can save an empty item', () async {
     var items = await Hive.openBox<Item<Share>>(BOX_NAME);
-    final item = Item<Share>();
+    final item = Item<Share>(null, null, null, null, null, null, null);
     final key = randomUnique();
     await items.put(key, item);
 
@@ -40,20 +40,23 @@ void main() {
   test('can save items to hive', () async {
     final key = randomUnique();
     var items = await Hive.openBox<Item<Share>>(BOX_NAME);
-    final item = Item<Share>()
-      ..value = (Share()..name = "a")
-      ..state = Int64(2)
-      ..requestId = 'a'
-      ..buffer = [
+    final item = Item<Share>(
+      null,
+      "",
+      (Share()..name = "a"),
+      Int64(2),
+      'a',
+      [
         op.share.name.set("b"),
         null,
         op.share.name.edit("b", "c"),
-      ]
-      ..overflow = [
+      ],
+      [
         op.share.name.set("d"),
         null,
         op.share.name.edit("d", "e"),
-      ];
+      ],
+    );
     await items.put(key, item);
 
     // must re-open box in order to remove cached values
