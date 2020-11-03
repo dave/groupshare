@@ -1,0 +1,24 @@
+name: data
+description: Dart package which manages data.
+version: 1.0.0
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  auth:
+    path: "../auth"
+  api:
+    path: "../api"
+  exceptions:
+    path: "../exceptions"
+  main:
+    path: "../main"
+  protod:
+    path: "../../../protod"
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter

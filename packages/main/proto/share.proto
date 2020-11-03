@@ -1,0 +1,30 @@
+syntax = "proto3";
+package main;
+
+import "google/protobuf/dart_options.proto";
+
+option go_package = "github.com/dave/groupshare/packages/main/main;main_proto";
+option (dart_options.dart_package) = "main";
+
+message Share_List_Request {
+  // empty
+}
+message Share_List_Response {
+  repeated Item items = 1;
+  message Item {
+    string id = 1;
+    string name = 2;
+  }
+}
+
+message Share_Remove_Request {
+  string id = 1;
+}
+
+message Share_Delete_Request {
+  string id = 1;
+}
+
+message Share_Delete_Task {
+  string id = 1;
+}

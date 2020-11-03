@@ -1,0 +1,16 @@
+name: connection
+description: Dart package which manages connection.
+version: 1.0.0
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  connectivity_macos: ^0.1.0+4
+  connectivity: ^0.4.9+2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter

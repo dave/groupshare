@@ -1,0 +1,17 @@
+syntax = "proto3";
+package data;
+
+import "google/protobuf/dart_options.proto";
+
+option go_package = "github.com/dave/groupshare/packages/data/data;data_proto";
+option (dart_options.dart_package) = "data";
+
+// [proto:data]
+message User {
+  repeated Share favourites = 1;
+  map<string, string> all = 2;
+  message Share {
+    string id = 1;
+    string name = 2;
+  }
+}
