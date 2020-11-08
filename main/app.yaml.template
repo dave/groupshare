@@ -5,4 +5,4 @@ runtime: go111
 # in here is free and simple. The key is secret, and should never be added to source control. It is visible in the
 # console (versions -> config) so this file can be rebuilt even if the key is lost.
 env_variables:
-  SECRET_KEY: "secret key goes here"
+  SECRET_KEY: ""
