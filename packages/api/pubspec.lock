@@ -78,20 +78,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.6"
-  convert:
-    dependency: transitive
-    description:
-      name: convert
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.1"
-  crypto:
-    dependency: transitive
-    description:
-      name: crypto
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.5"
   diff_match_patch:
     dependency: transitive
     description:
@@ -149,13 +135,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  hive:
-    dependency: transitive
-    description:
-      name: hive
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.4.4+1"
   http:
     dependency: "direct main"
     description:
@@ -198,6 +177,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0-nullsafety.1"
+  pdelta:
+    dependency: "direct main"
+    description:
+      path: "../../../protod/packages/pdelta"
+      relative: true
+    source: path
+    version: "1.0.0"
   pedantic:
     dependency: transitive
     description:
@@ -212,6 +198,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  pmsg:
+    dependency: "direct main"
+    description:
+      path: "../../../protod/packages/pmsg"
+      relative: true
+    source: path
+    version: "1.0.0"
   protobuf:
     dependency: "direct main"
     description:
@@ -219,13 +212,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  protod:
-    dependency: "direct main"
+  ptypes:
+    dependency: transitive
     description:
-      path: "../../../protod"
+      path: "../../../protod/packages/ptypes"
       relative: true
     source: path
-    version: "0.0.4"
+    version: "1.0.0"
   quill_delta:
     dependency: transitive
     description:

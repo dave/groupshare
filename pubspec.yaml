@@ -21,8 +21,8 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  main:
-    path: "packages/main"
+  client:
+    path: "packages/client"
 
 dev_dependencies:
   flutter_test:

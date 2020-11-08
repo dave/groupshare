@@ -1,9 +1,9 @@
 library data;
 
-export 'data/proto/data.op.dart';
-export 'data/proto/snapshot.pb.dart';
-export 'data/proto/state.pb.dart';
-export 'data/proto/share.pb.dart';
-export 'data/proto/user.pb.dart';
-export 'registry.dart';
-export 'src/data.dart';
+export 'data/data.dart';
+export 'data/data.op.dart';
+export 'data/snapshot.pb.dart';
+export 'data/state.pb.dart';
+export 'data/share.pb.dart';
+export 'data/user.pb.dart';
+export 'data/registry.dart';

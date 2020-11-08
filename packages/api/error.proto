@@ -1,0 +1,17 @@
+syntax = "proto3";
+package api;
+
+import "google/protobuf/dart_options.proto";
+
+option go_package = "github.com/dave/groupshare/packages/api/pkg/api;api";
+option (dart_options.dart_package) = "api";
+
+message Error {
+  string message = 1;
+  string debug = 2;
+  bool busy = 3;
+  bool retry = 4;
+  bool stop = 5;
+  bool auth = 6;
+  bool expired = 7;
+}

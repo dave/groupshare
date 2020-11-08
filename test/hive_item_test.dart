@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:data_repository/data_repository.dart';
+import 'package:data/data.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:protod/pserver/pserver.dart';
+import 'package:pserver/pserver/pserver.dart';
 
 const BOX_NAME = 'shares-hive-test';
 

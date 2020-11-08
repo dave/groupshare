@@ -1,0 +1,21 @@
+syntax = "proto3";
+package wrappers;
+
+import "pserver/pserver.proto";
+import "google/protobuf/dart_options.proto";
+
+option go_package = "github.com/dave/groupshare/packages/data/pkg/data;data";
+option (dart_options.dart_package) = "data";
+
+message Snapshot {
+  int64 state = 1;        // state of this document
+  pserver.Blob value = 2; // marshaled protobuf
+  string user = 3;        // user id
+}
+
+message ShareSnapshot {
+  int64 state = 1;        // state of this document
+  pserver.Blob value = 2; // marshaled protobuf
+  string user = 3;        // user id
+  string name = 4;        // name of the Share
+}

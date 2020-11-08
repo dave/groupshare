@@ -1,0 +1,14 @@
+syntax = "proto3";
+package wrappers;
+
+import "pserver/pserver.proto";
+import "google/protobuf/dart_options.proto";
+
+option go_package = "github.com/dave/groupshare/packages/data/pkg/data;data";
+option (dart_options.dart_package) = "data";
+
+message State {
+  int64 state = 1;     // state of this document after the this op
+  pserver.Blob op = 2; // the operation that was applied to change the state from (state-1)->state
+  string user = 3;     // user id
+}

@@ -1,8 +1,0 @@
-runtime: go111
-
-# This provides the secret key for authentication. In a production system I would probably use Google's Secret Manager
-# API (https://console.cloud.google.com/marketplace/product/google/secretmanager.googleapis.com)... but storing the key
-# in here is free and simple. The key is secret, and should never be added to source control. It is visible in the
-# console (versions -> config) so this file can be rebuilt even if the key is lost.
-env_variables:
-  SECRET_KEY: "fsdkjhuiewdcxxzlsptoi45856pw3mcmndosow002erfmfvhsiw0w2owjdieofmrtmy0euw28r504iew"

@@ -16,8 +16,10 @@ dependencies:
     path: '../connection'
   discovery:
     path: '../discovery'
-  protod:
-    path: "../../../protod"
+  pdelta:
+    path: "../../../protod/packages/pdelta"
+  pmsg:
+    path: "../../../protod/packages/pmsg"
 
 dev_dependencies:
   flutter_test:

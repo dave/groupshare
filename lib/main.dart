@@ -1,5 +1,5 @@
-import 'package:main/app.dart';
+import 'package:client/client/client.dart';
 
 void main() async {
-  await app();
+  await client();
 }

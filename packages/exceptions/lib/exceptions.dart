@@ -1,3 +1,3 @@
 library exceptions;
 
-export 'src/exceptions.dart';
+export 'exceptions/exceptions.dart';

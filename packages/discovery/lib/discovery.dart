@@ -1,3 +1,3 @@
 library discovery;
 
-export 'src/discovery.dart';
+export 'discovery/discovery.dart';

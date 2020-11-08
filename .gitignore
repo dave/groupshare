@@ -46,4 +46,4 @@ app.*.map.json
 .test_hive_data/
 
 # Secret key is stored in app.yaml - do not commit to source control
-server/app.yaml
+main/app.yaml

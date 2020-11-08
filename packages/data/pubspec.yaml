@@ -14,10 +14,10 @@ dependencies:
     path: "../api"
   exceptions:
     path: "../exceptions"
-  main:
-    path: "../main"
-  protod:
-    path: "../../../protod"
+  pdelta:
+    path: "../../../protod/packages/pdelta"
+  pserver:
+    path: "../../../protod/packages/pserver"
 
 dev_dependencies:
   flutter_test:

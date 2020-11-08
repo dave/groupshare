@@ -1,3 +1,3 @@
 library connection;
 
-export 'src/connection.dart';
+export 'connection/connection.dart';

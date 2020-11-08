@@ -1,3 +1,3 @@
 library device;
 
-export 'src/device.dart';
+export 'device/device.dart';
