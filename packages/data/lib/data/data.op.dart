@@ -34,7 +34,7 @@ class Share_type extends pdelta.Location {
     return pdelta.delete(location);
   }
 
-  pdelta.Op set( value) {
+  pdelta.Op set(pb.Share value) {
     return pdelta.set(location, value);
   }
 
@@ -189,7 +189,7 @@ class User_type extends pdelta.Location {
     return pdelta.delete(location);
   }
 
-  pdelta.Op set( value) {
+  pdelta.Op set(pb.User value) {
     return pdelta.set(location, value);
   }
 
@@ -344,7 +344,7 @@ class User_Share_type extends pdelta.Location {
     return pdelta.delete(location);
   }
 
-  pdelta.Op set( value) {
+  pdelta.Op set(pb.User_Share value) {
     return pdelta.set(location, value);
   }
 
