@@ -409,10 +409,10 @@ func (b User_Share_type) Set(value *User_Share) *pdelta.Op {
 	return pdelta.Set(b.location, value)
 }
 func (b User_Share_type) Id() pdelta.String_scalar {
-	return pdelta.NewString_scalar(pdelta.CopyAndAppendField(b.location, "data.Share", "id", 1))
+	return pdelta.NewString_scalar(pdelta.CopyAndAppendField(b.location, "data.User.Share", "id", 1))
 }
 func (b User_Share_type) Name() pdelta.String_scalar {
-	return pdelta.NewString_scalar(pdelta.CopyAndAppendField(b.location, "data.Share", "name", 2))
+	return pdelta.NewString_scalar(pdelta.CopyAndAppendField(b.location, "data.User.Share", "name", 2))
 }
 
 type User_Share_list struct {

@@ -6,4 +6,3 @@ export 'data/snapshot.pb.dart';
 export 'data/state.pb.dart';
 export 'data/share.pb.dart';
 export 'data/user.pb.dart';
-export 'data/registry.dart';

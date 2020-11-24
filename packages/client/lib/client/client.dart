@@ -33,7 +33,8 @@ void client() async {
     runZoned<Future<void>>(
       () async {
         WidgetsFlutterBinding.ensureInitialized();
-        setDefaultRegistry(types);
+
+        init(); // initialise pdelta type registry
 
         await Hive.initFlutter();
 
@@ -67,7 +68,6 @@ void client() async {
           Share(),
           Adapter<Share>(api.send),
           api.offline,
-          types,
           (Share value) => value.name,
         );
         final users = Store<User>(
@@ -75,7 +75,6 @@ void client() async {
           User(),
           Adapter<User>(api.send),
           api.offline,
-          types,
         );
         final data = Data(shares, users, auth, api);
         final navigator = GlobalKey<NavigatorState>();

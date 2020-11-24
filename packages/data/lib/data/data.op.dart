@@ -1,11 +1,15 @@
 import 'package:pdelta/pdelta/pdelta.dart' as pdelta;
 import 'package:pdelta/pdelta/pdelta.pb.dart' as pdelta;
 import 'package:fixnum/fixnum.dart' as fixnum;
+import 'package:protobuf/protobuf.dart' as protobuf;
 import 'package:pdelta/pdelta/pdelta.op.dart' as pkg_pdelta_pdelta_pdelta;
-import 'package:data/data/share.pb.dart' as pb;
 import 'package:data/data/user.pb.dart' as pb;
+import 'package:data/data/share.pb.dart' as pb;
+import 'package:data/data/share.pb.dart' as pkg_data_data_data;
+import 'package:data/data/user.pb.dart' as pkg_data_data_data;
 
 Op_root_type get op {
+  init();
   return Op_root_type();
 }
 
@@ -25,10 +29,10 @@ class Op_root_type {
 class Share_type extends pdelta.Location {
   Share_type(List<pdelta.Locator> location) : super(location);
   pkg_pdelta_pdelta_pdelta.String_scalar get name {
-    return pkg_pdelta_pdelta_pdelta.String_scalar(pdelta.copyAndAppendField(location, "name", 1));
+    return pkg_pdelta_pdelta_pdelta.String_scalar(pdelta.copyAndAppendField(location, "data.Share", "name", 1));
   }
   pkg_pdelta_pdelta_pdelta.String_scalar get description {
-    return pkg_pdelta_pdelta_pdelta.String_scalar(pdelta.copyAndAppendField(location, "description", 2));
+    return pkg_pdelta_pdelta_pdelta.String_scalar(pdelta.copyAndAppendField(location, "data.Share", "description", 2));
   }
   pdelta.Op delete() {
     return pdelta.delete(location);
@@ -180,10 +184,10 @@ class Share_string_map extends pdelta.Location {
 class User_type extends pdelta.Location {
   User_type(List<pdelta.Locator> location) : super(location);
   User_Share_list get favourites {
-    return User_Share_list(pdelta.copyAndAppendField(location, "favourites", 1));
+    return User_Share_list(pdelta.copyAndAppendField(location, "data.User", "favourites", 1));
   }
   pkg_pdelta_pdelta_pdelta.String_string_map get all {
-    return pkg_pdelta_pdelta_pdelta.String_string_map(pdelta.copyAndAppendField(location, "all", 2));
+    return pkg_pdelta_pdelta_pdelta.String_string_map(pdelta.copyAndAppendField(location, "data.User", "all", 2));
   }
   pdelta.Op delete() {
     return pdelta.delete(location);
@@ -335,10 +339,10 @@ class User_string_map extends pdelta.Location {
 class User_Share_type extends pdelta.Location {
   User_Share_type(List<pdelta.Locator> location) : super(location);
   pkg_pdelta_pdelta_pdelta.String_scalar get id {
-    return pkg_pdelta_pdelta_pdelta.String_scalar(pdelta.copyAndAppendField(location, "id", 1));
+    return pkg_pdelta_pdelta_pdelta.String_scalar(pdelta.copyAndAppendField(location, "data.User.Share", "id", 1));
   }
   pkg_pdelta_pdelta_pdelta.String_scalar get name {
-    return pkg_pdelta_pdelta_pdelta.String_scalar(pdelta.copyAndAppendField(location, "name", 2));
+    return pkg_pdelta_pdelta_pdelta.String_scalar(pdelta.copyAndAppendField(location, "data.User.Share", "name", 2));
   }
   pdelta.Op delete() {
     return pdelta.delete(location);
@@ -486,4 +490,23 @@ class User_Share_string_map extends pdelta.Location {
   }
 
 }
+
+var _initialised = false;
+void init() {
+  if (_initialised) {
+    return;
+  }
+  _initialised = true;
+  pdelta.registerTypes([
+    pkg_data_data_data.Share(),
+    pkg_data_data_data.User(),
+    pkg_data_data_data.User_Share(),
+  ]);
+}
+
+final typeRegistry = protobuf.TypeRegistry([
+  pkg_data_data_data.Share(),
+  pkg_data_data_data.User(),
+  pkg_data_data_data.User_Share(),
+]);
 

@@ -10,7 +10,7 @@ import 'package:pserver/pserver/pserver.dart';
 const BOX_NAME = 'shares-hive-test';
 
 void main() {
-  Hive.registerAdapter(ItemAdapter<Share>(0, types, null));
+  Hive.registerAdapter(ItemAdapter<Share>(0, null));
   setUp(() async {
     Hive.init('.');
     Hive.deleteBoxFromDisk(BOX_NAME);
