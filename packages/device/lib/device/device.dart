@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Device {
   String _id;
+
   String get id => _id;
 
   Future<void> init() async {

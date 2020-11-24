@@ -11,8 +11,7 @@ class Discovery {
 
   Future<void> init() async {
     if (!kIsWeb && Platform.isAndroid) {
-      _androidSimulator =
-          await FlutterIsEmulator.isDeviceAnEmulatorOrASimulator;
+      _androidSimulator = await FlutterIsEmulator.isDeviceAnEmulatorOrASimulator;
     }
   }
 

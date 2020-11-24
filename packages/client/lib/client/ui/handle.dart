@@ -45,17 +45,10 @@ Future<T> handle<T>(
           final showLogoff = logoff &&
               (state is AppStateDone ||
                   (state is AppStateLogin && state.auth) ||
-                  (state is AppStateLoading &&
-                      (state.status == Status.Auth ||
-                          state.status == Status.Done)));
+                  (state is AppStateLoading && (state.status == Status.Auth || state.status == Status.Done)));
           final showReset = logoff && !showHome && !showBack && !showLogoff;
 
-          final showOk = ok ||
-              (buttons.length == 0 &&
-                  !showHome &&
-                  !showRetry &&
-                  !showBack &&
-                  !showLogoff);
+          final showOk = ok || (buttons.length == 0 && !showHome && !showRetry && !showBack && !showLogoff);
 
           return AlertDialog(
             title: Text('Error'),

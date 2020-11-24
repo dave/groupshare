@@ -143,8 +143,7 @@ class _SubmitButton extends StatelessWidget {
                                 DeleteEvent.submit(),
                               ),
                           // show offline warning only for remove/delete:
-                          enabled: state.type.value == DeleteType.remove ||
-                              state.type.value == DeleteType.delete,
+                          enabled: state.type.value == DeleteType.remove || state.type.value == DeleteType.delete,
                         );
                       }
                     },

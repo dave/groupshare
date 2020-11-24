@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:client/client/ui/warning.dart';
 
-class BlocRefreshIndicator<B extends Bloc<E, S>, E, S, A>
-    extends StatefulWidget {
+class BlocRefreshIndicator<B extends Bloc<E, S>, E, S, A> extends StatefulWidget {
   final Widget child;
   final E event;
   final bool single;
@@ -21,12 +20,10 @@ class BlocRefreshIndicator<B extends Bloc<E, S>, E, S, A>
   }) : super(key: key);
 
   @override
-  _BlocRefreshIndicatorState<B, E, S, A> createState() =>
-      _BlocRefreshIndicatorState<B, E, S, A>();
+  _BlocRefreshIndicatorState<B, E, S, A> createState() => _BlocRefreshIndicatorState<B, E, S, A>();
 }
 
-class _BlocRefreshIndicatorState<B extends Bloc<E, S>, E, S, A>
-    extends State<BlocRefreshIndicator<B, E, S, A>> {
+class _BlocRefreshIndicatorState<B extends Bloc<E, S>, E, S, A> extends State<BlocRefreshIndicator<B, E, S, A>> {
   Completer<void> _completer;
 
   @override

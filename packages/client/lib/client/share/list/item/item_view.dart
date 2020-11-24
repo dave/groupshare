@@ -150,13 +150,11 @@ class SlidableListTile extends StatelessWidget {
                   onPressed: () {
                     final thisItemIsOpen = _controller.activeState != null &&
                         _controller.activeState == Slidable.of(context) &&
-                        _controller.activeState.actionType ==
-                            SlideActionType.secondary;
+                        _controller.activeState.actionType == SlideActionType.secondary;
 
                     final anotherItemIsOpen = _controller.activeState != null &&
                         _controller.activeState != Slidable.of(context) &&
-                        _controller.activeState.actionType ==
-                            SlideActionType.secondary;
+                        _controller.activeState.actionType == SlideActionType.secondary;
 
                     if (anotherItemIsOpen) {
                       _controller.activeState.close();
@@ -186,8 +184,7 @@ Color _iconColor(ThemeData theme, ListTileTheme tileTheme) {
 
   if (!enabled) return theme.disabledColor;
 
-  if (selected && tileTheme?.selectedColor != null)
-    return tileTheme.selectedColor;
+  if (selected && tileTheme?.selectedColor != null) return tileTheme.selectedColor;
 
   if (!selected && tileTheme?.iconColor != null) return tileTheme.iconColor;
 
@@ -195,9 +192,7 @@ Color _iconColor(ThemeData theme, ListTileTheme tileTheme) {
     case Brightness.light:
       return selected ? theme.primaryColor : Colors.black45;
     case Brightness.dark:
-      return selected
-          ? theme.accentColor
-          : null; // null - use current icon theme color
+      return selected ? theme.accentColor : null; // null - use current icon theme color
   }
   assert(theme.brightness != null);
   return null;

@@ -14,8 +14,7 @@ class UserException implements Exception {
 class AuthException extends UserException {
   bool expired;
 
-  AuthException(String message,
-      {String debug = "", bool expired = false})
+  AuthException(String message, {String debug = "", bool expired = false})
       : this.expired = expired,
         super(message, debug: debug);
 

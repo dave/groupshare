@@ -31,8 +31,7 @@ class ItemBloc extends ExtendedBloc<ItemEvent, ItemState> {
   final String _name;
   StreamSubscription<DataEvent<Share>> _subscription;
 
-  ItemBloc(this._id, this._name, this._data)
-      : super(_item(_id, _name, _data)) {
+  ItemBloc(this._id, this._name, this._data) : super(_item(_id, _name, _data)) {
     add(ItemEvent.setup());
   }
 

@@ -103,8 +103,7 @@ class ListPageContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [Center(child: Text("loading"))],
               ),
-              list: (state) => BlocRefreshIndicator<ListBloc, ListEvent,
-                  ListState, ListStateRefreshFinished>(
+              list: (state) => BlocRefreshIndicator<ListBloc, ListEvent, ListState, ListStateRefreshFinished>(
                 single: state.items.isEmpty,
                 event: ListEvent.refresh(),
                 warning: true,

@@ -67,8 +67,7 @@ class DetailsContent extends StatelessWidget {
             padding: EdgeInsets.all(12),
             child: Align(
               alignment: Alignment(0, -1 / 3),
-              child: BlocRefreshIndicator<DetailsBloc, DetailsEvent,
-                  DetailsState, DetailsStateRefreshFinished>(
+              child: BlocRefreshIndicator<DetailsBloc, DetailsEvent, DetailsState, DetailsStateRefreshFinished>(
                 single: true,
                 event: DetailsEvent.refresh(),
                 warning: true,

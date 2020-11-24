@@ -38,8 +38,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
             return PopupMenuButton(
               icon: Icon(Icons.settings),
               itemBuilder: (context) => [
-                if (state is AppStateDone ||
-                    (state is AppStateLogin && state.auth))
+                if (state is AppStateDone || (state is AppStateLogin && state.auth))
                   PopupMenuItem(
                     child: ListTile(
                       leading: Icon(Icons.group),

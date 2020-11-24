@@ -37,25 +37,19 @@ class UnicornButton extends FloatingActionButton {
             boxShadow: this.labelHasShadow
                 ? [
                     new BoxShadow(
-                      color: this.labelShadowColor == null
-                          ? Color.fromRGBO(204, 204, 204, 1.0)
-                          : this.labelShadowColor,
+                      color: this.labelShadowColor == null ? Color.fromRGBO(204, 204, 204, 1.0) : this.labelShadowColor,
                       blurRadius: 3.0,
                     ),
                   ]
                 : null,
-            color: this.labelBackgroundColor == null
-                ? Colors.white
-                : this.labelBackgroundColor,
+            color: this.labelBackgroundColor == null ? Colors.white : this.labelBackgroundColor,
             borderRadius: BorderRadius.circular(3.0)), //color: Colors.white,
         padding: EdgeInsets.all(9.0),
         child: Text(this.labelText,
             style: TextStyle(
                 fontSize: this.labelFontSize,
                 fontWeight: FontWeight.bold,
-                color: this.labelColor == null
-                    ? Color.fromRGBO(119, 119, 119, 1.0)
-                    : this.labelColor)));
+                color: this.labelColor == null ? Color.fromRGBO(119, 119, 119, 1.0) : this.labelColor)));
   }
 
   Widget build(BuildContext context) {
@@ -99,17 +93,15 @@ class UnicornDialer extends StatefulWidget {
   _UnicornDialer createState() => _UnicornDialer();
 }
 
-class _UnicornDialer extends State<UnicornDialer>
-    with TickerProviderStateMixin {
+class _UnicornDialer extends State<UnicornDialer> with TickerProviderStateMixin {
   AnimationController _animationController;
 
   bool isOpen = false;
 
   @override
   void initState() {
-    this._animationController = AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: widget.animationDuration));
+    this._animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: widget.animationDuration));
 
     super.initState();
   }
@@ -150,8 +142,7 @@ class _UnicornDialer extends State<UnicornDialer>
               animation: this._animationController,
               builder: (BuildContext context, Widget child) {
                 return Transform(
-                  transform: new Matrix4.rotationZ(
-                      this._animationController.value * 0.8),
+                  transform: new Matrix4.rotationZ(this._animationController.value * 0.8),
                   alignment: FractionalOffset.center,
                   child: this._animationController.isDismissed
                       ? widget.parentButton
@@ -178,95 +169,83 @@ class _UnicornDialer extends State<UnicornDialer>
         ),
       );
 
-      var childButtonsList =
-          widget.buttons == null || widget.buttons.length == 0
-              ? List<Widget>()
-              : List.generate(
-                  widget.buttons.length,
-                  (index) {
-                    var intervalValue = index == 0
-                        ? 0.9
-                        : ((widget.buttons.length - index) /
-                                widget.buttons.length) -
-                            0.2;
+      var childButtonsList = widget.buttons == null || widget.buttons.length == 0
+          ? List<Widget>()
+          : List.generate(
+              widget.buttons.length,
+              (index) {
+                var intervalValue = index == 0 ? 0.9 : ((widget.buttons.length - index) / widget.buttons.length) - 0.2;
 
-                    intervalValue =
-                        intervalValue < 0.0 ? (1 / index) * 0.5 : intervalValue;
+                intervalValue = intervalValue < 0.0 ? (1 / index) * 0.5 : intervalValue;
 
-                    var childFAB = Badge(
-                      text: widget.buttons[index].badge,
-                      mini: widget.buttons[index].button.mini,
-                      child: FloatingActionButton(
-                        onPressed: () {
-                          if (widget.buttons[index].button.onPressed != null) {
-                            widget.buttons[index].button.onPressed();
-                          }
+                var childFAB = Badge(
+                  text: widget.buttons[index].badge,
+                  mini: widget.buttons[index].button.mini,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      if (widget.buttons[index].button.onPressed != null) {
+                        widget.buttons[index].button.onPressed();
+                      }
 
-                          this._animationController.reverse();
-                        },
-                        child: widget.buttons[index].button.child,
-                        heroTag: widget.buttons[index].button.heroTag,
-                        backgroundColor:
-                            widget.buttons[index].button.backgroundColor,
-                        mini: widget.buttons[index].button.mini,
-                        tooltip: widget.buttons[index].button.tooltip,
-                        key: widget.buttons[index].button.key,
-                        elevation: widget.buttons[index].button.elevation,
-                        foregroundColor:
-                            widget.buttons[index].button.foregroundColor,
-                        highlightElevation:
-                            widget.buttons[index].button.highlightElevation,
-                        isExtended: widget.buttons[index].button.isExtended,
-                        shape: widget.buttons[index].button.shape,
-                      ),
-                    );
-
-                    return Positioned(
-                      right: widget.orientation == UnicornOrientation.VERTICAL
-                          ? widget.buttons[index].button.mini
-                              ? 4.0
-                              : 0.0
-                          : ((widget.buttons.length - index) * 55.0) + 15,
-                      bottom: widget.orientation == UnicornOrientation.VERTICAL
-                          ? ((widget.buttons.length - index) * 55.0) + 15
-                          : 8.0,
-                      child: Row(
-                        children: [
-                          ScaleTransition(
-                            scale: CurvedAnimation(
-                              parent: this._animationController,
-                              curve: Interval(
-                                intervalValue,
-                                1.0,
-                                curve: Curves.linear,
-                              ),
-                            ),
-                            alignment: FractionalOffset.center,
-                            child: (!widget.buttons[index].hasLabel) ||
-                                    widget.orientation ==
-                                        UnicornOrientation.HORIZONTAL
-                                ? Container()
-                                : Container(
-                                    padding: EdgeInsets.only(
-                                      right: widget.childPadding,
-                                    ),
-                                    child: widget.buttons[index].returnLabel(),
-                                  ),
-                          ),
-                          ScaleTransition(
-                            scale: CurvedAnimation(
-                              parent: this._animationController,
-                              curve: Interval(intervalValue, 1.0,
-                                  curve: Curves.linear),
-                            ),
-                            alignment: FractionalOffset.center,
-                            child: childFAB,
-                          )
-                        ],
-                      ),
-                    );
-                  },
+                      this._animationController.reverse();
+                    },
+                    child: widget.buttons[index].button.child,
+                    heroTag: widget.buttons[index].button.heroTag,
+                    backgroundColor: widget.buttons[index].button.backgroundColor,
+                    mini: widget.buttons[index].button.mini,
+                    tooltip: widget.buttons[index].button.tooltip,
+                    key: widget.buttons[index].button.key,
+                    elevation: widget.buttons[index].button.elevation,
+                    foregroundColor: widget.buttons[index].button.foregroundColor,
+                    highlightElevation: widget.buttons[index].button.highlightElevation,
+                    isExtended: widget.buttons[index].button.isExtended,
+                    shape: widget.buttons[index].button.shape,
+                  ),
                 );
+
+                return Positioned(
+                  right: widget.orientation == UnicornOrientation.VERTICAL
+                      ? widget.buttons[index].button.mini
+                          ? 4.0
+                          : 0.0
+                      : ((widget.buttons.length - index) * 55.0) + 15,
+                  bottom: widget.orientation == UnicornOrientation.VERTICAL
+                      ? ((widget.buttons.length - index) * 55.0) + 15
+                      : 8.0,
+                  child: Row(
+                    children: [
+                      ScaleTransition(
+                        scale: CurvedAnimation(
+                          parent: this._animationController,
+                          curve: Interval(
+                            intervalValue,
+                            1.0,
+                            curve: Curves.linear,
+                          ),
+                        ),
+                        alignment: FractionalOffset.center,
+                        child: (!widget.buttons[index].hasLabel) || widget.orientation == UnicornOrientation.HORIZONTAL
+                            ? Container()
+                            : Container(
+                                padding: EdgeInsets.only(
+                                  right: widget.childPadding,
+                                ),
+                                child: widget.buttons[index].returnLabel(),
+                              ),
+                      ),
+                      ScaleTransition(
+                        scale: CurvedAnimation(
+                          parent: this._animationController,
+                          curve: Interval(intervalValue, 1.0, curve: Curves.linear),
+                        ),
+                        alignment: FractionalOffset.center,
+                        child: childFAB,
+                      )
+                    ],
+                  ),
+                );
+              },
+            );
 
       var unicornDialWidget = Container(
         margin: widget.hasNotch ? EdgeInsets.only(bottom: 15.0) : null,
@@ -305,10 +284,7 @@ class _UnicornDialer extends State<UnicornDialer>
           ? Stack(
               alignment: Alignment.topCenter,
               clipBehavior: Clip.none,
-              children: [
-                Positioned(right: -16.0, bottom: -16.0, child: modal),
-                unicornDialWidget
-              ],
+              children: [Positioned(right: -16.0, bottom: -16.0, child: modal), unicornDialWidget],
             )
           : unicornDialWidget;
     }

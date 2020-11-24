@@ -108,7 +108,7 @@ class OpenBloc extends ExtendedBloc<OpenEvent, OpenState> {
       },
       remove: (event) async* {
         final favIndex = _data.user.value.favourites.indexWhere(
-              (fav) => fav.id == event.id,
+          (fav) => fav.id == event.id,
         );
         if (favIndex == -1) {
           yield _list();
@@ -123,13 +123,12 @@ class OpenBloc extends ExtendedBloc<OpenEvent, OpenState> {
   OpenState _list() {
     final items = _data.user.value.all.entries
         .map(
-          (entry) =>
-          Item(
+          (entry) => Item(
             entry.key,
             entry.value,
             _data.user.value.favourites.any((fav) => fav.id == entry.key),
           ),
-    )
+        )
         .toList();
 
     items.sort((a, b) {

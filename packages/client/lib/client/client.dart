@@ -77,9 +77,9 @@ void client() async {
           api.offline,
           types,
         );
-        final data = Data(shares,users,auth,api);
+        final data = Data(shares, users, auth, api);
         final navigator = GlobalKey<NavigatorState>();
-        final observer =  ErrorObserver(navigator);
+        final observer = ErrorObserver(navigator);
         Bloc.observer = observer;
 
         runApp(
@@ -145,7 +145,6 @@ void client() async {
     throw ex;
   }
 }
-
 
 //class ProtoAdapter<T extends GeneratedMessage> extends TypeAdapter<T> {
 //  // TODO: ProtoAdapter is unused now... remove it?

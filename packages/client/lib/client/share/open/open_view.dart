@@ -53,8 +53,7 @@ class OpenPageContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [Center(child: Text("loading"))],
               ),
-              list: (state) => BlocRefreshIndicator<OpenBloc, OpenEvent,
-                  OpenState, OpenStateRefreshFinished>(
+              list: (state) => BlocRefreshIndicator<OpenBloc, OpenEvent, OpenState, OpenStateRefreshFinished>(
                 single: state.items.isEmpty,
                 event: OpenEvent.refresh(),
                 warning: true,

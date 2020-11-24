@@ -41,8 +41,7 @@ class EditBloc extends ExtendedBloc<EditEvent, EditState> {
   final String _id;
   final String _back;
 
-  EditBloc(this._id, this._back, this._data)
-      : super(EditState.loading()) {
+  EditBloc(this._id, this._back, this._data) : super(EditState.loading()) {
     add(EditEvent.setup());
   }
 
@@ -85,15 +84,12 @@ class EditBloc extends ExtendedBloc<EditEvent, EditState> {
             );
 
             final userFavIndex = _data.user.value.favourites.indexWhere(
-                  (fav) => fav.id == _id,
+              (fav) => fav.id == _id,
             );
 
             if (userFavIndex > -1) {
               _data.user.op(
-                op.user.favourites
-                    .index(userFavIndex)
-                    .name
-                    .set(_state.name.value),
+                op.user.favourites.index(userFavIndex).name.set(_state.name.value),
               );
             }
 
@@ -101,7 +97,7 @@ class EditBloc extends ExtendedBloc<EditEvent, EditState> {
           } catch (ex) {
             // Clear submissionInProgress on error
             yield _state.copyWith(status: Formz.validate([_state.name]));
-            throw(ex);
+            throw (ex);
           }
         }
       },

@@ -4,6 +4,7 @@ enum EmailValidationError { empty }
 
 class Email extends FormzInput<String, EmailValidationError> {
   const Email.pure() : super.pure('');
+
   const Email.dirty([String value = '']) : super.dirty(value);
 
   @override
@@ -16,6 +17,7 @@ enum CodeValidationError { empty }
 
 class Code extends FormzInput<String, CodeValidationError> {
   const Code.pure() : super.pure('');
+
   const Code.dirty([String value = '']) : super.dirty(value);
 
   @override

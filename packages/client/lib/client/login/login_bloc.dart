@@ -92,7 +92,7 @@ class LoginBloc extends ExtendedBloc<LoginEvent, LoginState> {
           } catch (ex) {
             // Clear submissionInProgress on error
             yield _state.copyWith(status: Formz.validate([_state.email]));
-            throw(ex);
+            throw (ex);
           }
         }
       },
@@ -104,7 +104,7 @@ class LoginBloc extends ExtendedBloc<LoginEvent, LoginState> {
           } catch (ex) {
             // Clear submissionInProgress on error
             yield _state.copyWith(status: Formz.validate([_state.code]));
-            throw(ex);
+            throw (ex);
           }
         }
       },

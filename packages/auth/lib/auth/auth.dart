@@ -48,8 +48,11 @@ class Auth {
   }
 
   String get email => _box.get(_key.Email.toString());
+
   String get time => _box.get(_key.Time.toString());
+
   String get id => _box.get(_key.Id.toString());
+
   String get hash => _box.get(_key.Hash.toString());
 
   Token get token {

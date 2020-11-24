@@ -53,10 +53,7 @@ class ErrorObserver extends BlocObserver with NavigatorObserver {
       // error popup in this state should not have an "ok" button to dismiss
       // it, since the UI below is not complete. If an error is shown in this
       // state, the error dialog should include a button to go home / log off.
-      final homeButtonValid = !(cubit is AppBarBloc ||
-          cubit is AppBloc ||
-          cubit is ListBloc ||
-          cubit is LoginBloc);
+      final homeButtonValid = !(cubit is AppBarBloc || cubit is AppBloc || cubit is ListBloc || cubit is LoginBloc);
       final backButtonValid = _navigator.currentState.canPop();
       handle(
         _navigator.currentState.overlay.context,

@@ -153,9 +153,7 @@ class _EmailButton extends StatelessWidget {
                       if (state.status.isValidated) {
                         warning(
                           context,
-                          () => context
-                              .bloc<LoginBloc>()
-                              .add(LoginEvent.submitEmail()),
+                          () => context.bloc<LoginBloc>().add(LoginEvent.submitEmail()),
                         );
                       }
                     },

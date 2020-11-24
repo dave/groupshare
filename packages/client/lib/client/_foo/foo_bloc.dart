@@ -61,7 +61,7 @@ class FooBloc extends ExtendedBloc<FooEvent, FooState> {
           } catch (ex) {
             // Clear submissionInProgress on error
             yield _state.copyWith(status: Formz.validate([_state.name]));
-            throw(ex);
+            throw (ex);
           }
         }
       },
